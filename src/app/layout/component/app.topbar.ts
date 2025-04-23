@@ -18,7 +18,7 @@ import {AuthenticationService} from "../../features/authentication/services/auth
                     <i class="pi pi-bars"></i>
                 </button>
                 <a class="layout-topbar-logo" routerLink="/">
-                    <span>Deerlicious</span>
+                    <span>Apex Performance</span>
                 </a>
             </div>
 

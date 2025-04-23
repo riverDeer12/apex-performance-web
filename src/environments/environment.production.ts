@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://deerlicious.com/api',
+    apiUrl: 'https://apex-performance.fit/api',
 };
