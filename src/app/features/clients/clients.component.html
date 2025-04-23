@@ -1,11 +1,11 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Recipe"/>
+              type="button" iconPos="right" icon="pi pi-plus" label="New Client"/>
 </div>
 
 <p-table
-    #recipesTable
-    [value]="recipes"
+    #clientsTable
+    [value]="clients"
     dataKey="id"
     sortField="updatedAt"
     [sortOrder]="-1"
@@ -13,8 +13,7 @@
     [rowHover]="true"
     [showGridlines]="true"
     [paginator]="true"
-    [scrollable]="true"
-    [globalFilterFields]="['title', 'content']"
+    [globalFilterFields]="['firstName', 'lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
     currentPageReportTemplate="There are {totalRecords} entries"
@@ -22,23 +21,23 @@
     <ng-template>
         <div class="flex justify-between items-center flex-column sm:flex-row">
             <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
-                    (click)="clear(recipesTable)"></button>
+                    (click)="clear(clientsTable)"></button>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
                     <i class="pi pi-search"></i>
                 </p-inputicon>
-                <input pInputText type="text" (input)="onGlobalFilter(recipesTable, $event)"
-                       />
+                <input pInputText type="text" (input)="onGlobalFilter(clientsTable, $event)"
+                />
             </p-iconfield>
         </div>
     </ng-template>
     <ng-template #header>
         <tr>
-            <th pSortableColumn="title" style="min-width: 12rem">
+            <th pSortableColumn="fullName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Title
-                    <p-sortIcon field="title"/>
-                    <p-columnFilter type="text" field="title" display="menu" class="ml-auto"/>
+                    Name
+                    <p-sortIcon field="fullName"/>
+                    <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
@@ -53,41 +52,42 @@
                 Status
                 <p-sortIcon field="status"/>
             </th>
-            <th style="width:11rem"></th>
+            <th style="width: 11rem"></th>
         </tr>
     </ng-template>
-    <ng-template #body let-recipe>
+    <ng-template #body let-client>
         <tr>
             <td>
-                {{ recipe.title }}
+                {{ client.fullName }}
             </td>
             <td>
-                {{ recipe.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
+                {{ client.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
             </td>
             <td>
-                {{ recipe.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+                {{ client.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
             <td>
-                {{ recipe.status }}
+                {{ client.status }}
             </td>
             <td>
-                <p-button (click)="openInfoDialog(recipe)" class="mr-2" icon="pi pi-info" severity="secondary"
-                           [outlined]="true"/>
-                <p-button (click)="openUpdateDialog(recipe)" class="mr-2" icon="pi pi-pencil" severity="secondary"
-                           [outlined]="true"/>
-                <p-button (click)="confirmDelete(recipe)" icon="pi pi-trash" severity="danger"
+                <p-button (click)="openInfoDialog(client)" class="mr-2" icon="pi pi-info" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(client)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(client)" icon="pi pi-trash" severity="danger"
                           [outlined]="true"/>
             </td>
         </tr>
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No recipes found.</td>
+            <td colspan="8">No clients found.</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading recipes data. Please wait...</td>
+            <td colspan="8">Loading clients data. Please wait...</td>
         </tr>
     </ng-template>
 </p-table>

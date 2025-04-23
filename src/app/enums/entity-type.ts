@@ -1,7 +1,7 @@
 export enum EntityType {
     Administrator,
-    Category,
+    Client,
     Recipe,
     Role ,
-    User,
+    User
 }

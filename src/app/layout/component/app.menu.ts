@@ -41,16 +41,10 @@ export class AppMenu implements OnInit {
                 }]
             },
             {
-                label: 'Categories',
+                label: 'Clients',
                 visible: this.authenticationService
-                    .checkPermission(Permissions.CanGetCategories),
-                items: [{label: 'List of Categories', icon: 'pi pi-fw pi-bookmark', routerLink: ['/admin/categories']}]
-            },
-            {
-                label: 'Recipes',
-                visible: this.authenticationService
-                    .checkPermission(Permissions.CanGetRecipes),
-                items: [{label: 'List of Recipes', icon: 'pi pi-fw pi-book', routerLink: ['/admin/recipes']}]
+                    .checkPermission(Permissions.CanGetClients),
+                items: [{label: 'List of Clients', icon: 'pi pi-fw pi-book', routerLink: ['/admin/clients']}]
             },
             {
                 label: 'Users',

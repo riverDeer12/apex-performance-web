@@ -10,21 +10,13 @@
     [administrator]="data">
 </app-administrator-form>
 
-<app-category-form
-    *ngIf="contentType === entityType.Category"
+<app-client-form
+    *ngIf="contentType === entityType.Client"
     [type]="formType"
     [dialogId]="dialogId"
     [redirectType]="redirectType"
-    [category]="data">
-</app-category-form>
-
-<app-recipe-form
-    *ngIf="contentType === entityType.Recipe"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [recipe]="data">
-</app-recipe-form>
+    [client]="data">
+</app-client-form>
 
 <app-role-form
     *ngIf="contentType === entityType.Role"
