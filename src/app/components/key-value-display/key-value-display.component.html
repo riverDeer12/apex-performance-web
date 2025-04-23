@@ -1,0 +1,9 @@
+<ul>
+    <li *ngFor="let entry of getEntries(data)">
+        <strong>{{ entry[0] }}</strong>:
+        <span *ngIf="!isObject(entry[1])">{{ entry[1] }}</span>
+        <p class="ml-4">
+            <app-key-value-display *ngIf="isObject(entry[1])" [data]="entry[1]"></app-key-value-display>
+        </p>
+    </li>
+</ul>

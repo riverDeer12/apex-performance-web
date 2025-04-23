@@ -1,0 +1,36 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="firstName">First Name</label>
+            <input
+                class="w-full {{validationService.getInputClass(form, 'firstName', 'required')}}"
+                type="text" id="firstName" pInputText formControlName="firstName"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'firstName', 'required')"
+                   id="firstName-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="w-full {{validationService.getInputClass(form, 'lastName', 'required')}}"
+                   id="lastName"
+                   pInputText formControlName="lastName"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'lastName', 'required')"
+                   id="lastName-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="user">User</label>
+            <p-select appendTo="body" id="user" [options]="users" formControlName="user" optionLabel="username"
+                      optionValue="id" [filter]="true"
+                      filterBy="username" [showClear]="true"
+                      styleClass="w-full"></p-select>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'user', 'required')"
+                   id="user-input">This field is required.</small>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
+    </div>
+</form>

@@ -1,0 +1,51 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="username">Username</label>
+            <input
+                class="w-full {{validationService.getInputClass(form, 'username', 'required')}}"
+                type="text" id="username" pInputText formControlName="username"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'username', 'required')"
+                   id="username-input">This field is required.</small>
+        </div>
+        <div *ngIf="type == formType.Create" class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="password">Password</label>
+            <p-password id="password" formControlName="password" [toggleMask]="true"
+                        [fluid]="true" [feedback]="false"></p-password>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'password', 'required')"
+                   id="password-input">This field is required.</small>
+        </div>
+        <div *ngIf="type == formType.Create" class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="confirmPassword">Confirm Password</label>
+            <p-password id="confirmPassword" formControlName="confirmPassword" [toggleMask]="true"
+                        [fluid]="true" [feedback]="false"></p-password>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'confirmPassword', 'required')"
+                   id="confirmPassword-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="email">Email</label>
+            <input type="text" class="w-full {{validationService.getInputClass(form, 'email', 'required')}}"
+                   id="email"
+                   pInputText formControlName="email"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'email', 'required')"
+                   id="email-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="roles">Roles</label>
+            <p-multiselect [filter]="true" appendTo="body" styleClass="w-full" [options]="roles"
+                           formControlName="roles" optionLabel="name" optionValue="id"
+                           id="roles"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'users', 'required')"
+                   id="users-input">This field is required.</small>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
+    </div>
+</form>

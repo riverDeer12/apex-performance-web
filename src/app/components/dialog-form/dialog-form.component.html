@@ -1,0 +1,46 @@
+<div class="m-3 absolute top-0 right-0">
+    <p-button (click)="cancel()" icon="pi pi-times" [text]="true"></p-button>
+</div>
+
+<app-administrator-form
+    *ngIf="contentType === entityType.Administrator"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [administrator]="data">
+</app-administrator-form>
+
+<app-category-form
+    *ngIf="contentType === entityType.Category"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [category]="data">
+</app-category-form>
+
+<app-recipe-form
+    *ngIf="contentType === entityType.Recipe"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [recipe]="data">
+</app-recipe-form>
+
+<app-role-form
+    *ngIf="contentType === entityType.Role"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [role]="data">
+</app-role-form>
+
+<app-user-form
+    *ngIf="contentType === entityType.User"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [user]="data">
+</app-user-form>
+
+
+

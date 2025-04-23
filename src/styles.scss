@@ -1,0 +1,27 @@
+@use './tailwind.css';
+@use './assets/layout/layout.scss';
+@use 'primeicons/primeicons.css';
+@use './assets/demo/demo.scss';
+
+
+.p-toast{
+    width: 30rem !important;
+}
+
+.p-icon{
+    height: 1.2rem !important;
+    width: 1.2rem !important;
+}
+
+.p-toast-summary{
+    font-size: 1.2rem !important;
+}
+
+.p-toast-details{
+    font-size: 1.2rem !important;
+}
+
+.field {
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+}
