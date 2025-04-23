@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://test.apex-performance.fit/api',
+    apiUrl: 'https://localhost:7173/api'
 };

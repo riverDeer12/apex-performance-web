@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "deerlicious": {
+        "apex-performance": {
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
@@ -25,7 +25,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/deerlicious",
+                        "outputPath": "dist/apex-performance",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [
@@ -82,10 +82,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "buildTarget": "deerlicious:build:production"
+                            "buildTarget": "apex-performance:build:production"
                         },
                         "development": {
-                            "buildTarget": "deerlicious:build:development"
+                            "buildTarget": "apex-performance:build:development"
                         }
                     },
                     "defaultConfiguration": "development"

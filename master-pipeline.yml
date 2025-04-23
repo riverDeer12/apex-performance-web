@@ -18,7 +18,7 @@ steps:
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)/dist/deerlicious'
+    rootFolderOrFile: '$(Build.SourcesDirectory)/dist/apex-performance'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactMasterDirectory)/drop_fr_master.zip'
