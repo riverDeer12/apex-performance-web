@@ -18,7 +18,7 @@ import {AuthenticationService} from "../../features/authentication/services/auth
                     <i class="pi pi-bars"></i>
                 </button>
                 <a class="layout-topbar-logo" routerLink="/">
-                    <span>Apex Performance</span>
+                    <img src="assets/images/logo_transparent.png" alt="menu-logo">
                 </a>
             </div>
 
