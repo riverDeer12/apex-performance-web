@@ -1,17 +1,16 @@
 import { Routes } from "@angular/router";
 import { AdminLayout } from "./app/layout/component/admin-layout.component";
 import { Dashboard } from "./app/pages/dashboard/dashboard";
-import { Landing } from "./app/pages/landing/landing";
 import { NotFound } from "./app/components/not-found/not-found";
 import { Forbidden } from "./app/components/forbidden/forbidden";
 import { Error } from "./app/components/error/error";
 import { AdminGuard } from "./app/guards/admin.guard";
+import { LandingComponent } from './app/features/landing/landing.component';
 
 export const appRoutes: Routes = [
-  { path: "", component: Landing },
   {
     path: "",
-    component: Landing,
+    component: LandingComponent,
   },
   {
     path: "authentication",
