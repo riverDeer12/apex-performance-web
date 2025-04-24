@@ -2,10 +2,10 @@ import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/ht
 import {ApplicationConfig} from '@angular/core';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling} from '@angular/router';
-import Aura from '@primeng/themes/aura';
 import {providePrimeNG} from 'primeng/config';
 import {appRoutes} from './app.routes';
 import {DefaultInterceptor} from "./app/interceptors/default.interceptor";
+import Nora from '@primeng/themes/nora';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -16,6 +16,6 @@ export const appConfig: ApplicationConfig = {
             provideHttpClient(withFetch(),withInterceptors([DefaultInterceptor]),
         ),
         provideAnimationsAsync(),
-        providePrimeNG({theme: {preset: Aura, options: {darkModeSelector: '.app-dark'}}})
+        providePrimeNG({theme: {preset: Nora, options: {darkModeSelector: '.app-dark'}}})
     ]
 };

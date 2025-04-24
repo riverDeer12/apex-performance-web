@@ -25,10 +25,7 @@ import {AuthenticationService} from "../../features/authentication/services/auth
             <div class="layout-topbar-actions">
 
                 <div class="layout-config-menu">
-                    <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
-                        <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
-                    </button>
-                    <div class="relative">
+                    <div class="relative" style="visibility: hidden">
                         <button
                             class="layout-topbar-action layout-topbar-action-highlight"
                             pStyleClass="@next"
@@ -42,6 +39,9 @@ import {AuthenticationService} from "../../features/authentication/services/auth
                         </button>
                         <app-configurator/>
                     </div>
+                    <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+                        <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
+                    </button>
                 </div>
 
                 <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next"
