@@ -3,7 +3,7 @@ export class AuthResponse {
     exp!: number;
     nameid!: string;
     name!: string;
-    role!: string[];
+    role!: string | string[];
     nbf!: number;
     iat!: number;
     permissions!: string[];

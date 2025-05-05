@@ -49,6 +49,8 @@ export class AdminGuard implements CanActivate {
         const adminRoles = [Roles.SuperAdmin, Roles.Administrator];
         const userRoles = this.authenticationService.getLoggedUserRoles();
 
+        console.log(userRoles);
+
         if(userRoles.includes(Roles.SuperAdmin)) {
             return true;
         }
