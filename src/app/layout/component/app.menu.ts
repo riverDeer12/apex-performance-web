@@ -41,6 +41,16 @@ export class AppMenu implements OnInit {
                 }]
             },
             {
+                label: 'Appointments',
+                visible: this.authenticationService
+                    .checkPermission(Permissions.CanGetAppointments),
+                items: [{
+                    label: 'List of Appointments',
+                    icon: 'pi pi-fw pi-calendar',
+                    routerLink: ['/admin/appointments']
+                }]
+            },
+            {
                 label: 'Clients',
                 visible: this.authenticationService
                     .checkPermission(Permissions.CanGetClients),

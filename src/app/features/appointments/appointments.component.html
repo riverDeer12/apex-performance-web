@@ -1,0 +1,13 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment"/>
+</div>
+
+<p-timeline [value]="appointments">
+    <ng-template #opposite let-appointment>
+        <small class="text-surface-500 dark:text-surface-400">{{ appointment.startTime }}</small>
+    </ng-template>
+    <ng-template #content let-appointment>
+        Termin
+    </ng-template>
+</p-timeline>

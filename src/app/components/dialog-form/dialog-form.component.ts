@@ -15,6 +15,9 @@ import {RedirectType} from "../../enums/redirect-type";
 import {DialogHelperService} from "../../services/dialog-helper.service";
 import {RoleFormComponent} from "../../features/roles/roles/components/role-form/role-form.component";
 import { ClientFormComponent } from '../../features/clients/components/client-form/client-form.component';
+import {
+  AppointmentFormComponent
+} from '../../features/appointments/components/appointment-form/appointment-form.component';
 
 @Component({
   selector: "app-dialog-form",
@@ -27,6 +30,7 @@ import { ClientFormComponent } from '../../features/clients/components/client-fo
     UserFormComponent,
     RoleFormComponent,
     ClientFormComponent,
+    AppointmentFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

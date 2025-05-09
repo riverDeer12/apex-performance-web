@@ -8,6 +8,6 @@ export const ClientsRoutes: Routes = [
     component: ClientsComponent,
     data: {
       permissions: [Permissions.CanGetClients],
-    }
-  }
+    },
+  },
 ];

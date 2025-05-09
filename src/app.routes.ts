@@ -5,7 +5,7 @@ import { NotFound } from "./app/components/not-found/not-found";
 import { Forbidden } from "./app/components/forbidden/forbidden";
 import { Error } from "./app/components/error/error";
 import { AdminGuard } from "./app/guards/admin.guard";
-import { LandingComponent } from './app/features/landing/landing.component';
+import { LandingComponent } from "./app/features/landing/landing.component";
 
 export const appRoutes: Routes = [
   {
@@ -33,6 +33,13 @@ export const appRoutes: Routes = [
         loadChildren: () =>
           import("./app/features/administrators/administrators.routes").then(
             (m) => m.AdministratorsRoutes,
+          ),
+      },
+      {
+        path: "appointments",
+        loadChildren: () =>
+          import("./app/features/appointments/appointments.routes").then(
+            (m) => m.AppointmentsRoutes,
           ),
       },
       {

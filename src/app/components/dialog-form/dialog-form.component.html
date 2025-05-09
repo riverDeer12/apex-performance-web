@@ -10,6 +10,14 @@
     [administrator]="data">
 </app-administrator-form>
 
+<app-appointment-form
+    *ngIf="contentType === entityType.Appointment"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [appointment]="data">
+</app-appointment-form>
+
 <app-client-form
     *ngIf="contentType === entityType.Client"
     [type]="formType"
