@@ -105,10 +105,10 @@ export class AppointmentFormComponent implements OnInit {
 
   private initUpdateForm() {
     this.form = this.formBuilder.group({
-      startTime: [this.appointment.startTime, [Validators.required]],
-      endTime: [this.appointment.endTime, [Validators.required]],
-      appointmentType: [this.appointment.appointmentType, [Validators.required]],
-      clients: [this.appointment.clients, [Validators.required]],
+      startTime: [new Date(this.appointment.startTime), [Validators.required]],
+      endTime: [new Date(this.appointment.endTime), [Validators.required]],
+      appointmentType: [this.appointment.appointmentType.id, [Validators.required]],
+      clients: [this.appointment.clients?.map(x => x.id), [Validators.required]],
     });
   }
 

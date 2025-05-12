@@ -7,7 +7,6 @@ import { DialogFormComponent } from '../../components/dialog-form/dialog-form.co
 import { EntityType } from '../../enums/entity-type';
 import { ActionType } from '../../enums/action-type';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Administrator } from '../administrators/models/administrator';
 import { DatePipe, NgForOf } from '@angular/common';
 
 @Component({
