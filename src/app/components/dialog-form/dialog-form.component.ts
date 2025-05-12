@@ -18,6 +18,9 @@ import { ClientFormComponent } from '../../features/clients/components/client-fo
 import {
   AppointmentFormComponent
 } from '../../features/appointments/components/appointment-form/appointment-form.component';
+import {
+  AppointmentTypeFormComponent
+} from '../../features/appointments/components/appointment-type-form/appointment-type-form.component';
 
 @Component({
   selector: "app-dialog-form",
@@ -31,6 +34,7 @@ import {
     RoleFormComponent,
     ClientFormComponent,
     AppointmentFormComponent,
+    AppointmentTypeFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

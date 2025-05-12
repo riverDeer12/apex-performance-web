@@ -9,6 +9,11 @@ export class Permissions {
     static readonly CanCreateAppointment = "CanCreateAppointment";
     static readonly CanUpdateAppointment = "CanUpdateAppointment";
     static readonly CanDeleteAppointment = "CanDeleteAppointment";
+    // AppointmentTypes
+    static readonly CanGetAppointmentTypes = "CanGetAppointmentTypes";
+    static readonly CanCreateAppointmentTypes = "CanCreateAppointmentTypes";
+    static readonly CanUpdateAppointmentTypes = "CanUpdateAppointmentTypes";
+    static readonly CanDeleteAppointmentTypes = "CanDeleteAppointmentTypes";
     // Clients
     static readonly CanGetClients = "CanGetClients";
     static readonly CanCreateClient = "CanCreateClient";

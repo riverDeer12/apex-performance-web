@@ -18,6 +18,14 @@
     [appointment]="data">
 </app-appointment-form>
 
+<app-appointment-type-form
+    *ngIf="contentType === entityType.AppointmentType"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [appointmentType]="data">
+</app-appointment-type-form>
+
 <app-client-form
     *ngIf="contentType === entityType.Client"
     [type]="formType"
