@@ -1,1 +1,69 @@
-<p>appointment-types works!</p>
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment Type"/>
+</div>
+
+<p-table
+    #appointmentTypesTable
+    [value]="appointmentTypes"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['firstName', 'lastName']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Name
+                    <p-sortIcon field="name"/>
+                    <p-columnFilter type="text" field="name" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="description" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Description
+                    <p-sortIcon field="description"/>
+                    <p-columnFilter type="text" field="description" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-appointmentType>
+        <tr>
+            <td>
+                {{ appointmentType.name }}
+            </td>
+            <td>
+                {{ appointmentType.description }}
+            </td>
+            <td>
+                <p-button (click)="openInfoDialog(appointmentType)" class="mr-2" icon="pi pi-info" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(appointmentType)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(appointmentType)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No appointment types found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading appointment types data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>
