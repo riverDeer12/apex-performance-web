@@ -5,7 +5,7 @@ import {provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolli
 import {providePrimeNG} from 'primeng/config';
 import {appRoutes} from './app.routes';
 import {DefaultInterceptor} from "./app/interceptors/default.interceptor";
-import Nora from '@primeng/themes/nora';
+import Lara from '@primeng/themes/lara';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -16,6 +16,6 @@ export const appConfig: ApplicationConfig = {
             provideHttpClient(withFetch(),withInterceptors([DefaultInterceptor]),
         ),
         provideAnimationsAsync(),
-        providePrimeNG({theme: {preset: Nora, options: {darkModeSelector: '.app-dark'}}})
+        providePrimeNG({theme: {preset: Lara, options: {darkModeSelector: '.app-dark'}}})
     ]
 };

@@ -1,13 +1,25 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment"/>
+              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment" />
 </div>
 
 <p-timeline [value]="appointments">
+    <ng-template #marker let-appointment>
+        <span class="flex w-8 h-8 items-center justify-center rounded-full z-10 shadow-sm">
+            <img height="35" [src]="'assets/icons/'+ appointment.appointmentType.description + '.png'" alt="">
+        </span>
+    </ng-template>
     <ng-template #opposite let-appointment>
-        <small class="text-surface-500 dark:text-surface-400">{{ appointment.startTime }}</small>
+        <p-button size="small" (click)="openUpdateDialog(appointment)"
+                  type="button" class="mr-3" iconPos="right" icon="pi pi-pencil" label="" />
+        <small
+            class="text-surface-500 dark:text-surface-400">{{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm' }}</small>
+
     </ng-template>
     <ng-template #content let-appointment>
-        Termin
+        <span *ngFor="let client of appointment.clients">
+            {{ client.firstname }} {{ client.lastname }} <br>
+        </span>
+        <span><i>{{ appointment.appointmentType.name }}</i></span>
     </ng-template>
 </p-timeline>

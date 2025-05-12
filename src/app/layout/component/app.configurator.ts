@@ -9,13 +9,13 @@ import {
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { $t, updatePreset, updateSurfacePalette } from "@primeng/themes";
-import Nora from "@primeng/themes/nora";
+import Lara from "@primeng/themes/lara";
 import { PrimeNG } from "primeng/config";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { LayoutService } from "../service/layout.service";
 
 const presets = {
-  Nora
+  Lara
 } as const;
 
 declare type KeyOfType<T> = keyof T extends infer U ? U : never;

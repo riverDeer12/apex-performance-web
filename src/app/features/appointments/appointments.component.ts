@@ -8,10 +8,11 @@ import { EntityType } from '../../enums/entity-type';
 import { ActionType } from '../../enums/action-type';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Administrator } from '../administrators/models/administrator';
+import { DatePipe, NgForOf } from '@angular/common';
 
 @Component({
   selector: "app-appointments",
-  imports: [Timeline, Button],
+  imports: [Timeline, Button, NgForOf, DatePipe],
   providers: [DialogService],
   templateUrl: "./appointments.component.html",
   styleUrl: "./appointments.component.scss",
@@ -19,8 +20,10 @@ import { Administrator } from '../administrators/models/administrator';
 export class AppointmentsComponent implements OnInit {
   appointments!: Appointment[];
 
-  constructor(private appointmentService: AppointmentService,
-              private dialogService: DialogService) {}
+  constructor(
+    private appointmentService: AppointmentService,
+    private dialogService: DialogService,
+  ) {}
 
   ngOnInit() {
     this.loadData();
@@ -41,32 +44,32 @@ export class AppointmentsComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: 'Add New Appointment',
+      header: "Add New Appointment",
       data: {
         contentType: EntityType.Appointment,
         formType: ActionType.Create,
-        dialogId: 'createAppointmentForm'
-      }
+        dialogId: "createAppointmentForm",
+      },
     });
 
     dialogRef.onClose.subscribe((response: any) => {
       this.loadData();
-    })
+    });
   }
 
   openUpdateDialog(appointment: Appointment) {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: 'Update data for: ' + appointment.id,
+      header: "Update data for: " + appointment.id,
       data: {
         contentType: EntityType.Appointment,
         formType: ActionType.Update,
-        dialogId: 'updateAppointmentForm',
-        data: appointment
-      }
+        dialogId: "updateAppointmentForm",
+        data: appointment,
+      },
     });
 
     dialogRef.onClose.subscribe((response: any) => {
       this.loadData();
-    })
+    });
   }
 }
