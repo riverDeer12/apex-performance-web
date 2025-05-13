@@ -8,6 +8,7 @@ import { EntityType } from '../../enums/entity-type';
 import { ActionType } from '../../enums/action-type';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DatePipe, NgForOf } from '@angular/common';
+import { AppointmentsByDay } from './models/appointments-by-day';
 
 @Component({
   selector: "app-appointments",
@@ -17,7 +18,7 @@ import { DatePipe, NgForOf } from '@angular/common';
   styleUrl: "./appointments.component.scss",
 })
 export class AppointmentsComponent implements OnInit {
-  appointments!: Appointment[];
+  appointmentsByDay!: AppointmentsByDay[];
 
   constructor(
     private appointmentService: AppointmentService,
@@ -30,9 +31,9 @@ export class AppointmentsComponent implements OnInit {
 
   private loadData(): void {
     this.appointmentService.getAllAppointments().subscribe({
-      next: (data) => {
-        this.appointments = data.map((x: Appointment) =>
-          Object.assign(new Appointment(), x),
+      next: (data: AppointmentsByDay[]) => {
+        this.appointmentsByDay = data.map((x: AppointmentsByDay) =>
+          Object.assign(new AppointmentsByDay(), x),
         );
       },
       error: (err) => {

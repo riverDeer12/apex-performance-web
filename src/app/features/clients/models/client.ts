@@ -6,6 +6,7 @@ export class Client {
     lastName!: string;
     email!: string;
     phone!: string;
+    credits!: number;
     createdAt!: Date;
     updatedAt!: Date;
     user!: User;

@@ -39,6 +39,18 @@
                    *ngIf="validationService.hasErrors(form, 'phone', 'required')"
                    id="phone-input">This field is required.</small>
         </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="credits">Credits</label>
+            <input type="number" [min]="0" class="w-full {{validationService.getInputClass(form, 'credits', 'required')}}"
+                   id="credits"
+                   pInputText formControlName="credits"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'credits', 'required')"
+                   id="credits-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'credits', 'min')"
+                   id="credits-input-min">Minimun value is 0.</small>
+        </div>
     </div>
 
     <div class="my-3">

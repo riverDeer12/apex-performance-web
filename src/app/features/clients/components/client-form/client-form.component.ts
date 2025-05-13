@@ -82,6 +82,7 @@ export class ClientFormComponent {
       lastName: ["", [Validators.required]],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", [Validators.required]],
+      credits: ["", [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -91,6 +92,7 @@ export class ClientFormComponent {
       lastName: [this.client.lastName, [Validators.required]],
       email: [this.client.email, [Validators.required, Validators.email]],
       phone: [this.client.phone, [Validators.required]],
+      credits: [this.client.credits, [Validators.required, Validators.min(0)]],
     });
   }
 
