@@ -9,10 +9,12 @@ import { ActionType } from '../../enums/action-type';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DatePipe, NgForOf } from '@angular/common';
 import { AppointmentsByDay } from './models/appointments-by-day';
+import {Divider} from "primeng/divider";
 
 @Component({
   selector: "app-appointments",
-  imports: [Timeline, Button, NgForOf, DatePipe],
+  standalone: true,
+  imports: [Timeline, Button, NgForOf, DatePipe, Divider],
   providers: [DialogService],
   templateUrl: "./appointments.component.html",
   styleUrl: "./appointments.component.scss",

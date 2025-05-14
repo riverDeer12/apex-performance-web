@@ -93,7 +93,7 @@ export class RoleFormComponent {
             name: ['', [Validators.required]],
             description: ['', [Validators.required]],
             permissions: ['', [Validators.required]],
-            users: ['', [Validators.required]]
+            users: [[]]
         })
     }
 
@@ -102,7 +102,7 @@ export class RoleFormComponent {
             name: [this.role.name, [Validators.required]],
             description: [this.role.description, [Validators.required]],
             permissions: [this.role.permissions?.map(x => x.id), [Validators.required]],
-            users: [this.role.users?.map(x => x.id), [Validators.required]]
+            users: [this.role.users?.map(x => x.id)]
         })
     }
 

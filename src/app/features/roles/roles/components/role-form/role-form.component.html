@@ -34,9 +34,6 @@
                            styleClass="w-full" [options]="users"
                            formControlName="users" optionLabel="username" optionValue="id"
                            id="users"/>
-            <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'users', 'required')"
-                   id="users-input">This field is required.</small>
         </div>
     </div>
 

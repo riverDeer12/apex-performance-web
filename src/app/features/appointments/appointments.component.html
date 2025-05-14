@@ -6,7 +6,7 @@
 <div *ngFor="let day of appointmentsByDay">
     <h4 style="margin-top: 3rem">{{day.day | date : 'dd.MM.yyyy' }}</h4>
 
-    <hr>
+    <p-divider />
 
     <p-timeline [value]="day.appointments">
         <ng-template #marker let-appointment>

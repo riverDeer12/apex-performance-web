@@ -20,6 +20,7 @@ import { ClientService } from "../../services/client.service";
 
 @Component({
   selector: "app-client-form",
+  standalone: true,
   imports: [Button, InputText, NgIf, ReactiveFormsModule],
   templateUrl: "./client-form.component.html",
   styleUrl: "./client-form.component.scss",
@@ -32,8 +33,6 @@ export class ClientFormComponent {
   @Input() returnUrl!: string;
 
   form!: FormGroup;
-
-  users!: User[];
 
   loadingData = false;
 
@@ -48,7 +47,6 @@ export class ClientFormComponent {
 
   ngOnInit(): void {
     this.initForm();
-    this.getUsers();
   }
 
   submit() {
@@ -157,12 +155,6 @@ export class ClientFormComponent {
       complete: () => {
         this.loadingData = false;
       },
-    });
-  }
-
-  private getUsers() {
-    this.userService.getAllUsers().subscribe((response: User[]) => {
-      this.users = response.map((x: User) => Object.assign(new User(), x));
     });
   }
 }

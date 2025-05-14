@@ -52,6 +52,10 @@
                 Status
                 <p-sortIcon field="status"/>
             </th>
+            <th pSortableColumn="credits" style="min-width: 12rem">
+                Credits
+                <p-sortIcon field="credits"/>
+            </th>
             <th style="width: 11rem"></th>
         </tr>
     </ng-template>
@@ -68,6 +72,9 @@
             </td>
             <td>
                 {{ client.status }}
+            </td>
+            <td>
+                {{ client.credits }}
             </td>
             <td class="flex">
                 <p-button (click)="openInfoDialog(client)" class="mr-2" icon="pi pi-info" severity="secondary"

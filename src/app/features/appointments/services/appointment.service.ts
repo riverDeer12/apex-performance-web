@@ -15,6 +15,9 @@ export class AppointmentService {
   getAllAppointments = () =>
     this.http.get<AppointmentsByDay[]>(environment.apiUrl + "/appointments");
 
+  getAppointmentsByClient = () =>
+    this.http.get<Appointment[]>(environment.apiUrl + "/appointments/client");
+
   getAppointment = (appointmentId: string) =>
     this.http.get<Appointment>(
       environment.apiUrl + "/appointments/" + appointmentId,
