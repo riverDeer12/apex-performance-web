@@ -1,16 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "../services/authentication.service";
+import {AuthenticationService} from "../../services/authentication.service";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ValidationService} from "../../../services/validation.service";
-import {Router} from "@angular/router";
+import {ValidationService} from "../../../../services/validation.service";
+import {Router, RouterLink} from "@angular/router";
 import {MessageService} from "primeng/api";
-import {AuthResponse} from "../models/auth-response";
+import {AuthResponse} from "../../models/auth-response";
 import {PasswordModule} from "primeng/password";
 import {CheckboxModule} from "primeng/checkbox";
-import {AppFloatingConfigurator} from "../../../layout/component/app.floatingconfigurator";
+import {AppFloatingConfigurator} from "../../../../layout/component/app.floatingconfigurator";
+import {DialogFormComponent} from "../../../../components/dialog-form/dialog-form.component";
+import {EntityType} from "../../../../enums/entity-type";
+import {ActionType} from "../../../../enums/action-type";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
     selector: 'app-login',
@@ -21,8 +25,10 @@ import {AppFloatingConfigurator} from "../../../layout/component/app.floatingcon
         ReactiveFormsModule,
         PasswordModule,
         CheckboxModule,
-        AppFloatingConfigurator
+        AppFloatingConfigurator,
+        RouterLink
     ],
+    providers: [DialogService],
     standalone: true,
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
@@ -38,6 +44,7 @@ export class LoginComponent implements OnInit {
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
         private router: Router,
+        private dialogService: DialogService,
         private authenticationService: AuthenticationService,
         private messageService: MessageService) {
     }
@@ -49,6 +56,17 @@ export class LoginComponent implements OnInit {
         } else {
             this.initForm();
         }
+    }
+
+    openForgotPasswordDialog(): void {
+        this.dialogService.open(DialogFormComponent, {
+            header: "Please, enter your email in field below:",
+            data: {
+                contentType: EntityType.Authentication,
+                formType: ActionType.Create,
+                dialogId: "resetPasswordForm",
+            },
+        });
     }
 
     submit() {

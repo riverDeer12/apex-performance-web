@@ -21,6 +21,7 @@ import {
 import {
   AppointmentTypeFormComponent
 } from '../../features/appointments/components/appointment-type-form/appointment-type-form.component';
+import {ResetPasswordComponent} from "../../features/users/components/reset-password/reset-password.component";
 
 @Component({
   selector: "app-dialog-form",
@@ -35,6 +36,7 @@ import {
     ClientFormComponent,
     AppointmentFormComponent,
     AppointmentTypeFormComponent,
+    ResetPasswordComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

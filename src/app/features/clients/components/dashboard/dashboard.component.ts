@@ -3,12 +3,10 @@ import {Appointment} from "../../../appointments/models/appointment";
 import {AppointmentService} from "../../../appointments/services/appointment.service";
 import {Button} from "primeng/button";
 import {CommonModule, DatePipe} from "@angular/common";
-import {Timeline} from "primeng/timeline";
 import {DialogFormComponent} from "../../../../components/dialog-form/dialog-form.component";
 import {EntityType} from "../../../../enums/entity-type";
 import {ActionType} from "../../../../enums/action-type";
 import {DialogService} from "primeng/dynamicdialog";
-import {Card} from "primeng/card";
 import {Divider} from "primeng/divider";
 
 @Component({
@@ -18,8 +16,6 @@ import {Divider} from "primeng/divider";
         CommonModule,
         Button,
         DatePipe,
-        Timeline,
-        Card,
         Divider
     ],
     providers: [DialogService],
