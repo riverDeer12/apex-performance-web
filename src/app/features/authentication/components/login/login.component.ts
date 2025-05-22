@@ -5,7 +5,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ValidationService} from "../../../../services/validation.service";
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {MessageService} from "primeng/api";
 import {AuthResponse} from "../../models/auth-response";
 import {PasswordModule} from "primeng/password";
@@ -25,8 +25,7 @@ import {DialogService} from "primeng/dynamicdialog";
         ReactiveFormsModule,
         PasswordModule,
         CheckboxModule,
-        AppFloatingConfigurator,
-        RouterLink
+        AppFloatingConfigurator
     ],
     providers: [DialogService],
     standalone: true,

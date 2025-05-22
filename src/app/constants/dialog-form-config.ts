@@ -7,7 +7,6 @@ export const DialogFormConfig: DynamicDialogConfig = {
     modal: true,
     transitionOptions: '200ms',
     style: {
-        'width': '100%',
         'max-width': '90vh'
     },
     draggable: true,

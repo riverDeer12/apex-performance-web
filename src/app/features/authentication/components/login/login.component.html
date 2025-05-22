@@ -25,9 +25,12 @@
                                 <p-checkbox formControlName="rememberMe" id="rememberMe" binary
                                             class="mr-2"></p-checkbox>
                                 <label for="rememberMe">Remember me</label>
+                                <p-button [link]="true" (click)="openForgotPasswordDialog()" label="Forgot Password?" />
                             </div>
                         </div>
-                        <p-button (click)="openForgotPasswordDialog()" label="Forgot Password?" [link]="false" />
+                        <div class="mb-5">
+
+                        </div>
                         <p-button type="submit" label="Sign In" styleClass="w-full"></p-button>
                     </div>
                 </form>

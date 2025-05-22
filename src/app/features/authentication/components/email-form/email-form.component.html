@@ -1,0 +1,7 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="flex items-center">
+        <input pInputText id="email" type="text"
+               class="w-full md:w-[30rem]" formControlName="email" />
+        <p-button type="submit" class="m-2" label="Send"></p-button>
+    </div>
+</form>

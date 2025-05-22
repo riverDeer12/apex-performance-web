@@ -1,27 +1,21 @@
-import {Component} from '@angular/core';
-import {DialogModule} from "primeng/dialog";
-import {ButtonModule} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
-import {ActionType} from "../../enums/action-type";
-import {EntityType} from "../../enums/entity-type";
-import {CommonModule} from "@angular/common";
-import {DialogFormConfig} from "../../constants/dialog-form-config";
-import {
-    AdministratorFormComponent
-} from "../../features/administrators/components/administrator-form/administrator-form.component";
-import {UserFormComponent} from "../../features/users/components/user-form/user-form.component";
-import {RedirectType} from "../../enums/redirect-type";
-import {DialogHelperService} from "../../services/dialog-helper.service";
-import {RoleFormComponent} from "../../features/roles/roles/components/role-form/role-form.component";
-import { ClientFormComponent } from '../../features/clients/components/client-form/client-form.component';
-import {
-  AppointmentFormComponent
-} from '../../features/appointments/components/appointment-form/appointment-form.component';
-import {
-  AppointmentTypeFormComponent
-} from '../../features/appointments/components/appointment-type-form/appointment-type-form.component';
-import {ResetPasswordComponent} from "../../features/users/components/reset-password/reset-password.component";
+import { Component } from "@angular/core";
+import { DialogModule } from "primeng/dialog";
+import { ButtonModule } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
+import { ActionType } from "../../enums/action-type";
+import { EntityType } from "../../enums/entity-type";
+import { CommonModule } from "@angular/common";
+import { DialogFormConfig } from "../../constants/dialog-form-config";
+import { AdministratorFormComponent } from "../../features/administrators/components/administrator-form/administrator-form.component";
+import { UserFormComponent } from "../../features/users/components/user-form/user-form.component";
+import { RedirectType } from "../../enums/redirect-type";
+import { DialogHelperService } from "../../services/dialog-helper.service";
+import { RoleFormComponent } from "../../features/roles/roles/components/role-form/role-form.component";
+import { ClientFormComponent } from "../../features/clients/components/client-form/client-form.component";
+import { AppointmentFormComponent } from "../../features/appointments/components/appointment-form/appointment-form.component";
+import { AppointmentTypeFormComponent } from "../../features/appointments/components/appointment-type-form/appointment-type-form.component";
+import { EmailFormComponent } from "../../features/authentication/components/email-form/email-form.component";
 
 @Component({
   selector: "app-dialog-form",
@@ -36,7 +30,7 @@ import {ResetPasswordComponent} from "../../features/users/components/reset-pass
     ClientFormComponent,
     AppointmentFormComponent,
     AppointmentTypeFormComponent,
-    ResetPasswordComponent,
+    EmailFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",
@@ -62,10 +56,6 @@ export class DialogFormComponent {
     this.initSettings();
     this.initContentType();
     this.setDialogCloseListener();
-  }
-
-  ngOnInit(): void {
-    //intended
   }
 
   /**
