@@ -42,6 +42,7 @@ export class AuthenticationService {
 
   validateAdminUser(): boolean {
     const roles = this.getLoggedUserRoles();
+
     return (
       roles.includes(Roles.Administrator) || roles.includes(Roles.SuperAdmin)
     );
@@ -64,7 +65,12 @@ export class AuthenticationService {
 
   getLoggedUserRoles() {
     const token = this.getAuthTokenFromLocalStorage();
-    return token.role as string[];
+
+    if (Array.isArray(token.role)) {
+      return token.role;
+    } else {
+      return [token.role];
+    }
   }
 
   getLoggedUserUsername(): string {

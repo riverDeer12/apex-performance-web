@@ -4,7 +4,7 @@
 
 <div *ngIf="!isAdmin">
     <h4>My Appointments</h4>
-    <div *ngFor="let appointment of appointments">
+    <div class="my-10" *ngFor="let appointment of appointments">
         <p class="flex items-center">
             {{ appointment.startTime | date: 'dd.MM.yyyy HH:mm' }}
             <p-button size="small" (click)="openUpdateDialog(appointment)"
@@ -15,6 +15,7 @@
             <span class="mx-3">{{ appointment.appointmentType.name }}</span>
         </p>
     </div>
+
     <p-divider />
 
     <h4>My Measurements</h4>

@@ -32,10 +32,6 @@ export class DialogInfoComponent {
         this.initContentType();
     }
 
-    ngOnInit(): void {
-        //intended
-    }
-
     /**
      * Set dialog settings.
      */
@@ -62,7 +58,7 @@ export class DialogInfoComponent {
         this.dialogRef.close();
 
         const updateDialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Update data for: ' + this.data["id"],
+            header: 'Update data for: ' + this.dialogConfig.header,
             data: {
                 contentType: this.contentType,
                 formType: ActionType.Update,

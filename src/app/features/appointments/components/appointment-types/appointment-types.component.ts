@@ -61,7 +61,7 @@ export class AppointmentTypesComponent implements OnInit {
 
   openInfoDialog(appointmentType: AppointmentType) {
     this.dialogService.open(DialogInfoComponent, {
-      header: "Details for: " + appointmentType.id,
+      header: "Details for: " + appointmentType.name,
       data: {
         contentType: EntityType.AppointmentType,
         data: appointmentType,
@@ -71,7 +71,7 @@ export class AppointmentTypesComponent implements OnInit {
 
   openUpdateDialog(appointmentType: AppointmentType) {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Update data for: " + appointmentType.id,
+      header: "Update data for: " + appointmentType.name,
       data: {
         contentType: EntityType.AppointmentType,
         formType: ActionType.Update,
