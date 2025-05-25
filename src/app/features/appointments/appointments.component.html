@@ -17,6 +17,8 @@
         <ng-template #opposite let-appointment>
             <p-button size="small" (click)="openUpdateDialog(appointment)"
                       type="button" class="mr-3" iconPos="right" icon="pi pi-pencil" label="" />
+            <p-button size="small" severity="danger"  (click)="confirmDelete(appointment)"
+                      type="button" class="mr-3" iconPos="right" icon="pi pi-trash" label="" />
             <span
                 class="text-surface-500 dark:text-surface-400">{{ appointment.startTime | date : 'HH:mm' }}</span>
 

@@ -7,9 +7,10 @@ import { DialogFormComponent } from "../../components/dialog-form/dialog-form.co
 import { EntityType } from "../../enums/entity-type";
 import { ActionType } from "../../enums/action-type";
 import { DialogService } from "primeng/dynamicdialog";
-import { DatePipe, NgForOf } from "@angular/common";
+import { DatePipe, formatDate, NgForOf } from "@angular/common";
 import { AppointmentsByDay } from "./models/appointments-by-day";
 import { Divider } from "primeng/divider";
+import { ConfirmationService, MessageService } from "primeng/api";
 
 @Component({
   selector: "app-appointments",
@@ -24,6 +25,8 @@ export class AppointmentsComponent implements OnInit {
 
   constructor(
     private appointmentService: AppointmentService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private dialogService: DialogService,
   ) {}
 
@@ -61,7 +64,9 @@ export class AppointmentsComponent implements OnInit {
 
   openUpdateDialog(appointment: Appointment) {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Update data for: " + appointment.id,
+      header:
+        "Update data for: " +
+        formatDate(appointment.startTime, "dd.MM.yyyy HH:mm", "en-US"),
       data: {
         contentType: EntityType.Appointment,
         formType: ActionType.Update,
@@ -74,4 +79,39 @@ export class AppointmentsComponent implements OnInit {
       this.loadData();
     });
   }
+
+  confirmDelete(appointment: Appointment) {
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to deactivate this appointment?',
+      header: 'Confirm deletion of ' + formatDate(appointment.startTime, "dd.MM.yyyy HH:mm", "en-US"),
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'No',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Yes',
+      },
+      accept: () => {
+        this.appointmentService.deleteAppointment(appointment.id)
+            .subscribe((response) => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Appointment has been deactivated.'
+              });
+            }, error => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error deactivating appointment.'
+              });
+            });
+      }
+    });
+  }
+
 }

@@ -74,7 +74,7 @@ export class ClientsComponent {
 
   openInfoDialog(client: Client) {
     this.dialogService.open(DialogInfoComponent, {
-      header: "Details for: " + client.id,
+      header: "Details for: " + client.fullName,
       data: {
         contentType: EntityType.Client,
         data: client,
@@ -84,7 +84,7 @@ export class ClientsComponent {
 
   openUpdateDialog(client: Client) {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Update data for: " + client.id,
+      header: "Update data for: " + client.fullName,
       data: {
         contentType: EntityType.Client,
         formType: ActionType.Update,

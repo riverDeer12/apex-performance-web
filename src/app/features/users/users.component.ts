@@ -76,7 +76,7 @@ export class UsersComponent {
 
     openInfoDialog(user: User) {
         this.dialogService.open(DialogInfoComponent, {
-            header: 'Details for: ' + user.id,
+            header: 'Details for: ' + user.username,
             data: {
                 contentType: EntityType.User,
                 data: user
@@ -86,7 +86,7 @@ export class UsersComponent {
 
     openUpdateDialog(user: User) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Update data for: ' + user.id,
+            header: 'Update data for: ' + user.username,
             data: {
                 contentType: EntityType.User,
                 formType: ActionType.Update,
@@ -103,7 +103,7 @@ export class UsersComponent {
     confirmDelete(user: User) {
         this.confirmationService.confirm({
             message: 'Are you sure that you want to deactivate this user?',
-            header: 'Confirm deletion of ' + user.id,
+            header: 'Confirm deletion of ' + user.username,
             closable: true,
             closeOnEscape: true,
             icon: 'pi pi-exclamation-triangle',
