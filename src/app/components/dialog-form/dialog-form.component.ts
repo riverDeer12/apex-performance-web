@@ -16,6 +16,9 @@ import { ClientFormComponent } from "../../features/clients/components/client-fo
 import { AppointmentFormComponent } from "../../features/appointments/components/appointment-form/appointment-form.component";
 import { AppointmentTypeFormComponent } from "../../features/appointments/components/appointment-type-form/appointment-type-form.component";
 import { EmailFormComponent } from "../../features/authentication/components/email-form/email-form.component";
+import {
+  BodyMeasurementFormComponent
+} from "../../features/body-measurements/components/body-measurement-form/body-measurement-form.component";
 
 @Component({
   selector: "app-dialog-form",
@@ -31,6 +34,7 @@ import { EmailFormComponent } from "../../features/authentication/components/ema
     AppointmentFormComponent,
     AppointmentTypeFormComponent,
     EmailFormComponent,
+    BodyMeasurementFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

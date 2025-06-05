@@ -1,0 +1,111 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="height">Height</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'height', 'required') }}"
+                   id="height"
+                   pInputText formControlName="height"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'height', 'required')"
+                   id="height-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'height', 'min')"
+                   id="height-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="weight">Weight</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'weight', 'required') }}"
+                   id="weight"
+                   pInputText formControlName="weight"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'weight', 'required')"
+                   id="weight-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'weight', 'min')"
+                   id="weight-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="shoulders">Shoulders</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'shoulders', 'required') }}"
+                   id="shoulders"
+                   pInputText formControlName="shoulders"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'shoulders', 'required')"
+                   id="shoulders-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'shoulders', 'min')"
+                   id="shoulders-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="chest">Chest</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'chest', 'required') }}"
+                   id="chest"
+                   pInputText formControlName="chest"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'chest', 'required')"
+                   id="chest-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'chest', 'min')"
+                   id="chest-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="upperArm">Upper Arm</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'upperArm', 'required') }}"
+                   id="upperArm"
+                   pInputText formControlName="upperArm"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'upperArm', 'required')"
+                   id="upperArm-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'upperArm', 'min')"
+                   id="upperArm-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="waist">Waist</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'waist', 'required') }}"
+                   id="waist"
+                   pInputText formControlName="waist"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'waist', 'required')"
+                   id="waist-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'waist', 'min')"
+                   id="waist-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="thigh">Thigh</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'thigh', 'required') }}"
+                   id="thigh"
+                   pInputText formControlName="thigh"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'thigh', 'required')"
+                   id="thigh-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'thigh', 'min')"
+                   id="thigh-input-min">Minimum value is 0.</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="calves">Calves</label>
+            <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'calves', 'required') }}"
+                   id="calves"
+                   pInputText formControlName="calves"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'calves', 'required')"
+                   id="calves-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'calves', 'min')"
+                   id="calves-input-min">Minimum value is 0.</small>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
+    </div>
+</form>

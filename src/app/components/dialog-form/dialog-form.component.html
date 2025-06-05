@@ -3,28 +3,36 @@
 </div>
 
 <app-administrator-form
-    *ngIf="contentType === entityType.Administrator"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [administrator]="data">
+        *ngIf="contentType === entityType.Administrator"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [administrator]="data">
 </app-administrator-form>
 
 <app-appointment-form
-    *ngIf="contentType === entityType.Appointment"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [appointment]="data">
+        *ngIf="contentType === entityType.Appointment"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [appointment]="data">
 </app-appointment-form>
 
 <app-appointment-type-form
-    *ngIf="contentType === entityType.AppointmentType"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [appointmentType]="data">
+        *ngIf="contentType === entityType.AppointmentType"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [appointmentType]="data">
 </app-appointment-type-form>
+
+<app-body-measurement-form
+        *ngIf="contentType === entityType.BodyMeasurement"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [bodyMeasurement]="data">
+</app-body-measurement-form>
 
 <app-email-form
         *ngIf="contentType === entityType.Authentication"
@@ -34,27 +42,27 @@
 </app-email-form>
 
 <app-client-form
-    *ngIf="contentType === entityType.Client"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [client]="data">
+        *ngIf="contentType === entityType.Client"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [client]="data">
 </app-client-form>
 
 <app-role-form
-    *ngIf="contentType === entityType.Role"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [role]="data">
+        *ngIf="contentType === entityType.Role"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [role]="data">
 </app-role-form>
 
 <app-user-form
-    *ngIf="contentType === entityType.User"
-    [type]="formType"
-    [dialogId]="dialogId"
-    [redirectType]="redirectType"
-    [user]="data">
+        *ngIf="contentType === entityType.User"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [user]="data">
 </app-user-form>
 
 

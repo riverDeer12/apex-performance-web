@@ -1,0 +1,96 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Body Measurement"/>
+</div>
+
+<p-table
+    #bodyMeasurementsTable
+    [value]="bodyMeasurements"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['client.firstname', 'client.lastname']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(bodyMeasurementsTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(bodyMeasurementsTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="client.firstname" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Firstname
+                    <p-sortIcon field="client.firstname"/>
+                    <p-columnFilter type="text" field="client.firstname" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="client.lastname" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Lastname
+                    <p-sortIcon field="client.lastname"/>
+                    <p-columnFilter type="text" field="client.lastname" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="createdAt" style="min-width: 12rem">
+                Created At
+                <p-sortIcon field="createdAt"/>
+            </th>
+            <th pSortableColumn="updatedAt" style="min-width: 12rem">
+                Last Changes
+                <p-sortIcon field="updatedAt"/>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-bodyMeasurement>
+        <tr>
+            <td>
+                {{ bodyMeasurement.client.firstname }}
+            </td>
+            <td>
+                {{ bodyMeasurement.client.lastname }}
+            </td>
+            <td>
+                {{ bodyMeasurement.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
+            </td>
+            <td>
+                {{ bodyMeasurement.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(bodyMeasurement)" class="mr-2" icon="pi pi-info" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(bodyMeasurement)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(bodyMeasurement)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No Body Measurements found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading Body Measurements data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>

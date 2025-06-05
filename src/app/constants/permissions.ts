@@ -11,9 +11,14 @@ export class Permissions {
     static readonly CanDeleteAppointment = "CanDeleteAppointment";
     // AppointmentTypes
     static readonly CanGetAppointmentTypes = "CanGetAppointmentTypes";
-    static readonly CanCreateAppointmentTypes = "CanCreateAppointmentTypes";
-    static readonly CanUpdateAppointmentTypes = "CanUpdateAppointmentTypes";
-    static readonly CanDeleteAppointmentTypes = "CanDeleteAppointmentTypes";
+    static readonly CanCreateAppointmentType = "CanCreateAppointmentType";
+    static readonly CanUpdateAppointmentType = "CanUpdateAppointmentType";
+    static readonly CanDeleteAppointmentType = "CanDeleteAppointmentType";
+    // BodyMeasurements
+    static readonly CanGetBodyMeasurements = "CanGetBodyMeasurements";
+    static readonly CanCreateBodyMeasurement = "CanCreateBodyMeasurement";
+    static readonly CanUpdateBodyMeasurement = "CanUpdateBodyMeasurement";
+    static readonly CanDeleteBodyMeasurement = "CanDeleteBodyMeasurement";
     // Clients
     static readonly CanGetClients = "CanGetClients";
     static readonly CanCreateClient = "CanCreateClient";

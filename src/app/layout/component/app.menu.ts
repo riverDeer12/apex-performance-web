@@ -74,6 +74,19 @@ export class AppMenu implements OnInit {
         ],
       },
       {
+        label: "Body Measurements",
+        visible: this.authenticationService.checkPermission(
+            Permissions.CanGetBodyMeasurements,
+        ),
+        items: [
+          {
+            label: "Body Measurements",
+            icon: "pi pi-fw pi-gauge",
+            routerLink: ["/admin/body-measurements"],
+          },
+        ],
+      },
+      {
         label: "Clients",
         visible: this.authenticationService.checkPermission(
           Permissions.CanGetClients,

@@ -1,73 +1,80 @@
-import { Routes } from "@angular/router";
-import { AdminLayout } from "./app/layout/component/admin-layout.component";
-import { Dashboard } from "./app/pages/dashboard/dashboard";
-import { NotFound } from "./app/components/not-found/not-found";
-import { Forbidden } from "./app/components/forbidden/forbidden";
-import { Error } from "./app/components/error/error";
-import { AdminGuard } from "./app/guards/admin.guard";
-import { LandingComponent } from "./app/features/landing/landing.component";
+import {Routes} from "@angular/router";
+import {AdminLayout} from "./app/layout/component/admin-layout.component";
+import {Dashboard} from "./app/pages/dashboard/dashboard";
+import {NotFound} from "./app/components/not-found/not-found";
+import {Forbidden} from "./app/components/forbidden/forbidden";
+import {Error} from "./app/components/error/error";
+import {AdminGuard} from "./app/guards/admin.guard";
+import {LandingComponent} from "./app/features/landing/landing.component";
 import {DashboardComponent} from "./app/features/clients/components/dashboard/dashboard.component";
 
 export const appRoutes: Routes = [
-  {
-    path: "",
-    component: LandingComponent,
-  },
-  {
-    path: "authentication",
-    loadChildren: () =>
-      import("./app/features/authentication/authentication.routes").then(
-        (m) => m.AuthenticationRoutes,
-      ),
-  },
-  {
-    path: "admin",
-    component: AdminLayout,
-    canActivate: [AdminGuard],
-    children: [
-      {
-        path: "dashboard",
-        component: DashboardComponent
-      },
-      {
-        path: "administrators",
+    {
+        path: "",
+        component: LandingComponent,
+    },
+    {
+        path: "authentication",
         loadChildren: () =>
-          import("./app/features/administrators/administrators.routes").then(
-            (m) => m.AdministratorsRoutes,
-          ),
-      },
-      {
-        path: "appointments",
+            import("./app/features/authentication/authentication.routes").then(
+                (m) => m.AuthenticationRoutes,
+            ),
+    },
+    {
+        path: "admin",
+        component: AdminLayout,
+        canActivate: [AdminGuard],
+        children: [
+            {
+                path: "dashboard",
+                component: DashboardComponent
+            },
+            {
+                path: "administrators",
+                loadChildren: () =>
+                    import("./app/features/administrators/administrators.routes").then(
+                        (m) => m.AdministratorsRoutes,
+                    ),
+            },
+            {
+                path: "appointments",
+                loadChildren: () =>
+                    import("./app/features/appointments/appointments.routes").then(
+                        (m) => m.AppointmentsRoutes,
+                    ),
+            },
+            {
+                path: "body-measurements",
+                loadChildren: () =>
+                    import("./app/features/body-measurements/body-measurements.routes").then(
+                        (m) => m.BodyMeasurementsRoutes,
+                    ),
+            },
+            {
+                path: "clients",
+                loadChildren: () =>
+                    import("./app/features/clients/clients.routes").then(
+                        (m) => m.ClientsRoutes,
+                    ),
+            },
+            {
+                path: "users",
+                loadChildren: () =>
+                    import("./app/features/users/users.routes").then(
+                        (m) => m.UsersRoutes,
+                    ),
+            },
+        ],
+    },
+    {
+        path: "authentication",
         loadChildren: () =>
-          import("./app/features/appointments/appointments.routes").then(
-            (m) => m.AppointmentsRoutes,
-          ),
-      },
-      {
-        path: "clients",
-        loadChildren: () =>
-          import("./app/features/clients/clients.routes").then(
-            (m) => m.ClientsRoutes,
-          ),
-      },
-      {
-        path: "users",
-        loadChildren: () =>
-          import("./app/features/users/users.routes").then(
-            (m) => m.UsersRoutes,
-          ),
-      },
-    ],
-  },
-  {
-    path: "authentication",
-    loadChildren: () =>
-      import("./app/features/authentication/authentication.routes").then(
-        (m) => m.AuthenticationRoutes,
-      ),
-  },
-  { path: "not-found", component: NotFound },
-  { path: "forbidden", component: Forbidden },
-  { path: "error", component: Error },
-  { path: "**", redirectTo: "/not-found" },
+            import("./app/features/authentication/authentication.routes").then(
+                (m) => m.AuthenticationRoutes,
+            ),
+    },
+    {path: "not-found", component: NotFound},
+    {path: "forbidden", component: Forbidden},
+    {path: "error", component: Error},
+    {path: "**", redirectTo: "/not-found"},
 ];
