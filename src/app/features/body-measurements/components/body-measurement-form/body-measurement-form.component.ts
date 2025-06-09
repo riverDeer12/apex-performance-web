@@ -10,6 +10,9 @@ import {Component, Input, OnInit} from "@angular/core";
 import {InputText} from "primeng/inputtext";
 import {Button} from "primeng/button";
 import {CommonModule} from "@angular/common";
+import {Select} from "primeng/select";
+import {ClientService} from "../../../clients/services/client.service";
+import {Client} from "../../../clients/models/client";
 
 @Component({
     selector: 'app-body-measurement-form',
@@ -17,7 +20,8 @@ import {CommonModule} from "@angular/common";
         CommonModule,
         InputText,
         ReactiveFormsModule,
-        Button
+        Button,
+        Select
     ],
     templateUrl: './body-measurement-form.component.html',
     styleUrl: './body-measurement-form.component.scss'
@@ -33,17 +37,21 @@ export class BodyMeasurementFormComponent implements OnInit {
 
     loadingData = false;
 
+    clients!: Client[];
+
     constructor(
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
         private helperService: HelperService,
-        private clientService: BodyMeasurementService,
+        private bodyMeasurementService: BodyMeasurementService,
+        private clientService: ClientService,
         private messageService: MessageService,
     ) {
     }
 
     ngOnInit(): void {
         this.initForm();
+        this.getClients();
     }
 
     submit() {
@@ -80,7 +88,8 @@ export class BodyMeasurementFormComponent implements OnInit {
             upperArm: ["", [Validators.required, Validators.min(0)]],
             waist: ["", [Validators.required, Validators.min(0)]],
             thigh: ["", [Validators.required, Validators.min(0)]],
-            calves: ["", [Validators.required, Validators.min(0)]]
+            calves: ["", [Validators.required, Validators.min(0)]],
+            client: ["", [Validators.required]]
         });
     }
 
@@ -94,11 +103,12 @@ export class BodyMeasurementFormComponent implements OnInit {
             waist: [this.bodyMeasurement.waist, [Validators.required, Validators.min(0)]],
             thigh: [this.bodyMeasurement.thigh, [Validators.required, Validators.min(0)]],
             calves: [this.bodyMeasurement.calves, [Validators.required, Validators.min(0)]],
+            client: [this.bodyMeasurement.client.id, [Validators.required]]
         });
     }
 
     private createBodyMeasurement() {
-        this.clientService.createBodyMeasurement(this.form.value).subscribe({
+        this.bodyMeasurementService.createBodyMeasurement(this.form.value).subscribe({
             next: (response: BodyMeasurement) => {
                 this.bodyMeasurement = Object.assign(new BodyMeasurement(), response);
 
@@ -130,7 +140,7 @@ export class BodyMeasurementFormComponent implements OnInit {
     }
 
     private updateBodyMeasurement() {
-        this.clientService.updateBodyMeasurement(this.bodyMeasurement.id, this.form.value).subscribe({
+        this.bodyMeasurementService.updateBodyMeasurement(this.bodyMeasurement.id, this.form.value).subscribe({
             next: (response: BodyMeasurement) => {
                 this.bodyMeasurement = Object.assign(new BodyMeasurement(), response);
 
@@ -159,5 +169,13 @@ export class BodyMeasurementFormComponent implements OnInit {
                 this.loadingData = false;
             },
         });
+    }
+
+    private getClients() {
+        this.clientService.getAllClients().subscribe((response: Client[]) => {
+            this.clients = response.map((x: Client) =>
+                Object.assign(new Client(), x)
+            );
+        })
     }
 }

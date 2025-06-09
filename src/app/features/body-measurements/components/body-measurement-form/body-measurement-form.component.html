@@ -1,6 +1,16 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="client">Client</label>
+            <p-select [filter]="true" [options]="clients"
+                      appendTo="body" styleClass="w-full"
+                      formControlName="client" optionLabel="fullName" optionValue="id"
+                      id="client" />
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'client', 'required')"
+                   id="client-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="height">Height</label>
             <input type="number" [min]="0" class="w-full {{ validationService.getInputClass(form, 'height', 'required') }}"
                    id="height"

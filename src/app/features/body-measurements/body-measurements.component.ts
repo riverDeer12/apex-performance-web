@@ -73,12 +73,12 @@ export class BodyMeasurementsComponent implements OnInit {
     });
   }
 
-  openInfoDialog(client: Client) {
+  openInfoDialog(bodyMeasurement: BodyMeasurement) {
     this.dialogService.open(DialogInfoComponent, {
-      header: "Details for: " + client.fullName,
+      header: "Details for: " + bodyMeasurement.id,
       data: {
-        contentType: EntityType.Client,
-        data: client,
+        contentType: EntityType.BodyMeasurement,
+        data: bodyMeasurement,
       },
     });
   }

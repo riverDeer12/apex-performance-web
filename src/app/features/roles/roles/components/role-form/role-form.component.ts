@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActionType} from "../../../../../enums/action-type";
 import {RedirectType} from "../../../../../enums/redirect-type";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -30,7 +30,7 @@ import {UserService} from "../../../../users/services/user.service";
     templateUrl: './role-form.component.html',
     styleUrl: './role-form.component.scss'
 })
-export class RoleFormComponent {
+export class RoleFormComponent implements OnInit {
     @Input() type!: ActionType;
     @Input() role!: Role;
     @Input() redirectType!: RedirectType;
