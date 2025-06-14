@@ -1,0 +1,93 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Coach"/>
+</div>
+
+<p-table
+    #coachesTable
+    [value]="coaches"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['firstName', 'lastName']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(coachesTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(coachesTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="fullName" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Name
+                    <p-sortIcon field="fullName"/>
+                    <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="createdAt" style="min-width: 12rem">
+                Created At
+                <p-sortIcon field="createdAt"/>
+            </th>
+            <th pSortableColumn="updatedAt" style="min-width: 12rem">
+                Last Changes
+                <p-sortIcon field="updatedAt"/>
+            </th>
+            <th pSortableColumn="status" style="min-width: 12rem">
+                Status
+                <p-sortIcon field="status"/>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-coach>
+        <tr>
+            <td>
+                {{ coach.fullName }}
+            </td>
+            <td>
+                {{ coach.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
+            </td>
+            <td>
+                {{ coach.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>
+                {{ coach.status }}
+            </td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(coach)" class="mr-2" icon="pi pi-info" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(coach)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(coach)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No coaches found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading coaches data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>

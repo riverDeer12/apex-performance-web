@@ -1,0 +1,47 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="firstName">First Name</label>
+            <input
+                    class="w-full {{validationService.getInputClass(form, 'firstName', 'required')}}"
+                    type="text" id="firstName" pInputText formControlName="firstName"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'firstName', 'required')"
+                   id="firstName-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="w-full {{validationService.getInputClass(form, 'lastName', 'required')}}"
+                   id="lastName"
+                   pInputText formControlName="lastName"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'lastName', 'required')"
+                   id="lastName-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="lastName">Email</label>
+            <input type="text" class="w-full {{validationService.getInputClass(form, 'email', 'required')}}"
+                   id="email"
+                   pInputText formControlName="email"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'email', 'required')"
+                   id="email-input">This field is required.</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'email', 'email')"
+                   id="email-input-email-validation">Email is not valid.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="w-full {{validationService.getInputClass(form, 'phone', 'required')}}"
+                   id="phone"
+                   pInputText formControlName="phone"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'phone', 'required')"
+                   id="phone-input">This field is required.</small>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
+    </div>
+</form>
