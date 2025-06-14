@@ -19,6 +19,7 @@ import { EmailFormComponent } from "../../features/authentication/components/ema
 import {
   BodyMeasurementFormComponent
 } from "../../features/body-measurements/components/body-measurement-form/body-measurement-form.component";
+import {CoachFormComponent} from "../../features/coaches/components/coach-form/coach-form.component";
 
 @Component({
   selector: "app-dialog-form",
@@ -35,6 +36,7 @@ import {
     AppointmentTypeFormComponent,
     EmailFormComponent,
     BodyMeasurementFormComponent,
+    CoachFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

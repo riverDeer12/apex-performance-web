@@ -24,6 +24,11 @@ export class Permissions {
     static readonly CanCreateClient = "CanCreateClient";
     static readonly CanUpdateClient = "CanUpdateClient";
     static readonly CanDeleteClient = "CanDeleteClient";
+    // Coaches
+    static readonly CanGetCoaches = "CanGetCoaches";
+    static readonly CanCreateCoach = "CanCreateCoach";
+    static readonly CanUpdateCoach = "CanUpdateCoach";
+    static readonly CanDeleteCoach = "CanDeleteCoach";
     // Users
     static readonly CanGetUsers = "CanGetUsers";
     static readonly CanCreateUser = "CanCreateUser";

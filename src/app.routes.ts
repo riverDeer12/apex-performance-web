@@ -1,6 +1,5 @@
 import {Routes} from "@angular/router";
 import {AdminLayout} from "./app/layout/component/admin-layout.component";
-import {Dashboard} from "./app/pages/dashboard/dashboard";
 import {NotFound} from "./app/components/not-found/not-found";
 import {Forbidden} from "./app/components/forbidden/forbidden";
 import {Error} from "./app/components/error/error";
@@ -55,6 +54,13 @@ export const appRoutes: Routes = [
                 loadChildren: () =>
                     import("./app/features/clients/clients.routes").then(
                         (m) => m.ClientsRoutes,
+                    ),
+            },
+            {
+                path: "coaches",
+                loadChildren: () =>
+                    import("./app/features/coaches/coaches.routes").then(
+                        (m) => m.CoachesRoutes,
                     ),
             },
             {

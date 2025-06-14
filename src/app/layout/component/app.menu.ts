@@ -100,6 +100,19 @@ export class AppMenu implements OnInit {
         ],
       },
       {
+        label: "Coaches",
+        visible: this.authenticationService.checkPermission(
+            Permissions.CanGetCoaches,
+        ),
+        items: [
+          {
+            label: "Coaches",
+            icon: "pi pi-fw pi-users",
+            routerLink: ["/admin/coaches"],
+          },
+        ],
+      },
+      {
         label: "Users",
         visible: this.authenticationService.checkPermission(
           Permissions.CanGetUsers,

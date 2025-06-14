@@ -49,6 +49,14 @@
         [client]="data">
 </app-client-form>
 
+<app-coach-form
+        *ngIf="contentType === entityType.Coach"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [coach]="data">
+</app-coach-form>
+
 <app-role-form
         *ngIf="contentType === entityType.Role"
         [type]="formType"
