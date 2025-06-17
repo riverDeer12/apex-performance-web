@@ -1,4 +1,5 @@
 import {User} from "../../users/models/user";
+import {Client} from "../../clients/models/client";
 
 export class Coach {
     id!: string;
@@ -8,6 +9,7 @@ export class Coach {
     phone!: string;
     createdAt!: Date;
     updatedAt!: Date;
+    clients!: Client[];
     user!: User;
     isDeleted!: boolean;
 

@@ -10,6 +10,9 @@ import {HelperService} from "../../../../services/helper.service";
 import {MessageService} from "primeng/api";
 import {Coach} from "../../models/coach";
 import {CoachService} from "../../services/coach.service";
+import {Client} from "../../../clients/models/client";
+import {ClientService} from "../../../clients/services/client.service";
+import {MultiSelect} from "primeng/multiselect";
 
 @Component({
   selector: 'app-coach-form',
@@ -17,7 +20,8 @@ import {CoachService} from "../../services/coach.service";
         Button,
         InputText,
         NgIf,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MultiSelect
     ],
   templateUrl: './coach-form.component.html',
   styleUrl: './coach-form.component.scss'
@@ -33,17 +37,21 @@ export class CoachFormComponent implements OnInit {
 
     loadingData = false;
 
+    clients!: Client[];
+
     constructor(
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
         private helperService: HelperService,
         private coachService: CoachService,
         private messageService: MessageService,
+        private clientService: ClientService
     ) {
     }
 
     ngOnInit(): void {
         this.initForm();
+        this.getClients();
     }
 
     submit() {
@@ -76,7 +84,8 @@ export class CoachFormComponent implements OnInit {
             firstName: ["", [Validators.required]],
             lastName: ["", [Validators.required]],
             email: ["", [Validators.required, Validators.email]],
-            phone: ["", [Validators.required]]
+            phone: ["", [Validators.required]],
+            clients: [""],
         });
     }
 
@@ -85,7 +94,8 @@ export class CoachFormComponent implements OnInit {
             firstName: [this.coach.firstname, [Validators.required]],
             lastName: [this.coach.lastname, [Validators.required]],
             email: [this.coach.email, [Validators.required, Validators.email]],
-            phone: [this.coach.phone, [Validators.required]]
+            phone: [this.coach.phone, [Validators.required]],
+            clients: [this.coach?.clients.map(x => x.id)],
         });
     }
 
@@ -150,6 +160,14 @@ export class CoachFormComponent implements OnInit {
             complete: () => {
                 this.loadingData = false;
             },
+        });
+    }
+
+    private getClients() {
+        this.clientService.getAllClients().subscribe((response: Client[]) => {
+            this.clients = response.map((x: Client) =>
+                Object.assign(new Client(), x),
+            );
         });
     }
 }
