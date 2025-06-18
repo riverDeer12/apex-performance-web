@@ -1,4 +1,5 @@
 import { User } from '../../users/models/user';
+import {Coach} from "../../coaches/models/coach";
 
 export class Client {
     id!: string;
@@ -10,6 +11,7 @@ export class Client {
     createdAt!: Date;
     updatedAt!: Date;
     user!: User;
+    coaches!: Coach[];
     isDeleted!: boolean;
 
     get fullName(): string {

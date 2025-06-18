@@ -85,7 +85,7 @@ export class CoachFormComponent implements OnInit {
             lastName: ["", [Validators.required]],
             email: ["", [Validators.required, Validators.email]],
             phone: ["", [Validators.required]],
-            clients: [""],
+            clients: ["", [Validators.required]],
         });
     }
 
@@ -95,7 +95,7 @@ export class CoachFormComponent implements OnInit {
             lastName: [this.coach.lastname, [Validators.required]],
             email: [this.coach.email, [Validators.required, Validators.email]],
             phone: [this.coach.phone, [Validators.required]],
-            clients: [this.coach?.clients.map(x => x.id)],
+            clients: [this.coach?.clients.map(x => x.id), [Validators.required]],
         });
     }
 
