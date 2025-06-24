@@ -3,8 +3,8 @@ import {Client} from "../../clients/models/client";
 
 export class Coach {
     id!: string;
-    firstname!: string;
-    lastname!: string;
+    firstName!: string;
+    lastName!: string;
     email!: string;
     phone!: string;
     createdAt!: Date;
@@ -14,7 +14,7 @@ export class Coach {
     isDeleted!: boolean;
 
     get fullName(): string {
-        return `${this.firstname} ${this.lastname}`;
+        return `${this.firstName} ${this.lastName}`;
     }
 
     get status(): string {

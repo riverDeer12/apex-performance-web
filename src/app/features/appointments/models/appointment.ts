@@ -1,5 +1,5 @@
+import { CatalogData } from '../../../shared/data-transfer-objects/catalog-data';
 import { Client } from '../../clients/models/client';
-import { AppointmentType } from './appointment-type';
 
 export class Appointment {
     id!: string;
@@ -7,6 +7,7 @@ export class Appointment {
     endTime!: Date;
     createdAt!: Date;
     updatedAt!: Date;
-    appointmentType!: AppointmentType;
+    type!: CatalogData;
+    status!: CatalogData;
     clients!: Client[];
 }

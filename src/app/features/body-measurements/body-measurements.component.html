@@ -13,7 +13,7 @@
     [rowHover]="true"
     [showGridlines]="true"
     [paginator]="true"
-    [globalFilterFields]="['client.firstname', 'client.lastname']"
+    [globalFilterFields]="['client.firstName', 'client.lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
     currentPageReportTemplate="There are {totalRecords} entries"
@@ -33,18 +33,18 @@
     </ng-template>
     <ng-template #header>
         <tr>
-            <th pSortableColumn="client.firstname" style="min-width: 12rem">
+            <th pSortableColumn="client.firstName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Firstname
-                    <p-sortIcon field="client.firstname"/>
-                    <p-columnFilter type="text" field="client.firstname" display="menu" class="ml-auto"/>
+                    <p-sortIcon field="client.firstName"/>
+                    <p-columnFilter type="text" field="client.firstName" display="menu" class="ml-auto"/>
                 </div>
             </th>
-            <th pSortableColumn="client.lastname" style="min-width: 12rem">
+            <th pSortableColumn="client.lastName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Lastname
-                    <p-sortIcon field="client.lastname"/>
-                    <p-columnFilter type="text" field="client.lastname" display="menu" class="ml-auto"/>
+                    <p-sortIcon field="client.lastName"/>
+                    <p-columnFilter type="text" field="client.lastName" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
@@ -61,10 +61,10 @@
     <ng-template #body let-bodyMeasurement>
         <tr>
             <td>
-                {{ bodyMeasurement.client.firstname }}
+                {{ bodyMeasurement.client.firstName }}
             </td>
             <td>
-                {{ bodyMeasurement.client.lastname }}
+                {{ bodyMeasurement.client.lastName }}
             </td>
             <td>
                 {{ bodyMeasurement.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}

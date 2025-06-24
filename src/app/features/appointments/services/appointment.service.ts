@@ -1,39 +1,55 @@
-import { Injectable } from "@angular/core";
-import { Appointment } from "../models/appointment";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../../environments/environment";
-import { DefaultUpdateRequest } from "../../../models/default-update-request";
-import { DefaultPostRequest } from "../../../models/default-post-request";
-import { AppointmentsByDay } from '../models/appointments-by-day';
+import {Injectable} from "@angular/core";
+import {Appointment} from "../models/appointment";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../../../environments/environment";
+import {DefaultUpdateRequest} from "../../../models/default-update-request";
+import {DefaultPostRequest} from "../../../models/default-post-request";
+import {AppointmentsByDay} from '../models/appointments-by-day';
 
 @Injectable({
-  providedIn: "root",
+    providedIn: "root",
 })
 export class AppointmentService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
-  getAllAppointments = () =>
-    this.http.get<AppointmentsByDay[]>(environment.apiUrl + "/appointments");
+    getAppointmentsByDay = () =>
+        this.http.get<AppointmentsByDay[]>(environment.apiUrl + "/appointments/by-day");
 
-  getAppointmentsByClient = () =>
-    this.http.get<Appointment[]>(environment.apiUrl + "/appointments/client");
+    getAppointmentsByClient = () =>
+        this.http.get<Appointment[]>(environment.apiUrl + "/appointments/client");
 
-  getAppointment = (appointmentId: string) =>
-    this.http.get<Appointment>(
-      environment.apiUrl + "/appointments/" + appointmentId,
-    );
+    getAllAppointments = () =>
+        this.http.get<Appointment[]>(
+            environment.apiUrl + "/appointments",
+        );
 
-  createAppointment = (request: DefaultPostRequest) =>
-    this.http.post<Appointment>(environment.apiUrl + "/appointments/", request);
+    createAppointment = (request: DefaultPostRequest) =>
+        this.http.post<Appointment>(environment.apiUrl + "/appointments/", request);
 
-  updateAppointment = (appointmentId: string, request: DefaultUpdateRequest) =>
-    this.http.put<Appointment>(
-      environment.apiUrl + "/appointments/" + appointmentId,
-      request,
-    );
+    updateAppointment = (appointmentId: string, request: DefaultUpdateRequest) =>
+        this.http.put<Appointment>(
+            environment.apiUrl + "/appointments/" + appointmentId,
+            request,
+        );
 
-  deleteAppointment = (appointmentId: string) =>
-    this.http.delete<Appointment>(
-      environment.apiUrl + "/appointments/" + appointmentId,
-    );
+    deleteAppointment = (appointmentId: string) =>
+        this.http.delete<Appointment>(
+            environment.apiUrl + "/appointments/" + appointmentId,
+        );
+
+    approveAppointment = (appointmentId: string) =>
+        this.http.get<Appointment>(
+            environment.apiUrl + "/appointments/approve/" + appointmentId
+        );
+
+    declineAppointment = (appointmentId: string) =>
+        this.http.get<Appointment>(
+            environment.apiUrl + "/appointments/decline/" + appointmentId
+        );
+
+    progressAppointment = (appointmentId: string) =>
+        this.http.get<Appointment>(
+            environment.apiUrl + "/appointments/progress/" + appointmentId
+        );
 }

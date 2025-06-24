@@ -64,12 +64,12 @@ import { TextareaModule } from 'primeng/textarea';
                     <div class="font-semibold text-xl">Inline</div>
                     <div class="flex flex-wrap items-start gap-6">
                         <div class="field">
-                            <label for="firstname1" class="sr-only">Firstname</label>
-                            <input pInputText id="firstname1" type="text" placeholder="Firstname" />
+                            <label for="firstName1" class="sr-only">Firstname</label>
+                            <input pInputText id="firstName1" type="text" placeholder="Firstname" />
                         </div>
                         <div class="field">
-                            <label for="lastname1" class="sr-only">Lastname</label>
-                            <input pInputText id="lastname1" type="text" placeholder="Lastname" />
+                            <label for="lastName1" class="sr-only">Lastname</label>
+                            <input pInputText id="lastName1" type="text" placeholder="Lastname" />
                         </div>
                         <p-button label="Submit" [fluid]="false"></p-button>
                     </div>
@@ -90,12 +90,12 @@ import { TextareaModule } from 'primeng/textarea';
                 <div class="font-semibold text-xl">Advanced</div>
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="firstname2">Firstname</label>
-                        <input pInputText id="firstname2" type="text" />
+                        <label for="firstName2">Firstname</label>
+                        <input pInputText id="firstName2" type="text" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Lastname</label>
-                        <input pInputText id="lastname2" type="text" />
+                        <label for="lastName2">Lastname</label>
+                        <input pInputText id="lastName2" type="text" />
                     </div>
                 </div>
 

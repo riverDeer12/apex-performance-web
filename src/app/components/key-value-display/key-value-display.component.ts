@@ -34,7 +34,10 @@ export class KeyValueDisplayComponent {
     showValue(entryElement: any) {
         const date = new Date(entryElement);
 
-        if (!isNaN(date.getTime()) && !(typeof entryElement === 'boolean')) {
+        const isValidDateCandidate = !isNaN(date.getTime()) && !(typeof entryElement === 'boolean') &&
+            !(typeof entryElement === 'number');
+
+        if (isValidDateCandidate) {
             return this.datePipe.transform(date, 'dd.MM.yyyy HH:mm');
         } else {
             return entryElement;

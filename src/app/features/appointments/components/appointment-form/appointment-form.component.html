@@ -37,13 +37,13 @@
                    id="clients-input">This field is required.</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="clients">Appointment Type</label>
+            <label for="appointmentType">Type</label>
             <p-select [filter]="true" [options]="appointmentTypes"
                       appendTo="body" styleClass="w-full"
-                      formControlName="appointmentType" optionLabel="name" optionValue="id"
+                      formControlName="type" optionLabel="name" optionValue="id"
                       id="appointmentType" />
             <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'appointmentType', 'required')"
+                   *ngIf="validationService.hasErrors(form, 'type', 'required')"
                    id="appointmentType-input">This field is required.</small>
         </div>
     </div>

@@ -1,7 +1,3 @@
-<div *ngIf="isAdmin">
-    <app-appointments></app-appointments>
-</div>
-
 <div *ngIf="!isAdmin">
     <h4>My Appointments</h4>
     <div class="my-10" *ngFor="let appointment of appointments">
@@ -11,8 +7,8 @@
                       type="button" class="mx-3" iconPos="right" icon="pi pi-pencil" label="" />
         </p>
         <p class="flex items-center space-x-3">
-            <img width="30" [src]="'assets/icons/' + appointment.appointmentType.description + '.png'" alt="">
-            <span class="mx-3">{{ appointment.appointmentType.name }}</span>
+            <img width="30" [src]="'assets/icons/' + appointment.type.description + '.png'" alt="">
+            <span class="mx-3">{{ appointment.type.name }}</span>
         </p>
     </div>
 

@@ -85,17 +85,17 @@ export class CoachFormComponent implements OnInit {
             lastName: ["", [Validators.required]],
             email: ["", [Validators.required, Validators.email]],
             phone: ["", [Validators.required]],
-            clients: ["", [Validators.required]],
+            clients: [""],
         });
     }
 
     private initUpdateForm() {
         this.form = this.formBuilder.group({
-            firstName: [this.coach.firstname, [Validators.required]],
-            lastName: [this.coach.lastname, [Validators.required]],
+            firstName: [this.coach.firstName, [Validators.required]],
+            lastName: [this.coach.lastName, [Validators.required]],
             email: [this.coach.email, [Validators.required, Validators.email]],
             phone: [this.coach.phone, [Validators.required]],
-            clients: [this.coach?.clients.map(x => x.id), [Validators.required]],
+            clients: [this.coach.clients?.map(x => x.id)],
         });
     }
 
@@ -117,8 +117,6 @@ export class CoachFormComponent implements OnInit {
                 );
             },
             error: (error) => {
-                console.error("Error:", error);
-
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Creating Coach",

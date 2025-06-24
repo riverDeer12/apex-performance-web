@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {Button} from "primeng/button";
 import {InputText} from "primeng/inputtext";
 import {NgIf} from "@angular/common";
@@ -15,15 +15,18 @@ import {HelperService} from "../../../../services/helper.service";
 import {MessageService} from "primeng/api";
 import {Client} from "../../models/client";
 import {ClientService} from "../../services/client.service";
+import {Coach} from "../../../coaches/models/coach";
+import {CoachService} from "../../../coaches/services/coach.service";
+import {MultiSelect} from "primeng/multiselect";
 
 @Component({
     selector: "app-client-form",
     standalone: true,
-    imports: [Button, InputText, NgIf, ReactiveFormsModule],
+    imports: [Button, InputText, NgIf, ReactiveFormsModule, MultiSelect],
     templateUrl: "./client-form.component.html",
     styleUrl: "./client-form.component.scss",
 })
-export class ClientFormComponent {
+export class ClientFormComponent implements OnInit {
     @Input() type!: ActionType;
     @Input() client!: Client;
     @Input() redirectType!: RedirectType;
@@ -32,6 +35,8 @@ export class ClientFormComponent {
 
     form!: FormGroup;
 
+    coaches!: Coach[];
+
     loadingData = false;
 
     constructor(
@@ -39,12 +44,14 @@ export class ClientFormComponent {
         private formBuilder: FormBuilder,
         private helperService: HelperService,
         private clientService: ClientService,
+        private coachService: CoachService,
         private messageService: MessageService,
     ) {
     }
 
     ngOnInit(): void {
         this.initForm();
+        this.getCoaches();
     }
 
     submit() {
@@ -79,7 +86,7 @@ export class ClientFormComponent {
             email: ["", [Validators.required, Validators.email]],
             phone: ["", [Validators.required]],
             credits: ["", [Validators.required, Validators.min(0)]],
-            coaches: ["", [Validators.required]]
+            coaches: [""]
         });
     }
 
@@ -90,7 +97,7 @@ export class ClientFormComponent {
             email: [this.client.email, [Validators.required, Validators.email]],
             phone: [this.client.phone, [Validators.required]],
             credits: [this.client.credits, [Validators.required, Validators.min(0)]],
-            coaches: [this.client.coaches.map(x => x.id), [Validators.required]]
+            coaches: [this.client.coaches?.map(x => x.id)]
         });
     }
 
@@ -112,7 +119,6 @@ export class ClientFormComponent {
                 );
             },
             error: (error) => {
-                console.error("Error:", error);
 
                 this.messageService.add({
                     severity: "error",
@@ -155,6 +161,14 @@ export class ClientFormComponent {
             complete: () => {
                 this.loadingData = false;
             },
+        });
+    }
+
+    private getCoaches() {
+        this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
+            this.coaches = response.map((x: Coach) =>
+                Object.assign(new Coach(), x),
+            );
         });
     }
 }

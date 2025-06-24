@@ -34,13 +34,6 @@
         [bodyMeasurement]="data">
 </app-body-measurement-form>
 
-<app-email-form
-        *ngIf="contentType === entityType.Authentication"
-        [type]="formType"
-        [dialogId]="dialogId"
-        [redirectType]="redirectType">
-</app-email-form>
-
 <app-client-form
         *ngIf="contentType === entityType.Client"
         [type]="formType"
@@ -56,6 +49,13 @@
         [redirectType]="redirectType"
         [coach]="data">
 </app-coach-form>
+
+<app-email-form
+        *ngIf="contentType === entityType.Authentication"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType">
+</app-email-form>
 
 <app-role-form
         *ngIf="contentType === entityType.Role"

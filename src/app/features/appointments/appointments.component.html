@@ -3,32 +3,89 @@
               type="button" iconPos="right" icon="pi pi-plus" label="New Appointment" />
 </div>
 
-<div *ngFor="let day of appointmentsByDay">
-    <h4 style="margin-top: 3rem">{{day.day | date : 'dd.MM.yyyy' }}</h4>
+<p-table
+    #appointmentsTable
+    [value]="appointments"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['startTime', 'endTime']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="startTime" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Start Time
+                    <p-sortIcon field="startTime"/>
+                    <p-columnFilter type="text" field="startTime" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="endTime" style="min-width: 12rem">
+                End Time
+                <p-sortIcon field="endTime"/>
+            </th>
+            <th pSortableColumn="appointmentType.Name" style="min-width: 12rem">
+                Type
+                <p-sortIcon field="appointmentType.Name"/>
+            </th>
+            <th pSortableColumn="appointmentStatus.Name" style="min-width: 12rem">
+                Status
+                <p-sortIcon field="appointmentStatus.Name"/>
+            </th>
+            <th pSortableColumn="clients" style="min-width: 12rem">
+                Clients
+                <p-sortIcon field="clients"/>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-appointment>
+        <tr>
+            <td>
+                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss'}}
+            </td>
+            <td>
+                {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>
+                {{ appointment.appointmentType.name }}
+            </td>
+            <td>
+                {{ appointment.appointmentStatus.name }}
+            </td>
+            <td>
+                <span>
 
-    <p-divider />
-
-    <p-timeline [value]="day.appointments">
-        <ng-template #marker let-appointment>
-        <span class="flex w-8 h-8 items-center justify-center rounded-full z-10 shadow-sm">
-            <img height="35" [src]="'assets/icons/'+ appointment.appointmentType.description + '.png'" alt="">
-        </span>
-        </ng-template>
-        <ng-template #opposite let-appointment>
-            <p-button size="small" (click)="openUpdateDialog(appointment)"
-                      type="button" class="mr-3" iconPos="right" icon="pi pi-pencil" label="" />
-            <p-button size="small" severity="danger"  (click)="confirmDelete(appointment)"
-                      type="button" class="mr-3" iconPos="right" icon="pi pi-trash" label="" />
-            <span
-                class="text-surface-500 dark:text-surface-400">{{ appointment.startTime | date : 'HH:mm' }}</span>
-
-        </ng-template>
-        <ng-template #content let-appointment>
-        <span *ngFor="let client of appointment.clients">
-            {{ client.firstname }} {{ client.lastname }} <br>
-        </span>
-            <span><i>{{ appointment.appointmentType.name }}</i></span>
-        </ng-template>
-    </p-timeline>
-</div>
+                </span>
+                {{ appointment.clients }}
+            </td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(appointment)" class="mr-2" icon="pi pi-info" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(appointment)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(appointment)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No appointments found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading appointments data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>
 

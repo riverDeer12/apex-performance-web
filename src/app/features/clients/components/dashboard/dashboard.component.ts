@@ -8,14 +8,12 @@ import { EntityType } from "../../../../enums/entity-type";
 import { ActionType } from "../../../../enums/action-type";
 import { DialogService } from "primeng/dynamicdialog";
 import { Divider } from "primeng/divider";
-import { AppointmentsByDay } from "../../../appointments/models/appointments-by-day";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
-import { AppointmentsComponent } from '../../../appointments/appointments.component';
 
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [CommonModule, Button, DatePipe, Divider, AppointmentsComponent],
+  imports: [CommonModule, Button, DatePipe, Divider],
   providers: [DialogService],
   templateUrl: "./dashboard.component.html",
   styleUrl: "./dashboard.component.scss",
