@@ -1,5 +1,5 @@
-import { CatalogData } from '../../../shared/data-transfer-objects/catalog-data';
 import { Client } from '../../clients/models/client';
+import { CatalogData } from "../../../shared/data-transfer-objects/catalog-data";
 
 export class Appointment {
     id!: string;

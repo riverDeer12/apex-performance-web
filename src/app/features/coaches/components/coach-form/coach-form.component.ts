@@ -85,7 +85,7 @@ export class CoachFormComponent implements OnInit {
             lastName: ["", [Validators.required]],
             email: ["", [Validators.required, Validators.email]],
             phone: ["", [Validators.required]],
-            clients: [""],
+            clients: [[]],
         });
     }
 
