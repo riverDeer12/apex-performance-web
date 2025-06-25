@@ -1,21 +1,20 @@
 import {Component, OnInit} from "@angular/core";
 import {AppointmentService} from "./services/appointment.service";
 import {Appointment} from "./models/appointment";
-import {Button, ButtonDirective} from "primeng/button";
+import {Button} from "primeng/button";
 import {DialogFormComponent} from "../../components/dialog-form/dialog-form.component";
 import {EntityType} from "../../enums/entity-type";
 import {ActionType} from "../../enums/action-type";
 import {DialogService} from "primeng/dynamicdialog";
-import {DatePipe, formatDate} from "@angular/common";
+import {CommonModule, DatePipe, formatDate} from "@angular/common";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {TableModule} from "primeng/table";
-import {BodyMeasurement} from "../body-measurements/models/body-measurement";
 import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
 
 @Component({
     selector: "app-appointments",
     standalone: true,
-    imports: [Button, DatePipe, TableModule],
+    imports: [CommonModule, Button, DatePipe, TableModule],
     providers: [DialogService],
     templateUrl: "./appointments.component.html",
     styleUrl: "./appointments.component.scss",

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {CommonModule} from "@angular/common";
@@ -28,7 +28,7 @@ import {UserService} from "../../../users/services/user.service";
     templateUrl: './administrator-form.component.html',
     styleUrl: './administrator-form.component.scss'
 })
-export class AdministratorFormComponent {
+export class AdministratorFormComponent implements OnInit {
     @Input() type!: ActionType;
     @Input() administrator!: Administrator;
     @Input() redirectType!: RedirectType;

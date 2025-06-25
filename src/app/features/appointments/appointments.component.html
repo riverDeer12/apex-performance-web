@@ -31,13 +31,13 @@
                 End Time
                 <p-sortIcon field="endTime"/>
             </th>
-            <th pSortableColumn="appointmentType.Name" style="min-width: 12rem">
+            <th pSortableColumn="type.Name" style="min-width: 12rem">
                 Type
-                <p-sortIcon field="appointmentType.Name"/>
+                <p-sortIcon field="type.Name"/>
             </th>
-            <th pSortableColumn="appointmentStatus.Name" style="min-width: 12rem">
+            <th pSortableColumn="status.Name" style="min-width: 12rem">
                 Status
-                <p-sortIcon field="appointmentStatus.Name"/>
+                <p-sortIcon field="status.Name"/>
             </th>
             <th pSortableColumn="clients" style="min-width: 12rem">
                 Clients
@@ -55,16 +55,15 @@
                 {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
             <td>
-                {{ appointment.appointmentType.name }}
+                {{ appointment.type.name }}
             </td>
             <td>
-                {{ appointment.appointmentStatus.name }}
+                {{ appointment.status.name }}
             </td>
             <td>
-                <span>
-
+                <span *ngFor="let client of appointment.clients">
+                    {{client.firstName}} {{client.lastName}}
                 </span>
-                {{ appointment.clients }}
             </td>
             <td class="flex">
                 <p-button (click)="openInfoDialog(appointment)" class="mr-2" icon="pi pi-info" severity="secondary"
