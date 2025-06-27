@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,
   ) {
-    this.isAdmin = this.authenticationService.validateAdminUser();
+    this.isAdmin = this.authenticationService.validateUserRole();
   }
 
   ngOnInit() {

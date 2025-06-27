@@ -44,9 +44,7 @@ export class AppMenu implements OnInit {
       },
       {
         label: "Administrators",
-        visible: this.authenticationService.checkPermission(
-          Permissions.CanGetAdministrators,
-        ),
+        visible: this.authenticationService.validateUserRole(),
         items: [
           {
             label: "Administrators",
@@ -68,6 +66,7 @@ export class AppMenu implements OnInit {
           },
           {
             label: "Appointment Types",
+            visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-bookmark",
             routerLink: ["/admin/appointments/appointment-types"],
           },
@@ -114,9 +113,7 @@ export class AppMenu implements OnInit {
       },
       {
         label: "Users",
-        visible: this.authenticationService.checkPermission(
-          Permissions.CanGetUsers,
-        ),
+        visible: this.authenticationService.validateUserRole(),
         items: [
           {
             label: "Users",

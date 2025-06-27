@@ -8,30 +8,31 @@ import { jwtDecode } from "jwt-decode";
 import { Roles } from "../../../constants/roles";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class AuthenticationService {
   constructor(
     private http: HttpClient,
-    private router: Router,
-  ) {}
+    private router: Router
+  ) {
+  }
 
   login = (request: DefaultPostRequest) =>
     this.http.post<AuthResponse>(
       environment.apiUrl + "/authentication/login",
-      request,
+      request
     );
 
   register = (request: DefaultPostRequest) =>
     this.http.post<AuthResponse>(
       environment.apiUrl + "/authentication/register",
-      request,
+      request
     );
 
   forgotPassword = (request: DefaultPostRequest) =>
     this.http.post<AuthResponse>(
       environment.apiUrl + "/authentication/forgot-password",
-      request,
+      request
     );
 
   isUserLogged(): boolean {
@@ -40,12 +41,19 @@ export class AuthenticationService {
     return token.exp >= now;
   }
 
-  validateAdminUser(): boolean {
+  /**
+   * User is valid if it is super admin,
+   * or has valid role for resource.
+   * @param validRole - value of valid role.
+   */
+  validateUserRole(validRole?:  string): boolean {
     const roles = this.getLoggedUserRoles();
 
-    return (
-      roles.includes(Roles.Administrator) || roles.includes(Roles.SuperAdmin)
-    );
+    const userIsSuperAdmin = roles.includes(Roles.SuperAdmin);
+
+    if (userIsSuperAdmin) return true;
+
+    return roles.includes(<string>validRole);
   }
 
   /**
