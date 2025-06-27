@@ -5,7 +5,7 @@ import {Forbidden} from "./app/components/forbidden/forbidden";
 import {Error} from "./app/components/error/error";
 import {AdminGuard} from "./app/guards/admin.guard";
 import {LandingComponent} from "./app/features/landing/landing.component";
-import {DashboardComponent} from "./app/features/clients/components/dashboard/dashboard.component";
+import {DashboardComponent} from "./app/features/dashboard/dashboard.component";
 
 export const appRoutes: Routes = [
     {
