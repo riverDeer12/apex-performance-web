@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment" />
+              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment"/>
 </div>
 
 <p-table
@@ -49,7 +49,7 @@
     <ng-template #body let-appointment>
         <tr>
             <td>
-                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss'}}
+                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
             <td>
                 {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
@@ -62,7 +62,9 @@
             </td>
             <td>
                 <span *ngFor="let client of appointment.clients">
-                    {{client.firstName}} {{client.lastName}}
+                    <p>
+                        <span>{{ client.firstName }} {{ client.lastName }}</span>
+                    </p>
                 </span>
             </td>
             <td class="flex">

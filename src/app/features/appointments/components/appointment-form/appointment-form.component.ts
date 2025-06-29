@@ -22,6 +22,8 @@ import {DropdownModule} from 'primeng/dropdown';
 import {Select} from 'primeng/select';
 import {AppointmentType} from '../../models/appointment-type';
 import {AppointmentTypeService} from '../../services/appointment-type.service';
+import {Coach} from "../../../coaches/models/coach";
+import {CoachService} from "../../../coaches/services/coach.service";
 
 @Component({
     selector: "app-appointment-form",
@@ -47,6 +49,7 @@ export class AppointmentFormComponent implements OnInit {
     form!: FormGroup;
 
     clients!: Client[];
+    coaches!: Coach[];
     appointmentTypes!: AppointmentType[];
 
     loadingData = false;
@@ -56,6 +59,7 @@ export class AppointmentFormComponent implements OnInit {
         private formBuilder: FormBuilder,
         private helperService: HelperService,
         private clientService: ClientService,
+        private coachService: CoachService,
         private appointmentService: AppointmentService,
         private appointmentTypeService: AppointmentTypeService,
         private messageService: MessageService,
@@ -65,6 +69,7 @@ export class AppointmentFormComponent implements OnInit {
     ngOnInit(): void {
         this.initForm();
         this.getClients();
+        this.getCoaches();
         this.getAppointmentTypes();
     }
 
@@ -104,6 +109,7 @@ export class AppointmentFormComponent implements OnInit {
             endTime: ["", [Validators.required]],
             type: ["", [Validators.required]],
             clients: ["", [Validators.required]],
+            coaches: ["", [Validators.required]],
         });
     }
 
@@ -113,6 +119,7 @@ export class AppointmentFormComponent implements OnInit {
             endTime: [new Date(this.appointment.endTime), [Validators.required]],
             type: [this.appointment.type.id, [Validators.required]],
             clients: [this.appointment.clients?.map(x => x.id), [Validators.required]],
+            coaches: [this.appointment.coaches?.map(x => x.id), [Validators.required]],
         });
     }
 
@@ -186,6 +193,14 @@ export class AppointmentFormComponent implements OnInit {
         this.clientService.getAllClients().subscribe((response: Client[]) => {
             this.clients = response.map((x: Client) =>
                 Object.assign(new Client(), x),
+            );
+        });
+    }
+
+    private getCoaches() {
+        this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
+            this.coaches = response.map((x: Coach) =>
+                Object.assign(new Coach(), x),
             );
         });
     }
