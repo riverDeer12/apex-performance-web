@@ -78,8 +78,6 @@ export class AppointmentFormComponent implements OnInit {
 
         if (this.form.invalid) {
 
-            console.log(this.form.value);
-
             this.form.markAllAsTouched();
 
             this.messageService.add({

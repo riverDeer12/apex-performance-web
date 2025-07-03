@@ -13,7 +13,7 @@ export class CoachService {
     constructor(private http: HttpClient) {
     }
 
-    getAllCoaches = () => this.http.get<Coach[]>(environment.apiUrl + '/coaches');
+    getAllCoaches = () => this.http.get<Coach[]>(environment.apiUrl + '/coaches/all');
     getCoach = (coachId: string) =>
         this.http.get<Coach>(environment.apiUrl + '/coaches/' + coachId);
     createCoach = (request: DefaultPostRequest) =>
