@@ -5,6 +5,7 @@ import { MenuItem } from "primeng/api";
 import { AppMenuitem } from "./app.menuitem";
 import { AuthenticationService } from "../../features/authentication/services/authentication.service";
 import { Permissions } from "../../constants/permissions";
+import {Roles} from "../../constants/roles";
 
 @Component({
   selector: "app-menu",
@@ -69,6 +70,12 @@ export class AppMenu implements OnInit {
             visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-bookmark",
             routerLink: ["/admin/appointments/appointment-types"],
+          },
+          {
+            label: "Appointment Requests",
+            visible: this.authenticationService.validateUserRole(Roles.Coach),
+            icon: "pi pi-fw pi-file-check",
+            routerLink: ["/admin/appointments/appointment-requests"],
           },
         ],
       },

@@ -6,7 +6,6 @@ import {
 } from "@angular/router";
 import {Injectable} from "@angular/core";
 import {AuthenticationService} from "../features/authentication/services/authentication.service";
-import {Roles} from "../constants/roles";
 
 /**
  * Auth guard for admin routes.

@@ -72,13 +72,6 @@ export const appRoutes: Routes = [
             },
         ],
     },
-    {
-        path: "authentication",
-        loadChildren: () =>
-            import("./app/features/authentication/authentication.routes").then(
-                (m) => m.AuthenticationRoutes,
-            ),
-    },
     {path: "not-found", component: NotFound},
     {path: "forbidden", component: Forbidden},
     {path: "error", component: Error},
