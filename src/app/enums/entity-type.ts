@@ -2,6 +2,7 @@ export enum EntityType {
     Administrator,
     Authentication,
     Appointment,
+    AppointmentRequest,
     AppointmentType,
     BodyMeasurement,
     Client,

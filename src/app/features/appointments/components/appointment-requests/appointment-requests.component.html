@@ -1,1 +1,77 @@
-<p>appointment-requests works!</p>
+<p-table
+    #appointmentRequestsTable
+    [value]="appointmentRequests"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['Comment', 'Type.Name']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="comment" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Comment
+                    <p-sortIcon field="comment"/>
+                    <p-columnFilter type="text" field="comment" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="type.name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Request Type
+                    <p-sortIcon field="type.name"/>
+                    <p-columnFilter type="text" field="type.name" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="status.name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Request Status
+                    <p-sortIcon field="status.name"/>
+                    <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th style="width: 11rem">Related Appointment</th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-appointmentRequest>
+        <tr>
+            <td>
+                {{ appointmentRequest.comment }}
+            </td>
+            <td>
+                {{ appointmentRequest.type.name }}
+            </td>
+            <td>
+                {{ appointmentRequest.status.name }}
+            </td>
+            <td class="flex">
+                <p-button (click)="openAppointmentInfo(appointmentRequest.appointment)" class="mr-2" icon="pi pi-info"
+                          severity="secondary"
+                          label="Appoitment Info"
+                          [outlined]="true"/>
+            </td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(appointmentRequest)" class="mr-2" icon="pi pi-info"
+                          severity="secondary"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No appointment requests found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading appointment requests data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>
