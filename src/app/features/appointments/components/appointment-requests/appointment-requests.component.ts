@@ -6,6 +6,7 @@ import {EntityType} from "../../../../enums/entity-type";
 import {DialogInfoComponent} from "../../../../components/dialog-info/dialog-info.component";
 import {AppointmentRequest} from "../../models/appointment-request";
 import {AppointmentRequestService} from "../../services/appointment-request.service";
+import {Appointment} from '../../models/appointment';
 
 @Component({
     selector: 'app-appointment-requests',
@@ -13,6 +14,7 @@ import {AppointmentRequestService} from "../../services/appointment-request.serv
         Button,
         TableModule
     ],
+    providers: [DialogService],
     templateUrl: './appointment-requests.component.html',
     styleUrl: './appointment-requests.component.scss'
 })
@@ -48,6 +50,16 @@ export class AppointmentRequestsComponent implements OnInit {
             data: {
                 contentType: EntityType.AppointmentRequest,
                 data: appointmentRequest,
+            },
+        });
+    }
+
+    openAppointmentInfo(appointment: Appointment) {
+        this.dialogService.open(DialogInfoComponent, {
+            header: "Details for appointment",
+            data: {
+                contentType: EntityType.Appointment,
+                data: appointment,
             },
         });
     }
