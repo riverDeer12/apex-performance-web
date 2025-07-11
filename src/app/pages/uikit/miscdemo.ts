@@ -135,7 +135,7 @@ import { TagModule } from 'primeng/tag';
                     <div class="flex gap-2">
                         <p-tag icon="pi pi-user" value="Primary"></p-tag>
                         <p-tag icon="pi pi-check" severity="success" value="Success"></p-tag>
-                        <p-tag icon="pi pi-info-circle" severity="info" value="Info"></p-tag>
+                        <p-tag icon="pi pi-info-circle-circle" severity="info" value="Info"></p-tag>
                         <p-tag icon="pi pi-exclamation-triangle" severity="warn" value="Warning"></p-tag>
                         <p-tag icon="pi pi-times" severity="danger" value="Danger"></p-tag>
                     </div>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {AppointmentService} from "./services/appointment.service";
 import {Appointment} from "./models/appointment";
 import {Button} from "primeng/button";
@@ -10,6 +10,7 @@ import {CommonModule, DatePipe, formatDate} from "@angular/common";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
+import {BusinessStatuses} from "../../constants/business-statuses";
 
 @Component({
     selector: "app-appointments",
@@ -20,7 +21,13 @@ import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.comp
     styleUrl: "./appointments.component.scss",
 })
 export class AppointmentsComponent implements OnInit {
+    @Input() isAdmin: boolean = true;
+
     appointments!: Appointment[];
+
+    public get businessStatuses(): typeof BusinessStatuses {
+        return BusinessStatuses;
+    }
 
     constructor(
         private appointmentService: AppointmentService,
@@ -121,6 +128,36 @@ export class AppointmentsComponent implements OnInit {
                         });
                     });
             }
+        });
+    }
+
+    approve(appointment: Appointment): void {
+        this.appointmentService.approveAppointment(appointment.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Appointment has been approved.'
+                });
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+
+    decline(appointment: Appointment): void {
+        this.appointmentService.declineAppointment(appointment.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Appointment has been declined.'
+                });
+            },
+            error: (err) => {
+                console.error(err);
+            },
         });
     }
 
