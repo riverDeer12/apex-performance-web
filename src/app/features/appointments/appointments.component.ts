@@ -11,6 +11,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
 import {BusinessStatuses} from "../../constants/business-statuses";
+import {AppointmentRequest} from "./models/appointment-request";
 
 @Component({
     selector: "app-appointments",
@@ -53,6 +54,28 @@ export class AppointmentsComponent implements OnInit {
             },
         });
     }
+
+    areActionsEnabled = (appointment: Appointment) =>
+        this.isAdmin && appointment.status.name == BusinessStatuses.Pending ||
+        appointment.status.name == BusinessStatuses.InProgress
+
+    isStatusTextVisible = (appointment: Appointment) =>
+        this.isAdmin && appointment.status.name != BusinessStatuses.Pending &&
+        appointment.status.name != BusinessStatuses.InProgress;
+
+    getTextColor = (appointment: Appointment) => {
+        switch (appointment.status.name) {
+            case BusinessStatuses.Approved:
+                return "text-green-500";
+            case BusinessStatuses.Declined:
+                return "text-red-500";
+            case BusinessStatuses.Canceled:
+                return "text-red-500";
+            default:
+                return "";
+        }
+    }
+
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
@@ -139,6 +162,7 @@ export class AppointmentsComponent implements OnInit {
                     summary: 'Success',
                     detail: 'Appointment has been approved.'
                 });
+                this.loadData();
             },
             error: (err) => {
                 console.error(err);
@@ -154,6 +178,7 @@ export class AppointmentsComponent implements OnInit {
                     summary: 'Success',
                     detail: 'Appointment has been declined.'
                 });
+                this.loadData();
             },
             error: (err) => {
                 console.error(err);

@@ -15,11 +15,12 @@
 >
     <ng-template #header>
         <tr>
-            <th pSortableColumn="comment" style="min-width: 12rem">
+            <th></th>
+            <th pSortableColumn="status.name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Comment
-                    <p-sortIcon field="comment"/>
-                    <p-columnFilter type="text" field="comment" display="menu" class="ml-auto"/>
+                    Request Status
+                    <p-sortIcon field="status.name"/>
+                    <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="type.name" style="min-width: 12rem">
@@ -29,31 +30,46 @@
                     <p-columnFilter type="text" field="type.name" display="menu" class="ml-auto"/>
                 </div>
             </th>
-            <th pSortableColumn="status.name" style="min-width: 12rem">
+            <th pSortableColumn="comment" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Request Status
-                    <p-sortIcon field="status.name"/>
-                    <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"/>
+                    Comment
+                    <p-sortIcon field="comment"/>
+                    <p-columnFilter type="text" field="comment" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th>Related Appointment</th>
             <th>Request Info</th>
-            <th></th>
         </tr>
     </ng-template>
     <ng-template #body let-appointmentRequest>
         <tr>
             <td>
-                {{ appointmentRequest.comment }}
+                <p-button
+                        *ngIf="areActionsEnabled(appointmentRequest)"
+                        (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
+                        [outlined]="true"/>
+                <p-button
+                        *ngIf="areActionsEnabled(appointmentRequest)"
+                        (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
+                        severity="danger"
+                        [outlined]="true"/>
+                <p *ngIf="isStatusTextVisible(appointmentRequest)"
+                   [ngClass]="getTextColor(appointmentRequest)">
+                    {{ appointmentRequest.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+                </p>
+            </td>
+            <td>
+                {{ appointmentRequest.status.name }}
             </td>
             <td>
                 {{ appointmentRequest.type.name }}
             </td>
             <td>
-                {{ appointmentRequest.status.name }}
+                {{ appointmentRequest.comment }}
             </td>
             <td class="flex">
-                <p-button (click)="openAppointmentInfo(appointmentRequest.appointment)" class="mr-2" icon="pi pi-info-circle"
+                <p-button (click)="openAppointmentInfo(appointmentRequest.appointment)" class="mr-2"
+                          icon="pi pi-info-circle"
                           severity="secondary"
                           label="Appointment"
                           [outlined]="true"/>
@@ -62,13 +78,6 @@
                 <p-button (click)="openInfoDialog(appointmentRequest)" class="mr-2" icon="pi pi-info-circle"
                           severity="secondary"
                           label="Request"
-                          [outlined]="true"/>
-            </td>
-            <td class="flex" *ngIf="appointmentRequest.status.name == businessStatuses.Pending">
-                <p-button (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
-                          [outlined]="true"/>
-                <p-button (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
-                          severity="danger"
                           [outlined]="true"/>
             </td>
         </tr>

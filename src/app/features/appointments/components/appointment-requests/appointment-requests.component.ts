@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Button} from "primeng/button";
 import {TableModule} from "primeng/table";
 import {DialogService} from "primeng/dynamicdialog";
@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
     styleUrl: './appointment-requests.component.scss'
 })
 export class AppointmentRequestsComponent implements OnInit {
+    @Input() isAdmin: boolean = true;
     appointmentRequests!: AppointmentRequest[];
 
     public get businessStatuses(): typeof BusinessStatuses {
@@ -40,18 +41,26 @@ export class AppointmentRequestsComponent implements OnInit {
         this.loadData();
     }
 
-    private loadData(): void {
-        this.appointmentRequestService.getAppointmentRequests().subscribe({
-            next: (data) => {
-                this.appointmentRequests = data.map((x: AppointmentRequest) =>
-                    Object.assign(new AppointmentRequest(), x),
-                );
-            },
-            error: (err) => {
-                console.error(err);
-            },
-        });
+    areActionsEnabled = (appointmentRequest: AppointmentRequest) =>
+        this.isAdmin && appointmentRequest.status.name == BusinessStatuses.Pending ||
+        appointmentRequest.status.name == BusinessStatuses.InProgress
+
+    getTextColor = (appointmentRequest: AppointmentRequest) => {
+        switch (appointmentRequest.status.name) {
+            case BusinessStatuses.Approved:
+                return "text-green-500";
+            case BusinessStatuses.Declined:
+                return "text-red-500";
+            case BusinessStatuses.Canceled:
+                return "text-red-500";
+            default:
+                return "";
+        }
     }
+
+    isStatusTextVisible = (appointmentRequest: AppointmentRequest) =>
+        this.isAdmin && appointmentRequest.status.name != BusinessStatuses.Pending &&
+        appointmentRequest.status.name != BusinessStatuses.InProgress;
 
     approve(appointmentRequest: AppointmentRequest): void {
         this.appointmentRequestService.approveAppointmentRequest(appointmentRequest.id).subscribe({
@@ -61,6 +70,7 @@ export class AppointmentRequestsComponent implements OnInit {
                     summary: 'Success',
                     detail: 'Appointment Request has been approved.'
                 });
+                this.loadData();
             },
             error: (err) => {
                 console.error(err);
@@ -76,6 +86,7 @@ export class AppointmentRequestsComponent implements OnInit {
                     summary: 'Success',
                     detail: 'Appointment Request has been declined.'
                 });
+                this.loadData();
             },
             error: (err) => {
                 console.error(err);
@@ -99,6 +110,19 @@ export class AppointmentRequestsComponent implements OnInit {
             data: {
                 contentType: EntityType.Appointment,
                 data: appointment,
+            },
+        });
+    }
+
+    private loadData(): void {
+        this.appointmentRequestService.getAppointmentRequests().subscribe({
+            next: (data) => {
+                this.appointmentRequests = data.map((x: AppointmentRequest) =>
+                    Object.assign(new AppointmentRequest(), x),
+                );
+            },
+            error: (err) => {
+                console.error(err);
             },
         });
     }

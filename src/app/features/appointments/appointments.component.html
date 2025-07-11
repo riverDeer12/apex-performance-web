@@ -21,6 +21,14 @@
     <ng-template #header>
         <tr>
             <th *ngIf="isAdmin"></th>
+            <th pSortableColumn="status.Name" style="min-width: 12rem">
+                Status
+                <p-sortIcon field="status.Name"/>
+            </th>
+            <th pSortableColumn="clients" style="min-width: 12rem">
+                Clients
+                <p-sortIcon field="clients"/>
+            </th>
             <th pSortableColumn="startTime" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Start Time
@@ -36,39 +44,24 @@
                 Type
                 <p-sortIcon field="type.Name"/>
             </th>
-            <th pSortableColumn="status.Name" style="min-width: 12rem">
-                Status
-                <p-sortIcon field="status.Name"/>
-            </th>
-            <th pSortableColumn="clients" style="min-width: 12rem">
-                Clients
-                <p-sortIcon field="clients"/>
-            </th>
             <th *ngIf="isAdmin"></th>
         </tr>
     </ng-template>
     <ng-template #body let-appointment>
         <tr>
-            <td class="flex">
-                <p-button *ngIf="isAdmin && appointment.status.name != businessStatuses.Approved"
-                          (click)="approve(appointment)" class="mr-2" icon="pi pi-check" severity="success"
-                          [outlined]="true"/>
-                <p-button *ngIf="isAdmin && appointment.status.name != businessStatuses.Approved"
-                          (click)="decline(appointment)" class="mr-2" icon="pi pi-times" severity="danger"
-                          [outlined]="true"/>
-                <p [ngClass]="appointment.status.name == businessStatuses.Approved ? 'text-green-400' : 'text-red-500'"
-                   *ngIf="appointment.status.name == businessStatuses.Approved">
+            <td>
+                <p-button
+                        *ngIf="areActionsEnabled(appointment)"
+                        (click)="approve(appointment)" class="mr-2" icon="pi pi-check" severity="success"
+                        [outlined]="true"/>
+                <p-button
+                        *ngIf="areActionsEnabled(appointment)"
+                        (click)="decline(appointment)" class="mr-2" icon="pi pi-times" severity="danger"
+                        [outlined]="true"/>
+                <p *ngIf="isStatusTextVisible(appointment)"
+                   [ngClass]="getTextColor(appointment)">
                     {{ appointment.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
                 </p>
-            </td>
-            <td>
-                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
-            </td>
-            <td>
-                {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
-            </td>
-            <td>
-                {{ appointment.type.name }}
             </td>
             <td>
                 {{ appointment.status.name }}
@@ -80,21 +73,27 @@
                     </p>
                 </span>
             </td>
-            <td class="flex" *ngIf="isAdmin">
+            <td>
+                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>
+                {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>
+                {{ appointment.type.name }}
+            </td>
+
+            <td *ngIf="isAdmin">
                 <p-button
-                        *ngIf="appointment.status.name != businessStatuses.Approved"
+                        *ngIf="areActionsEnabled(appointment)"
                         (click)="openInfoDialog(appointment)" class="mr-2" icon="pi pi-info-circle"
                         severity="secondary"
                         [outlined]="true"/>
                 <p-button
-                        *ngIf="appointment.status.name != businessStatuses.Approved"
+                        *ngIf="areActionsEnabled(appointment)"
                         (click)="openUpdateDialog(appointment)" class="mr-2" icon="pi pi-pencil"
                         severity="secondary"
                         [outlined]="true"/>
-                <p-button *ngIf="appointment.status.name == businessStatuses.Approved"
-                          (click)="openInfoDialog(appointment)" class="mr-2" icon="pi pi-info-circle"
-                          severity="secondary"
-                          [outlined]="true"/>
             </td>
         </tr>
     </ng-template>
