@@ -7,10 +7,14 @@ import {DialogInfoComponent} from "../../../../components/dialog-info/dialog-inf
 import {AppointmentRequest} from "../../models/appointment-request";
 import {AppointmentRequestService} from "../../services/appointment-request.service";
 import {Appointment} from '../../models/appointment';
+import {MessageService} from 'primeng/api';
+import { BusinessStatuses } from '../../../../constants/business-statuses';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-appointment-requests',
     imports: [
+        CommonModule,
         Button,
         TableModule
     ],
@@ -21,8 +25,13 @@ import {Appointment} from '../../models/appointment';
 export class AppointmentRequestsComponent implements OnInit {
     appointmentRequests!: AppointmentRequest[];
 
+    public get businessStatuses(): typeof BusinessStatuses {
+        return BusinessStatuses;
+    }
+
     constructor(
         private appointmentRequestService: AppointmentRequestService,
+        private messageService: MessageService,
         private dialogService: DialogService,
     ) {
     }
@@ -37,6 +46,36 @@ export class AppointmentRequestsComponent implements OnInit {
                 this.appointmentRequests = data.map((x: AppointmentRequest) =>
                     Object.assign(new AppointmentRequest(), x),
                 );
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+
+    approve(appointmentRequest: AppointmentRequest): void {
+        this.appointmentRequestService.approveAppointmentRequest(appointmentRequest.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Appointment Request has been approved.'
+                });
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+
+    decline(appointmentRequest: AppointmentRequest): void {
+        this.appointmentRequestService.declineAppointmentRequest(appointmentRequest.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Appointment Request has been declined.'
+                });
             },
             error: (err) => {
                 console.error(err);

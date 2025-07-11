@@ -36,8 +36,9 @@
                     <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"/>
                 </div>
             </th>
-            <th style="width: 11rem">Related Appointment</th>
-            <th style="width: 11rem"></th>
+            <th>Related Appointment</th>
+            <th>Request Info</th>
+            <th></th>
         </tr>
     </ng-template>
     <ng-template #body let-appointmentRequest>
@@ -54,12 +55,20 @@
             <td class="flex">
                 <p-button (click)="openAppointmentInfo(appointmentRequest.appointment)" class="mr-2" icon="pi pi-info"
                           severity="secondary"
-                          label="Appoitment Info"
+                          label="Appointment"
                           [outlined]="true"/>
             </td>
-            <td class="flex">
+            <td>
                 <p-button (click)="openInfoDialog(appointmentRequest)" class="mr-2" icon="pi pi-info"
                           severity="secondary"
+                          label="Request"
+                          [outlined]="true"/>
+            </td>
+            <td class="flex" *ngIf="appointmentRequest.status.name == businessStatuses.Pending">
+                <p-button (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
+                          [outlined]="true"/>
+                <p-button (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
+                          severity="danger"
                           [outlined]="true"/>
             </td>
         </tr>
