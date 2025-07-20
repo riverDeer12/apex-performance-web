@@ -1,6 +1,7 @@
 import {Routes} from "@angular/router";
 import {Permissions} from "../../constants/permissions";
 import {CoachesComponent} from "./coaches.component";
+import {TimeSlotsComponent} from "./components/time-slots/time-slots.component";
 
 export const CoachesRoutes: Routes = [
     {
@@ -10,4 +11,11 @@ export const CoachesRoutes: Routes = [
             permissions: [Permissions.CanGetCoaches],
         },
     },
+    {
+        path: "time-slots",
+        component: TimeSlotsComponent,
+        data: {
+            permissions: [Permissions.CanGetTimeSlots],
+        }
+    }
 ];

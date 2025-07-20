@@ -9,6 +9,11 @@ export class Permissions {
     static readonly CanCreateAppointment = "CanCreateAppointment";
     static readonly CanUpdateAppointment = "CanUpdateAppointment";
     static readonly CanDeleteAppointment = "CanDeleteAppointment";
+    // AppointmentRequests
+    static readonly CanGetAppointmentRequests = "CanGetAppointmentRequests";
+    static readonly CanCreateAppointmentRequest = "CanCreateAppointmentRequest";
+    static readonly CanUpdateAppointmentRequest = "CanUpdateAppointmentRequest";
+    static readonly CanDeleteAppointmentRequest = "CanDeleteAppointmentRequest";
     // AppointmentTypes
     static readonly CanGetAppointmentTypes = "CanGetAppointmentTypes";
     static readonly CanCreateAppointmentType = "CanCreateAppointmentType";
@@ -29,15 +34,22 @@ export class Permissions {
     static readonly CanCreateCoach = "CanCreateCoach";
     static readonly CanUpdateCoach = "CanUpdateCoach";
     static readonly CanDeleteCoach = "CanDeleteCoach";
-    // Users
-    static readonly CanGetUsers = "CanGetUsers";
-    static readonly CanCreateUser = "CanCreateUser";
-    static readonly CanUpdateUser = "CanUpdateUser";
-    static readonly CanDeleteUser = "CanDeleteUser";
+    // Logs
+    static readonly CanGetLogs = "CanGetLogs";
     // Roles
     static readonly CanGetRoles = "CanGetRoles";
     static readonly CanCreateRole = "CanCreateRole";
     static readonly CanUpdateRole = "CanUpdateRole";
     static readonly CanDeleteRole = "CanDeleteRole";
+    // TimeSlots
+    static readonly CanGetTimeSlots = "CanGetTimeSlots";
+    static readonly CanCreateTimeSlot = "CanCreateTimeSlot";
+    static readonly CanUpdateTimeSlot = "CanUpdateTimeSlot";
+    static readonly CanDeleteTimeSlot = "CanDeleteTimeSlot";
+    // Users
+    static readonly CanGetUsers = "CanGetUsers";
+    static readonly CanCreateUser = "CanCreateUser";
+    static readonly CanUpdateUser = "CanUpdateUser";
+    static readonly CanDeleteUser = "CanDeleteUser";
 }
 

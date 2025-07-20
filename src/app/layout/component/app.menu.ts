@@ -116,6 +116,11 @@ export class AppMenu implements OnInit {
             icon: "pi pi-fw pi-users",
             routerLink: ["/admin/coaches"],
           },
+          {
+            label: "Time Slots",
+            icon: "pi pi-fw pi-clock",
+            routerLink: ["/admin/time-slots"],
+          },
         ],
       },
       {
@@ -131,6 +136,11 @@ export class AppMenu implements OnInit {
             label: "User Roles",
             icon: "pi pi-fw pi-crown",
             routerLink: ["/admin/users/roles"],
+          },
+          {
+            label: "Logs",
+            icon: "pi pi-fw pi-file",
+            routerLink: ["/admin/users/logs"],
           },
         ],
       },

@@ -1,0 +1,94 @@
+<p-table
+    #logsTable
+    [value]="logs"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['timeStamp']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Timestamp
+                    <p-sortIcon field="timeStamp"/>
+                    <p-columnFilter type="date" field="timeStamp" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Level
+                    <p-sortIcon field="level"/>
+                    <p-columnFilter type="text" field="level" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    RequestMethod
+                    <p-sortIcon field="properties.requestMethod"/>
+                    <p-columnFilter type="text" field="properties.requestMethod" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    RequestPath
+                    <p-sortIcon field="properties.requestPath"/>
+                    <p-columnFilter type="text" field="properties.requestPath" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    StatusCode
+                    <p-sortIcon field="properties.statusCode"/>
+                    <p-columnFilter type="text" field="properties.statusCode" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Exception
+                    <p-sortIcon field="exception"/>
+                    <p-columnFilter type="text" field="exception" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-log>
+        <tr>
+            <td>
+                {{ log.timestamp | date: 'dd.MM.yyyy HH:mm:ss' }}
+            </td>
+            <td>
+                {{ log.level }}
+            </td>
+            <td>
+                {{ log.properties.requestMethod }}
+            </td>
+            <td>
+                {{ log.properties.requestPath }}
+            </td>
+            <td>
+                {{ log.properties.statusCode }}
+            </td>
+            <td>
+                {{ log.exception }}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No logs found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading logs data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>
