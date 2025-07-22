@@ -13,7 +13,7 @@ export class TimeSlotService {
     constructor(private http: HttpClient) {
     }
 
-    getAllTimeSlots = () => this.http.get<TimeSlot[]>(environment.apiUrl + '/time-slots/all');
+    getAllTimeSlots = () => this.http.get<TimeSlot[]>(environment.apiUrl + '/time-slots');
 
     getTimeSlot = (TimeSlotId: string) =>
         this.http.get<TimeSlot>(environment.apiUrl + '/time-slots/' + TimeSlotId);

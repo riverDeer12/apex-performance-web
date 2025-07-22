@@ -1,6 +1,7 @@
 import {Client} from '../../clients/models/client';
 import {CatalogData} from "../../../shared/data-transfer-objects/catalog-data";
 import {Coach} from "../../coaches/models/coach";
+import {TimeSlot} from '../../coaches/models/time-slot';
 
 export class Appointment {
     id!: string;
@@ -10,6 +11,7 @@ export class Appointment {
     updatedAt!: Date;
     type!: CatalogData;
     status!: CatalogData;
+    timeSlot!: TimeSlot;
     clients!: Client[];
     coaches!: Coach[];
 }

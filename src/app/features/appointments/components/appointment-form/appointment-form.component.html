@@ -1,37 +1,26 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="startTime">Start Time</label>
-            <p-date-picker [style]="{'width': '100%'}"
-                           [hourFormat]="'24'"
-                           [showButtonBar]="true"
-                           [showTime]="true"
-                           dateFormat="dd.mm.yy."
-                           appendTo="body" id="startTime" formControlName="startTime" />
+            <label>Day</label>
+            <p-datepicker id="day" dateFormat="dd.mm.yy" styleClass="w-full" formControlName="day"/>
             <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'startTime', 'required')"
-                   id="startTime-input">This field is required.</small>
+                   *ngIf="validationService.hasErrors(form, 'timeSlot', 'required')"
+                   id="day-input">This field is required.</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="endTime">End Time</label>
-            <p-date-picker [style]="{'width': '100%'}"
-                           [showTime]="true"
-                           [hourFormat]="'24'"
-                           [showButtonBar]="true"
-                           dateFormat="dd.mm.yy."
-                           appendTo="body"
-                           id="endTime"
-                           formControlName="endTime" />
+            <label for="timeSlot">Time Slot</label>
+            <p-select id="timeSlot" styleClass="w-full" [options]="timeSlots" formControlName="timeSlot"
+                      optionLabel="name"/>
             <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'endTime', 'required')"
-                   id="endTime-input">This field is required.</small>
+                   *ngIf="validationService.hasErrors(form, 'timeSlot', 'required')"
+                   id="startTime-input">This field is required.</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="clients">Clients</label>
             <p-multi-select [filter]="true" [options]="clients"
                             appendTo="body" styleClass="w-full"
                             formControlName="clients" optionLabel="fullName" optionValue="id"
-                            id="clients" />
+                            id="clients"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'clients', 'required')"
                    id="clients-input">This field is required.</small>
@@ -41,7 +30,7 @@
             <p-multi-select [filter]="true" [options]="coaches"
                             appendTo="body" styleClass="w-full"
                             formControlName="coaches" optionLabel="fullName" optionValue="id"
-                            id="coaches" />
+                            id="coaches"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'coaches', 'required')"
                    id="coaches-input">This field is required.</small>
@@ -51,7 +40,7 @@
             <p-select [filter]="true" [options]="appointmentTypes"
                       appendTo="body" styleClass="w-full"
                       formControlName="type" optionLabel="name" optionValue="id"
-                      id="type" />
+                      id="type"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'type', 'required')"
                    id="appointmentType-input">This field is required.</small>
@@ -59,6 +48,6 @@
     </div>
 
     <div class="my-3">
-        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save" />
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
     </div>
 </form>

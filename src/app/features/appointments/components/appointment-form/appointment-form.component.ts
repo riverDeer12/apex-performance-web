@@ -4,6 +4,7 @@ import {Client} from "../../../clients/models/client";
 import {RedirectType} from "../../../../enums/redirect-type";
 import {
     FormBuilder,
+    FormControl,
     FormGroup,
     ReactiveFormsModule,
     Validators,
@@ -17,13 +18,15 @@ import {AppointmentService} from "../../services/appointment.service";
 import {Button} from "primeng/button";
 import {NgIf} from "@angular/common";
 import {MultiSelect} from "primeng/multiselect";
-import {DatePicker} from 'primeng/datepicker';
 import {DropdownModule} from 'primeng/dropdown';
 import {Select} from 'primeng/select';
 import {AppointmentType} from '../../models/appointment-type';
 import {AppointmentTypeService} from '../../services/appointment-type.service';
 import {Coach} from "../../../coaches/models/coach";
 import {CoachService} from "../../../coaches/services/coach.service";
+import {TimeSlotService} from "../../../coaches/services/time-slot.service";
+import {TimeSlot} from "../../../coaches/models/time-slot";
+import {DatePicker} from "primeng/datepicker";
 
 @Component({
     selector: "app-appointment-form",
@@ -32,9 +35,9 @@ import {CoachService} from "../../../coaches/services/coach.service";
         NgIf,
         ReactiveFormsModule,
         MultiSelect,
-        DatePicker,
         DropdownModule,
         Select,
+        DatePicker,
     ],
     templateUrl: "./appointment-form.component.html",
     styleUrl: "./appointment-form.component.scss",
@@ -51,6 +54,7 @@ export class AppointmentFormComponent implements OnInit {
     clients!: Client[];
     coaches!: Coach[];
     appointmentTypes!: AppointmentType[];
+    timeSlots!: TimeSlot[];
 
     loadingData = false;
 
@@ -59,6 +63,7 @@ export class AppointmentFormComponent implements OnInit {
         private formBuilder: FormBuilder,
         private helperService: HelperService,
         private clientService: ClientService,
+        private timeSlotService: TimeSlotService,
         private coachService: CoachService,
         private appointmentService: AppointmentService,
         private appointmentTypeService: AppointmentTypeService,
@@ -71,6 +76,7 @@ export class AppointmentFormComponent implements OnInit {
         this.getClients();
         this.getCoaches();
         this.getAppointmentTypes();
+        this.getTimeSlots();
     }
 
     submit() {
@@ -103,8 +109,7 @@ export class AppointmentFormComponent implements OnInit {
 
     private initCreateForm() {
         this.form = this.formBuilder.group({
-            startTime: ["", [Validators.required]],
-            endTime: ["", [Validators.required]],
+            timeSlot: [null, [Validators.required]],
             type: ["", [Validators.required]],
             clients: ["", [Validators.required]],
             coaches: ["", [Validators.required]],
@@ -113,8 +118,7 @@ export class AppointmentFormComponent implements OnInit {
 
     private initUpdateForm() {
         this.form = this.formBuilder.group({
-            startTime: [new Date(this.appointment.startTime), [Validators.required]],
-            endTime: [new Date(this.appointment.endTime), [Validators.required]],
+            timeSlot: [this.appointment.timeSlot.id, [Validators.required]],
             type: [this.appointment.type.id, [Validators.required]],
             clients: [this.appointment.clients?.map(x => x.id), [Validators.required]],
             coaches: [this.appointment.coaches?.map(x => x.id), [Validators.required]],
@@ -211,5 +215,13 @@ export class AppointmentFormComponent implements OnInit {
                     Object.assign(new AppointmentType(), x),
                 );
             });
+    }
+
+    private getTimeSlots() {
+        this.timeSlotService.getAllTimeSlots().subscribe((response: TimeSlot[]) => {
+            this.timeSlots = response.map((x: TimeSlot) =>
+                Object.assign(new TimeSlot(), x),
+            );
+        });
     }
 }
