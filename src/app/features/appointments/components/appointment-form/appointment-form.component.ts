@@ -27,6 +27,8 @@ import {CoachService} from "../../../coaches/services/coach.service";
 import {TimeSlotService} from "../../../coaches/services/time-slot.service";
 import {TimeSlot} from "../../../coaches/models/time-slot";
 import {DatePicker} from "primeng/datepicker";
+import {DateExtensions} from "../../../../shared/extensions/date-extensions";
+import moment from 'moment';
 
 @Component({
     selector: "app-appointment-form",
@@ -56,6 +58,8 @@ export class AppointmentFormComponent implements OnInit {
     appointmentTypes!: AppointmentType[];
     timeSlots!: TimeSlot[];
 
+    selectedTimeSlot!: TimeSlot;
+
     loadingData = false;
 
     constructor(
@@ -82,6 +86,8 @@ export class AppointmentFormComponent implements OnInit {
     submit() {
         this.loadingData = true;
 
+        this.setAppointmentTime();
+
         if (this.form.invalid) {
 
             this.form.markAllAsTouched();
@@ -102,6 +108,7 @@ export class AppointmentFormComponent implements OnInit {
             : this.updateAppointment();
     }
 
+
     private initForm = () =>
         this.type == ActionType.Create
             ? this.initCreateForm()
@@ -109,6 +116,9 @@ export class AppointmentFormComponent implements OnInit {
 
     private initCreateForm() {
         this.form = this.formBuilder.group({
+            day: [null, [Validators.required]],
+            startTime: [null, [Validators.required]],
+            endTime: [null, [Validators.required]],
             timeSlot: [null, [Validators.required]],
             type: ["", [Validators.required]],
             clients: ["", [Validators.required]],
@@ -118,6 +128,9 @@ export class AppointmentFormComponent implements OnInit {
 
     private initUpdateForm() {
         this.form = this.formBuilder.group({
+            day: [new Date(this.appointment.startTime), [Validators.required]],
+            startTime: [this.appointment.startTime, [Validators.required]],
+            endTime: [this.appointment.endTime, [Validators.required]],
             timeSlot: [this.appointment.timeSlot.id, [Validators.required]],
             type: [this.appointment.type.id, [Validators.required]],
             clients: [this.appointment.clients?.map(x => x.id), [Validators.required]],
@@ -223,5 +236,22 @@ export class AppointmentFormComponent implements OnInit {
                 Object.assign(new TimeSlot(), x),
             );
         });
+    }
+
+    private setAppointmentTime() {
+        const timeSlot = this.timeSlots.find(x => x.id === this.form.controls['timeSlot'].value) as TimeSlot;
+
+        const day = moment(this.form.controls['day'].value).toDate();
+
+        const startTime = DateExtensions.addTimeToDate(day, timeSlot.startTime.toString());
+        const endTime = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
+
+        this.form.controls['startTime'].setValue(startTime);
+        this.form.controls['endTime'].setValue(endTime);
+    }
+
+    protected onSelectedTimeSlot(event: any) {
+        const timeSlot = this.timeSlots.find(x => x.id === event.value);
+        this.selectedTimeSlot = Object.assign(new TimeSlot(), timeSlot);
     }
 }
