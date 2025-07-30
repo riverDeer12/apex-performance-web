@@ -1,7 +1,7 @@
 import {Client} from '../../clients/models/client';
 import {CatalogData} from "../../../shared/data-transfer-objects/catalog-data";
 import {Coach} from "../../coaches/models/coach";
-import {TimeSlot} from '../../coaches/models/time-slot';
+import {TimeSlot} from '../../time-slots/models/time-slot';
 
 export class Appointment {
     id!: string;

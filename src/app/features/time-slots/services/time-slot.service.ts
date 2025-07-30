@@ -15,15 +15,18 @@ export class TimeSlotService {
 
     getAllTimeSlots = () => this.http.get<TimeSlot[]>(environment.apiUrl + '/time-slots');
 
-    getTimeSlot = (TimeSlotId: string) =>
-        this.http.get<TimeSlot>(environment.apiUrl + '/time-slots/' + TimeSlotId);
+    getTimeSlot = (timeSlotId: string) =>
+        this.http.get<TimeSlot>(environment.apiUrl + '/time-slots/' + timeSlotId);
+
+    getCoachTimeSlots = (request: DefaultPostRequest) =>
+        this.http.post<TimeSlot[]>(environment.apiUrl + '/time-slots/coach', request);
 
     createTimeSlot = (request: DefaultPostRequest) =>
         this.http.post<TimeSlot>(environment.apiUrl + '/time-slots/', request);
 
-    updateTimeSlot = (TimeSlotId: string, request: DefaultUpdateRequest) =>
-        this.http.put<TimeSlot>(environment.apiUrl + '/time-slots/' + TimeSlotId, request);
+    updateTimeSlot = (timeSlotId: string, request: DefaultUpdateRequest) =>
+        this.http.put<TimeSlot>(environment.apiUrl + '/time-slots/' + timeSlotId, request);
 
-    deleteTimeSlot = (TimeSlotId: string) =>
-        this.http.delete<TimeSlot>(environment.apiUrl + '/time-slots/' + TimeSlotId);
+    deleteTimeSlot = (timeSlotId: string) =>
+        this.http.delete<TimeSlot>(environment.apiUrl + '/time-slots/' + timeSlotId);
 }

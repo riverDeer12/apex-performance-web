@@ -4,7 +4,6 @@ import {Client} from "../../../clients/models/client";
 import {RedirectType} from "../../../../enums/redirect-type";
 import {
     FormBuilder,
-    FormControl,
     FormGroup,
     ReactiveFormsModule,
     Validators,
@@ -24,8 +23,8 @@ import {AppointmentType} from '../../models/appointment-type';
 import {AppointmentTypeService} from '../../services/appointment-type.service';
 import {Coach} from "../../../coaches/models/coach";
 import {CoachService} from "../../../coaches/services/coach.service";
-import {TimeSlotService} from "../../../coaches/services/time-slot.service";
-import {TimeSlot} from "../../../coaches/models/time-slot";
+import {TimeSlotService} from "../../../time-slots/services/time-slot.service";
+import {TimeSlot} from "../../../time-slots/models/time-slot";
 import {DatePicker} from "primeng/datepicker";
 import {DateExtensions} from "../../../../shared/extensions/date-extensions";
 
@@ -55,9 +54,10 @@ export class AppointmentFormComponent implements OnInit {
     clients!: Client[];
     coaches!: Coach[];
     appointmentTypes!: AppointmentType[];
+
     timeSlots!: TimeSlot[];
 
-    selectedTimeSlot!: TimeSlot;
+    filteredTimeSlots!: TimeSlot[];
 
     loadingData = false;
 
@@ -234,6 +234,36 @@ export class AppointmentFormComponent implements OnInit {
             this.timeSlots = response.map((x: TimeSlot) =>
                 Object.assign(new TimeSlot(), x),
             );
+
+            this.filteredTimeSlots = this.timeSlots;
+        });
+    }
+
+    getCoachTimeSlots() {
+
+        this.loadingData = true;
+
+        if (this.form.controls["coaches"].invalid || this.form.controls["day"].invalid) {
+            this.messageService.add({
+                severity: "warn",
+                summary: "Incomplete or incorrect data",
+                detail: "Check the entered data and try again.",
+            });
+
+            this.loadingData = false;
+
+            return;
+        }
+
+        const payload = {
+            coaches: this.form.controls["coaches"].value,
+            day: this.form.controls["day"].value
+        };
+
+        this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
+            this.filteredTimeSlots = response.map((x: TimeSlot) =>
+                Object.assign(new TimeSlot(), x),
+            );
         });
     }
 
@@ -247,10 +277,5 @@ export class AppointmentFormComponent implements OnInit {
 
         this.form.controls['startTime'].setValue(startTime);
         this.form.controls['endTime'].setValue(endTime);
-    }
-
-    protected onSelectedTimeSlot(event: any) {
-        const timeSlot = this.timeSlots.find(x => x.id === event.value);
-        this.selectedTimeSlot = Object.assign(new TimeSlot(), timeSlot);
     }
 }

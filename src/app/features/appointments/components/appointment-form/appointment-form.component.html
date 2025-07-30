@@ -1,34 +1,6 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label>Day</label>
-            <p-datepicker id="day" dateFormat="dd.mm.yy" styleClass="w-full" formControlName="day"
-                          [firstDayOfWeek]="1"
-                          [disabledDays]="[0]"/>
-            <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'day', 'required')"
-                   id="day-input">This field is required.</small>
-        </div>
-        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="timeSlot">Time Slot</label>
-            <p-select id="timeSlot" styleClass="w-full" [options]="timeSlots" (onChange)="onSelectedTimeSlot($event)"
-                      formControlName="timeSlot"
-                      optionLabel="name" optionValue="id"/>
-            <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'timeSlot', 'required')"
-                   id="startTime-input">This field is required.</small>
-        </div>
-        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="clients">Clients</label>
-            <p-multi-select [filter]="true" [options]="clients"
-                            appendTo="body" styleClass="w-full"
-                            formControlName="clients" optionLabel="fullName" optionValue="id"
-                            id="clients"/>
-            <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'clients', 'required')"
-                   id="clients-input">This field is required.</small>
-        </div>
-        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="clients">Coaches</label>
             <p-multi-select [filter]="true" [options]="coaches"
                             appendTo="body" styleClass="w-full"
@@ -37,6 +9,26 @@
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'coaches', 'required')"
                    id="coaches-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label>Day</label>
+            <p-datepicker appendTo="body" id="day" dateFormat="dd.mm.yy" styleClass="w-full"
+                          formControlName="day"
+                          (onSelect)="getCoachTimeSlots()"
+                          [firstDayOfWeek]="1"
+                          [disabledDays]="[0]"></p-datepicker>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'day', 'required')"
+                   id="day-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="timeSlot">Time Slot</label>
+            <p-select id="timeSlot" styleClass="w-full" [options]="filteredTimeSlots"
+                      formControlName="timeSlot"
+                      optionLabel="name" optionValue="id"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'timeSlot', 'required')"
+                   id="startTime-input">This field is required.</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="type">Type</label>
@@ -49,7 +41,16 @@
                    id="appointmentType-input">This field is required.</small>
         </div>
     </div>
-
+    <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+        <label for="clients">Clients</label>
+        <p-multi-select [filter]="true" [options]="clients"
+                        appendTo="body" styleClass="w-full"
+                        formControlName="clients" optionLabel="fullName" optionValue="id"
+                        id="clients"/>
+        <small class="p-error"
+               *ngIf="validationService.hasErrors(form, 'clients', 'required')"
+               id="clients-input">This field is required.</small>
+    </div>
     <div class="my-3">
         <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
     </div>
