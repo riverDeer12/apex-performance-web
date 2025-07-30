@@ -28,7 +28,6 @@ import {TimeSlotService} from "../../../coaches/services/time-slot.service";
 import {TimeSlot} from "../../../coaches/models/time-slot";
 import {DatePicker} from "primeng/datepicker";
 import {DateExtensions} from "../../../../shared/extensions/date-extensions";
-import moment from 'moment';
 
 @Component({
     selector: "app-appointment-form",
@@ -129,8 +128,8 @@ export class AppointmentFormComponent implements OnInit {
     private initUpdateForm() {
         this.form = this.formBuilder.group({
             day: [new Date(this.appointment.startTime), [Validators.required]],
-            startTime: [this.appointment.startTime, [Validators.required]],
-            endTime: [this.appointment.endTime, [Validators.required]],
+            startTime: [new Date(this.appointment.startTime), [Validators.required]],
+            endTime: [new Date(this.appointment.endTime), [Validators.required]],
             timeSlot: [this.appointment.timeSlot.id, [Validators.required]],
             type: [this.appointment.type.id, [Validators.required]],
             clients: [this.appointment.clients?.map(x => x.id), [Validators.required]],
@@ -241,7 +240,7 @@ export class AppointmentFormComponent implements OnInit {
     private setAppointmentTime() {
         const timeSlot = this.timeSlots.find(x => x.id === this.form.controls['timeSlot'].value) as TimeSlot;
 
-        const day = moment(this.form.controls['day'].value).toDate();
+        const day = new Date(this.form.controls['day'].value);
 
         const startTime = DateExtensions.addTimeToDate(day, timeSlot.startTime.toString());
         const endTime = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
