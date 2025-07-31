@@ -119,7 +119,7 @@ export class AppMenu implements OnInit {
           {
             label: "Time Slots",
             icon: "pi pi-fw pi-clock",
-            routerLink: ["/admin/time-slots"],
+            routerLink: ["/admin/coaches/time-slots"],
           },
         ],
       },

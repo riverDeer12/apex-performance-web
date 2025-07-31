@@ -69,7 +69,7 @@ export const appRoutes: Routes = [
                     import("./app/features/users/users.routes").then(
                         (m) => m.UsersRoutes,
                     ),
-            },
+            }
         ],
     },
     {path: "not-found", component: NotFound},

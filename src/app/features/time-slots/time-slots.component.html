@@ -1,1 +1,76 @@
-<p>time-slots works!</p>
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Time Slot"/>
+</div>
+
+<p-table
+    #timeSlotsTable
+    [value]="timeSlots"
+    dataKey="id"
+    sortField="startTime"
+    [sortOrder]="1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['startTime', 'endTime']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(timeSlotsTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(timeSlotsTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                Start Time - End Time
+                <p-sortIcon field="name"/>
+            </th>
+            <th pSortableColumn="day" style="min-width: 12rem">
+                Day
+                <p-sortIcon field="day"/>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-timeSlot>
+        <tr>
+            <td>
+                {{ timeSlot.name }}
+            </td>
+            <td>
+                {{ timeSlot.day }}
+            </td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(timeSlot)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(timeSlot)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(timeSlot)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No time slots found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading time slots data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>

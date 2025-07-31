@@ -1,22 +1,36 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {DialogService} from "primeng/dynamicdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {HelperService} from "../../services/helper.service";
-import {Table} from "primeng/table";
+import {Table, TableModule} from "primeng/table";
 import {DialogFormComponent} from "../../components/dialog-form/dialog-form.component";
 import {EntityType} from "../../enums/entity-type";
 import {ActionType} from "../../enums/action-type";
 import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
 import {TimeSlot} from "./models/time-slot";
 import {TimeSlotService} from './services/time-slot.service';
+import {Button, ButtonDirective} from "primeng/button";
+import {IconField} from "primeng/iconfield";
+import {InputIcon} from "primeng/inputicon";
+import {InputText} from "primeng/inputtext";
+import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'app-time-slots',
-    imports: [],
+    imports: [
+        CommonModule,
+        Button,
+        ButtonDirective,
+        IconField,
+        InputIcon,
+        InputText,
+        TableModule
+    ],
+    providers: [DialogService],
     templateUrl: './time-slots.component.html',
     styleUrl: './time-slots.component.scss'
 })
-export class TimeSlotsComponent {
+export class TimeSlotsComponent implements OnInit {
     @Input() timeSlots!: TimeSlot[];
 
     @ViewChild(`filter`) filter!: ElementRef;
