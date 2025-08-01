@@ -1,133 +1,47 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import {Component} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
 import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
+    FormGroup,
+    ReactiveFormsModule,
 } from "@angular/forms";
-import { MessageService } from "primeng/api";
-import { AuthResponse } from "../../models/auth-response";
-import { AuthenticationService } from "../../services/authentication.service";
-import { AppFloatingConfigurator } from "../../../../layout/component/app.floatingconfigurator";
-import { Password } from "primeng/password";
-import { Button } from "primeng/button";
-import { UserService } from "../../../users/services/user.service";
-import { NgIf } from "@angular/common";
-import { ValidationService } from "../../../../services/validation.service";
+import {MessageService} from "primeng/api";
+import {AuthenticationService} from "../../services/authentication.service";
+import {AppFloatingConfigurator} from "../../../../layout/component/app.floatingconfigurator";
+import {ValidationService} from "../../../../services/validation.service";
+import {ResetPasswordFormComponent} from "../reset-password-form/reset-password-form.component";
 
 @Component({
-  selector: "app-reset-password",
-  standalone: true,
-  imports: [
-    AppFloatingConfigurator,
-    ReactiveFormsModule,
-    Password,
-    Button,
-    NgIf,
-  ],
-  providers: [MessageService],
-  templateUrl: "./reset-password.component.html",
-  styleUrl: "./reset-password.component.scss",
+    selector: "app-reset-password",
+    standalone: true,
+    imports: [
+        AppFloatingConfigurator,
+        ReactiveFormsModule,
+        ResetPasswordFormComponent,
+    ],
+    providers: [MessageService],
+    templateUrl: "./reset-password.component.html",
+    styleUrl: "./reset-password.component.scss",
 })
-export class ResetPasswordComponent implements OnInit {
-  token!: string;
+export class ResetPasswordComponent {
+    form!: FormGroup;
 
-  form!: FormGroup;
+    loadingData = false;
 
-  loadingData = false;
-
-  authResponse!: AuthResponse;
-
-  constructor(
-    public validationService: ValidationService,
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private userService: UserService,
-    private authenticationService: AuthenticationService,
-    private messageService: MessageService,
-  ) {
-    this.initForm();
-  }
-
-  ngOnInit(): void {
-    this.handleToken();
-  }
-
-  submit() {
-    this.loadingData = true;
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-
-      this.messageService.add({
-        severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
-      });
-
-      this.loadingData = false;
-
-      return;
+    constructor(
+        public validationService: ValidationService,
+        private route: ActivatedRoute,
+        private authenticationService: AuthenticationService,
+    ) {
+        this.handleToken();
     }
 
-    this.resetPassword();
-  }
+    private handleToken() {
+        let token = this.route.snapshot.paramMap.get("token") || "";
 
-  private initForm() {
-    this.form = this.formBuilder.group(
-      {
-        newPassword: ["", [Validators.required]],
-        confirmPassword: ["", [Validators.required]],
-      },
-      { validators: this.passwordMatchValidator },
-    );
-  }
+        const isTokenValid = this.authenticationService.validateToken(token);
 
-  private passwordMatchValidator(
-    formGroup: AbstractControl,
-  ): ValidationErrors | null {
-    const newPassword = formGroup.get("newPassword")?.value;
-    const confirmPassword = formGroup.get("confirmPassword")?.value;
-
-    return newPassword === confirmPassword ? null : { passwordMismatch: true };
-  }
-
-  private resetPassword() {
-    this.userService.resetPassword(this.form.value).subscribe(
-      (response: AuthResponse) => {
-        this.authResponse = Object.assign(response as AuthResponse);
-        this.messageService.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Password reset successfully.",
-        });
-
-        this.router.navigateByUrl("admin/dashboard").then();
-
-        this.loadingData = false;
-      },
-      (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Password Reset Error.",
-          detail: error.message,
-        });
-        this.loadingData = false;
-      },
-    );
-  }
-
-  private handleToken() {
-    this.token = this.route.snapshot.paramMap.get("token") || "";
-
-    const isTokenValid = this.authenticationService.validateToken(this.token);
-
-    if (isTokenValid) {
-      localStorage.setItem("token", this.token);
+        if (isTokenValid) {
+            localStorage.setItem("token", token);
+        }
     }
-  }
 }

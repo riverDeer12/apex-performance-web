@@ -9,6 +9,7 @@ export enum EntityType {
     Coach,
     Recipe,
     Role ,
+    ResetUserPassword ,
     TimeSlot ,
     User
 }

@@ -65,6 +65,12 @@
         [role]="data">
 </app-role-form>
 
+<app-reset-password-form
+        *ngIf="contentType === entityType.ResetUserPassword"
+        [redirectType]="redirectType"
+        [dialogId]="dialogId">
+</app-reset-password-form>
+
 <app-user-form
         *ngIf="contentType === entityType.User"
         [type]="formType"

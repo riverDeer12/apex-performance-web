@@ -44,7 +44,6 @@
         align-items: center;
         color: var(--text-color-secondary);
         border-radius: 50%;
-        width: 2.5rem;
         height: 2.5rem;
         color: var(--text-color);
         transition: background-color var(--element-transition-duration);
@@ -140,7 +139,7 @@
                 height: auto;
                 justify-content: flex-start;
                 border-radius: var(--content-border-radius);
-                padding: 0.5rem 1rem;
+
 
                 i {
                     font-size: 1rem;

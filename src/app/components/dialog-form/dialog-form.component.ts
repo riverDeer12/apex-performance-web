@@ -20,6 +20,9 @@ import {
   BodyMeasurementFormComponent
 } from "../../features/body-measurements/components/body-measurement-form/body-measurement-form.component";
 import {CoachFormComponent} from "../../features/coaches/components/coach-form/coach-form.component";
+import {
+  ResetPasswordFormComponent
+} from "../../features/authentication/components/reset-password-form/reset-password-form.component";
 
 @Component({
   selector: "app-dialog-form",
@@ -37,6 +40,7 @@ import {CoachFormComponent} from "../../features/coaches/components/coach-form/c
     EmailFormComponent,
     BodyMeasurementFormComponent,
     CoachFormComponent,
+    ResetPasswordFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",
