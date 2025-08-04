@@ -1,0 +1,68 @@
+<div class="p-3">
+    <h5 class="mb-3">{{ type }}</h5>
+
+    <p-table [value]="appointments" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr>
+                <th>Appointment Time</th>
+                <th>Coach</th>
+                <th>Clients</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-appointment>
+            <tr>
+                <td>{{ appointment.startTime | date: 'dd.MM.yyyy' }}
+                    {{ appointment.startTime | date: 'HH:mm' }} - {{ appointment.endTime | date: 'HH:mm' }}
+                </td>
+                <td>
+                    <span *ngFor="let coach of appointment.coaches">
+                        <p>
+                            <span>{{ coach.firstName }} {{ coach.lastName }}</span>
+                        </p>
+                    </span>
+                </td>
+                <td>
+                    <span *ngFor="let client of appointment.clients">
+                        <p>
+                            <span>{{ client.firstName }} {{ client.lastName }}</span>
+                        </p>
+                    </span>
+                </td>
+                <td>
+                    <button
+                            *ngIf="appointment.status.name === businessStatuses.Approved"
+                            class="p-button-outlined p-button-danger"
+                            pButton type="button" icon="pi pi-times"
+                            label="Cancel"
+                            (click)="openCancelationRequestDialog(appointment.id)">
+                    </button>
+                    <button
+                            *ngIf="appointment.status.name === businessStatuses.Pending"
+                            class="p-button-outlined p-button-success"
+                            pButton type="button" icon="pi pi-check"
+                            label="Approve"
+                            (click)="approve(appointment)">
+                    </button>
+                    <button
+                            *ngIf="appointment.status.name === businessStatuses.Pending"
+                            class="p-button-outlined p-button-danger"
+                            pButton type="button" icon="pi pi-times"
+                            label="Decline"
+                            (click)="decline(appointment)">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="8">There are no {{ type }} appointments.</td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr>
+                <td colspan="8">Loading appointments data. Please wait...</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

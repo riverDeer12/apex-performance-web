@@ -1,9 +1,16 @@
 
-<h2>Appointments</h2>
+<h4>Appointments</h4>
 
 <app-appointments-list [appointments]="approvedAppointments" type="Approved"></app-appointments-list>
+
 <app-appointments-list [appointments]="pendingAppointments" type="Pending"></app-appointments-list>
+
 <app-appointments-list [appointments]="inProgressAppointments" type="In Progress"></app-appointments-list>
 
-<h2>Appointment Requests</h2>
+<hr>
+
+<div *ngIf="showAppointmentRequests">
+    <h4>Appointment Requests</h4>
+    <app-appointments-requests-list [appointmentRequests]="appointmentRequests"></app-appointments-requests-list>
+</div>
 

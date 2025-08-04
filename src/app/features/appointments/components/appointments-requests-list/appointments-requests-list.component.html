@@ -1,0 +1,62 @@
+<p-table [value]="appointmentRequests" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="sender.firstName" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Sender
+                </div>
+            </th>
+            <th pSortableColumn="type.name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Type
+                </div>
+            </th>
+            <th pSortableColumn="comment" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Comment
+                </div>
+            </th>
+            <th>Related Appointment</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-appointmentRequest>
+        <tr>
+            <td>
+                {{ appointmentRequest.sender.firstName }} {{ appointmentRequest.sender.lastName }}
+            </td>
+            <td>
+                {{ appointmentRequest.type.name }}
+            </td>
+            <td>
+                {{ appointmentRequest.comment }}
+            </td>
+            <td>
+                {{ appointmentRequest.appointment.startTime | date: 'dd.MM.yyyy' }}
+                {{ appointmentRequest.appointment.startTime | date: 'HH:mm' }}
+                - {{ appointmentRequest.appointment.endTime | date: 'HH:mm' }}
+            </td>
+            <td>
+                <p-button
+                        (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
+                        label="Approve"
+                        [outlined]="true"/>
+                <p-button
+                        (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
+                        severity="danger"
+                        label="Decline"
+                        [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No appointment requests found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading appointment requests data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>

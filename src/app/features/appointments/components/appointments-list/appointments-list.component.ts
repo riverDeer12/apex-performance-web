@@ -1,0 +1,86 @@
+import {Component, Input, OnInit} from '@angular/core';
+import {CommonModule, DatePipe} from "@angular/common";
+import {Appointment} from '../../models/appointment';
+import {BusinessStatuses} from '../../../../constants/business-statuses';
+import {DialogFormComponent} from "../../../../components/dialog-form/dialog-form.component";
+import {EntityType} from "../../../../enums/entity-type";
+import {ActionType} from "../../../../enums/action-type";
+import {DialogService} from 'primeng/dynamicdialog';
+import {TableModule} from "primeng/table";
+import {ButtonDirective} from "primeng/button";
+import { AppointmentService } from '../../services/appointment.service';
+import { MessageService } from 'primeng/api';
+
+@Component({
+    selector: 'app-appointments-list',
+    imports: [
+        CommonModule,
+        DatePipe,
+        TableModule,
+        ButtonDirective
+    ],
+    providers: [DialogService],
+    templateUrl: './appointments-list.component.html',
+    styleUrl: './appointments-list.component.scss'
+})
+export class AppointmentsListComponent implements OnInit {
+    @Input() type!: string;
+    @Input() appointments!: Appointment[];
+
+    constructor(private dialogService: DialogService,
+                private messageService: MessageService,
+                private appointmentService: AppointmentService) {
+    }
+
+    ngOnInit() {
+    }
+
+    get businessStatuses(): typeof BusinessStatuses {
+        return BusinessStatuses;
+    }
+
+    openCancelationRequestDialog(appointmentId: string): void {
+        const dialogRef = this.dialogService.open(DialogFormComponent, {
+            header: 'Create Cancelation Request',
+            data: {
+                contentType: EntityType.CancelationRequest,
+                formType: ActionType.Create,
+                dialogId: 'createCancelationRequestForm',
+                data: appointmentId
+            }
+        });
+
+        dialogRef.onClose.subscribe((response: any) => {
+        })
+    }
+
+    approve(appointment: Appointment): void {
+        this.appointmentService.approveAppointment(appointment.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Appointment has been approved.'
+                });
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+
+    decline(appointment: Appointment): void {
+        this.appointmentService.declineAppointment(appointment.id).subscribe({
+            next: (data) => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Appointment has been declined.'
+                });
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+}
