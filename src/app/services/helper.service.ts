@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {RedirectType} from "../enums/redirect-type";
 import {Router} from "@angular/router";
 import {DialogHelperService} from "./dialog-helper.service";
-import {Observable, Subject} from "rxjs";
-import {List} from "postcss/lib/list";
+import {Subject} from "rxjs";
 
 @Injectable({
     providedIn: 'root'

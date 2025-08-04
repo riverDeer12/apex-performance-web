@@ -23,6 +23,9 @@ import {CoachFormComponent} from "../../features/coaches/components/coach-form/c
 import {
   ResetPasswordFormComponent
 } from "../../features/authentication/components/reset-password-form/reset-password-form.component";
+import {
+  CancelationRequestFormComponent
+} from "../../features/appointments/components/cancelation-request-form/cancelation-request-form.component";
 
 @Component({
   selector: "app-dialog-form",
@@ -41,6 +44,7 @@ import {
     BodyMeasurementFormComponent,
     CoachFormComponent,
     ResetPasswordFormComponent,
+    CancelationRequestFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

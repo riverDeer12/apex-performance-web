@@ -8,8 +8,8 @@ import {AppointmentRequest} from "../../models/appointment-request";
 import {AppointmentRequestService} from "../../services/appointment-request.service";
 import {Appointment} from '../../models/appointment';
 import {MessageService} from 'primeng/api';
-import { BusinessStatuses } from '../../../../constants/business-statuses';
-import { CommonModule } from '@angular/common';
+import {BusinessStatuses} from '../../../../constants/business-statuses';
+import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'app-appointment-requests',

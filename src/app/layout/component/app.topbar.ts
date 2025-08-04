@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {MenuItem} from 'primeng/api';
-import {Router, RouterModule} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {StyleClassModule} from 'primeng/styleclass';
 import {AppConfigurator} from './app.configurator';
@@ -8,19 +8,14 @@ import {LayoutService} from '../service/layout.service';
 import {AuthenticationService} from "../../features/authentication/services/authentication.service";
 import {DialogFormComponent} from "../../components/dialog-form/dialog-form.component";
 import {EntityType} from "../../enums/entity-type";
-import {ActionType} from "../../enums/action-type";
 import {DialogService} from 'primeng/dynamicdialog';
-import {ResetPasswordComponent} from "../../features/authentication/components/reset-password/reset-password.component";
 import {ButtonLabel} from "primeng/button";
-import {
-    ResetPasswordFormComponent
-} from "../../features/authentication/components/reset-password-form/reset-password-form.component";
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
     providers: [DialogService],
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, ButtonLabel],
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
     template: `
         <div class="layout-topbar">
             <div class="layout-topbar-logo-container">

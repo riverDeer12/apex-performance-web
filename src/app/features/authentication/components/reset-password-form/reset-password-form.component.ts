@@ -42,7 +42,6 @@ export class ResetPasswordFormComponent {
 
     constructor(public validationService: ValidationService,
                 private formBuilder: FormBuilder,
-                private router: Router,
                 private userService: UserService,
                 private helperService: HelperService,
                 private messageService: MessageService) {
