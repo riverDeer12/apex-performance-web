@@ -12,6 +12,7 @@ import {
 } from "../appointments/components/appointments-requests-list/appointments-requests-list.component";
 import {AppointmentRequestService} from "../appointments/services/appointment-request.service";
 import {AppointmentRequest} from "../appointments/models/appointment-request";
+import { HelperService } from "../../services/helper.service";
 
 @Component({
     selector: "app-dashboard",
@@ -36,9 +37,17 @@ export class DashboardComponent {
     constructor(
         private authenticationService: AuthenticationService,
         private appointmentRequestService: AppointmentRequestService,
-        private appointmentService: AppointmentService
+        private appointmentService: AppointmentService,
+        private helperService: HelperService
     ) {
         this.loadData();
+        this.getDataStatus();
+    }
+
+    private getDataStatus() {
+        this.helperService.getDataStatus().subscribe(data => {
+            this.loadData();
+        })
     }
 
     private loadData(): void {

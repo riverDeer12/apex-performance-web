@@ -40,7 +40,8 @@ export class HelperService {
      * Method that listens on
      * data refresh changes.
      */
-    getDataStatus = () => this.dataRefresh;
+    getDataStatus = () =>
+        this.dataRefresh;
 
     /**
      * Method that triggers
@@ -50,5 +51,6 @@ export class HelperService {
      * @param refresh flag
      * that triggers data load.
      */
-    triggerDataRefresh = (refresh: boolean) => this.dataRefresh.next(refresh);
+    triggerDataRefresh = (refresh: boolean) =>
+        this.dataRefresh.next(refresh);
 }

@@ -1,18 +1,18 @@
 import {Component, Input} from '@angular/core';
 import {AppointmentRequest} from '../../models/appointment-request';
 import {Button} from "primeng/button";
-import {DatePipe, NgIf} from "@angular/common";
+import {DatePipe} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {AppointmentRequestService} from '../../services/appointment-request.service';
 import {MessageService} from 'primeng/api';
+import { HelperService } from '../../../../services/helper.service';
 
 @Component({
     selector: 'app-appointments-requests-list',
     imports: [
         Button,
         DatePipe,
-        TableModule,
-        NgIf
+        TableModule
     ],
     templateUrl: './appointments-requests-list.component.html',
     styleUrl: './appointments-requests-list.component.scss'
@@ -21,7 +21,8 @@ export class AppointmentsRequestsListComponent {
     @Input() appointmentRequests!: AppointmentRequest[];
 
     constructor(private appointmentRequestService: AppointmentRequestService,
-                private messageService: MessageService
+                private messageService: MessageService,
+                private helperService: HelperService
     ) {
     }
 
@@ -33,6 +34,8 @@ export class AppointmentsRequestsListComponent {
                     summary: 'Success',
                     detail: 'Appointment Request has been approved.'
                 });
+
+                this.helperService.triggerDataRefresh(true);
             },
             error: (err) => {
                 console.error(err);
@@ -48,6 +51,8 @@ export class AppointmentsRequestsListComponent {
                     summary: 'Success',
                     detail: 'Appointment Request has been declined.'
                 });
+
+                this.helperService.triggerDataRefresh(true);
             },
             error: (err) => {
                 console.error(err);
