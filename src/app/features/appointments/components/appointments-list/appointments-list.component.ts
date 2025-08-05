@@ -8,8 +8,9 @@ import {ActionType} from "../../../../enums/action-type";
 import {DialogService} from 'primeng/dynamicdialog';
 import {TableModule} from "primeng/table";
 import {ButtonDirective} from "primeng/button";
-import { AppointmentService } from '../../services/appointment.service';
-import { MessageService } from 'primeng/api';
+import {AppointmentService} from '../../services/appointment.service';
+import {MessageService} from 'primeng/api';
+import { HelperService } from '../../../../services/helper.service';
 
 @Component({
     selector: 'app-appointments-list',
@@ -29,6 +30,7 @@ export class AppointmentsListComponent implements OnInit {
 
     constructor(private dialogService: DialogService,
                 private messageService: MessageService,
+                private helperService: HelperService,
                 private appointmentService: AppointmentService) {
     }
 
@@ -51,6 +53,7 @@ export class AppointmentsListComponent implements OnInit {
         });
 
         dialogRef.onClose.subscribe((response: any) => {
+            this.helperService.triggerDataRefresh(true);
         })
     }
 
@@ -62,6 +65,7 @@ export class AppointmentsListComponent implements OnInit {
                     summary: 'Success',
                     detail: 'Appointment has been approved.'
                 });
+                this.helperService.triggerDataRefresh(true);
             },
             error: (err) => {
                 console.error(err);
@@ -77,6 +81,7 @@ export class AppointmentsListComponent implements OnInit {
                     summary: 'Success',
                     detail: 'Appointment has been declined.'
                 });
+                this.helperService.triggerDataRefresh(true);
             },
             error: (err) => {
                 console.error(err);
