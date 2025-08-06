@@ -257,7 +257,7 @@ export class AppointmentFormComponent implements OnInit {
 
         const payload = {
             coaches: this.form.controls["coaches"].value,
-            day: this.form.controls["day"].value
+            day: new Date(this.form.controls["day"].value).getDay()
         };
 
         this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
