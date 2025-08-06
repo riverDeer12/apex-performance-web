@@ -61,6 +61,8 @@ export class AppointmentFormComponent implements OnInit {
 
     loadingData = false;
 
+    today = new Date();
+
     constructor(
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
