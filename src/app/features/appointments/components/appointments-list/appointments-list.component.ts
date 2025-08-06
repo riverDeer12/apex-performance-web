@@ -10,7 +10,7 @@ import {TableModule} from "primeng/table";
 import {ButtonDirective} from "primeng/button";
 import {AppointmentService} from '../../services/appointment.service';
 import {MessageService} from 'primeng/api';
-import { HelperService } from '../../../../services/helper.service';
+import {HelperService} from '../../../../services/helper.service';
 
 @Component({
     selector: 'app-appointments-list',
@@ -39,6 +39,12 @@ export class AppointmentsListComponent implements OnInit {
 
     get businessStatuses(): typeof BusinessStatuses {
         return BusinessStatuses;
+    }
+
+    showActionButtons(appointment: Appointment): boolean {
+        const isApprovedAppointment = appointment.status.name === BusinessStatuses.Approved;
+        const isValidAppointmentTime = new Date(appointment.startTime).getTime() > new Date().getTime();
+        return isApprovedAppointment && isValidAppointmentTime;
     }
 
     openCancelationRequestDialog(appointmentId: string): void {

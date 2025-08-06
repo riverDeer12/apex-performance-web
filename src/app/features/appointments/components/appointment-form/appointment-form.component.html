@@ -16,6 +16,7 @@
                           formControlName="day"
                           (onSelect)="getCoachTimeSlots()"
                           [firstDayOfWeek]="1"
+                          [minDate]="today"
                           [disabledDays]="[0]"></p-datepicker>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'day', 'required')"
