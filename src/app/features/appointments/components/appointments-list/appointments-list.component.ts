@@ -11,6 +11,7 @@ import {ButtonDirective} from "primeng/button";
 import {AppointmentService} from '../../services/appointment.service';
 import {MessageService} from 'primeng/api';
 import {HelperService} from '../../../../services/helper.service';
+import { Roles } from '../../../../constants/roles';
 
 @Component({
     selector: 'app-appointments-list',
@@ -26,6 +27,7 @@ import {HelperService} from '../../../../services/helper.service';
 })
 export class AppointmentsListComponent implements OnInit {
     @Input() type!: string;
+    @Input() userRole!: string;
     @Input() appointments!: Appointment[];
 
     constructor(private dialogService: DialogService,
@@ -46,6 +48,10 @@ export class AppointmentsListComponent implements OnInit {
         const isValidAppointmentTime = new Date(appointment.startTime).getTime() > new Date().getTime();
         return isApprovedAppointment && isValidAppointmentTime;
     }
+
+    showPendingActionButtons = (appointment: Appointment): boolean =>
+        this.userRole == Roles.Administrator &&
+        appointment.status.name === BusinessStatuses.Pending;
 
     openCancelationRequestDialog(appointmentId: string): void {
         const dialogRef = this.dialogService.open(DialogFormComponent, {

@@ -12,7 +12,7 @@ import {
 } from "../appointments/components/appointments-requests-list/appointments-requests-list.component";
 import {AppointmentRequestService} from "../appointments/services/appointment-request.service";
 import {AppointmentRequest} from "../appointments/models/appointment-request";
-import { HelperService } from "../../services/helper.service";
+import {HelperService} from "../../services/helper.service";
 
 @Component({
     selector: "app-dashboard",
@@ -28,6 +28,8 @@ export class DashboardComponent {
     inProgressAppointments!: Appointment[];
 
     appointmentRequests!: AppointmentRequest[];
+
+    userRole!: string;
 
     get showAppointmentRequests(): boolean {
         const loggedUserRoles = this.authenticationService.getLoggedUserRoles();
@@ -52,14 +54,14 @@ export class DashboardComponent {
 
     private loadData(): void {
 
-        const userRoles = this.authenticationService.getLoggedUserRoles();
+        this.userRole = this.authenticationService.getUserRole();
 
-        if ((userRoles.includes(Roles.Administrator) || userRoles.includes(Roles.SuperAdmin))) {
+        if (this.userRole == Roles.Administrator) {
             this.loadAdminAppointments();
             this.loadAppointmentRequests();
-        } else if (userRoles.includes(Roles.Coach)) {
+        } else if (this.userRole == Roles.Coach) {
             this.loadCoachAppointments();
-        } else if (userRoles.includes(Roles.Client)) {
+        } else if (this.userRole == Roles.Client) {
             this.loadClientAppointments();
         }
     }

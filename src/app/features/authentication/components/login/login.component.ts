@@ -5,7 +5,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ValidationService} from "../../../../services/validation.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MessageService} from "primeng/api";
 import {AuthResponse} from "../../models/auth-response";
 import {PasswordModule} from "primeng/password";
@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
         private router: Router,
+        private route: ActivatedRoute,
         private dialogService: DialogService,
         private authenticationService: AuthenticationService,
         private messageService: MessageService) {

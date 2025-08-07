@@ -38,14 +38,14 @@
                             (click)="openCancelationRequestDialog(appointment.id)">
                     </button>
                     <button
-                            *ngIf="appointment.status.name === businessStatuses.Pending"
+                            *ngIf="showPendingActionButtons(appointment)"
                             class="p-button-outlined p-button-success"
                             pButton type="button" icon="pi pi-check"
                             label="Approve"
                             (click)="approve(appointment)">
                     </button>
                     <button
-                            *ngIf="appointment.status.name === businessStatuses.Pending"
+                            *ngIf="showPendingActionButtons(appointment)"
                             class="p-button-outlined p-button-danger"
                             pButton type="button" icon="pi pi-times"
                             label="Decline"

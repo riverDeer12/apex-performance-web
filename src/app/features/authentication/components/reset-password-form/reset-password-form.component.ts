@@ -16,7 +16,6 @@ import {UserService} from "../../../users/services/user.service";
 import {ValidationService} from '../../../../services/validation.service';
 import {HelperService} from '../../../../services/helper.service';
 import {RedirectType} from "../../../../enums/redirect-type";
-import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-reset-password-form',

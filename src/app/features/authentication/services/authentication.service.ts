@@ -35,6 +35,11 @@ export class AuthenticationService {
             request
         );
 
+    notifyMailConfirmation = () =>
+        this.http.get(
+            environment.apiUrl + "/authentication/mail-confirmation",
+        );
+
     isUserLogged(): boolean {
         const token = this.getAuthTokenFromLocalStorage();
         const now = Date.now().valueOf() / 1000;
