@@ -14,12 +14,19 @@ export class CoachService {
     }
 
     getAllCoaches = () => this.http.get<Coach[]>(environment.apiUrl + '/coaches/all');
+
     getCoach = (coachId: string) =>
         this.http.get<Coach>(environment.apiUrl + '/coaches/' + coachId);
+
+    getClientCoaches = () =>
+        this.http.get<Coach[]>(environment.apiUrl + '/coaches/client');
+
     createCoach = (request: DefaultPostRequest) =>
         this.http.post<Coach>(environment.apiUrl + '/coaches/', request);
+
     updateCoach = (coachId: string, request: DefaultUpdateRequest) =>
         this.http.put<Coach>(environment.apiUrl + '/coaches/' + coachId, request);
+
     deleteCoach = (coachId: string) =>
         this.http.delete<Coach>(environment.apiUrl + '/coaches/' + coachId);
 }

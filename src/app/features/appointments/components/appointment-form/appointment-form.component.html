@@ -14,7 +14,7 @@
             <label>Day</label>
             <p-datepicker appendTo="body" id="day" dateFormat="dd.mm.yy" styleClass="w-full"
                           formControlName="day"
-                          (onSelect)="getCoachTimeSlots()"
+                          (onSelect)="getDataForSelectedCoaches()"
                           [firstDayOfWeek]="1"
                           [minDate]="today"
                           [disabledDays]="[0]"></p-datepicker>
@@ -24,7 +24,7 @@
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="timeSlot">Time Slot</label>
-            <p-select id="timeSlot" styleClass="w-full" [options]="filteredTimeSlots"
+            <p-select id="timeSlot" styleClass="w-full" [options]="timeSlots"
                       formControlName="timeSlot"
                       optionLabel="name" optionValue="id"/>
             <small class="p-error"

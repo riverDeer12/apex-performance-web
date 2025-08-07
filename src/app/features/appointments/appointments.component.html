@@ -1,5 +1,5 @@
 <div class="my-3">
-    <p-button (click)="openCreateDialog()" *ngIf="isAdmin"
+    <p-button (click)="openCreateDialog()" *ngIf="userCanCreateAppointment"
               type="button" iconPos="right" icon="pi pi-plus" label="New Appointment"/>
 </div>
 
@@ -20,15 +20,7 @@
 >
     <ng-template #header>
         <tr>
-            <th *ngIf="isAdmin"></th>
-            <th pSortableColumn="status.Name" style="min-width: 12rem">
-                Status
-                <p-sortIcon field="status.Name"/>
-            </th>
-            <th pSortableColumn="clients" style="min-width: 12rem">
-                Clients
-                <p-sortIcon field="clients"/>
-            </th>
+            <th *ngIf="userRole == userRoles.Administrator"></th>
             <th pSortableColumn="startTime" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Start Time
@@ -40,16 +32,24 @@
                 End Time
                 <p-sortIcon field="endTime"/>
             </th>
+            <th pSortableColumn="clients" style="min-width: 12rem">
+                Clients
+                <p-sortIcon field="clients"/>
+            </th>
             <th pSortableColumn="type.Name" style="min-width: 12rem">
                 Type
                 <p-sortIcon field="type.Name"/>
             </th>
-            <th *ngIf="isAdmin"></th>
+            <th pSortableColumn="status.Name" style="min-width: 12rem">
+                Status
+                <p-sortIcon field="status.Name"/>
+            </th>
+            <th *ngIf="userRole == userRoles.Administrator"></th>
         </tr>
     </ng-template>
     <ng-template #body let-appointment>
         <tr>
-            <td>
+            <td *ngIf="userRole == userRoles.Administrator">
                 <p-button
                         *ngIf="areActionsEnabled(appointment)"
                         (click)="approve(appointment)" class="mr-2" icon="pi pi-check" severity="success"
@@ -64,7 +64,10 @@
                 </p>
             </td>
             <td>
-                {{ appointment.status.name }}
+                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>
+                {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
             <td style="font-size: 0.85rem">
                 <span *ngFor="let client of appointment.clients">
@@ -74,24 +77,15 @@
                 </span>
             </td>
             <td>
-                {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
-            </td>
-            <td>
-                {{ appointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
-            </td>
-            <td>
                 {{ appointment.type.name }}
             </td>
-
-            <td *ngIf="isAdmin">
+            <td>
+                {{ appointment.status.name }}
+            </td>
+            <td *ngIf="userRole == userRoles.Administrator">
                 <p-button
                         *ngIf="areActionsEnabled(appointment)"
                         (click)="openInfoDialog(appointment)" class="mr-2" icon="pi pi-info-circle"
-                        severity="secondary"
-                        [outlined]="true"/>
-                <p-button
-                        *ngIf="areActionsEnabled(appointment)"
-                        (click)="openUpdateDialog(appointment)" class="mr-2" icon="pi pi-pencil"
                         severity="secondary"
                         [outlined]="true"/>
             </td>

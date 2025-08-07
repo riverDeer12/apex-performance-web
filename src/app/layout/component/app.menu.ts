@@ -56,13 +56,13 @@ export class AppMenu implements OnInit {
       },
       {
         label: "Appointments",
-        visible: this.authenticationService.checkPermission(
-          Permissions.CanGetAppointments,
-        ),
         items: [
           {
             label: "Appointments",
             icon: "pi pi-fw pi-calendar",
+            visible: this.authenticationService.checkPermission(
+                Permissions.CanGetAppointments,
+            ),
             routerLink: ["/admin/appointments"],
           },
           {
@@ -73,7 +73,9 @@ export class AppMenu implements OnInit {
           },
           {
             label: "Appointment Requests",
-            visible: this.authenticationService.validateUserRole(Roles.Coach),
+            visible: this.authenticationService.checkPermission(
+                Permissions.CanGetAppointmentRequests,
+            ),
             icon: "pi pi-fw pi-file-check",
             routerLink: ["/admin/appointments/appointment-requests"],
           },
@@ -94,9 +96,7 @@ export class AppMenu implements OnInit {
       },
       {
         label: "Clients",
-        visible: this.authenticationService.checkPermission(
-          Permissions.CanGetClients,
-        ),
+        visible: this.authenticationService.validateUserRole(),
         items: [
           {
             label: "Clients",
@@ -107,9 +107,7 @@ export class AppMenu implements OnInit {
       },
       {
         label: "Coaches",
-        visible: this.authenticationService.checkPermission(
-            Permissions.CanGetCoaches,
-        ),
+        visible: this.authenticationService.validateUserRole(),
         items: [
           {
             label: "Coaches",

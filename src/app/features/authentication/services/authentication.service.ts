@@ -56,6 +56,22 @@ export class AuthenticationService {
         return roles.includes(<string>validRole);
     }
 
+    getUserRole(): string {
+        const userRoles = this.getLoggedUserRoles();
+
+        switch (true) {
+            case userRoles.includes(Roles.Administrator):
+            case userRoles.includes(Roles.SuperAdmin):
+                return Roles.Administrator;
+            case userRoles.includes(Roles.Client):
+                return Roles.Client;
+            case userRoles.includes(Roles.Coach):
+                return Roles.Coach;
+            default:
+                return Roles.Client;
+        }
+    }
+
     /**
      * Log out user from application.
      *

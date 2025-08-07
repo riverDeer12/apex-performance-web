@@ -27,6 +27,8 @@ import {TimeSlotService} from "../../../time-slots/services/time-slot.service";
 import {TimeSlot} from "../../../time-slots/models/time-slot";
 import {DatePicker} from "primeng/datepicker";
 import {DateExtensions} from "../../../../shared/extensions/date-extensions";
+import {Roles} from "../../../../constants/roles";
+import {AuthenticationService} from '../../../authentication/services/authentication.service';
 
 @Component({
     selector: "app-appointment-form",
@@ -49,6 +51,8 @@ export class AppointmentFormComponent implements OnInit {
     @Input() dialogId!: string;
     @Input() returnUrl!: string;
 
+    userRole!: string;
+
     form!: FormGroup;
 
     clients!: Client[];
@@ -56,8 +60,6 @@ export class AppointmentFormComponent implements OnInit {
     appointmentTypes!: AppointmentType[];
 
     timeSlots!: TimeSlot[];
-
-    filteredTimeSlots!: TimeSlot[];
 
     loadingData = false;
 
@@ -73,15 +75,14 @@ export class AppointmentFormComponent implements OnInit {
         private appointmentService: AppointmentService,
         private appointmentTypeService: AppointmentTypeService,
         private messageService: MessageService,
+        private authenticationService: AuthenticationService
     ) {
+        this.userRole = this.authenticationService.getUserRole();
     }
 
     ngOnInit(): void {
-        this.initForm();
-        this.getClients();
-        this.getCoaches();
-        this.getAppointmentTypes();
-        this.getTimeSlots();
+        this.initCreateForm();
+        this.initFormData();
     }
 
     submit() {
@@ -104,16 +105,62 @@ export class AppointmentFormComponent implements OnInit {
             return;
         }
 
-        this.type == ActionType.Create
-            ? this.createAppointment()
-            : this.updateAppointment();
+        this.createAppointment();
     }
 
+    getDataForSelectedCoaches(): void {
 
-    private initForm = () =>
-        this.type == ActionType.Create
-            ? this.initCreateForm()
-            : this.initUpdateForm();
+        this.loadingData = true;
+
+        if (this.form.controls["coaches"].invalid || this.form.controls["day"].invalid) {
+            this.messageService.add({
+                severity: "warn",
+                summary: "Incomplete or incorrect data",
+                detail: "Please select appointment day.",
+            });
+
+            this.loadingData = false;
+
+            return;
+        }
+
+        const payload = {
+            coaches: this.form.controls["coaches"].value,
+            day: new Date(this.form.controls["day"].value).getDay()
+        };
+
+        this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
+            this.timeSlots = response.map((x: TimeSlot) =>
+                Object.assign(new TimeSlot(), x),
+            );
+        });
+
+        this.clientService.getCoachesClients(payload).subscribe((response: Client[]) => {
+            this.clients = response.map((x: Client) =>
+                Object.assign(new Client(), x),
+            );
+        })
+    }
+
+    private initFormData() {
+
+        this.getAllAppointmentTypes();
+
+        switch (this.userRole) {
+            case Roles.Administrator:
+                this.getAllClients();
+                this.getAllCoaches();
+                break;
+            case Roles.Client:
+                this.getClientCoaches();
+                break;
+            case Roles.Coach:
+                this.getCoachClients();
+                break;
+            default:
+                break;
+        }
+    }
 
     private initCreateForm() {
         this.form = this.formBuilder.group({
@@ -124,18 +171,6 @@ export class AppointmentFormComponent implements OnInit {
             type: ["", [Validators.required]],
             clients: ["", [Validators.required]],
             coaches: ["", [Validators.required]],
-        });
-    }
-
-    private initUpdateForm() {
-        this.form = this.formBuilder.group({
-            day: [new Date(this.appointment.startTime), [Validators.required]],
-            startTime: [new Date(this.appointment.startTime), [Validators.required]],
-            endTime: [new Date(this.appointment.endTime), [Validators.required]],
-            timeSlot: [this.appointment.timeSlot.id, [Validators.required]],
-            type: [this.appointment.type.id, [Validators.required]],
-            clients: [this.appointment.clients?.map(x => x.id), [Validators.required]],
-            coaches: [this.appointment.coaches?.map(x => x.id), [Validators.required]],
         });
     }
 
@@ -171,41 +206,15 @@ export class AppointmentFormComponent implements OnInit {
         });
     }
 
-    private updateAppointment() {
-        this.appointmentService
-            .updateAppointment(this.appointment.id, this.form.value)
-            .subscribe({
-                next: (response: Appointment) => {
-                    this.appointment = Object.assign(new Appointment(), response);
-
-                    this.messageService.add({
-                        severity: "success",
-                        summary: "Success",
-                        detail: "Appointment is updated successfully.",
-                    });
-
-                    this.helperService.redirectUserAfterSubmit(
-                        this.redirectType,
-                        this.returnUrl,
-                        this.dialogId,
-                    );
-                },
-                error: (error) => {
-                    console.error("Error:", error);
-
-                    this.messageService.add({
-                        severity: "error",
-                        summary: "Error Updating Appointment",
-                        detail: error.message || "An unexpected error occurred.",
-                    });
-                },
-                complete: () => {
-                    this.loadingData = false;
-                },
-            });
+    private getCoachClients() {
+        this.clientService.getCoachClients().subscribe((response: Client[]) => {
+            this.clients = response.map((x: Client) =>
+                Object.assign(new Client(), x),
+            );
+        });
     }
 
-    private getClients() {
+    private getAllClients() {
         this.clientService.getAllClients().subscribe((response: Client[]) => {
             this.clients = response.map((x: Client) =>
                 Object.assign(new Client(), x),
@@ -213,7 +222,7 @@ export class AppointmentFormComponent implements OnInit {
         });
     }
 
-    private getCoaches() {
+    private getAllCoaches() {
         this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
             this.coaches = response.map((x: Coach) =>
                 Object.assign(new Coach(), x),
@@ -221,7 +230,15 @@ export class AppointmentFormComponent implements OnInit {
         });
     }
 
-    private getAppointmentTypes() {
+    private getClientCoaches() {
+        this.coachService.getClientCoaches().subscribe((response: Coach[]) => {
+            this.coaches = response.map((x: Coach) =>
+                Object.assign(new Coach(), x),
+            );
+        });
+    }
+
+    private getAllAppointmentTypes() {
         this.appointmentTypeService
             .getAllAppointmentTypes()
             .subscribe((response: AppointmentType[]) => {
@@ -229,44 +246,6 @@ export class AppointmentFormComponent implements OnInit {
                     Object.assign(new AppointmentType(), x),
                 );
             });
-    }
-
-    private getTimeSlots() {
-        this.timeSlotService.getAllTimeSlots().subscribe((response: TimeSlot[]) => {
-            this.timeSlots = response.map((x: TimeSlot) =>
-                Object.assign(new TimeSlot(), x),
-            );
-
-            this.filteredTimeSlots = this.timeSlots;
-        });
-    }
-
-    getCoachTimeSlots() {
-
-        this.loadingData = true;
-
-        if (this.form.controls["coaches"].invalid || this.form.controls["day"].invalid) {
-            this.messageService.add({
-                severity: "warn",
-                summary: "Incomplete or incorrect data",
-                detail: "Check the entered data and try again.",
-            });
-
-            this.loadingData = false;
-
-            return;
-        }
-
-        const payload = {
-            coaches: this.form.controls["coaches"].value,
-            day: new Date(this.form.controls["day"].value).getDay()
-        };
-
-        this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
-            this.filteredTimeSlots = response.map((x: TimeSlot) =>
-                Object.assign(new TimeSlot(), x),
-            );
-        });
     }
 
     private setAppointmentTime() {

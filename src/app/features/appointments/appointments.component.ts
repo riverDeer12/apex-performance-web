@@ -11,7 +11,10 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
 import {BusinessStatuses} from "../../constants/business-statuses";
-import {AppointmentRequest} from "./models/appointment-request";
+import {Roles} from "../../constants/roles";
+import { AuthenticationService } from "../authentication/services/authentication.service";
+import {AppointmentsStatus} from "../../shared/data-transfer-objects/appointments-status";
+import {Permissions} from "../../constants/permissions";
 
 @Component({
     selector: "app-appointments",
@@ -22,20 +25,26 @@ import {AppointmentRequest} from "./models/appointment-request";
     styleUrl: "./appointments.component.scss",
 })
 export class AppointmentsComponent implements OnInit {
-    @Input() isAdmin: boolean = true;
+    userRole!: string;
 
     appointments!: Appointment[];
 
-    public get businessStatuses(): typeof BusinessStatuses {
-        return BusinessStatuses;
+    get userCanCreateAppointment(): boolean{
+        return this.authenticationService.checkPermission(Permissions.CanCreateAppointment);
+    }
+
+    get userRoles(): typeof Roles {
+        return Roles;
     }
 
     constructor(
         private appointmentService: AppointmentService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
+        private authenticationService: AuthenticationService,
         private dialogService: DialogService,
     ) {
+        this.userRole = this.authenticationService.getUserRole();
     }
 
     ngOnInit() {
@@ -43,6 +52,16 @@ export class AppointmentsComponent implements OnInit {
     }
 
     private loadData(): void {
+        if (this.userRole == Roles.Administrator) {
+            this.loadAdminAppointments();
+        } else if (this.userRole == Roles.Coach) {
+            this.loadCoachAppointments();
+        } else if (this.userRole == Roles.Client) {
+            this.loadClientAppointments();
+        }
+    }
+
+    loadAdminAppointments(): void {
         this.appointmentService.getAllAppointments().subscribe({
             next: (data: Appointment[]) => {
                 this.appointments = data.map((x: Appointment) =>
@@ -55,12 +74,38 @@ export class AppointmentsComponent implements OnInit {
         });
     }
 
+    loadCoachAppointments(): void {
+        this.appointmentService.getCoachAppointments().subscribe({
+            next: (data: AppointmentsStatus) => {
+                this.appointments = data.approvedAppointments.map((x: Appointment) =>
+                    Object.assign(new Appointment(), x),
+                );
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+
+    loadClientAppointments(): void {
+        this.appointmentService.getClientAppointments().subscribe({
+            next: (data: AppointmentsStatus) => {
+                this.appointments = data.approvedAppointments.map((x: Appointment) =>
+                    Object.assign(new Appointment(), x),
+                );
+            },
+            error: (err) => {
+                console.error(err);
+            },
+        });
+    }
+
     areActionsEnabled = (appointment: Appointment) =>
-        this.isAdmin && appointment.status.name == BusinessStatuses.Pending ||
+        this.userRole == Roles.Administrator && appointment.status.name == BusinessStatuses.Pending ||
         appointment.status.name == BusinessStatuses.InProgress
 
     isStatusTextVisible = (appointment: Appointment) =>
-        this.isAdmin && appointment.status.name != BusinessStatuses.Pending &&
+        this.userRole == Roles.Administrator && appointment.status.name != BusinessStatuses.Pending &&
         appointment.status.name != BusinessStatuses.InProgress;
 
     getTextColor = (appointment: Appointment) => {
@@ -75,7 +120,6 @@ export class AppointmentsComponent implements OnInit {
                 return "";
         }
     }
-
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
@@ -99,24 +143,6 @@ export class AppointmentsComponent implements OnInit {
                 contentType: EntityType.Appointment,
                 data: appointment,
             },
-        });
-    }
-
-    openUpdateDialog(appointment: Appointment) {
-        const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header:
-                "Update data for: " +
-                formatDate(appointment.startTime, "dd.MM.yyyy HH:mm", "en-US"),
-            data: {
-                contentType: EntityType.Appointment,
-                formType: ActionType.Update,
-                dialogId: "updateAppointmentForm",
-                data: appointment,
-            },
-        });
-
-        dialogRef.onClose.subscribe((response: any) => {
-            this.loadData();
         });
     }
 

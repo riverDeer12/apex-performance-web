@@ -47,7 +47,6 @@ import {ButtonLabel} from "primeng/button";
                     <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                         <i class="mx-2"
                            [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme()}"></i>
-                        Change Theme
                     </button>
                 </div>
 

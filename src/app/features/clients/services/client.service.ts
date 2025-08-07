@@ -14,12 +14,22 @@ export class ClientService {
     }
 
     getAllClients = () => this.http.get<Client[]>(environment.apiUrl + '/clients/all');
+
     getClient = (clientId: string) =>
         this.http.get<Client>(environment.apiUrl + '/clients/' + clientId);
+
+    getCoachClients = () =>
+        this.http.get<Client[]>(environment.apiUrl + '/clients/coach');
+
+    getCoachesClients = (request: DefaultPostRequest) =>
+        this.http.post<Client[]>(environment.apiUrl + '/clients/coaches', request);
+
     createClient = (request: DefaultPostRequest) =>
         this.http.post<Client>(environment.apiUrl + '/clients/', request);
+
     updateClient = (clientId: string, request: DefaultUpdateRequest) =>
         this.http.put<Client>(environment.apiUrl + '/clients/' + clientId, request);
+
     deleteClient = (clientId: string) =>
         this.http.delete<Client>(environment.apiUrl + '/clients/' + clientId);
 }
