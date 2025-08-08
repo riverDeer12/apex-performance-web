@@ -1,6 +1,6 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
-        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+        <div *ngIf="userRole != userRoles.Coach" class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="clients">Coaches</label>
             <p-multi-select [filter]="true" [options]="coaches"
                             appendTo="body" styleClass="w-full"

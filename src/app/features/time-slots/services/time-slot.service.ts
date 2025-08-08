@@ -19,6 +19,9 @@ export class TimeSlotService {
         this.http.get<TimeSlot>(environment.apiUrl + '/time-slots/' + timeSlotId);
 
     getCoachTimeSlots = (request: DefaultPostRequest) =>
+        this.http.post<TimeSlot[]>(environment.apiUrl + '/time-slots/available', request);
+
+    updateCoachTimeSlots = (request: DefaultPostRequest) =>
         this.http.post<TimeSlot[]>(environment.apiUrl + '/time-slots/coach', request);
 
     createTimeSlot = (request: DefaultPostRequest) =>

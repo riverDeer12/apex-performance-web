@@ -1,0 +1,1 @@
+var t=class{static Approved="Approved";static Declined="Declined";static Canceled="Canceled";static InProgress="InProgress";static Pending="Pending"};var a=class{id;type;status;appointment;sender;comment};export{t as a,a as b};

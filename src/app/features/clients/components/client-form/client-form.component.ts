@@ -18,6 +18,8 @@ import {ClientService} from "../../services/client.service";
 import {Coach} from "../../../coaches/models/coach";
 import {CoachService} from "../../../coaches/services/coach.service";
 import {MultiSelect} from "primeng/multiselect";
+import { AuthenticationService } from "../../../authentication/services/authentication.service";
+import {Roles} from "../../../../constants/roles";
 
 @Component({
     selector: "app-client-form",
@@ -33,11 +35,17 @@ export class ClientFormComponent implements OnInit {
     @Input() dialogId!: string;
     @Input() returnUrl!: string;
 
+    userRole!: string;
+
     form!: FormGroup;
 
     coaches!: Coach[];
 
     loadingData = false;
+
+    get userRoles(): typeof Roles {
+        return Roles;
+    }
 
     constructor(
         public validationService: ValidationService,
@@ -45,13 +53,15 @@ export class ClientFormComponent implements OnInit {
         private helperService: HelperService,
         private clientService: ClientService,
         private coachService: CoachService,
+        private authenticationService: AuthenticationService,
         private messageService: MessageService,
     ) {
+        this.userRole = this.authenticationService.getUserRole();
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.initForm();
-        this.getCoaches();
+        this.loadData();
     }
 
     submit() {
@@ -72,6 +82,22 @@ export class ClientFormComponent implements OnInit {
         }
 
         this.type == ActionType.Create ? this.createClient() : this.updateClient();
+    }
+
+    private loadData(): void {
+        if (this.userRole == Roles.Administrator) {
+            this.getAllCoaches();
+        } else {
+            this.setCoach();
+        }
+    }
+
+    private setCoach() {
+        this.coachService.getCurrentCoachId().subscribe({
+            next: coachId => {
+                this.form.controls["coaches"].setValue([coachId]);
+            }
+        })
     }
 
     private initForm = () =>
@@ -164,7 +190,7 @@ export class ClientFormComponent implements OnInit {
         });
     }
 
-    private getCoaches() {
+    private getAllCoaches() {
         this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
             this.coaches = response.map((x: Coach) =>
                 Object.assign(new Coach(), x),

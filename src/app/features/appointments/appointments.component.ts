@@ -146,40 +146,6 @@ export class AppointmentsComponent implements OnInit {
         });
     }
 
-    confirmDelete(appointment: Appointment) {
-        this.confirmationService.confirm({
-            message: 'Are you sure that you want to deactivate this appointment?',
-            header: 'Confirm deletion of ' + formatDate(appointment.startTime, "dd.MM.yyyy HH:mm", "en-US"),
-            closable: true,
-            closeOnEscape: true,
-            icon: 'pi pi-exclamation-triangle',
-            rejectButtonProps: {
-                label: 'No',
-                severity: 'secondary',
-                outlined: true,
-            },
-            acceptButtonProps: {
-                label: 'Yes',
-            },
-            accept: () => {
-                this.appointmentService.deleteAppointment(appointment.id)
-                    .subscribe((response) => {
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: 'Appointment has been deactivated.'
-                        });
-                    }, error => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error deactivating appointment.'
-                        });
-                    });
-            }
-        });
-    }
-
     approve(appointment: Appointment): void {
         this.appointmentService.approveAppointment(appointment.id).subscribe({
             next: (data) => {

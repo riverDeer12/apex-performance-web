@@ -51,7 +51,7 @@
                    *ngIf="validationService.hasErrors(form, 'credits', 'min')"
                    id="credits-input-min">Minimun value is 0.</small>
         </div>
-        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+        <div *ngIf="userRole != userRoles.Coach" class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="coaches">Coaches</label>
             <p-multi-select [filter]="true" [options]="coaches"
                             appendTo="body" styleClass="w-full"

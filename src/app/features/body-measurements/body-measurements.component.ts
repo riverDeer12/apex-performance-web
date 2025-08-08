@@ -5,7 +5,6 @@ import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
 import {Table, TableModule} from "primeng/table";
-import {Client} from "../clients/models/client";
 import {DialogService} from "primeng/dynamicdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {HelperService} from "../../services/helper.service";

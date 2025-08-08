@@ -65,6 +65,10 @@ export class AppointmentFormComponent implements OnInit {
 
     today = new Date();
 
+    get userRoles(): typeof Roles {
+        return Roles;
+    }
+
     constructor(
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
@@ -122,24 +126,26 @@ export class AppointmentFormComponent implements OnInit {
             this.loadingData = false;
 
             return;
+        } else {
+            const payload = {
+                coaches: this.form.controls["coaches"].value,
+                day: new Date(this.form.controls["day"].value).getDay()
+            };
+
+            this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
+                this.timeSlots = response.map((x: TimeSlot) =>
+                    Object.assign(new TimeSlot(), x),
+                );
+            });
+
+            if(this.userRole != Roles.Coach) {
+                this.clientService.getCoachesClients(payload).subscribe((response: Client[]) => {
+                    this.clients = response.map((x: Client) =>
+                        Object.assign(new Client(), x),
+                    );
+                })
+            }
         }
-
-        const payload = {
-            coaches: this.form.controls["coaches"].value,
-            day: new Date(this.form.controls["day"].value).getDay()
-        };
-
-        this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
-            this.timeSlots = response.map((x: TimeSlot) =>
-                Object.assign(new TimeSlot(), x),
-            );
-        });
-
-        this.clientService.getCoachesClients(payload).subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-                Object.assign(new Client(), x),
-            );
-        })
     }
 
     private initFormData() {
@@ -156,10 +162,19 @@ export class AppointmentFormComponent implements OnInit {
                 break;
             case Roles.Coach:
                 this.getCoachClients();
+                this.setCoach();
                 break;
             default:
                 break;
         }
+    }
+
+    private setCoach() {
+        this.coachService.getCurrentCoachId().subscribe({
+            next: coachId => {
+                this.form.controls["coaches"].setValue([coachId]);
+            }
+        })
     }
 
     private initCreateForm() {

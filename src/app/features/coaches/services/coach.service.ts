@@ -4,6 +4,7 @@ import {Coach} from "../models/coach";
 import {environment} from "../../../../environments/environment";
 import {DefaultPostRequest} from "../../../models/default-post-request";
 import {DefaultUpdateRequest} from "../../../models/default-update-request";
+import {map, Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -29,4 +30,13 @@ export class CoachService {
 
     deleteCoach = (coachId: string) =>
         this.http.delete<Coach>(environment.apiUrl + '/coaches/' + coachId);
+
+    getCurrentCoachId(): Observable<string> {
+        return this.getCurrentCoach().pipe(
+            map((data: { id: string; }) => data.id)
+        );
+    }
+
+    private getCurrentCoach = () =>
+        this.http.get<Coach>(environment.apiUrl + '/coaches/current-coach');
 }
