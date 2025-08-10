@@ -18,7 +18,7 @@ steps:
 - script: |
     npm install -g @angular/cli
     npm install
-    npm run development
+    npm run production
   displayName: 'npm install and build'
 
 - task: ArchiveFiles@2
@@ -26,11 +26,11 @@ steps:
     rootFolderOrFile: '$(Build.SourcesDirectory)/dist/apex-performance'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactDevelopmentDirectory)/drop_fr_production.zip'
+    archiveFile: '$(Build.ArtifactProductionDirectory)/drop_fr_production.zip'
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactDevelopmentDirectory)'
+    PathtoPublish: '$(Build.ArtifactProductionDirectory)'
     ArtifactName: 'drop_fr_production'
     publishLocation: 'Container'
