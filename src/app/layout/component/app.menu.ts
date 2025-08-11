@@ -5,7 +5,6 @@ import {MenuItem} from "primeng/api";
 import {AppMenuitem} from "./app.menuitem";
 import {AuthenticationService} from "../../features/authentication/services/authentication.service";
 import {Permissions} from "../../constants/permissions";
-import {Role} from "../../features/roles/roles/models/role";
 import { Roles } from "../../constants/roles";
 
 @Component({
