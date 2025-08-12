@@ -10,7 +10,7 @@ export const AuthenticationRoutes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'mail-confirmation/:token',
+        path: 'mail-confirmation',
         component: MailConfirmationComponent
     },
     {
