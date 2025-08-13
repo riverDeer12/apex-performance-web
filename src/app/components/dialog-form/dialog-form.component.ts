@@ -26,6 +26,9 @@ import {
 import {
   CancelationRequestFormComponent
 } from "../../features/appointments/components/cancelation-request-form/cancelation-request-form.component";
+import {
+  ChangeUsernameFormComponent
+} from '../../features/authentication/components/change-username-form/change-username-form.component';
 
 @Component({
   selector: "app-dialog-form",
@@ -45,6 +48,7 @@ import {
     CoachFormComponent,
     ResetPasswordFormComponent,
     CancelationRequestFormComponent,
+    ChangeUsernameFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

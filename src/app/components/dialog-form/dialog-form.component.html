@@ -42,6 +42,12 @@
         [appointmentId]="data">
 </app-cancelation-request-form>
 
+<app-change-username-form
+    *ngIf="contentType === entityType.ChangeUsername"
+    [redirectType]="redirectType"
+    [dialogId]="dialogId">
+</app-change-username-form>
+
 <app-client-form
         *ngIf="contentType === entityType.Client"
         [type]="formType"

@@ -6,6 +6,7 @@ export enum EntityType {
     AppointmentType,
     BodyMeasurement,
     CancelationRequest,
+    ChangeUsername,
     Client,
     Coach,
     Recipe,
