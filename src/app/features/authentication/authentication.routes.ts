@@ -18,7 +18,7 @@ export const AuthenticationRoutes: Routes = [
         component: RegistrationComponent
     },
     {
-        path: 'reset-password/:token',
+        path: 'reset-password',
         component: ResetPasswordComponent
     }
 ]
