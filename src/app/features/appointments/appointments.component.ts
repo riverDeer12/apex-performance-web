@@ -35,13 +35,12 @@ export class AppointmentsComponent implements OnInit {
     );
   }
 
-  get userRoles(): typeof Roles {
+  get userRoles (): typeof Roles{
     return Roles;
   }
 
   constructor(
     private appointmentService: AppointmentService,
-    private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,

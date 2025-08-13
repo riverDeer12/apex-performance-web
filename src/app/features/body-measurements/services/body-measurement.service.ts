@@ -15,12 +15,19 @@ export class BodyMeasurementService {
 
     getAllBodyMeasurements = () => 
         this.http.get<BodyMeasurement[]>(environment.apiUrl + "/body-measurements");
-    getBodyMeasurement = (bodyMeasurementId: string) =>
-        this.http.get<BodyMeasurement>(environment.apiUrl + "/body-measurements/" + bodyMeasurementId);
+
+    getCoachClientsBodyMeasurements = () =>
+        this.http.get<BodyMeasurement[]>(environment.apiUrl + "/body-measurements/coach");
+
+    getClientBodyMeasurements = () =>
+        this.http.get<BodyMeasurement[]>(environment.apiUrl + "/body-measurements/client");
+
     createBodyMeasurement = (request: DefaultPostRequest) =>
         this.http.post<BodyMeasurement>(environment.apiUrl + "/body-measurements/", request);
+
     updateBodyMeasurement = (bodyMeasurementId: string, request: DefaultUpdateRequest) =>
         this.http.put<BodyMeasurement>(environment.apiUrl + "/body-measurements/" + bodyMeasurementId, request);
+
     deleteBodyMeasurement = (bodyMeasurementId: string) =>
         this.http.delete<BodyMeasurement>(environment.apiUrl + "/body-measurements/" + bodyMeasurementId);
 }

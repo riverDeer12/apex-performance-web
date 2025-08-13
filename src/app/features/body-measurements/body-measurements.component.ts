@@ -1,51 +1,81 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Button, ButtonDirective} from "primeng/button";
-import {DatePipe} from "@angular/common";
-import {IconField} from "primeng/iconfield";
-import {InputIcon} from "primeng/inputicon";
-import {InputText} from "primeng/inputtext";
-import {Table, TableModule} from "primeng/table";
-import {DialogService} from "primeng/dynamicdialog";
-import {ConfirmationService, MessageService} from "primeng/api";
-import {HelperService} from "../../services/helper.service";
-import {DialogFormComponent} from "../../components/dialog-form/dialog-form.component";
-import {EntityType} from "../../enums/entity-type";
-import {ActionType} from "../../enums/action-type";
-import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
-import {BodyMeasurement} from "./models/body-measurement";
-import {BodyMeasurementService} from "./services/body-measurement.service";
+import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { Button, ButtonDirective } from "primeng/button";
+import { CommonModule, DatePipe } from "@angular/common";
+import { IconField } from "primeng/iconfield";
+import { InputIcon } from "primeng/inputicon";
+import { InputText } from "primeng/inputtext";
+import { Table, TableModule } from "primeng/table";
+import { DialogService } from "primeng/dynamicdialog";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { HelperService } from "../../services/helper.service";
+import { DialogFormComponent } from "../../components/dialog-form/dialog-form.component";
+import { EntityType } from "../../enums/entity-type";
+import { ActionType } from "../../enums/action-type";
+import { DialogInfoComponent } from "../../components/dialog-info/dialog-info.component";
+import { BodyMeasurement } from "./models/body-measurement";
+import { BodyMeasurementService } from "./services/body-measurement.service";
+import { Roles } from "../../constants/roles";
+import { AuthenticationService } from "../authentication/services/authentication.service";
 
 @Component({
-  selector: 'app-body-measurements',
+  selector: "app-body-measurements",
   imports: [
+    CommonModule,
     Button,
     ButtonDirective,
     DatePipe,
     IconField,
     InputIcon,
     InputText,
-    TableModule
+    TableModule,
   ],
   providers: [DialogService],
-  templateUrl: './body-measurements.component.html',
-  styleUrl: './body-measurements.component.scss'
+  templateUrl: "./body-measurements.component.html",
+  styleUrl: "./body-measurements.component.scss",
 })
 export class BodyMeasurementsComponent implements OnInit {
   @Input() bodyMeasurements!: BodyMeasurement[];
 
   @ViewChild(`filter`) filter!: ElementRef;
 
+  userRole!: string;
+
+  get userRoles(): typeof Roles {
+    return Roles;
+  }
+
+  get canManageBodyMeasurements(): boolean {
+    const loggedUserRole = this.authenticationService.getUserRole();
+
+    return (
+      loggedUserRole == Roles.Administrator || loggedUserRole == Roles.Coach
+    );
+  }
+
   constructor(
-      private bodyMeasurementService: BodyMeasurementService,
-      private dialogService: DialogService,
-      private messageService: MessageService,
-      private helperService: HelperService,
-      private confirmationService: ConfirmationService,
-  ) {}
+    private bodyMeasurementService: BodyMeasurementService,
+    private dialogService: DialogService,
+    private messageService: MessageService,
+    private helperService: HelperService,
+    private confirmationService: ConfirmationService,
+    private authenticationService: AuthenticationService,
+  ) {
+    this.userRole = this.authenticationService.getUserRole();
+  }
 
   ngOnInit(): void {
     this.loadData();
     this.getDataStatus();
+  }
+
+  private loadData(): void {
+    if (this.userRole == Roles.Administrator) {
+      this.loadAdminBodyMeasurements();
+    } else if (this.userRole == Roles.Coach) {
+      this.loadCoachBodyMeasurements();
+    } else if (this.userRole == Roles.Client) {
+      this.loadClientBodyMeasurements();
+    }
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -100,7 +130,8 @@ export class BodyMeasurementsComponent implements OnInit {
 
   confirmDelete(bodyMeasurement: BodyMeasurement) {
     this.confirmationService.confirm({
-      message: "Are you sure that you want to deactivate this Body Measurement?",
+      message:
+        "Are you sure that you want to deactivate this Body Measurement?",
       header: "Confirm deletion of " + bodyMeasurement.id,
       closable: true,
       closeOnEscape: true,
@@ -114,7 +145,9 @@ export class BodyMeasurementsComponent implements OnInit {
         label: "Yes",
       },
       accept: () => {
-        this.bodyMeasurementService.deleteBodyMeasurement(bodyMeasurement.id).subscribe(
+        this.bodyMeasurementService
+          .deleteBodyMeasurement(bodyMeasurement.id)
+          .subscribe(
             (response) => {
               this.messageService.add({
                 severity: "success",
@@ -129,17 +162,39 @@ export class BodyMeasurementsComponent implements OnInit {
                 detail: "Error deactivating Body Measurement.",
               });
             },
-        );
+          );
       },
     });
   }
 
-  private loadData() {
-    this.bodyMeasurementService.getAllBodyMeasurements().subscribe((response: BodyMeasurement[]) => {
-      this.bodyMeasurements = response.map((x: BodyMeasurement) =>
+  private loadAdminBodyMeasurements(): void {
+    this.bodyMeasurementService
+      .getAllBodyMeasurements()
+      .subscribe((response: BodyMeasurement[]) => {
+        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
           Object.assign(new BodyMeasurement(), x),
-      );
-    });
+        );
+      });
+  }
+
+  private loadCoachBodyMeasurements(): void {
+    this.bodyMeasurementService
+      .getCoachClientsBodyMeasurements()
+      .subscribe((response: BodyMeasurement[]) => {
+        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
+          Object.assign(new BodyMeasurement(), x),
+        );
+      });
+  }
+
+  private loadClientBodyMeasurements(): void {
+    this.bodyMeasurementService
+      .getClientBodyMeasurements()
+      .subscribe((response: BodyMeasurement[]) => {
+        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
+          Object.assign(new BodyMeasurement(), x),
+        );
+      });
   }
 
   private getDataStatus() {

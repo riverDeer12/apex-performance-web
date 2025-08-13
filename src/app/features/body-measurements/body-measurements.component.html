@@ -1,6 +1,6 @@
-<div class="my-3">
+<div class="my-3" *ngIf="canManageBodyMeasurements">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Body Measurement"/>
+              type="button" iconPos="right" icon="pi pi-plus" label="New Body Measurement" />
 </div>
 
 <p-table
@@ -13,7 +13,7 @@
     [rowHover]="true"
     [showGridlines]="true"
     [paginator]="true"
-    [globalFilterFields]="['client.firstName', 'client.lastName']"
+    [globalFilterFields]="['firstName', 'lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
     currentPageReportTemplate="There are {totalRecords} entries"
@@ -33,53 +33,79 @@
     </ng-template>
     <ng-template #header>
         <tr>
-            <th pSortableColumn="client.firstName" style="min-width: 12rem">
+            <th *ngIf="canManageBodyMeasurements" pSortableColumn="firstName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Firstname
-                    <p-sortIcon field="client.firstName"/>
-                    <p-columnFilter type="text" field="client.firstName" display="menu" class="ml-auto"/>
+                    <p-sortIcon field="firstName" />
+                    <p-columnFilter type="text" field="firstName" display="menu" class="ml-auto" />
                 </div>
             </th>
-            <th pSortableColumn="client.lastName" style="min-width: 12rem">
+            <th *ngIf="canManageBodyMeasurements" pSortableColumn="lastName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Lastname
-                    <p-sortIcon field="client.lastName"/>
-                    <p-columnFilter type="text" field="client.lastName" display="menu" class="ml-auto"/>
+                    <p-sortIcon field="lastName" />
+                    <p-columnFilter type="text" field="lastName" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
-                Created At
-                <p-sortIcon field="createdAt"/>
+                Measured At
+                <p-sortIcon field="createdAt" />
             </th>
-            <th pSortableColumn="updatedAt" style="min-width: 12rem">
-                Last Changes
-                <p-sortIcon field="updatedAt"/>
+            <th pSortableColumn="weight" style="min-width: 12rem">
+                Weight
+                <p-sortIcon field="weight" />
             </th>
-            <th style="width: 11rem"></th>
+            <th pSortableColumn="shoulders" style="min-width: 12rem">
+                Shoulders
+                <p-sortIcon field="shoulders" />
+            </th>
+            <th pSortableColumn="chest" style="min-width: 12rem">
+                Chest
+                <p-sortIcon field="chest" />
+            </th>
+            <th pSortableColumn="upperArm" style="min-width: 12rem">
+                Upper Arm
+                <p-sortIcon field="upperArm" />
+            </th>
+            <th pSortableColumn="waist" style="min-width: 12rem">
+                Waist
+                <p-sortIcon field="waist" />
+            </th>
+            <th pSortableColumn="thigh" style="min-width: 12rem">
+                Thigh
+                <p-sortIcon field="thigh" />
+            </th>
+            <th pSortableColumn="calves" style="min-width: 12rem">
+                Calves
+                <p-sortIcon field="calves" />
+            </th>
+            <th *ngIf="canManageBodyMeasurements" style="width: 11rem"></th>
         </tr>
     </ng-template>
     <ng-template #body let-bodyMeasurement>
         <tr>
-            <td>
-                {{ bodyMeasurement.client.firstName }}
+            <td *ngIf="canManageBodyMeasurements">
+                {{ bodyMeasurement.firstName }}
+            </td>
+            <td *ngIf="canManageBodyMeasurements">
+                {{ bodyMeasurement.lastName }}
             </td>
             <td>
-                {{ bodyMeasurement.client.lastName }}
+                {{ bodyMeasurement.createdAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
-            <td>
-                {{ bodyMeasurement.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
-            </td>
-            <td>
-                {{ bodyMeasurement.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
-            </td>
-            <td class="flex">
-                <p-button (click)="openInfoDialog(bodyMeasurement)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
-                          [outlined]="true"/>
-                <p-button (click)="openUpdateDialog(bodyMeasurement)" class="mr-2" icon="pi pi-pencil"
+            <td>{{ bodyMeasurement.weight + 'kg' }}</td>
+            <td>{{ bodyMeasurement.shoulders + 'cm' }}</td>
+            <td>{{ bodyMeasurement.chest + 'cm' }}</td>
+            <td>{{ bodyMeasurement.upperArm + 'cm' }}</td>
+            <td>{{ bodyMeasurement.waist + 'cm' }}</td>
+            <td>{{ bodyMeasurement.thigh + 'cm' }}</td>
+            <td>{{ bodyMeasurement.calves + 'cm' }}</td>
+            <td class="flex" *ngIf="canManageBodyMeasurements">
+                <p-button (click)="openInfoDialog(bodyMeasurement)" class="mr-2" icon="pi pi-info-circle"
                           severity="secondary"
-                          [outlined]="true"/>
+                          [outlined]="true" />
                 <p-button (click)="confirmDelete(bodyMeasurement)" icon="pi pi-trash" severity="danger"
-                          [outlined]="true"/>
+                          [outlined]="true" />
             </td>
         </tr>
     </ng-template>
