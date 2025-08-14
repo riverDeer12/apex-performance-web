@@ -117,7 +117,7 @@
             <label for="glutes">Glutes</label>
             <input type="number" [min]="0" class="w-full"
                    id="glutes"
-                   pInputText formControlName="calves"/>
+                   pInputText formControlName="glutes"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'glutes', 'min')"
                    id="glutes-input-min">Minimum value is 0.</small>
