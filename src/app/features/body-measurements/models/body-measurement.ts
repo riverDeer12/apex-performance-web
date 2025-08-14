@@ -2,6 +2,9 @@ import {Client} from "../../clients/models/client";
 
 export class BodyMeasurement {
     id!: string;
+    clientId!: string;
+    firstName!: string;
+    lastName!: string;
     height!: number;
     weight!: number;
     shoulders!: number;
