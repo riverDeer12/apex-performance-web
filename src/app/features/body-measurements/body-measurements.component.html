@@ -79,6 +79,10 @@
                 Calves
                 <p-sortIcon field="calves" />
             </th>
+            <th pSortableColumn="glutes" style="min-width: 12rem">
+                Glutes
+                <p-sortIcon field="glutes" />
+            </th>
             <th *ngIf="canManageBodyMeasurements" style="width: 11rem"></th>
         </tr>
     </ng-template>
@@ -100,6 +104,7 @@
             <td>{{ bodyMeasurement.waist + 'cm' }}</td>
             <td>{{ bodyMeasurement.thigh + 'cm' }}</td>
             <td>{{ bodyMeasurement.calves + 'cm' }}</td>
+            <td>{{ bodyMeasurement.glutes + 'cm' }}</td>
             <td class="flex" *ngIf="canManageBodyMeasurements">
                 <p-button (click)="openInfoDialog(bodyMeasurement)" class="mr-2" icon="pi pi-info-circle"
                           severity="secondary"

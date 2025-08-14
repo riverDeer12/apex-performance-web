@@ -10,5 +10,6 @@ export class BodyMeasurement {
     waist!: number;
     thigh!: number;
     calves!: number;
+    glutes!: number;
     client!: Client;
 }

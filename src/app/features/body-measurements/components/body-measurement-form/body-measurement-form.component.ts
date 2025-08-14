@@ -104,6 +104,7 @@ export class BodyMeasurementFormComponent implements OnInit {
       waist: ["", [Validators.required, Validators.min(0)]],
       thigh: ["", [Validators.required, Validators.min(0)]],
       calves: ["", [Validators.required, Validators.min(0)]],
+      glutes: ["", [Validators.required, Validators.min(0)]],
       client: ["", [Validators.required]],
     });
   }
@@ -140,6 +141,10 @@ export class BodyMeasurementFormComponent implements OnInit {
       ],
       calves: [
         this.bodyMeasurement.calves,
+        [Validators.required, Validators.min(0)],
+      ],
+      glutes: [
+        this.bodyMeasurement.glutes,
         [Validators.required, Validators.min(0)],
       ],
       client: [this.bodyMeasurement.client.id, [Validators.required]],
