@@ -113,6 +113,15 @@
                    *ngIf="validationService.hasErrors(form, 'calves', 'min')"
                    id="calves-input-min">Minimum value is 0.</small>
         </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="glutes">Glutes</label>
+            <input type="number" [min]="0" class="w-full"
+                   id="glutes"
+                   pInputText formControlName="calves"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'glutes', 'min')"
+                   id="glutes-input-min">Minimum value is 0.</small>
+        </div>
     </div>
 
     <div class="my-3">
