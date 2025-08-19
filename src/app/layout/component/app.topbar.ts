@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MenuItem, MessageService } from "primeng/api";
 import { RouterModule } from "@angular/router";
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { StyleClassModule } from "primeng/styleclass";
 import { AppConfigurator } from "./app.configurator";
 import { LayoutService } from "../service/layout.service";
@@ -15,7 +15,13 @@ import { ButtonLabel } from "primeng/button";
   selector: "app-topbar",
   standalone: true,
   providers: [DialogService, MessageService],
-  imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+  imports: [
+    RouterModule,
+    CommonModule,
+    StyleClassModule,
+    AppConfigurator,
+    NgOptimizedImage,
+  ],
   template: ` <div class="layout-topbar">
     <div class="layout-topbar-logo-container">
       <button
@@ -25,7 +31,15 @@ import { ButtonLabel } from "primeng/button";
         <i class="pi pi-bars"></i>
       </button>
       <a class="layout-topbar-logo" routerLink="/">
-        <img src="assets/images/logo_transparent.png" alt="menu-logo" />
+        <img
+          [ngSrc]=" !layoutService.isDarkTheme()
+              ? 'assets/images/logo_light_transparent.png'
+              : 'assets/images/logo_dark_transparent.png'
+          "
+          width="200"
+          height="50"
+          alt="menu-logo"
+        />
       </a>
     </div>
 

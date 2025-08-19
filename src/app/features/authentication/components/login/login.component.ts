@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../../services/authentication.service";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
-import {CommonModule} from "@angular/common";
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ValidationService} from "../../../../services/validation.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -15,111 +15,115 @@ import {DialogFormComponent} from "../../../../components/dialog-form/dialog-for
 import {EntityType} from "../../../../enums/entity-type";
 import {ActionType} from "../../../../enums/action-type";
 import {DialogService} from "primeng/dynamicdialog";
+import { LayoutService } from '../../../../layout/service/layout.service';
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        CommonModule,
-        ButtonModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        PasswordModule,
-        CheckboxModule,
-        AppFloatingConfigurator
-    ],
-    providers: [DialogService],
-    standalone: true,
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.scss'
+  selector: "app-login",
+  imports: [
+    CommonModule,
+    ButtonModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    PasswordModule,
+    CheckboxModule,
+    AppFloatingConfigurator,
+    NgOptimizedImage,
+  ],
+  providers: [DialogService],
+  standalone: true,
+  templateUrl: "./login.component.html",
+  styleUrl: "./login.component.scss",
 })
 export class LoginComponent implements OnInit {
-    form!: FormGroup;
+  form!: FormGroup;
 
-    loadingData = false;
+  loadingData = false;
 
-    authResponse!: AuthResponse;
+  authResponse!: AuthResponse;
 
-    constructor(
-        public validationService: ValidationService,
-        private formBuilder: FormBuilder,
-        private router: Router,
-        private route: ActivatedRoute,
-        private dialogService: DialogService,
-        private authenticationService: AuthenticationService,
-        private messageService: MessageService) {
+  constructor(
+    public layoutService: LayoutService,
+    public validationService: ValidationService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialogService: DialogService,
+    private authenticationService: AuthenticationService,
+    private messageService: MessageService,
+  ) {}
+
+  ngOnInit(): void {
+    if (this.authenticationService.isUserLogged()) {
+      this.router.navigateByUrl("/admin/dashboard").then();
+      return;
+    } else {
+      this.initForm();
+    }
+  }
+
+  openForgotPasswordDialog(): void {
+    this.dialogService.open(DialogFormComponent, {
+      header: "Please, enter your email in field below:",
+      data: {
+        contentType: EntityType.Authentication,
+        formType: ActionType.Create,
+        dialogId: "resetPasswordForm",
+      },
+    });
+  }
+
+  submit() {
+    this.loadingData = true;
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+
+      this.messageService.add({
+        severity: "warn",
+        summary: "Incomplete or incorrect data",
+        detail: "Check the entered data and try again.",
+      });
+
+      this.loadingData = false;
+
+      return;
     }
 
-    ngOnInit(): void {
-        if (this.authenticationService.isUserLogged()) {
-            this.router.navigateByUrl("/admin/dashboard").then();
-            return;
-        } else {
-            this.initForm();
-        }
-    }
+    this.login();
+  }
 
-    openForgotPasswordDialog(): void {
-        this.dialogService.open(DialogFormComponent, {
-            header: "Please, enter your email in field below:",
-            data: {
-                contentType: EntityType.Authentication,
-                formType: ActionType.Create,
-                dialogId: "resetPasswordForm",
-            },
+  private initForm() {
+    this.form = this.formBuilder.group({
+      username: ["", [Validators.required]],
+      password: ["", [Validators.required]],
+      rememberMe: [false, [Validators.required]],
+    });
+  }
+
+  private login() {
+    this.authenticationService.login(this.form.value).subscribe(
+      (response: AuthResponse) => {
+        this.authResponse = Object.assign(response as AuthResponse);
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Login Is Successful.",
         });
-    }
 
-    submit() {
-        this.loadingData = true;
+        localStorage.setItem("token", this.authResponse.token);
 
-        if (this.form.invalid) {
+        this.router.navigateByUrl("admin/dashboard").then();
 
-            this.form.markAllAsTouched();
-
-            this.messageService
-                .add({
-                    severity: 'warn',
-                    summary: 'Incomplete or incorrect data',
-                    detail: 'Check the entered data and try again.'
-                });
-
-            this.loadingData = false;
-
-            return;
-        }
-
-        this.login();
-    }
-
-    private initForm() {
-        this.form = this.formBuilder.group({
-            username: ['', [Validators.required]],
-            password: ['', [Validators.required]],
-            rememberMe: [false, [Validators.required]]
-        })
-    }
-
-    private login() {
-        this.authenticationService.login(this.form.value).subscribe((response: AuthResponse) => {
-            this.authResponse = Object.assign(response as AuthResponse);
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'Login Is Successful.'
-            });
-
-            localStorage.setItem('token', this.authResponse.token)
-
-            this.router.navigateByUrl('admin/dashboard').then();
-
-            this.loadingData = false;
-        }, error => {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Login Error',
-                detail: error.message
-            });
-            this.loadingData = false;
-        })
-    }
+        this.loadingData = false;
+      },
+      (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Login Error",
+          detail: error.message,
+        });
+        this.loadingData = false;
+      },
+    );
+  }
 }

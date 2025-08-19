@@ -5,7 +5,15 @@
         <div>
             <div class="w-full py-20 px-8 sm:px-20" style="border-radius: 53px">
                 <div class="text-center mb-8">
-                    <img class="login-header-image" src="../../../../../assets/images/logo_transparent.png" alt="">
+                    <img class="login-header-image"
+                         [ngSrc]=" !layoutService.isDarkTheme()
+                              ? 'assets/images/logo_light_transparent.png'
+                              : 'assets/images/logo_dark_transparent.png'
+                          "
+                         width="200"
+                         height="50"
+                         alt="menu-logo"
+                    />
                 </div>
                 <form [formGroup]="form" (submit)="submit()">
                     <div>
