@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MenuItem, MessageService } from "primeng/api";
 import { RouterModule } from "@angular/router";
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { StyleClassModule } from "primeng/styleclass";
 import { AppConfigurator } from "./app.configurator";
 import { LayoutService } from "../service/layout.service";
@@ -32,7 +32,8 @@ import { ButtonLabel } from "primeng/button";
       </button>
       <a class="layout-topbar-logo" routerLink="/">
         <img
-          [ngSrc]=" !layoutService.isDarkTheme()
+          [ngSrc]="
+            !layoutService.isDarkTheme()
               ? 'assets/images/logo_light_transparent.png'
               : 'assets/images/logo_dark_transparent.png'
           "
@@ -129,6 +130,9 @@ export class AppTopbar {
   }
 
   toggleDarkMode() {
+
+    localStorage.setItem("theme", "dark");
+
     this.layoutService.layoutConfig.update((state) => ({
       ...state,
       darkTheme: !state.darkTheme,
