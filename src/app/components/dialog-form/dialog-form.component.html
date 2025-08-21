@@ -79,6 +79,14 @@
         [role]="data">
 </app-role-form>
 
+<app-recurring-appointment-form
+    *ngIf="contentType === entityType.RecurringAppointment"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [recurringAppointment]="data">
+</app-recurring-appointment-form>
+
 <app-reset-password-form
         *ngIf="contentType === entityType.ResetUserPassword"
         [redirectType]="redirectType"

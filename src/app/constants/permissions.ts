@@ -36,6 +36,11 @@ export class Permissions {
     static readonly CanDeleteCoach = "CanDeleteCoach";
     // Logs
     static readonly CanGetLogs = "CanGetLogs";
+    // RecurringAppointments
+    static readonly CanGetRecurringAppointments = "CanGetRecurringAppointments";
+    static readonly CanCreateRecurringAppointment = "CanCreateRecurringAppointment";
+    static readonly CanUpdateRecurringAppointment = "CanUpdateRecurringAppointment";
+    static readonly CanDeleteRecurringAppointment = "CanDeleteRecurringAppointment";
     // Roles
     static readonly CanGetRoles = "CanGetRoles";
     static readonly CanCreateRole = "CanCreateRole";

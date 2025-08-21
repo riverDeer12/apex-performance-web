@@ -11,6 +11,7 @@ export enum EntityType {
     Coach,
     Recipe,
     Role ,
+    RecurringAppointment ,
     ResetUserPassword ,
     TimeSlot ,
     User

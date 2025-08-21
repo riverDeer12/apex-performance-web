@@ -29,6 +29,9 @@ import {
 import {
   ChangeUsernameFormComponent
 } from '../../features/authentication/components/change-username-form/change-username-form.component';
+import {
+  RecurringAppointmentFormComponent
+} from '../../features/appointments/components/recurring-appointment-form/recurring-appointment-form.component';
 
 @Component({
   selector: "app-dialog-form",
@@ -49,6 +52,7 @@ import {
     ResetPasswordFormComponent,
     CancelationRequestFormComponent,
     ChangeUsernameFormComponent,
+    RecurringAppointmentFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

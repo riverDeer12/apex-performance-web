@@ -80,6 +80,14 @@ export class AppMenu implements OnInit {
             icon: "pi pi-fw pi-file-check",
             routerLink: ["/admin/appointments/appointment-requests"],
           },
+          {
+            label: "Recurring Appointments",
+            visible: this.authenticationService.checkPermission(
+                Permissions.CanGetRecurringAppointments,
+            ),
+            icon: "pi pi-fw pi-calendar-clock",
+            routerLink: ["/admin/appointments/recurring-appointments"],
+          },
         ],
       },
       {
