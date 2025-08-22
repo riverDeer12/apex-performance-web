@@ -2,19 +2,24 @@
     <div class="formgrid grid">
         <div *ngIf="userRole != userRoles.Coach" class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="coach">Coaches</label>
-            <p-select [options]="coaches"
-                      appendTo="body" styleClass="w-full"
-                      formControlName="coach" optionLabel="fullName" optionValue="id"
-                      id="coach" />
+            <p-select
+                (onChange)="getTimeSlots()"
+                [options]="coaches"
+                appendTo="body"
+                styleClass="w-full"
+                formControlName="coach" optionLabel="fullName" optionValue="id"
+                id="coach" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'coach', 'required')"
                    id="coach-input">This field is required.</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
             <label for="timeSlot">Time Slot</label>
-            <p-select id="timeSlot" styleClass="w-full" [options]="timeSlots"
-                      formControlName="timeSlot"
-                      optionLabel="name" optionValue="id" />
+            <p-select
+                appendTo="body"
+                id="timeSlot" styleClass="w-full" [options]="timeSlots"
+                formControlName="timeSlot"
+                optionLabel="name" optionValue="id" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'timeSlot', 'required')"
                    id="startTime-input">This field is required.</small>

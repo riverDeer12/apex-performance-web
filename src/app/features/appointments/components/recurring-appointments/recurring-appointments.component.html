@@ -12,17 +12,15 @@
             <th>Client</th>
             <th>Coach</th>
             <th>Day</th>
-            <th>Start Time</th>
-            <th>End Time</th>
+            <th>Time Slot</th>
         </tr>
     </ng-template>
     <ng-template #body let-recurringAppointment>
         <tr>
-            <td>{{ recurringAppointment.client.fullName }}</td>
-            <td>{{ recurringAppointment.coach.fullName }}</td>
-            <td>{{ recurringAppointment.day }}</td>
-            <td>{{ recurringAppointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}</td>
-            <td>{{ recurringAppointment.endTime | date : 'dd.MM.yyyy. HH:mm:ss' }}</td>
+            <td>{{ recurringAppointment.client.firstName + ' ' + recurringAppointment.client.lastName }}</td>
+            <td>{{ recurringAppointment.coach.firstName + ' ' +  recurringAppointment.coach.lastName }}</td>
+            <td>{{ recurringAppointment.timeSlot.day }}</td>
+            <td>{{ recurringAppointment.timeSlot.startTime }} - {{ recurringAppointment.timeSlot.endTime }}</td>
         </tr>
     </ng-template>
 </p-table>

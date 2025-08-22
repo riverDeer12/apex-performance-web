@@ -49,8 +49,6 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   loadingData = false;
 
-  today = new Date();
-
   get userRoles(): typeof Roles {
     return Roles;
   }
@@ -94,7 +92,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
     this.createAppointment();
   }
 
-  getDataForSelectedCoaches(): void {
+  getTimeSlots(): void {
     this.loadingData = true;
 
     if (this.form.controls["coach"].invalid) {
@@ -108,12 +106,8 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
       return;
     } else {
-      const payload = {
-        coaches: this.form.controls["coach"].value
-      };
-
       this.timeSlotService
-        .getCoachTimeSlots(payload)
+        .getRecurringAvailableTimeSlots(this.form.controls["coach"].value)
         .subscribe((response: TimeSlot[]) => {
           this.timeSlots = response.map((x: TimeSlot) =>
             Object.assign(new TimeSlot(), x),
@@ -122,7 +116,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
       if (this.userRole != Roles.Coach) {
         this.clientService
-          .getCoachesClients(payload)
+          .getClientsByCoachId(this.form.controls["coach"].value)
           .subscribe((response: Client[]) => {
             this.clients = response.map((x: Client) =>
               Object.assign(new Client(), x),
@@ -161,8 +155,8 @@ export class RecurringAppointmentFormComponent implements OnInit {
   private initCreateForm() {
     this.form = this.formBuilder.group({
       timeSlot: [null, [Validators.required]],
-      client: ["", [Validators.required]],
-      coach: ["", [Validators.required]],
+      client: [null, [Validators.required]],
+      coach: [null, [Validators.required]],
     });
   }
 
