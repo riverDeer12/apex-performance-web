@@ -32,6 +32,7 @@ import {
 import {
   RecurringAppointmentFormComponent
 } from '../../features/appointments/components/recurring-appointment-form/recurring-appointment-form.component';
+import { TimeSlotFormComponent } from '../../features/time-slots/components/time-slot-form/time-slot-form.component';
 
 @Component({
   selector: "app-dialog-form",
@@ -53,6 +54,7 @@ import {
     CancelationRequestFormComponent,
     ChangeUsernameFormComponent,
     RecurringAppointmentFormComponent,
+    TimeSlotFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

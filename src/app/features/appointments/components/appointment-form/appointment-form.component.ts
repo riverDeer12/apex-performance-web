@@ -132,7 +132,7 @@ export class AppointmentFormComponent implements OnInit {
                 day: new Date(this.form.controls["day"].value).getDay()
             };
 
-            this.timeSlotService.getCoachTimeSlots(payload).subscribe((response: TimeSlot[]) => {
+            this.timeSlotService.getTimeSlotsByCoachId(payload).subscribe((response: TimeSlot[]) => {
                 this.timeSlots = response.map((x: TimeSlot) =>
                     Object.assign(new TimeSlot(), x),
                 );

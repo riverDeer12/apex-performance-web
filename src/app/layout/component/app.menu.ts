@@ -122,12 +122,18 @@ export class AppMenu implements OnInit {
             label: "Coaches",
             icon: "pi pi-fw pi-users",
             routerLink: ["/admin/coaches"],
-          },
+          }
+        ],
+      },
+      {
+        label: "Time Slots",
+        visible: this.authenticationService.validateUserRole(Roles.Coach),
+        items: [
           {
             label: "Time Slots",
             icon: "pi pi-fw pi-clock",
-            routerLink: ["/admin/coaches/time-slots"],
-          },
+            routerLink: ["/admin/time-slots"],
+          }
         ],
       },
       {

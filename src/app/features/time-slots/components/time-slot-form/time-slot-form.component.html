@@ -1,1 +1,57 @@
-<p>time-slot-form works!</p>
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div *ngIf="userRole != userRoles.Coach" class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="coach">Coach</label>
+            <p-select
+                [options]="coaches"
+                appendTo="body"
+                styleClass="w-full"
+                formControlName="coach" optionLabel="fullName" optionValue="id"
+                id="coach" />
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'coach', 'required')"
+                   id="coach-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="day">Day</label>
+            <p-select
+                [options]="weekDays"
+                appendTo="body"
+                styleClass="w-full"
+                formControlName="day" optionLabel="name" optionValue="value"
+                id="day" />
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'day', 'required')"
+                   id="day-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label>Start Time</label>
+            <p-datepicker appendTo="body" id="startTime" dateFormat="HH:mm" styleClass="w-full"
+                          formControlName="startTime"
+                          [showTime]="true"
+                          [timeOnly]="true"
+                          [dataType]="'string'"
+                          [firstDayOfWeek]="1"
+                          [disabledDays]="[0]"></p-datepicker>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'startTime', 'required')"
+                   id="startTime-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label>End Time</label>
+            <p-datepicker appendTo="body" id="endTime" dateFormat="HH:mm" styleClass="w-full"
+                          formControlName="endTime"
+                          [showTime]="true"
+                          [timeOnly]="true"
+                          [dataType]="'string'"
+                          [firstDayOfWeek]="1"
+                          [disabledDays]="[0]"></p-datepicker>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'endTime', 'required')"
+                   id="endTime-input">This field is required.</small>
+        </div>
+    </div>
+    <div class="my-3">
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save" />
+    </div>
+</form>

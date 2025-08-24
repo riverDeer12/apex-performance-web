@@ -30,7 +30,7 @@ import { CommonModule } from "@angular/common";
   templateUrl: "./recurring-appointment-form.component.html",
   styleUrl: "./recurring-appointment-form.component.scss",
 })
-export class RecurringAppointmentFormComponent implements OnInit {
+export class RecurringAppointmentFormComponent  {
   @Input() type!: ActionType;
   @Input() recurringAppointment!: RecurringAppointment;
   @Input() redirectType!: RedirectType;
@@ -65,11 +65,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
     private authenticationService: AuthenticationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
-  }
-
-  ngOnInit(): void {
     this.initCreateForm();
-    this.initFormData();
   }
 
   submit() {
@@ -106,23 +102,16 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
       return;
     } else {
-      this.timeSlotService
-        .getRecurringAvailableTimeSlots(this.form.controls["coach"].value)
-        .subscribe((response: TimeSlot[]) => {
-          this.timeSlots = response.map((x: TimeSlot) =>
-            Object.assign(new TimeSlot(), x),
+
+      this.getCoachTimeSlots();
+
+      this.clientService
+        .getClientsByCoachId(this.form.controls["coach"].value)
+        .subscribe((response: Client[]) => {
+          this.clients = response.map((x: Client) =>
+            Object.assign(new Client(), x),
           );
         });
-
-      if (this.userRole != Roles.Coach) {
-        this.clientService
-          .getClientsByCoachId(this.form.controls["coach"].value)
-          .subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-              Object.assign(new Client(), x),
-            );
-          });
-      }
     }
   }
 
@@ -132,12 +121,9 @@ export class RecurringAppointmentFormComponent implements OnInit {
         this.getAllClients();
         this.getAllCoaches();
         break;
-      case Roles.Client:
-        this.getClientCoaches();
-        break;
       case Roles.Coach:
         this.getCoachClients();
-        this.setCoach();
+        this.getCoachTimeSlots();
         break;
       default:
         break;
@@ -148,8 +134,19 @@ export class RecurringAppointmentFormComponent implements OnInit {
     this.coachService.getCurrentCoachId().subscribe({
       next: (coachId) => {
         this.form.controls["coach"].setValue(coachId);
+        this.initFormData();
       },
     });
+  }
+
+  private getCoachTimeSlots() {
+    this.timeSlotService
+      .getRecurringAvailableTimeSlots(this.form.controls["coach"].value)
+      .subscribe((response: TimeSlot[]) => {
+        this.timeSlots = response.map((x: TimeSlot) =>
+          Object.assign(new TimeSlot(), x),
+        );
+      });
   }
 
   private initCreateForm() {
@@ -158,6 +155,12 @@ export class RecurringAppointmentFormComponent implements OnInit {
       client: [null, [Validators.required]],
       coach: [null, [Validators.required]],
     });
+
+    if(this.userRole == Roles.Coach){
+      this.setCoach();
+    } else {
+      this.initFormData();
+    }
   }
 
   private createAppointment() {
@@ -215,12 +218,6 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   private getAllCoaches() {
     this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
-    });
-  }
-
-  private getClientCoaches() {
-    this.coachService.getClientCoaches().subscribe((response: Coach[]) => {
       this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
     });
   }

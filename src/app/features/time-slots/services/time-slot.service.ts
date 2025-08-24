@@ -12,16 +12,19 @@ export class TimeSlotService {
   constructor(private http: HttpClient) {}
 
   getAllTimeSlots = () =>
-    this.http.get<TimeSlot[]>(environment.apiUrl + "/time-slots");
+    this.http.get<TimeSlot[]>(environment.apiUrl + "/time-slots/all");
 
   getTimeSlot = (timeSlotId: string) =>
     this.http.get<TimeSlot>(environment.apiUrl + "/time-slots/" + timeSlotId);
 
-  getCoachTimeSlots = (request: DefaultPostRequest) =>
+  getTimeSlotsByCoachId = (request: DefaultPostRequest) =>
     this.http.post<TimeSlot[]>(
       environment.apiUrl + "/time-slots/available",
       request,
     );
+
+  getCoachTimeSlots = () =>
+      this.http.get<TimeSlot[]>(environment.apiUrl + "/time-slots");
 
   getRecurringAvailableTimeSlots = (coachId: string) =>
     this.http.get<TimeSlot[]>(
@@ -43,8 +46,8 @@ export class TimeSlotService {
       request,
     );
 
-  deleteTimeSlot = (timeSlotId: string) =>
-    this.http.delete<TimeSlot>(
-      environment.apiUrl + "/time-slots/" + timeSlotId,
+  changeCoachTimeSlotActivity = (timeSlotId: string, coachId: string) =>
+    this.http.get<TimeSlot>(
+      environment.apiUrl + "/time-slots/" + timeSlotId + "/coach/" + coachId + "/activity",
     );
 }

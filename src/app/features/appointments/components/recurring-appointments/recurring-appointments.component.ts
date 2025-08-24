@@ -1,20 +1,24 @@
 import { Component, OnInit } from "@angular/core";
 import { Button } from "primeng/button";
-import { DatePipe, NgIf } from "@angular/common";
+import { CommonModule, NgIf } from "@angular/common";
 import { TableModule } from "primeng/table";
 import { RecurringAppointment } from "../../models/recurring-appointment";
-import { Roles } from '../../../../constants/roles';
+import { Roles } from "../../../../constants/roles";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { RecurringAppointmentService } from "../../services/recurring-appointment.service";
-import { Permissions } from '../../../../constants/permissions';
-import { DialogFormComponent } from '../../../../components/dialog-form/dialog-form.component';
-import { EntityType } from '../../../../enums/entity-type';
-import { ActionType } from '../../../../enums/action-type';
+import { Permissions } from "../../../../constants/permissions";
+import { DialogFormComponent } from "../../../../components/dialog-form/dialog-form.component";
+import { EntityType } from "../../../../enums/entity-type";
+import { ActionType } from "../../../../enums/action-type";
 import { DialogService } from "primeng/dynamicdialog";
+import { DateExtensions } from "../../../../shared/extensions/date-extensions";
+import { TimeSlot } from "../../../time-slots/models/time-slot";
+import { TimeSlotService } from "../../../time-slots/services/time-slot.service";
+import { DayOfWeek } from "../../../../enums/day-of-week";
 
 @Component({
   selector: "app-recurring-appointments",
-  imports: [Button, DatePipe, NgIf, TableModule],
+  imports: [CommonModule, Button, NgIf, TableModule],
   providers: [DialogService],
   templateUrl: "./recurring-appointments.component.html",
   styleUrl: "./recurring-appointments.component.scss",
@@ -22,22 +26,51 @@ import { DialogService } from "primeng/dynamicdialog";
 export class RecurringAppointmentsComponent implements OnInit {
   recurringAppointments!: RecurringAppointment[];
 
+  timeSlots!: TimeSlot[];
+
   userRole!: string;
+
+  weekDays = DateExtensions.getWeekDays(DayOfWeek.Monday);
 
   get userCanCreateRecurringAppointment(): boolean {
     return this.authenticationService.checkPermission(
-        Permissions.CanCreateRecurringAppointment
+      Permissions.CanCreateRecurringAppointment,
     );
   }
 
-  constructor(private authenticationService: AuthenticationService,
-              private recurringAppointmentService: RecurringAppointmentService,
-              private dialogService: DialogService) {
+  get userRoles(): typeof Roles {
+    return Roles;
+  }
+
+  constructor(
+    private authenticationService: AuthenticationService,
+    private timeSlotService: TimeSlotService,
+    private recurringAppointmentService: RecurringAppointmentService,
+    private dialogService: DialogService,
+  ) {
     this.userRole = this.authenticationService.getUserRole();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.loadData();
+  }
+
+  recurringAppointmentArranged(timeSlot: TimeSlot): boolean {
+    return this.recurringAppointments.some(
+      (a: { timeSlot: { id: string } }) => a.timeSlot?.id === timeSlot.id,
+    );
+  }
+
+  showClientForRecurringAppointment(timeSlot: TimeSlot): string {
+    let recurringAppointment = this.recurringAppointments.find(
+      (a) => a.timeSlot?.id === timeSlot.id,
+    );
+
+    return (
+      recurringAppointment?.client.firstName +
+      "" +
+      recurringAppointment?.client.lastName
+    );
   }
 
   private loadData(): void {
@@ -45,16 +78,17 @@ export class RecurringAppointmentsComponent implements OnInit {
       this.loadAdminRecurringAppointments();
     } else if (this.userRole == Roles.Coach) {
       this.loadCoachRecurringAppointments();
+      this.loadCoachTimeSlots();
     } else if (this.userRole == Roles.Client) {
       this.loadClientRecurringAppointments();
     }
   }
 
-  loadAdminRecurringAppointments(): void {
+  private loadAdminRecurringAppointments(): void {
     this.recurringAppointmentService.getAllRecurringAppointments().subscribe({
       next: (data: RecurringAppointment[]) => {
         this.recurringAppointments = data.map((x: RecurringAppointment) =>
-            Object.assign(new RecurringAppointment(), x),
+          Object.assign(new RecurringAppointment(), x),
         );
       },
       error: (err) => {
@@ -63,11 +97,11 @@ export class RecurringAppointmentsComponent implements OnInit {
     });
   }
 
-  loadCoachRecurringAppointments(): void {
+  private loadCoachRecurringAppointments(): void {
     this.recurringAppointmentService.getCoachRecurringAppointments().subscribe({
       next: (data: RecurringAppointment[]) => {
         this.recurringAppointments = data.map((x: RecurringAppointment) =>
-            Object.assign(new RecurringAppointment(), x),
+          Object.assign(new RecurringAppointment(), x),
         );
       },
       error: (err) => {
@@ -76,17 +110,32 @@ export class RecurringAppointmentsComponent implements OnInit {
     });
   }
 
-  loadClientRecurringAppointments(): void {
-    this.recurringAppointmentService.getClientRecurringAppointments().subscribe({
-      next: (data: RecurringAppointment[]) => {
-        this.recurringAppointments = data.map((x: RecurringAppointment) =>
-            Object.assign(new RecurringAppointment(), x),
+  private loadCoachTimeSlots(): void {
+    this.timeSlotService.getCoachTimeSlots().subscribe({
+      next: (data: TimeSlot[]) => {
+        this.timeSlots = data.map((x: TimeSlot) =>
+          Object.assign(new TimeSlot(), x),
         );
       },
       error: (err) => {
         console.error(err);
       },
     });
+  }
+
+  private loadClientRecurringAppointments(): void {
+    this.recurringAppointmentService
+      .getClientRecurringAppointments()
+      .subscribe({
+        next: (data: RecurringAppointment[]) => {
+          this.recurringAppointments = data.map((x: RecurringAppointment) =>
+            Object.assign(new RecurringAppointment(), x),
+          );
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
   }
 
   openCreateDialog() {

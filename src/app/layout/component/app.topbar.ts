@@ -139,7 +139,8 @@ export class AppTopbar {
     }));
   }
 
-  logOut = () => this.authenticationService.logOut("/authentication/login");
+  logOut = () =>
+      this.authenticationService.logOut("/authentication/login");
 
   changePassword(): void {
     this.dialogService.open(DialogFormComponent, {

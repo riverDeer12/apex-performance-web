@@ -15,6 +15,7 @@ import { Roles } from "../../constants/roles";
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { AppointmentsStatus } from "../../shared/data-transfer-objects/appointments-status";
 import { Permissions } from "../../constants/permissions";
+import { DateExtensions } from '../../shared/extensions/date-extensions';
 
 @Component({
   selector: "app-appointments",
@@ -28,6 +29,8 @@ export class AppointmentsComponent implements OnInit {
   userRole!: string;
 
   appointments!: Appointment[];
+
+  weekDays = DateExtensions.getWeekDates(new Date(), 1)
 
   get userCanCreateAppointment(): boolean {
     return this.authenticationService.checkPermission(

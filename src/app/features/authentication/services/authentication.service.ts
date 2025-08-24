@@ -87,7 +87,7 @@ export class AuthenticationService {
    */
   logOut(redirectUrl: string): void {
     localStorage.removeItem("token");
-    this.router.navigateByUrl(redirectUrl).then();
+    this.router.navigate([redirectUrl], { replaceUrl: true })
   }
 
   getLoggedUserPermissions(): string[] {

@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Time Slot"/>
+              type="button" iconPos="right" icon="pi pi-plus" label="New Time Slot" />
 </div>
 
 <p-table
@@ -35,11 +35,17 @@
         <tr>
             <th pSortableColumn="name" style="min-width: 12rem">
                 Start Time - End Time
-                <p-sortIcon field="name"/>
+                <p-sortIcon field="name" />
             </th>
             <th pSortableColumn="day" style="min-width: 12rem">
                 Day
-                <p-sortIcon field="day"/>
+                <p-sortIcon field="day" />
+            </th>
+            <th pSortableColumn="status" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Status
+                    <p-sortIcon field="status" />
+                </div>
             </th>
             <th style="width: 11rem"></th>
         </tr>
@@ -47,19 +53,18 @@
     <ng-template #body let-timeSlot>
         <tr>
             <td>
-                {{ timeSlot.name }}
+                {{ timeSlot.startTime }} - {{ timeSlot.endTime }}
             </td>
             <td>
-                {{ timeSlot.day }}
+                {{ timeSlot.dayName }}
+            </td>
+            <td>
+                {{ timeSlot.status }}
             </td>
             <td class="flex">
-                <p-button (click)="openInfoDialog(timeSlot)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
-                          [outlined]="true"/>
-                <p-button (click)="openUpdateDialog(timeSlot)" class="mr-2" icon="pi pi-pencil"
-                          severity="secondary"
-                          [outlined]="true"/>
-                <p-button (click)="confirmDelete(timeSlot)" icon="pi pi-trash" severity="danger"
-                          [outlined]="true"/>
+                <p-button (click)="changeActivity(timeSlot)" [icon]=" timeSlot.status ? 'pi pi-eye' : 'pi pi-eye-slash'"
+                          severity="primary"
+                          [outlined]="true" />
             </td>
         </tr>
     </ng-template>

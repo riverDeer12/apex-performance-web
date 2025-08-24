@@ -93,6 +93,14 @@
         [dialogId]="dialogId">
 </app-reset-password-form>
 
+<app-time-slot-form
+    *ngIf="contentType === entityType.TimeSlot"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [timeSlot]="data">
+</app-time-slot-form>
+
 <app-user-form
         *ngIf="contentType === entityType.User"
         [type]="formType"

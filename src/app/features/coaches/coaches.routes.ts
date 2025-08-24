@@ -10,12 +10,5 @@ export const CoachesRoutes: Routes = [
         data: {
             permissions: [Permissions.CanGetCoaches],
         },
-    },
-    {
-        path: "time-slots",
-        component: TimeSlotsComponent,
-        data: {
-            permissions: [Permissions.CanGetTimeSlots],
-        }
     }
 ];

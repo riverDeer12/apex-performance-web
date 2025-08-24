@@ -6,6 +6,8 @@ import {Error} from "./app/components/error/error";
 import {AdminGuard} from "./app/guards/admin.guard";
 import {LandingComponent} from "./app/features/landing/landing.component";
 import {DashboardComponent} from "./app/features/dashboard/dashboard.component";
+import { TimeSlotsComponent } from './app/features/time-slots/time-slots.component';
+import { Permissions } from './app/constants/permissions';
 
 export const appRoutes: Routes = [
     {
@@ -61,6 +63,13 @@ export const appRoutes: Routes = [
                 loadChildren: () =>
                     import("./app/features/coaches/coaches.routes").then(
                         (m) => m.CoachesRoutes,
+                    ),
+            },
+            {
+                path: "time-slots",
+                loadChildren: () =>
+                    import("./app/features/time-slots/time-slots.routes").then(
+                        (m) => m.TimeSlotsRoutes,
                     ),
             },
             {
