@@ -15,6 +15,7 @@ import { DateExtensions } from "../../../../shared/extensions/date-extensions";
 import { TimeSlot } from "../../../time-slots/models/time-slot";
 import { TimeSlotService } from "../../../time-slots/services/time-slot.service";
 import { DayOfWeek } from "../../../../enums/day-of-week";
+import { ConfirmationService, MessageService } from "primeng/api";
 
 @Component({
   selector: "app-recurring-appointments",
@@ -45,6 +46,8 @@ export class RecurringAppointmentsComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private timeSlotService: TimeSlotService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private recurringAppointmentService: RecurringAppointmentService,
     private dialogService: DialogService,
   ) {
@@ -150,6 +153,45 @@ export class RecurringAppointmentsComponent implements OnInit {
 
     dialogRef.onClose.subscribe((response: any) => {
       this.loadData();
+    });
+  }
+
+  changeActivity(recurringAppointment: RecurringAppointment) {
+    this.confirmationService.confirm({
+      message: "Are you sure that you want to change activity for this recurring appointment?",
+      header: "Confirm activity change of " + recurringAppointment.timeSlot.name,
+      closable: true,
+      closeOnEscape: true,
+      icon: "pi pi-exclamation-triangle",
+      rejectButtonProps: {
+        label: "No",
+        severity: "secondary",
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: "Yes",
+      },
+      accept: () => {
+        this.recurringAppointmentService.changeClientRecurringAppointmentActivity(recurringAppointment.id).subscribe(
+            () => {
+              this.messageService.add({
+                severity: "success",
+                summary: "Success",
+                detail: "Recurring Appointment activity has been changed.",
+              });
+
+              this.loadData();
+
+            },
+            () => {
+              this.messageService.add({
+                severity: "error",
+                summary: "Error",
+                detail: "Error changing Recurring Appointment activity.",
+              });
+            },
+        );
+      },
     });
   }
 }

@@ -6,7 +6,6 @@ import { Table, TableModule } from "primeng/table";
 import { DialogFormComponent } from "../../components/dialog-form/dialog-form.component";
 import { EntityType } from "../../enums/entity-type";
 import { ActionType } from "../../enums/action-type";
-import { DialogInfoComponent } from "../../components/dialog-info/dialog-info.component";
 import { TimeSlot } from "./models/time-slot";
 import { TimeSlotService } from "./services/time-slot.service";
 import { Button, ButtonDirective } from "primeng/button";
@@ -84,32 +83,6 @@ export class TimeSlotsComponent implements OnInit {
         contentType: EntityType.TimeSlot,
         formType: ActionType.Create,
         dialogId: "createTimeSlotForm",
-      },
-    });
-
-    dialogRef.onClose.subscribe((response: any) => {
-      this.loadData();
-    });
-  }
-
-  openInfoDialog(timeSlot: TimeSlot) {
-    this.dialogService.open(DialogInfoComponent, {
-      header: "Details for: " + timeSlot.id,
-      data: {
-        contentType: EntityType.TimeSlot,
-        data: timeSlot,
-      },
-    });
-  }
-
-  openUpdateDialog(timeSlot: TimeSlot) {
-    const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Update data for: " + timeSlot.id,
-      data: {
-        contentType: EntityType.TimeSlot,
-        formType: ActionType.Update,
-        dialogId: "updateTimeSlotForm",
-        data: timeSlot,
       },
     });
 

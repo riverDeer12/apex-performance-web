@@ -59,7 +59,7 @@
                 {{ timeSlot.dayName }}
             </td>
             <td>
-                {{ timeSlot.status }}
+                {{ timeSlot.status ? 'Active' : 'InActive' }}
             </td>
             <td class="flex">
                 <p-button (click)="changeActivity(timeSlot)" [icon]=" timeSlot.status ? 'pi pi-eye' : 'pi pi-eye-slash'"

@@ -28,6 +28,13 @@
                 Client
                 <p-sortIcon field="client" />
             </th>
+            <th pSortableColumn="status" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Status
+                    <p-sortIcon field="status" />
+                </div>
+            </th>
+            <th></th>
         </tr>
     </ng-template>
     <ng-template #body let-recurringAppointment>
@@ -37,6 +44,15 @@
             </td>
             <td>
                 <span>{{ recurringAppointment.client.firstName }} {{ recurringAppointment.client.lastName }}</span>
+            </td>
+            <td>
+                {{ recurringAppointment.status ? 'Active' : 'InActive' }}
+            </td>
+            <td class="flex">
+                <p-button (click)="changeActivity(recurringAppointment)"
+                          [icon]=" recurringAppointment.status ? 'pi pi-eye' : 'pi pi-eye-slash'"
+                          severity="primary"
+                          [outlined]="true" />
             </td>
         </tr>
     </ng-template>

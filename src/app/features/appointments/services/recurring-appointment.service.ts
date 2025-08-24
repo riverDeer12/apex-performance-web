@@ -8,6 +8,7 @@ import { DefaultPostRequest } from "../../../models/default-post-request";
   providedIn: "root",
 })
 export class RecurringAppointmentService {
+
   constructor(private http: HttpClient) {}
 
   getAllRecurringAppointments = () =>
@@ -24,6 +25,11 @@ export class RecurringAppointmentService {
     this.http.get<RecurringAppointment[]>(
       environment.apiUrl + "/recurring-appointments/coach",
     );
+
+  changeClientRecurringAppointmentActivity = (recurringAppointmentId: string) =>
+      this.http.get<RecurringAppointment>(
+          environment.apiUrl + "/recurring-appointments/" + recurringAppointmentId + "/activity",
+      );
 
   createRecurringAppointment = (request: DefaultPostRequest) =>
     this.http.post<RecurringAppointment>(
