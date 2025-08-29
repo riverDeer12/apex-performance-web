@@ -45,4 +45,9 @@ export class RecurringAppointmentService {
       environment.apiUrl + "/recurring-appointments/" + recurringAppointmentId,
       request,
     );
+
+  generateNextWeekRecurringAppointments = () =>
+      this.http.get<boolean>(
+          environment.apiUrl + "/recurring-appointments/generate-next-week"
+      );
 }

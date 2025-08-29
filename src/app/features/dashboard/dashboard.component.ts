@@ -1,144 +1,175 @@
-import {Component, OnInit} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {DialogService} from "primeng/dynamicdialog";
-import {AuthenticationService} from "../authentication/services/authentication.service";
-import {Appointment} from "../appointments/models/appointment";
-import {AppointmentService} from "../appointments/services/appointment.service";
-import {AppointmentsListComponent} from "../appointments/components/appointments-list/appointments-list.component";
-import {AppointmentsStatus} from "../../shared/data-transfer-objects/appointments-status";
-import {Roles} from "../../constants/roles";
-import {
-    AppointmentsRequestsListComponent
-} from "../appointments/components/appointments-requests-list/appointments-requests-list.component";
-import {AppointmentRequestService} from "../appointments/services/appointment-request.service";
-import {AppointmentRequest} from "../appointments/models/appointment-request";
-import {HelperService} from "../../services/helper.service";
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { DialogService } from "primeng/dynamicdialog";
+import { AuthenticationService } from "../authentication/services/authentication.service";
+import { Appointment } from "../appointments/models/appointment";
+import { AppointmentService } from "../appointments/services/appointment.service";
+import { AppointmentsListComponent } from "../appointments/components/appointments-list/appointments-list.component";
+import { AppointmentsStatus } from "../../shared/data-transfer-objects/appointments-status";
+import { Roles } from "../../constants/roles";
+import { AppointmentsRequestsListComponent } from "../appointments/components/appointments-requests-list/appointments-requests-list.component";
+import { AppointmentRequestService } from "../appointments/services/appointment-request.service";
+import { AppointmentRequest } from "../appointments/models/appointment-request";
+import { HelperService } from "../../services/helper.service";
+import { Button } from "primeng/button";
+import { MessageService } from "primeng/api";
+import { RecurringAppointmentService } from "../appointments/services/recurring-appointment.service";
 
 @Component({
-    selector: "app-dashboard",
-    standalone: true,
-    imports: [CommonModule, AppointmentsListComponent, AppointmentsRequestsListComponent],
-    providers: [DialogService],
-    templateUrl: "./dashboard.component.html",
-    styleUrl: "./dashboard.component.scss",
+  selector: "app-dashboard",
+  standalone: true,
+  imports: [
+    CommonModule,
+    AppointmentsListComponent,
+    AppointmentsRequestsListComponent,
+    Button,
+  ],
+  providers: [DialogService, MessageService],
+  templateUrl: "./dashboard.component.html",
+  styleUrl: "./dashboard.component.scss",
 })
 export class DashboardComponent {
-    approvedAppointments!: Appointment[];
-    pendingAppointments!: Appointment[];
-    inProgressAppointments!: Appointment[];
+  approvedAppointments!: Appointment[];
+  pendingAppointments!: Appointment[];
+  inProgressAppointments!: Appointment[];
 
-    appointmentRequests!: AppointmentRequest[];
+  appointmentRequests!: AppointmentRequest[];
 
-    userRole!: string;
+  userRole!: string;
 
-    get showAppointmentRequests(): boolean {
-        const loggedUserRoles = this.authenticationService.getLoggedUserRoles();
-        return loggedUserRoles.includes(Roles.SuperAdmin) || loggedUserRoles.includes(Roles.Administrator);
-    }
+  get userRoles(): typeof Roles {
+    return Roles;
+  }
 
-    constructor(
-        private authenticationService: AuthenticationService,
-        private appointmentRequestService: AppointmentRequestService,
-        private appointmentService: AppointmentService,
-        private helperService: HelperService
-    ) {
+  get showAppointmentRequests(): boolean {
+    const loggedUserRoles = this.authenticationService.getLoggedUserRoles();
+    return (
+      loggedUserRoles.includes(Roles.SuperAdmin) ||
+      loggedUserRoles.includes(Roles.Administrator)
+    );
+  }
+
+  constructor(
+    private authenticationService: AuthenticationService,
+    private appointmentRequestService: AppointmentRequestService,
+    private appointmentService: AppointmentService,
+    private recurringAppointmentService: RecurringAppointmentService,
+    private messageService: MessageService,
+    private helperService: HelperService,
+  ) {
+    this.loadData();
+    this.getDataStatus();
+  }
+
+  generateRecurringAppointments(): void {
+    this.recurringAppointmentService.generateNextWeekRecurringAppointments().subscribe({
+      next: (data: boolean) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Appointments are successfully generated.",
+        });
+
         this.loadData();
-        this.getDataStatus();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+  private getDataStatus() {
+    this.helperService.getDataStatus().subscribe((data) => {
+      this.loadData();
+    });
+  }
+
+  private loadData(): void {
+    this.userRole = this.authenticationService.getUserRole();
+
+    if (this.userRole == Roles.Administrator) {
+      this.loadAdminAppointments();
+      this.loadAppointmentRequests();
+    } else if (this.userRole == Roles.Coach) {
+      this.loadCoachAppointments();
+    } else if (this.userRole == Roles.Client) {
+      this.loadClientAppointments();
     }
+  }
 
-    private getDataStatus() {
-        this.helperService.getDataStatus().subscribe(data => {
-            this.loadData();
-        })
-    }
+  private loadAppointmentRequests() {
+    this.appointmentRequestService.getPendingAppointmentRequests().subscribe({
+      next: (data: AppointmentRequest[]) => {
+        this.appointmentRequests = data.map((x: AppointmentRequest) =>
+          Object.assign(new AppointmentRequest(), x),
+        );
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
-    private loadData(): void {
+  private loadAdminAppointments(): void {
+    this.appointmentService.getAllAppointmentsStatus().subscribe({
+      next: (data: AppointmentsStatus) => {
+        this.approvedAppointments = data.approvedAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
 
-        this.userRole = this.authenticationService.getUserRole();
+        this.pendingAppointments = data.pendingAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
 
-        if (this.userRole == Roles.Administrator) {
-            this.loadAdminAppointments();
-            this.loadAppointmentRequests();
-        } else if (this.userRole == Roles.Coach) {
-            this.loadCoachAppointments();
-        } else if (this.userRole == Roles.Client) {
-            this.loadClientAppointments();
-        }
-    }
+        this.inProgressAppointments = data.inProgressAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
-    private loadAppointmentRequests() {
-        this.appointmentRequestService.getPendingAppointmentRequests().subscribe({
-            next: (data: AppointmentRequest[]) => {
-                this.appointmentRequests = data.map((x: AppointmentRequest) =>
-                    Object.assign(new AppointmentRequest(), x),
-                );
-            },
-            error: (err) => {
-                console.error(err);
-            },
-        });
-    }
+  private loadClientAppointments(): void {
+    this.appointmentService.getClientAppointments().subscribe({
+      next: (data: AppointmentsStatus) => {
+        this.approvedAppointments = data.approvedAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
 
-    private loadAdminAppointments(): void {
-        this.appointmentService.getAllAppointmentsStatus().subscribe({
-            next: (data: AppointmentsStatus) => {
-                this.approvedAppointments = data.approvedAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
+        this.pendingAppointments = data.pendingAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
 
-                this.pendingAppointments = data.pendingAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
+        this.inProgressAppointments = data.inProgressAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
-                this.inProgressAppointments = data.inProgressAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
-            },
-            error: (err) => {
-                console.error(err);
-            },
-        });
-    }
+  private loadCoachAppointments(): void {
+    this.appointmentService.getCoachAppointments().subscribe({
+      next: (data: AppointmentsStatus) => {
+        this.approvedAppointments = data.approvedAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
 
-    private loadClientAppointments(): void {
-        this.appointmentService.getClientAppointments().subscribe({
-            next: (data: AppointmentsStatus) => {
-                this.approvedAppointments = data.approvedAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
+        this.pendingAppointments = data.pendingAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
 
-                this.pendingAppointments = data.pendingAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
-
-                this.inProgressAppointments = data.inProgressAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
-            },
-            error: (err) => {
-                console.error(err);
-            },
-        });
-    }
-
-    private loadCoachAppointments(): void {
-        this.appointmentService.getCoachAppointments().subscribe({
-            next: (data: AppointmentsStatus) => {
-                this.approvedAppointments = data.approvedAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
-
-                this.pendingAppointments = data.pendingAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
-
-                this.inProgressAppointments = data.inProgressAppointments.map((x: Appointment) =>
-                    Object.assign(new Appointment(), x),
-                );
-            },
-            error: (err: any) => {
-                console.error(err);
-            }
-        })
-    }
+        this.inProgressAppointments = data.inProgressAppointments.map(
+          (x: Appointment) => Object.assign(new Appointment(), x),
+        );
+      },
+      error: (err: any) => {
+        console.error(err);
+      },
+    });
+  }
 }

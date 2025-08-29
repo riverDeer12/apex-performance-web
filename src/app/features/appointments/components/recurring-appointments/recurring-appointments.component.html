@@ -43,7 +43,9 @@
                 {{ recurringAppointment.timeSlot.name }}
             </td>
             <td>
-                <span>{{ recurringAppointment.client.firstName }} {{ recurringAppointment.client.lastName }}</span>
+                <span *ngFor="let client of recurringAppointment.clients">
+                    {{ client.firstName + ' ' + client.lastName }} <br>
+                </span>
             </td>
             <td>
                 {{ recurringAppointment.status ? 'Active' : 'InActive' }}

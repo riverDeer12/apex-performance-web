@@ -1,5 +1,10 @@
 <h4>Next Appointments</h4>
 
+<div class="my-3" *ngIf="userRole == userRoles.Coach">
+    <p-button (click)="generateRecurringAppointments()"
+              type="button" iconPos="right" icon="pi pi-sync" label="Generate Schedule For Next Week" />
+</div>
+
 <app-appointments-list [userRole]="userRole" [appointments]="approvedAppointments"
                        type="Approved"></app-appointments-list>
 <app-appointments-list [userRole]="userRole" [appointments]="pendingAppointments"

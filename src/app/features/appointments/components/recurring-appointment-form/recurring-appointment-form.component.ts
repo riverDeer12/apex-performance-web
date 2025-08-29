@@ -23,14 +23,17 @@ import { RecurringAppointmentService } from "../../services/recurring-appointmen
 import { Select } from "primeng/select";
 import { Button } from "primeng/button";
 import { CommonModule } from "@angular/common";
+import { MultiSelect } from 'primeng/multiselect';
+import { AppointmentType } from "../../models/appointment-type";
+import { AppointmentTypeService } from "../../services/appointment-type.service";
 
 @Component({
   selector: "app-recurring-appointment-form",
-  imports: [CommonModule, Select, Button, ReactiveFormsModule],
+  imports: [CommonModule, Select, Button, ReactiveFormsModule, MultiSelect],
   templateUrl: "./recurring-appointment-form.component.html",
   styleUrl: "./recurring-appointment-form.component.scss",
 })
-export class RecurringAppointmentFormComponent  {
+export class RecurringAppointmentFormComponent {
   @Input() type!: ActionType;
   @Input() recurringAppointment!: RecurringAppointment;
   @Input() redirectType!: RedirectType;
@@ -47,6 +50,8 @@ export class RecurringAppointmentFormComponent  {
 
   timeSlots!: TimeSlot[];
 
+  appointmentTypes!: AppointmentType[];
+
   loadingData = false;
 
   get userRoles(): typeof Roles {
@@ -59,6 +64,7 @@ export class RecurringAppointmentFormComponent  {
     private helperService: HelperService,
     private clientService: ClientService,
     private timeSlotService: TimeSlotService,
+    private appointmentTypeService: AppointmentTypeService,
     private coachService: CoachService,
     private recurringAppointmentService: RecurringAppointmentService,
     private messageService: MessageService,
@@ -102,7 +108,6 @@ export class RecurringAppointmentFormComponent  {
 
       return;
     } else {
-
       this.getCoachTimeSlots();
 
       this.clientService
@@ -116,6 +121,9 @@ export class RecurringAppointmentFormComponent  {
   }
 
   private initFormData() {
+
+    this.getAppointmentTypes();
+
     switch (this.userRole) {
       case Roles.Administrator:
         this.getAllClients();
@@ -152,11 +160,12 @@ export class RecurringAppointmentFormComponent  {
   private initCreateForm() {
     this.form = this.formBuilder.group({
       timeSlot: [null, [Validators.required]],
-      client: [null, [Validators.required]],
+      clients: [null, [Validators.required]],
       coach: [null, [Validators.required]],
+      type: [null, [Validators.required]]
     });
 
-    if(this.userRole == Roles.Coach){
+    if (this.userRole == Roles.Coach) {
       this.setCoach();
     } else {
       this.initFormData();
@@ -219,6 +228,14 @@ export class RecurringAppointmentFormComponent  {
   private getAllCoaches() {
     this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
       this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+    });
+  }
+
+  private getAppointmentTypes() {
+    this.appointmentTypeService.getAllAppointmentTypes().subscribe((response: AppointmentType[]) => {
+      this.appointmentTypes = response.map((x: AppointmentType) =>
+          Object.assign(new AppointmentType(), x),
+      );
     });
   }
 }
