@@ -28,6 +28,10 @@
                 Client
                 <p-sortIcon field="client" />
             </th>
+            <th pSortableColumn="type.name" style="min-width: 12rem">
+                Type
+                <p-sortIcon field="type.name" />
+            </th>
             <th pSortableColumn="status" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Status
@@ -48,11 +52,19 @@
                 </span>
             </td>
             <td>
+                {{ recurringAppointment.type.name }}
+            </td>
+            <td>
                 {{ recurringAppointment.status ? 'Active' : 'InActive' }}
             </td>
             <td class="flex">
                 <p-button (click)="changeActivity(recurringAppointment)"
                           [icon]=" recurringAppointment.status ? 'pi pi-eye' : 'pi pi-eye-slash'"
+                          severity="primary"
+                          [outlined]="true" />
+                <p-button *ngIf="userCanCreateRecurringAppointment"
+                          class="ml-2" (click)="openUpdateDialog(recurringAppointment)"
+                          icon="pi pi-pencil"
                           severity="primary"
                           [outlined]="true" />
             </td>

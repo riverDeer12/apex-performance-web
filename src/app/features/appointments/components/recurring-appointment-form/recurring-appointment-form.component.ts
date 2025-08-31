@@ -33,7 +33,7 @@ import { AppointmentTypeService } from "../../services/appointment-type.service"
   templateUrl: "./recurring-appointment-form.component.html",
   styleUrl: "./recurring-appointment-form.component.scss",
 })
-export class RecurringAppointmentFormComponent {
+export class RecurringAppointmentFormComponent implements OnInit {
   @Input() type!: ActionType;
   @Input() recurringAppointment!: RecurringAppointment;
   @Input() redirectType!: RedirectType;
@@ -58,6 +58,10 @@ export class RecurringAppointmentFormComponent {
     return Roles;
   }
 
+  get actionTypes(): typeof ActionType {
+    return ActionType;
+  }
+
   constructor(
     public validationService: ValidationService,
     private formBuilder: FormBuilder,
@@ -71,7 +75,10 @@ export class RecurringAppointmentFormComponent {
     private authenticationService: AuthenticationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
-    this.initCreateForm();
+  }
+
+  ngOnInit() {
+    this.initForm();
   }
 
   submit() {
@@ -91,7 +98,9 @@ export class RecurringAppointmentFormComponent {
       return;
     }
 
-    this.createAppointment();
+    this.type == ActionType.Create ?
+        this.createRecurringAppointment() :
+        this.updateRecurringAppointment();
   }
 
   getTimeSlots(): void {
@@ -119,6 +128,11 @@ export class RecurringAppointmentFormComponent {
         });
     }
   }
+
+  private initForm = () =>
+      this.type == ActionType.Create
+          ? this.initCreateForm()
+          : this.initUpdateForm();
 
   private initFormData() {
 
@@ -172,7 +186,24 @@ export class RecurringAppointmentFormComponent {
     }
   }
 
-  private createAppointment() {
+  private initUpdateForm() {
+    this.form = this.formBuilder.group({
+      timeSlot: [this.recurringAppointment.timeSlot.id, [Validators.required]],
+      clients: [this.recurringAppointment.clients.map(x => x.id), [Validators.required]],
+      coach: [this.recurringAppointment.coach.id, [Validators.required]],
+      type: [this.recurringAppointment.type.id, [Validators.required]]
+    });
+
+    if (this.userRole == Roles.Coach) {
+      this.setCoach();
+    } else {
+      this.initFormData();
+    }
+  }
+
+
+
+  private createRecurringAppointment() {
     this.recurringAppointmentService
       .createRecurringAppointment(this.form.value)
       .subscribe({
@@ -207,6 +238,43 @@ export class RecurringAppointmentFormComponent {
           this.loadingData = false;
         },
       });
+  }
+
+  private updateRecurringAppointment() {
+    this.recurringAppointmentService
+        .updateRecurringAppointment(this.recurringAppointment.id, this.form.value)
+        .subscribe({
+          next: (response: RecurringAppointment) => {
+            this.recurringAppointment = Object.assign(
+                new RecurringAppointment(),
+                response,
+            );
+
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Recurring Appointment is updated successfully.",
+            });
+
+            this.helperService.redirectUserAfterSubmit(
+                this.redirectType,
+                this.returnUrl,
+                this.dialogId,
+            );
+          },
+          error: (error) => {
+            console.error("Error:", error);
+
+            this.messageService.add({
+              severity: "error",
+              summary: "Error Updating Recurring Appointment",
+              detail: error.message || "An unexpected error occurred.",
+            });
+          },
+          complete: () => {
+            this.loadingData = false;
+          },
+        });
   }
 
   private getCoachClients() {

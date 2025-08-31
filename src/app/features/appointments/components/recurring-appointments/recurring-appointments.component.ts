@@ -58,24 +58,6 @@ export class RecurringAppointmentsComponent implements OnInit {
     this.loadData();
   }
 
-  recurringAppointmentArranged(timeSlot: TimeSlot): boolean {
-    return this.recurringAppointments.some(
-      (a: { timeSlot: { id: string } }) => a.timeSlot?.id === timeSlot.id,
-    );
-  }
-
-  showClientForRecurringAppointment(timeSlot: TimeSlot): string {
-    let recurringAppointment = this.recurringAppointments.find(
-      (a) => a.timeSlot?.id === timeSlot.id,
-    );
-
-    return (
-      recurringAppointment?.client.firstName +
-      "" +
-      recurringAppointment?.client.lastName
-    );
-  }
-
   private loadData(): void {
     if (this.userRole == Roles.Administrator) {
       this.loadAdminRecurringAppointments();
@@ -148,6 +130,22 @@ export class RecurringAppointmentsComponent implements OnInit {
         contentType: EntityType.RecurringAppointment,
         formType: ActionType.Create,
         dialogId: "createRecurringAppointmentForm",
+      },
+    });
+
+    dialogRef.onClose.subscribe((response: any) => {
+      this.loadData();
+    });
+  }
+
+  openUpdateDialog(recurringAppointment: RecurringAppointment) {
+    const dialogRef = this.dialogService.open(DialogFormComponent, {
+      header: "Update Recurring Appointment",
+      data: {
+        contentType: EntityType.RecurringAppointment,
+        formType: ActionType.Update,
+        dialogId: "updateRecurringAppointmentForm",
+        data: recurringAppointment
       },
     });
 

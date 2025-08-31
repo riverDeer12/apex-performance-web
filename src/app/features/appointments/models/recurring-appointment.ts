@@ -1,11 +1,13 @@
 import { Client } from "../../clients/models/client";
 import { Coach } from "../../coaches/models/coach";
 import { TimeSlot } from "../../time-slots/models/time-slot";
+import { AppointmentType } from "./appointment-type";
 
 export class RecurringAppointment {
   id!: string;
-  client!: Client;
+  clients!: Client[];
   coach!: Coach;
   timeSlot!: TimeSlot;
+  type!: AppointmentType;
   status!: boolean;
 }

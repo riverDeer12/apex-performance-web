@@ -12,6 +12,7 @@ import {AppointmentService} from '../../services/appointment.service';
 import {MessageService} from 'primeng/api';
 import {HelperService} from '../../../../services/helper.service';
 import { Roles } from '../../../../constants/roles';
+import { DayOfWeek } from '../../../../enums/day-of-week';
 
 @Component({
     selector: 'app-appointments-list',
@@ -41,6 +42,10 @@ export class AppointmentsListComponent implements OnInit {
 
     get businessStatuses(): typeof BusinessStatuses {
         return BusinessStatuses;
+    }
+
+    get weekDays():typeof DayOfWeek {
+        return DayOfWeek;
     }
 
     showActionButtons(appointment: Appointment): boolean {
