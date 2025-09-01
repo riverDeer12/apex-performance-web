@@ -35,11 +35,11 @@
                             class="p-button-outlined p-button-danger"
                             pButton type="button" icon="pi pi-times"
                             label="Cancel"
-                            (click)="openCancelationRequestDialog(appointment.id)">
+                            (click)="cancel(appointment)">
                     </button>
                     <button
                             *ngIf="showPendingActionButtons(appointment)"
-                            class="p-button-outlined p-button-success"
+                            class="p-button-outlined p-button-success mr-2"
                             pButton type="button" icon="pi pi-check"
                             label="Approve"
                             (click)="approve(appointment)">

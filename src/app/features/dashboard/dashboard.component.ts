@@ -24,7 +24,7 @@ import { RecurringAppointmentService } from "../appointments/services/recurring-
     AppointmentsRequestsListComponent,
     Button,
   ],
-  providers: [DialogService, MessageService],
+  providers: [DialogService],
   templateUrl: "./dashboard.component.html",
   styleUrl: "./dashboard.component.scss",
 })

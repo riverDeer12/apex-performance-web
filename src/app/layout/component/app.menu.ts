@@ -56,7 +56,6 @@ export class AppMenu implements OnInit {
       },
       {
         label: "Appointments",
-        visible: this.authenticationService.validateUserRole(Roles.Coach),
         items: [
           {
             label: "Appointments",

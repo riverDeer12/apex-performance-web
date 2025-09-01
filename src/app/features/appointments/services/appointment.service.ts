@@ -60,6 +60,11 @@ export class AppointmentService {
       environment.apiUrl + "/appointments/decline/" + appointmentId,
     );
 
+  cancelAppointment = (appointmentId: string) =>
+    this.http.get<Appointment>(
+      environment.apiUrl + "/appointments/cancel/" + appointmentId,
+    );
+
   progressAppointment = (appointmentId: string) =>
     this.http.get<Appointment>(
       environment.apiUrl + "/appointments/progress/" + appointmentId,
