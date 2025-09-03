@@ -89,10 +89,10 @@
     <ng-template #body let-bodyMeasurement>
         <tr>
             <td *ngIf="canManageBodyMeasurements">
-                {{ bodyMeasurement.firstName }}
+                {{ bodyMeasurement.client.firstName }}
             </td>
             <td *ngIf="canManageBodyMeasurements">
-                {{ bodyMeasurement.lastName }}
+                {{ bodyMeasurement.client.lastName }}
             </td>
             <td>
                 {{ bodyMeasurement.createdAt | date : 'dd.MM.yyyy. HH:mm:ss' }}

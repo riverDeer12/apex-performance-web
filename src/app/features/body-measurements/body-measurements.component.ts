@@ -69,13 +69,13 @@ export class BodyMeasurementsComponent implements OnInit {
   }
 
   private loadData(): void {
-    if (this.userRole == Roles.Administrator) {
-      this.loadAdminBodyMeasurements();
-    } else if (this.userRole == Roles.Coach) {
-      this.loadCoachBodyMeasurements();
-    } else if (this.userRole == Roles.Client) {
-      this.loadClientBodyMeasurements();
-    }
+    this.bodyMeasurementService
+      .getBodyMeasurements()
+      .subscribe((response: BodyMeasurement[]) => {
+        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
+          Object.assign(new BodyMeasurement(), x),
+        );
+      });
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -165,36 +165,6 @@ export class BodyMeasurementsComponent implements OnInit {
           );
       },
     });
-  }
-
-  private loadAdminBodyMeasurements(): void {
-    this.bodyMeasurementService
-      .getAllBodyMeasurements()
-      .subscribe((response: BodyMeasurement[]) => {
-        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
-          Object.assign(new BodyMeasurement(), x),
-        );
-      });
-  }
-
-  private loadCoachBodyMeasurements(): void {
-    this.bodyMeasurementService
-      .getCoachClientsBodyMeasurements()
-      .subscribe((response: BodyMeasurement[]) => {
-        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
-          Object.assign(new BodyMeasurement(), x),
-        );
-      });
-  }
-
-  private loadClientBodyMeasurements(): void {
-    this.bodyMeasurementService
-      .getClientBodyMeasurements()
-      .subscribe((response: BodyMeasurement[]) => {
-        this.bodyMeasurements = response.map((x: BodyMeasurement) =>
-          Object.assign(new BodyMeasurement(), x),
-        );
-      });
   }
 
   private getDataStatus() {

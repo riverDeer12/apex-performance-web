@@ -13,14 +13,8 @@ export class BodyMeasurementService {
     constructor(private http: HttpClient) {
     }
 
-    getAllBodyMeasurements = () => 
+    getBodyMeasurements = () =>
         this.http.get<BodyMeasurement[]>(environment.apiUrl + "/body-measurements");
-
-    getCoachClientsBodyMeasurements = () =>
-        this.http.get<BodyMeasurement[]>(environment.apiUrl + "/body-measurements/coach");
-
-    getClientBodyMeasurements = () =>
-        this.http.get<BodyMeasurement[]>(environment.apiUrl + "/body-measurements/client");
 
     createBodyMeasurement = (request: DefaultPostRequest) =>
         this.http.post<BodyMeasurement>(environment.apiUrl + "/body-measurements/", request);
