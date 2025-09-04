@@ -13,23 +13,8 @@ import { AppointmentsStatus } from "../../../shared/data-transfer-objects/appoin
 export class AppointmentService {
   constructor(private http: HttpClient) {}
 
-  getAllAppointments = () =>
-    this.http.get<Appointment[]>(environment.apiUrl + "/appointments");
-
-  getClientAppointments = () =>
-    this.http.get<AppointmentsStatus>(
-      environment.apiUrl + "/appointments/client",
-    );
-
-  getCoachAppointments = () =>
-    this.http.get<AppointmentsStatus>(
-      environment.apiUrl + "/appointments/coach",
-    );
-
-  getAllAppointmentsStatus = () =>
-    this.http.get<AppointmentsStatus>(
-      environment.apiUrl + "/appointments/status",
-    );
+  getAppointments = () =>
+    this.http.get<AppointmentsStatus>(environment.apiUrl + "/appointments");
 
   createAppointment = (request: DefaultPostRequest) =>
     this.http.post<Appointment>(environment.apiUrl + "/appointments/", request);

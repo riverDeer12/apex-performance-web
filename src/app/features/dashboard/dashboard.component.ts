@@ -62,20 +62,22 @@ export class DashboardComponent {
   }
 
   generateRecurringAppointments(): void {
-    this.recurringAppointmentService.generateNextWeekRecurringAppointments().subscribe({
-      next: (data: boolean) => {
-        this.messageService.add({
-          severity: "success",
-          summary: "Success",
-          detail: "Appointments are successfully generated.",
-        });
+    this.recurringAppointmentService
+      .generateNextWeekRecurringAppointments()
+      .subscribe({
+        next: (data: boolean) => {
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Appointments are successfully generated.",
+          });
 
-        this.loadData();
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+          this.loadData();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
   }
 
   private getDataStatus() {
@@ -86,15 +88,8 @@ export class DashboardComponent {
 
   private loadData(): void {
     this.userRole = this.authenticationService.getUserRole();
-
-    if (this.userRole == Roles.Administrator) {
-      this.loadAdminAppointments();
-      this.loadAppointmentRequests();
-    } else if (this.userRole == Roles.Coach) {
-      this.loadCoachAppointments();
-    } else if (this.userRole == Roles.Client) {
-      this.loadClientAppointments();
-    }
+    this.loadAppointmentRequests();
+    this.loadAppointments();
   }
 
   private loadAppointmentRequests() {
@@ -110,8 +105,8 @@ export class DashboardComponent {
     });
   }
 
-  private loadAdminAppointments(): void {
-    this.appointmentService.getAllAppointmentsStatus().subscribe({
+  private loadAppointments(): void {
+    this.appointmentService.getAppointments().subscribe({
       next: (data: AppointmentsStatus) => {
         this.approvedAppointments = data.approvedAppointments.map(
           (x: Appointment) => Object.assign(new Appointment(), x),
@@ -126,48 +121,6 @@ export class DashboardComponent {
         );
       },
       error: (err) => {
-        console.error(err);
-      },
-    });
-  }
-
-  private loadClientAppointments(): void {
-    this.appointmentService.getClientAppointments().subscribe({
-      next: (data: AppointmentsStatus) => {
-        this.approvedAppointments = data.approvedAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
-
-        this.pendingAppointments = data.pendingAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
-
-        this.inProgressAppointments = data.inProgressAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-  }
-
-  private loadCoachAppointments(): void {
-    this.appointmentService.getCoachAppointments().subscribe({
-      next: (data: AppointmentsStatus) => {
-        this.approvedAppointments = data.approvedAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
-
-        this.pendingAppointments = data.pendingAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
-
-        this.inProgressAppointments = data.inProgressAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
-      },
-      error: (err: any) => {
         console.error(err);
       },
     });

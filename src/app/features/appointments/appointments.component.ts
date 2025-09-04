@@ -15,7 +15,7 @@ import { Roles } from "../../constants/roles";
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { AppointmentsStatus } from "../../shared/data-transfer-objects/appointments-status";
 import { Permissions } from "../../constants/permissions";
-import { DateExtensions } from '../../shared/extensions/date-extensions';
+import { DateExtensions } from "../../shared/extensions/date-extensions";
 
 @Component({
   selector: "app-appointments",
@@ -30,7 +30,7 @@ export class AppointmentsComponent implements OnInit {
 
   appointments!: Appointment[];
 
-  weekDays = DateExtensions.getWeekDates(new Date(), 1)
+  weekDays = DateExtensions.getWeekDates(new Date(), 1);
 
   get userCanCreateAppointment(): boolean {
     return this.authenticationService.checkPermission(
@@ -38,7 +38,7 @@ export class AppointmentsComponent implements OnInit {
     );
   }
 
-  get userRoles (): typeof Roles{
+  get userRoles(): typeof Roles {
     return Roles;
   }
 
@@ -56,45 +56,9 @@ export class AppointmentsComponent implements OnInit {
   }
 
   private loadData(): void {
-    if (this.userRole == Roles.Administrator) {
-      this.loadAdminAppointments();
-    } else if (this.userRole == Roles.Coach) {
-      this.loadCoachAppointments();
-    } else if (this.userRole == Roles.Client) {
-      this.loadClientAppointments();
-    }
-  }
-
-  loadAdminAppointments(): void {
-    this.appointmentService.getAllAppointments().subscribe({
+    this.appointmentService.getAppointments().subscribe({
       next: (data: Appointment[]) => {
         this.appointments = data.map((x: Appointment) =>
-          Object.assign(new Appointment(), x),
-        );
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-  }
-
-  loadCoachAppointments(): void {
-    this.appointmentService.getCoachAppointments().subscribe({
-      next: (data: AppointmentsStatus) => {
-        this.appointments = data.approvedAppointments.map((x: Appointment) =>
-          Object.assign(new Appointment(), x),
-        );
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-  }
-
-  loadClientAppointments(): void {
-    this.appointmentService.getClientAppointments().subscribe({
-      next: (data: AppointmentsStatus) => {
-        this.appointments = data.approvedAppointments.map((x: Appointment) =>
           Object.assign(new Appointment(), x),
         );
       },
