@@ -11,19 +11,9 @@ export class RecurringAppointmentService {
 
   constructor(private http: HttpClient) {}
 
-  getAllRecurringAppointments = () =>
+  getRecurringAppointments = () =>
     this.http.get<RecurringAppointment[]>(
-      environment.apiUrl + "/recurring-appointments/all",
-    );
-
-  getClientRecurringAppointments = () =>
-    this.http.get<RecurringAppointment[]>(
-      environment.apiUrl + "/recurring-appointments/client",
-    );
-
-  getCoachRecurringAppointments = () =>
-    this.http.get<RecurringAppointment[]>(
-      environment.apiUrl + "/recurring-appointments/coach",
+      environment.apiUrl + "/recurring-appointments",
     );
 
   changeClientRecurringAppointmentActivity = (recurringAppointmentId: string) =>

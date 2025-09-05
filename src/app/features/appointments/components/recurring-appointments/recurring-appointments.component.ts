@@ -59,35 +59,15 @@ export class RecurringAppointmentsComponent implements OnInit {
   }
 
   private loadData(): void {
-    if (this.userRole == Roles.Administrator) {
-      this.loadAdminRecurringAppointments();
-    } else if (this.userRole == Roles.Coach) {
-      this.loadCoachRecurringAppointments();
-      this.loadCoachTimeSlots();
-    } else if (this.userRole == Roles.Client) {
-      this.loadClientRecurringAppointments();
-    }
-  }
-
-  private loadAdminRecurringAppointments(): void {
-    this.recurringAppointmentService.getAllRecurringAppointments().subscribe({
+    this.recurringAppointmentService.getRecurringAppointments().subscribe({
       next: (data: RecurringAppointment[]) => {
         this.recurringAppointments = data.map((x: RecurringAppointment) =>
           Object.assign(new RecurringAppointment(), x),
         );
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-  }
 
-  private loadCoachRecurringAppointments(): void {
-    this.recurringAppointmentService.getCoachRecurringAppointments().subscribe({
-      next: (data: RecurringAppointment[]) => {
-        this.recurringAppointments = data.map((x: RecurringAppointment) =>
-          Object.assign(new RecurringAppointment(), x),
-        );
+        if (this.userRole === Roles.Coach) {
+          this.loadCoachTimeSlots();
+        }
       },
       error: (err) => {
         console.error(err);
@@ -106,21 +86,6 @@ export class RecurringAppointmentsComponent implements OnInit {
         console.error(err);
       },
     });
-  }
-
-  private loadClientRecurringAppointments(): void {
-    this.recurringAppointmentService
-      .getClientRecurringAppointments()
-      .subscribe({
-        next: (data: RecurringAppointment[]) => {
-          this.recurringAppointments = data.map((x: RecurringAppointment) =>
-            Object.assign(new RecurringAppointment(), x),
-          );
-        },
-        error: (err) => {
-          console.error(err);
-        },
-      });
   }
 
   openCreateDialog() {
@@ -145,7 +110,7 @@ export class RecurringAppointmentsComponent implements OnInit {
         contentType: EntityType.RecurringAppointment,
         formType: ActionType.Update,
         dialogId: "updateRecurringAppointmentForm",
-        data: recurringAppointment
+        data: recurringAppointment,
       },
     });
 
@@ -156,8 +121,10 @@ export class RecurringAppointmentsComponent implements OnInit {
 
   changeActivity(recurringAppointment: RecurringAppointment) {
     this.confirmationService.confirm({
-      message: "Are you sure that you want to change activity for this recurring appointment?",
-      header: "Confirm activity change of " + recurringAppointment.timeSlot.name,
+      message:
+        "Are you sure that you want to change activity for this recurring appointment?",
+      header:
+        "Confirm activity change of " + recurringAppointment.timeSlot.name,
       closable: true,
       closeOnEscape: true,
       icon: "pi pi-exclamation-triangle",
@@ -170,7 +137,9 @@ export class RecurringAppointmentsComponent implements OnInit {
         label: "Yes",
       },
       accept: () => {
-        this.recurringAppointmentService.changeClientRecurringAppointmentActivity(recurringAppointment.id).subscribe(
+        this.recurringAppointmentService
+          .changeClientRecurringAppointmentActivity(recurringAppointment.id)
+          .subscribe(
             () => {
               this.messageService.add({
                 severity: "success",
@@ -179,7 +148,6 @@ export class RecurringAppointmentsComponent implements OnInit {
               });
 
               this.loadData();
-
             },
             () => {
               this.messageService.add({
@@ -188,7 +156,7 @@ export class RecurringAppointmentsComponent implements OnInit {
                 detail: "Error changing Recurring Appointment activity.",
               });
             },
-        );
+          );
       },
     });
   }
