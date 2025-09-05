@@ -57,8 +57,8 @@ export class AppointmentsComponent implements OnInit {
 
   private loadData(): void {
     this.appointmentService.getAppointments().subscribe({
-      next: (data: Appointment[]) => {
-        this.appointments = data.map((x: Appointment) =>
+      next: (data: AppointmentsStatus) => {
+        this.appointments = data.approvedAppointments.map((x: Appointment) =>
           Object.assign(new Appointment(), x),
         );
       },

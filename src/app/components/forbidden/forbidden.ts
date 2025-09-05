@@ -20,7 +20,7 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                         <h1 class="text-surface-900 dark:text-surface-0 font-bold text-3xl lg:text-5xl mb-2">
                             Forbidden Access</h1>
                         <div class="text-surface-600 dark:text-surface-200 mb-8">You don't have access to requested
-                            resource.
+                            resource. Please contact administrator for further information.
                         </div>
                         <p-button label="Go Back" routerLink="/authentication/login"/>
                     </div>

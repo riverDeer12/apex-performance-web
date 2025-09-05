@@ -41,14 +41,6 @@ export class DashboardComponent {
     return Roles;
   }
 
-  get showAppointmentRequests(): boolean {
-    const loggedUserRoles = this.authenticationService.getLoggedUserRoles();
-    return (
-      loggedUserRoles.includes(Roles.SuperAdmin) ||
-      loggedUserRoles.includes(Roles.Administrator)
-    );
-  }
-
   constructor(
     private authenticationService: AuthenticationService,
     private appointmentRequestService: AppointmentRequestService,
@@ -95,9 +87,13 @@ export class DashboardComponent {
   private loadAppointmentRequests() {
     this.appointmentRequestService.getPendingAppointmentRequests().subscribe({
       next: (data: AppointmentRequest[]) => {
-        this.appointmentRequests = data.map((x: AppointmentRequest) =>
-          Object.assign(new AppointmentRequest(), x),
-        );
+        if(data){
+          this.appointmentRequests = data.map((x: AppointmentRequest) =>
+              Object.assign(new AppointmentRequest(), x),
+          );
+        } else {
+          this.appointmentRequests = [];
+        }
       },
       error: (err) => {
         console.error(err);

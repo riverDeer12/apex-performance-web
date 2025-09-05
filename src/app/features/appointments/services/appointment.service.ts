@@ -2,9 +2,7 @@ import { Injectable } from "@angular/core";
 import { Appointment } from "../models/appointment";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { DefaultUpdateRequest } from "../../../models/default-update-request";
 import { DefaultPostRequest } from "../../../models/default-post-request";
-import { AppointmentsByDay } from "../models/appointments-by-day";
 import { AppointmentsStatus } from "../../../shared/data-transfer-objects/appointments-status";
 
 @Injectable({
@@ -19,17 +17,6 @@ export class AppointmentService {
   createAppointment = (request: DefaultPostRequest) =>
     this.http.post<Appointment>(environment.apiUrl + "/appointments/", request);
 
-  updateAppointment = (appointmentId: string, request: DefaultUpdateRequest) =>
-    this.http.put<Appointment>(
-      environment.apiUrl + "/appointments/" + appointmentId,
-      request,
-    );
-
-  deleteAppointment = (appointmentId: string) =>
-    this.http.delete<Appointment>(
-      environment.apiUrl + "/appointments/" + appointmentId,
-    );
-
   approveAppointment = (appointmentId: string) =>
     this.http.get<Appointment>(
       environment.apiUrl + "/appointments/approve/" + appointmentId,
@@ -43,10 +30,5 @@ export class AppointmentService {
   cancelAppointment = (appointmentId: string) =>
     this.http.get<Appointment>(
       environment.apiUrl + "/appointments/cancel/" + appointmentId,
-    );
-
-  progressAppointment = (appointmentId: string) =>
-    this.http.get<Appointment>(
-      environment.apiUrl + "/appointments/progress/" + appointmentId,
     );
 }

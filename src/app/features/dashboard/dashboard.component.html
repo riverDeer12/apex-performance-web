@@ -11,10 +11,9 @@
                        type="Pending"></app-appointments-list>
 <app-appointments-list [userRole]="userRole" [appointments]="inProgressAppointments"
                        type="In Progress"></app-appointments-list>
-
 <hr>
 
-<div *ngIf="showAppointmentRequests">
+<div>
     <h4>Appointment Requests</h4>
     <app-appointments-requests-list [appointmentRequests]="appointmentRequests"></app-appointments-requests-list>
 </div>

@@ -87,7 +87,7 @@ export class AuthenticationService {
    */
   logOut(redirectUrl: string): void {
     localStorage.removeItem("token");
-    this.router.navigate([redirectUrl], { replaceUrl: true })
+    this.router.navigateByUrl(redirectUrl).then();
   }
 
   getLoggedUserPermissions(): string[] {
@@ -114,7 +114,6 @@ export class AuthenticationService {
     const tokenStorageValue = localStorage.getItem("token");
 
     if (!tokenStorageValue) {
-      this.router.navigateByUrl("/authentication/login").then();
       return new AuthResponse();
     } else {
       return jwtDecode(tokenStorageValue) as AuthResponse;

@@ -38,14 +38,16 @@
             </td>
             <td>
                 <p-button
-                        (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
-                        label="Approve"
-                        [outlined]="true"/>
+                    *ngIf="showActionButtons"
+                    (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
+                    label="Approve"
+                    [outlined]="true" />
                 <p-button
-                        (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
-                        severity="danger"
-                        label="Decline"
-                        [outlined]="true"/>
+                    *ngIf="showActionButtons"
+                    (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
+                    severity="danger"
+                    label="Decline"
+                    [outlined]="true" />
             </td>
         </tr>
     </ng-template>
