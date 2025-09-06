@@ -9,11 +9,11 @@ import {
 import { AuthResponse } from "../../models/auth-response";
 import { AuthenticationService } from "../../services/authentication.service";
 import { MessageService } from "primeng/api";
-import { HelperService } from "../../../../services/helper.service";
+import { HelperService } from "../../../../shared/services/helper.service";
 import { Button } from "primeng/button";
 import { CommonModule } from "@angular/common";
 import { InputText } from "primeng/inputtext";
-import { ValidationService } from "../../../../services/validation.service";
+import { ValidationService } from "../../../../shared/services/validation.service";
 
 @Component({
   selector: "app-change-username-form",

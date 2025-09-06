@@ -1,7 +1,7 @@
 import {HttpInterceptorFn} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {tap} from 'rxjs';
-import {LoaderService, LoadingOverlayRef} from '../services/loader.service';
+import {LoaderService, LoadingOverlayRef} from '../shared/services/loader.service';
 import {AuthenticationService} from "../features/authentication/services/authentication.service";
 import {inject} from "@angular/core";
 

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Appointment } from "../models/appointment";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { DefaultPostRequest } from "../../../models/default-post-request";
+import { DefaultPostRequest } from "../../../shared/models/default-post-request";
 import { AppointmentsStatus } from "../../../shared/data-transfer-objects/appointments-status";
 
 @Injectable({

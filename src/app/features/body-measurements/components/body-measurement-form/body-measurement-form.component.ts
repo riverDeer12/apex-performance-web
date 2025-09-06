@@ -9,8 +9,8 @@ import {
 } from "@angular/forms";
 import { BodyMeasurementService } from "../../services/body-measurement.service";
 import { MessageService } from "primeng/api";
-import { ValidationService } from "../../../../services/validation.service";
-import { HelperService } from "../../../../services/helper.service";
+import { ValidationService } from "../../../../shared/services/validation.service";
+import { HelperService } from "../../../../shared/services/helper.service";
 import { Component, Input, OnInit } from "@angular/core";
 import { InputText } from "primeng/inputtext";
 import { Button } from "primeng/button";

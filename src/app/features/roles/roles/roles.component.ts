@@ -7,13 +7,13 @@ import {InputText} from "primeng/inputtext";
 import {Table, TableModule} from "primeng/table";
 import {DialogService} from "primeng/dynamicdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
-import {DialogFormComponent} from "../../../components/dialog-form/dialog-form.component";
+import {DialogFormComponent} from "../../../shared/components/dialog-form/dialog-form.component";
 import {EntityType} from "../../../enums/entity-type";
 import {ActionType} from "../../../enums/action-type";
-import {DialogInfoComponent} from "../../../components/dialog-info/dialog-info.component";
+import {DialogInfoComponent} from "../../../shared/components/dialog-info/dialog-info.component";
 import {Role} from "./models/role";
 import {RoleService} from "./services/role.service";
-import {HelperService} from "../../../services/helper.service";
+import {HelperService} from "../../../shared/services/helper.service";
 
 @Component({
     selector: 'app-roles',

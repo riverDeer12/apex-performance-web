@@ -6,14 +6,14 @@ import {InputText} from 'primeng/inputtext';
 import {Table, TableModule} from 'primeng/table';
 import {Administrator} from './models/administrator';
 import {AdministratorService} from './services/administrator.service';
-import {DialogFormComponent} from '../../components/dialog-form/dialog-form.component';
+import {DialogFormComponent} from '../../shared/components/dialog-form/dialog-form.component';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {DialogService} from 'primeng/dynamicdialog';
 import {EntityType} from "../../enums/entity-type";
 import {ActionType} from "../../enums/action-type";
-import {DialogInfoComponent} from "../../components/dialog-info/dialog-info.component";
+import {DialogInfoComponent} from "../../shared/components/dialog-info/dialog-info.component";
 import {DatePipe} from "@angular/common";
-import {HelperService} from "../../services/helper.service";
+import {HelperService} from "../../shared/services/helper.service";
 
 @Component({
     selector: 'app-administrators',

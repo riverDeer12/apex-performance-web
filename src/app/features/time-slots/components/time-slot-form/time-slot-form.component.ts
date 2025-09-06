@@ -9,8 +9,8 @@ import {
 } from "@angular/forms";
 import { ActionType } from "../../../../enums/action-type";
 import { RedirectType } from "../../../../enums/redirect-type";
-import { ValidationService } from "../../../../services/validation.service";
-import { HelperService } from "../../../../services/helper.service";
+import { ValidationService } from "../../../../shared/services/validation.service";
+import { HelperService } from "../../../../shared/services/helper.service";
 import { MessageService } from "primeng/api";
 import { TimeSlot } from "../../models/time-slot";
 import { TimeSlotService } from "../../services/time-slot.service";

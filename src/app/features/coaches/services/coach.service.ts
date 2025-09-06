@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Coach} from "../models/coach";
 import {environment} from "../../../../environments/environment";
-import {DefaultPostRequest} from "../../../models/default-post-request";
-import {DefaultUpdateRequest} from "../../../models/default-update-request";
+import {DefaultPostRequest} from "../../../shared/models/default-post-request";
+import {DefaultUpdateRequest} from "../../../shared/models/default-update-request";
 import {map, Observable} from 'rxjs';
 
 @Injectable({

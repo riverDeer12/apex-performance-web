@@ -7,13 +7,13 @@ import { AppointmentService } from "../appointments/services/appointment.service
 import { AppointmentsListComponent } from "../appointments/components/appointments-list/appointments-list.component";
 import { AppointmentsStatus } from "../../shared/data-transfer-objects/appointments-status";
 import { Roles } from "../../constants/roles";
-import { AppointmentsRequestsListComponent } from "../appointments/components/appointments-requests-list/appointments-requests-list.component";
-import { AppointmentRequestService } from "../appointments/services/appointment-request.service";
-import { AppointmentRequest } from "../appointments/models/appointment-request";
-import { HelperService } from "../../services/helper.service";
+import { AppointmentsRequestsListComponent } from "../appointments/appointment-requests/components/appointments-requests-list/appointments-requests-list.component";
+import { AppointmentRequestService } from "../appointments/appointment-requests/services/appointment-request.service";
+import { AppointmentRequest } from "../appointments/appointment-requests/models/appointment-request";
+import { HelperService } from "../../shared/services/helper.service";
 import { Button } from "primeng/button";
 import { MessageService } from "primeng/api";
-import { RecurringAppointmentService } from "../appointments/services/recurring-appointment.service";
+import { RecurringAppointmentService } from "../appointments/recurring-appointments/services/recurring-appointment.service";
 
 @Component({
   selector: "app-dashboard",

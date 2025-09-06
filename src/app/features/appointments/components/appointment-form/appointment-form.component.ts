@@ -8,8 +8,8 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
-import {ValidationService} from "../../../../services/validation.service";
-import {HelperService} from "../../../../services/helper.service";
+import {ValidationService} from "../../../../shared/services/validation.service";
+import {HelperService} from "../../../../shared/services/helper.service";
 import {ClientService} from "../../../clients/services/client.service";
 import {MessageService} from "primeng/api";
 import {Appointment} from "../../models/appointment";
@@ -19,8 +19,8 @@ import {NgIf} from "@angular/common";
 import {MultiSelect} from "primeng/multiselect";
 import {DropdownModule} from 'primeng/dropdown';
 import {Select} from 'primeng/select';
-import {AppointmentType} from '../../models/appointment-type';
-import {AppointmentTypeService} from '../../services/appointment-type.service';
+import {AppointmentType} from '../../appointment-types/models/appointment-type';
+import {AppointmentTypeService} from '../../appointment-types/services/appointment-type.service';
 import {Coach} from "../../../coaches/models/coach";
 import {CoachService} from "../../../coaches/services/coach.service";
 import {TimeSlotService} from "../../../time-slots/services/time-slot.service";

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { CommonModule, DatePipe } from "@angular/common";
 import { Appointment } from "../../models/appointment";
 import { BusinessStatuses } from "../../../../constants/business-statuses";
-import { DialogFormComponent } from "../../../../components/dialog-form/dialog-form.component";
+import { DialogFormComponent } from "../../../../shared/components/dialog-form/dialog-form.component";
 import { EntityType } from "../../../../enums/entity-type";
 import { ActionType } from "../../../../enums/action-type";
 import { DialogService } from "primeng/dynamicdialog";
@@ -10,7 +10,7 @@ import { TableModule } from "primeng/table";
 import { ButtonDirective } from "primeng/button";
 import { AppointmentService } from "../../services/appointment.service";
 import { MessageService } from "primeng/api";
-import { HelperService } from "../../../../services/helper.service";
+import { HelperService } from "../../../../shared/services/helper.service";
 import { Roles } from "../../../../constants/roles";
 import { DayOfWeek } from "../../../../enums/day-of-week";
 

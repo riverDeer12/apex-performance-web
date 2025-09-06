@@ -10,7 +10,7 @@ import {
 import { AuthenticationService } from "../../services/authentication.service";
 import { MessageService } from "primeng/api";
 import { AuthResponse } from "../../models/auth-response";
-import { HelperService } from "../../../../services/helper.service";
+import { HelperService } from "../../../../shared/services/helper.service";
 import { Button } from "primeng/button";
 import { InputText } from "primeng/inputtext";
 

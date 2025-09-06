@@ -13,8 +13,8 @@ import {
 import {AuthResponse} from "../../models/auth-response";
 import {MessageService} from 'primeng/api';
 import {UserService} from "../../../users/services/user.service";
-import {ValidationService} from '../../../../services/validation.service';
-import {HelperService} from '../../../../services/helper.service';
+import {ValidationService} from '../../../../shared/services/validation.service';
+import {HelperService} from '../../../../shared/services/helper.service';
 import {RedirectType} from "../../../../enums/redirect-type";
 
 @Component({

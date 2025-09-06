@@ -4,7 +4,7 @@ import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { AuthenticationService } from "../../services/authentication.service";
 import { AppFloatingConfigurator } from "../../../../layout/component/app.floatingconfigurator";
-import { ValidationService } from "../../../../services/validation.service";
+import { ValidationService } from "../../../../shared/services/validation.service";
 import { ResetPasswordFormComponent } from "../reset-password-form/reset-password-form.component";
 import { RedirectType } from "../../../../enums/redirect-type";
 

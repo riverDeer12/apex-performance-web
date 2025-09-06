@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { DefaultPostRequest } from "../../../models/default-post-request";
+import { DefaultPostRequest } from "../../../shared/models/default-post-request";
 import { AuthResponse } from "../models/auth-response";
 import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";

@@ -6,7 +6,7 @@ import { StyleClassModule } from "primeng/styleclass";
 import { AppConfigurator } from "./app.configurator";
 import { LayoutService } from "../service/layout.service";
 import { AuthenticationService } from "../../features/authentication/services/authentication.service";
-import { DialogFormComponent } from "../../components/dialog-form/dialog-form.component";
+import { DialogFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
 import { EntityType } from "../../enums/entity-type";
 import { DialogService } from "primeng/dynamicdialog";
 import { ButtonLabel } from "primeng/button";
