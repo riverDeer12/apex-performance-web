@@ -33,6 +33,9 @@ import {
   RecurringAppointmentFormComponent
 } from '../../../features/appointments/recurring-appointments/components/recurring-appointment-form/recurring-appointment-form.component';
 import { TimeSlotFormComponent } from '../../../features/time-slots/components/time-slot-form/time-slot-form.component';
+import {
+  FunctionalMovementScreenFormComponent
+} from '../../../features/clients/functional-movement-screens/components/functional-movement-screen-form/functional-movement-screen-form.component';
 
 @Component({
   selector: "app-dialog-form",
@@ -55,6 +58,7 @@ import { TimeSlotFormComponent } from '../../../features/time-slots/components/t
     ChangeUsernameFormComponent,
     RecurringAppointmentFormComponent,
     TimeSlotFormComponent,
+    FunctionalMovementScreenFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

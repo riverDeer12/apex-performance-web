@@ -1,38 +1,30 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
-import {DefaultPostRequest} from '../../../shared/models/default-post-request';
-import {DefaultUpdateRequest} from '../../../shared/models/default-update-request';
-import {Client} from '../models/client';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../../environments/environment";
+import { DefaultPostRequest } from "../../../shared/models/default-post-request";
+import { DefaultUpdateRequest } from "../../../shared/models/default-update-request";
+import { Client } from "../models/client";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class ClientService {
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {
-    }
+  getClients = () => this.http.get<Client[]>(environment.apiUrl + "/clients");
 
-    getAllClients = () => this.http.get<Client[]>(environment.apiUrl + '/clients/all');
+  getClientsByCoachId = (coachId: string) =>
+    this.http.get<Client[]>(environment.apiUrl + "/clients/coach/" + coachId);
 
-    getClient = (clientId: string) =>
-        this.http.get<Client>(environment.apiUrl + '/clients/' + clientId);
+  getCoachesClients = (request: DefaultPostRequest) =>
+    this.http.post<Client[]>(environment.apiUrl + "/clients/coaches", request);
 
-    getCoachClients = () =>
-        this.http.get<Client[]>(environment.apiUrl + '/clients/coach');
+  createClient = (request: DefaultPostRequest) =>
+    this.http.post<Client>(environment.apiUrl + "/clients/", request);
 
-    getClientsByCoachId = (coachId: string) =>
-        this.http.get<Client[]>(environment.apiUrl + '/clients/coach/'+ coachId);
+  updateClient = (clientId: string, request: DefaultUpdateRequest) =>
+    this.http.put<Client>(environment.apiUrl + "/clients/" + clientId, request);
 
-    getCoachesClients = (request: DefaultPostRequest) =>
-        this.http.post<Client[]>(environment.apiUrl + '/clients/coaches', request);
-
-    createClient = (request: DefaultPostRequest) =>
-        this.http.post<Client>(environment.apiUrl + '/clients/', request);
-
-    updateClient = (clientId: string, request: DefaultUpdateRequest) =>
-        this.http.put<Client>(environment.apiUrl + '/clients/' + clientId, request);
-
-    deleteClient = (clientId: string) =>
-        this.http.delete<Client>(environment.apiUrl + '/clients/' + clientId);
+  deleteClient = (clientId: string) =>
+    this.http.delete<Client>(environment.apiUrl + "/clients/" + clientId);
 }

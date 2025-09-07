@@ -60,11 +60,11 @@ export class BodyMeasurementFormComponent implements OnInit {
   }
 
   private loadClients(): void {
-    if (this.userRole == Roles.Administrator) {
-      this.loadAdminClients();
-    } else if (this.userRole == Roles.Coach) {
-      this.loadCoachClients();
-    }
+    this.clientService.getClients().subscribe((response: Client[]) => {
+      this.clients = response.map((x: Client) =>
+          Object.assign(new Client(), x),
+      );
+    });
   }
 
   submit() {
@@ -214,21 +214,5 @@ export class BodyMeasurementFormComponent implements OnInit {
           this.loadingData = false;
         },
       });
-  }
-
-  private loadAdminClients() {
-    this.clientService.getAllClients().subscribe((response: Client[]) => {
-      this.clients = response.map((x: Client) =>
-        Object.assign(new Client(), x),
-      );
-    });
-  }
-
-  private loadCoachClients() {
-    this.clientService.getCoachClients().subscribe((response: Client[]) => {
-      this.clients = response.map((x: Client) =>
-        Object.assign(new Client(), x),
-      );
-    });
   }
 }

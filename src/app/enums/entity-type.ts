@@ -9,6 +9,7 @@ export enum EntityType {
     ChangeUsername,
     Client,
     Coach,
+    FunctionalMovementScreen,
     Recipe,
     Role ,
     RecurringAppointment ,

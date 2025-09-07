@@ -111,6 +111,11 @@ export class AppMenu implements OnInit {
             icon: "pi pi-fw pi-book",
             routerLink: ["/admin/clients"],
           },
+          {
+            label: "FMS",
+            icon: "pi pi-fw pi-gauge",
+            routerLink: ["/admin/clients/functional-movement-screens"],
+          },
         ],
       },
       {

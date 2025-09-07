@@ -71,6 +71,14 @@
         [redirectType]="redirectType">
 </app-email-form>
 
+<app-functional-movement-screen-form
+    *ngIf="contentType === entityType.FunctionalMovementScreen"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [functionalMovementScreen]="data">
+</app-functional-movement-screen-form>
+
 <app-role-form
         *ngIf="contentType === entityType.Role"
         [type]="formType"

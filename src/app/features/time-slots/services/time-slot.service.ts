@@ -14,10 +14,7 @@ export class TimeSlotService {
   getAllTimeSlots = () =>
     this.http.get<TimeSlot[]>(environment.apiUrl + "/time-slots/all");
 
-  getTimeSlot = (timeSlotId: string) =>
-    this.http.get<TimeSlot>(environment.apiUrl + "/time-slots/" + timeSlotId);
-
-  getTimeSlotsByCoachId = (request: DefaultPostRequest) =>
+  getAvailableCoachesTimeSlots = (request: DefaultPostRequest) =>
     this.http.post<TimeSlot[]>(
       environment.apiUrl + "/time-slots/available",
       request,

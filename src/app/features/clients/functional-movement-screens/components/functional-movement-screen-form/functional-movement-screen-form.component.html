@@ -1,1 +1,80 @@
-<p>functional-movement-screen-form works!</p>
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="client">Client</label>
+            <p-select [filter]="true" [options]="clients"
+                      appendTo="body" styleClass="w-full"
+                      formControlName="client" optionLabel="fullName" optionValue="id"
+                      id="client" />
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'client', 'required')"
+                   id="client-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="deepSquat">Deep Squat</label>
+            <textarea id="deepSquat" type="number" pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'deepSquat', 'required') }}"
+                      formControlName="deepSquat"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'deepSquat', 'required')"
+                   id="deepSquat-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="hurdleStep">Hurdle Step</label>
+            <textarea id="hurdleStep" pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'hurdleStep', 'required') }}"
+                      formControlName="hurdleStep"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'hurdleStep', 'required')"
+                   id="hurdleStep-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="inLineLunge">Inline Lunge</label>
+            <textarea id="inLineLunge"  pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'inLineLunge', 'required') }}"
+                      formControlName="inLineLunge"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'inLineLunge', 'required')"
+                   id="inLineLunge-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="activeStraightLegRaise">Active Straight Leg Raise</label>
+            <textarea id="activeStraightLegRaise" pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'activeStraightLegRaise', 'required') }}"
+                      formControlName="activeStraightLegRaise"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'activeStraightLegRaise', 'required')"
+                   id="activeStraightLegRaise-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="trunkStabilityPushUp">Trunk Stability Push-Up </label>
+            <textarea id="trunkStabilityPushUp" pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'trunkStabilityPushUp', 'required') }}"
+                      formControlName="trunkStabilityPushUp"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'trunkStabilityPushUp', 'required')"
+                   id="trunkStabilityPushUp-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="rotaryStability">Rotary Stability</label>
+            <textarea id="rotaryStability" pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'rotaryStability', 'required') }}"
+                      formControlName="rotaryStability"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'rotaryStability', 'required')"
+                   id="rotaryStability-input">This field is required.</small>
+        </div>
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="deepSquat">Shoulder Mobility</label>
+            <textarea id="shoulderMobility" pInputText
+                      class="w-full {{ validationService.getInputClass(form, 'shoulderMobility', 'required') }}"
+                      formControlName="shoulderMobility"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'shoulderMobility', 'required')"
+                   id="shoulderMobility-input">This field is required.</small>
+        </div>
+    </div>
+    <div class="my-3">
+        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save" />
+    </div>
+</form>

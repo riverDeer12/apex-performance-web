@@ -57,11 +57,11 @@ export class ClientsComponent {
     }
 
     private loadData(): void {
-        if (this.userRole == Roles.Administrator) {
-            this.loadAdminClients();
-        } else if (this.userRole == Roles.Coach) {
-            this.loadCoachClients();
-        }
+        this.clientService.getClients().subscribe((response: Client[]) => {
+            this.clients = response.map((x: Client) =>
+                Object.assign(new Client(), x),
+            );
+        });
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -147,22 +147,6 @@ export class ClientsComponent {
                     },
                 );
             },
-        });
-    }
-
-    private loadAdminClients() {
-        this.clientService.getAllClients().subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-                Object.assign(new Client(), x),
-            );
-        });
-    }
-
-    private loadCoachClients() {
-        this.clientService.getCoachClients().subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-                Object.assign(new Client(), x),
-            );
         });
     }
 

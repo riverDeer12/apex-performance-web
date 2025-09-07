@@ -162,7 +162,7 @@ export class CoachFormComponent implements OnInit {
     }
 
     private getClients() {
-        this.clientService.getAllClients().subscribe((response: Client[]) => {
+        this.clientService.getClients().subscribe((response: Client[]) => {
             this.clients = response.map((x: Client) =>
                 Object.assign(new Client(), x),
             );

@@ -1,1 +1,93 @@
-<p>functional-movement-screens works!</p>
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Functional Movement Screen" />
+</div>
+
+<p-table
+    #functionalMovementScreensTable
+    [value]="functionalMovementScreens"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['firstName', 'lastName']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(functionalMovementScreensTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(functionalMovementScreensTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="firstName" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Firstname
+                    <p-sortIcon field="firstName" />
+                    <p-columnFilter type="text" field="firstName" display="menu" class="ml-auto" />
+                </div>
+            </th>
+            <th pSortableColumn="lastName" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Lastname
+                    <p-sortIcon field="lastName" />
+                    <p-columnFilter type="text" field="lastName" display="menu" class="ml-auto" />
+                </div>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-functionalMovementScreen>
+        <tr>
+            <td>
+                {{ functionalMovementScreen.client.firstName }}
+            </td>
+            <td>
+                {{ functionalMovementScreen.client.lastName }}
+            </td>
+            <td>
+                {{ functionalMovementScreen.createdAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>{{ functionalMovementScreen.deepSquat}}</td>
+            <td>{{ functionalMovementScreen.hurdleStep}}</td>
+            <td>{{ functionalMovementScreen.inLineLunge}}</td>
+            <td>{{ functionalMovementScreen.activeStraightLegRaise}}</td>
+            <td>{{ functionalMovementScreen.trunkStabilityPushUp}}</td>
+            <td>{{ functionalMovementScreen.rotaryStability}}</td>
+            <td>{{ functionalMovementScreen.shoulderMobility}}</td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(functionalMovementScreen)" class="mr-2" icon="pi pi-info-circle"
+                          severity="secondary"
+                          [outlined]="true" />
+                <p-button (click)="openUpdateDialog(functionalMovementScreen)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true" />
+                <p-button (click)="confirmDelete(functionalMovementScreen)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true" />
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No Functional Movement Screens found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading Functional Movement Screens data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>

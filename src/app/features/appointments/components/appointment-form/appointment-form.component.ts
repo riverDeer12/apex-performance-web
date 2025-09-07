@@ -132,7 +132,7 @@ export class AppointmentFormComponent implements OnInit {
                 day: new Date(this.form.controls["day"].value).getDay()
             };
 
-            this.timeSlotService.getTimeSlotsByCoachId(payload).subscribe((response: TimeSlot[]) => {
+            this.timeSlotService.getAvailableCoachesTimeSlots(payload).subscribe((response: TimeSlot[]) => {
                 this.timeSlots = response.map((x: TimeSlot) =>
                     Object.assign(new TimeSlot(), x),
                 );
@@ -152,21 +152,29 @@ export class AppointmentFormComponent implements OnInit {
 
         this.getAllAppointmentTypes();
 
+        this.getClients();
+
         switch (this.userRole) {
             case Roles.Administrator:
-                this.getAllClients();
                 this.getAllCoaches();
                 break;
             case Roles.Client:
                 this.getClientCoaches();
                 break;
             case Roles.Coach:
-                this.getCoachClients();
                 this.setCoach();
                 break;
             default:
                 break;
         }
+    }
+
+    private getClients() {
+        this.clientService.getClients().subscribe((response: Client[]) => {
+            this.clients = response.map((x: Client) =>
+                Object.assign(new Client(), x),
+            );
+        });
     }
 
     private setCoach() {
@@ -218,22 +226,6 @@ export class AppointmentFormComponent implements OnInit {
             complete: () => {
                 this.loadingData = false;
             },
-        });
-    }
-
-    private getCoachClients() {
-        this.clientService.getCoachClients().subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-                Object.assign(new Client(), x),
-            );
-        });
-    }
-
-    private getAllClients() {
-        this.clientService.getAllClients().subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-                Object.assign(new Client(), x),
-            );
         });
     }
 
