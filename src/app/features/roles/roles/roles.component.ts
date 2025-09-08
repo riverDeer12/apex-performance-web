@@ -123,6 +123,8 @@ export class RolesComponent {
                             summary: 'Success',
                             detail: 'Role has been deactivated.'
                         });
+
+                        this.loadData();
                     }, () => {
                         this.messageService.add({
                             severity: 'error',

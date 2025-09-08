@@ -123,6 +123,7 @@ export class UsersComponent {
                             summary: 'Success',
                             detail: 'User has been deactivated.'
                         });
+                        this.loadData();
                     }, () => {
                         this.messageService.add({
                             severity: 'error',

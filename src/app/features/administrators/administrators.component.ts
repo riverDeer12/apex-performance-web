@@ -113,6 +113,7 @@ export class AdministratorsComponent {
                             summary: 'Success',
                             detail: 'Administrator has been deactivated.'
                         });
+                        this.loadData();
                     }, error => {
                         this.messageService.add({
                             severity: 'error',

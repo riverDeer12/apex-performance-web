@@ -154,6 +154,9 @@ export class BodyMeasurementsComponent implements OnInit {
                 summary: "Success",
                 detail: "Body Measurement has been deactivated.",
               });
+
+              this.loadData();
+
             },
             (error) => {
               this.messageService.add({

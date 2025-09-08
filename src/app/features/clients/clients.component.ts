@@ -137,6 +137,8 @@ export class ClientsComponent {
                             summary: "Success",
                             detail: "Client has been deactivated.",
                         });
+
+                        this.loadData();
                     },
                     (error) => {
                         this.messageService.add({

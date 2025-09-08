@@ -155,6 +155,8 @@ export class FunctionalMovementScreensComponent {
                                 summary: 'Success',
                                 detail: 'Functional Movement Screen has been deactivated.'
                             });
+
+                            this.loadData();
                         },
                         (error) => {
                             this.messageService.add({

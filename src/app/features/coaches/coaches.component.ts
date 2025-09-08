@@ -122,6 +122,8 @@ export class CoachesComponent implements OnInit {
                             summary: "Success",
                             detail: "Coach has been deactivated.",
                         });
+
+                        this.loadData();
                     },
                     (error) => {
                         this.messageService.add({

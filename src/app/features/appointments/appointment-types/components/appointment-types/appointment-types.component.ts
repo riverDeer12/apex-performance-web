@@ -111,6 +111,9 @@ export class AppointmentTypesComponent implements OnInit {
                 summary: "Success",
                 detail: "Appointment Type has been deactivated.",
               });
+
+              this.loadData();
+
             },
             (error) => {
               this.messageService.add({
