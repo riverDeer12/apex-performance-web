@@ -111,7 +111,7 @@ export class ClientFormComponent implements OnInit {
             lastName: ["", [Validators.required]],
             email: ["", [Validators.required, Validators.email]],
             phone: ["", [Validators.required]],
-            credits: ["", [Validators.required, Validators.min(0)]],
+            credits: ["", [Validators.required]],
             coaches: [[]]
         });
     }
@@ -122,7 +122,7 @@ export class ClientFormComponent implements OnInit {
             lastName: [this.client.lastName, [Validators.required]],
             email: [this.client.email, [Validators.required, Validators.email]],
             phone: [this.client.phone, [Validators.required]],
-            credits: [this.client.credits, [Validators.required, Validators.min(0)]],
+            credits: [this.client.credits, [Validators.required]],
             coaches: [this.client.coaches?.map(x => x.id)]
         });
     }
