@@ -1,0 +1,113 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Product"/>
+</div>
+
+<p-table
+    #productsTable
+    [value]="products"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'description']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(productsTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(productsTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Name
+                    <p-sortIcon field="name"/>
+                    <p-columnFilter type="text" field="name" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="description" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Description
+                    <p-sortIcon field="description"/>
+                    <p-columnFilter type="text" field="description" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="price" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Price
+                    <p-sortIcon field="price"/>
+                    <p-columnFilter type="text" field="price" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="createdAt" style="min-width: 12rem">
+                Created At
+                <p-sortIcon field="createdAt"/>
+            </th>
+            <th pSortableColumn="updatedAt" style="min-width: 12rem">
+                Last Changes
+                <p-sortIcon field="updatedAt"/>
+            </th>
+            <th pSortableColumn="status" style="min-width: 12rem">
+                Status
+                <p-sortIcon field="status"/>
+            </th>
+            <th style="width: 11rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-product>
+        <tr>
+            <td>
+                {{ product.name }}
+            </td>
+            <td>
+                {{ product.description }}
+            </td>
+            <td>
+                {{ product.price }}
+            </td>
+            <td>
+                {{ product.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
+            </td>
+            <td>
+                {{ product.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+            <td>
+                {{ product.status }}
+            </td>
+            <td class="flex">
+                <p-button (click)="openInfoDialog(product)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="openUpdateDialog(product)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true"/>
+                <p-button (click)="confirmDelete(product)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No products found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading products data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>

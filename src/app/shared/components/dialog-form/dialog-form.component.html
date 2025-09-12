@@ -79,6 +79,14 @@
     [functionalMovementScreen]="data">
 </app-functional-movement-screen-form>
 
+<app-product-form
+    *ngIf="contentType === entityType.Product"
+    [type]="formType"
+    [dialogId]="dialogId"
+    [redirectType]="redirectType"
+    [product]="data">
+</app-product-form>
+
 <app-role-form
         *ngIf="contentType === entityType.Role"
         [type]="formType"

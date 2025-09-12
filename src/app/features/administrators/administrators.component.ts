@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
 import {Button, ButtonDirective} from 'primeng/button';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
@@ -23,7 +23,7 @@ import {HelperService} from "../../shared/services/helper.service";
     templateUrl: './administrators.component.html',
     styleUrl: './administrators.component.scss'
 })
-export class AdministratorsComponent {
+export class AdministratorsComponent implements OnInit {
     @Input() administrators!: Administrator[];
 
     @ViewChild(`filter`) filter!: ElementRef;

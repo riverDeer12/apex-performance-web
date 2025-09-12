@@ -1,6 +1,10 @@
 <p-menubar [model]="items">
     <ng-template #start>
-        <img class="public-menu-logo" src="assets/images/logo_transparent.png" alt="public-menu-logo">
+        <img class="public-menu-logo" [ngSrc]="!layoutService.isDarkTheme()
+                              ? 'assets/images/logo_light_transparent.png'
+                              : 'assets/images/logo_dark_transparent.png'"
+                             width="200"
+                             height="50" alt="logo">
     </ng-template>
     <ng-template #item let-item let-root="root">
         <a pRipple class="flex items-center p-menubar-item-link">
@@ -10,6 +14,9 @@
                   class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
             <i *ngIf="item.items" [ngClass]="['ml-auto pi', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
         </a>
+    </ng-template>
+    <ng-template #end>
+        <i class="pi pi-shopping-cart" style="font-size: 2rem"></i>
     </ng-template>
     <app-configurator></app-configurator>
 </p-menubar>

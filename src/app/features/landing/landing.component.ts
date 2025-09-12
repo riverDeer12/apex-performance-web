@@ -10,6 +10,6 @@ import {Router, RouterOutlet} from '@angular/router';
 })
 export class LandingComponent {
     constructor(private router: Router) {
-        this.router.navigateByUrl("/authentication/login").then();
+        // this.router.navigateByUrl("/authentication/login").then();
     }
 }

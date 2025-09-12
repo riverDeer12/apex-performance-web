@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { BadgeModule } from 'primeng/badge';
-import { AvatarModule } from 'primeng/avatar';
-import { InputTextModule } from 'primeng/inputtext';
-import { CommonModule } from '@angular/common';
-import { Ripple } from 'primeng/ripple';
-import { Menubar } from 'primeng/menubar';
-import { AppConfigurator } from '../app.configurator';
+import { Component } from "@angular/core";
+import { MenuItem } from "primeng/api";
+import { BadgeModule } from "primeng/badge";
+import { AvatarModule } from "primeng/avatar";
+import { InputTextModule } from "primeng/inputtext";
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { Ripple } from "primeng/ripple";
+import { Menubar } from "primeng/menubar";
+import { AppConfigurator } from "../app.configurator";
+import { LayoutService } from "../../service/layout.service";
 
 @Component({
   selector: "app-public-menu",
   imports: [
+    CommonModule,
     Menubar,
     BadgeModule,
     AvatarModule,
@@ -18,12 +20,15 @@ import { AppConfigurator } from '../app.configurator';
     Ripple,
     CommonModule,
     AppConfigurator,
+    NgOptimizedImage,
   ],
   templateUrl: "./public-menu.component.html",
   styleUrl: "./public-menu.component.scss",
 })
 export class PublicMenuComponent {
   items: MenuItem[] | undefined;
+
+  constructor(public layoutService: LayoutService) {}
 
   ngOnInit() {
     this.items = [

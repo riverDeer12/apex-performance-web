@@ -161,6 +161,17 @@ export class AppMenu implements OnInit {
           },
         ],
       },
+      {
+        label: "Web Shop",
+        visible: this.authenticationService.validateUserRole(),
+        items: [
+          {
+            label: "Products",
+            icon: "pi pi-fw pi-shopping-bag",
+            routerLink: ["/admin/products"],
+          }
+        ],
+      },
     ];
   }
 }
