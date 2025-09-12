@@ -78,7 +78,7 @@
                 {{ product.description }}
             </td>
             <td>
-                {{ product.price }}
+                {{ product.price | number:'1.2-2' }} €
             </td>
             <td>
                 {{ product.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
