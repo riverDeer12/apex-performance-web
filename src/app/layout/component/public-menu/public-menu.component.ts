@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MenuItem } from "primeng/api";
 import { BadgeModule } from "primeng/badge";
 import { AvatarModule } from "primeng/avatar";
@@ -25,7 +25,7 @@ import { LayoutService } from "../../service/layout.service";
   templateUrl: "./public-menu.component.html",
   styleUrl: "./public-menu.component.scss",
 })
-export class PublicMenuComponent {
+export class PublicMenuComponent implements OnInit {
   items: MenuItem[] | undefined;
 
   constructor(public layoutService: LayoutService) {}
@@ -40,6 +40,7 @@ export class PublicMenuComponent {
       },
       {
         label: "Shop",
+        routerLink: ["/shop"],
       },
       {
         label: "Contact",

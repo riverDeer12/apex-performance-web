@@ -3,8 +3,10 @@
         <img class="public-menu-logo" [ngSrc]="!layoutService.isDarkTheme()
                               ? 'assets/images/logo_light_transparent.png'
                               : 'assets/images/logo_dark_transparent.png'"
-                             width="200"
-                             height="50" alt="logo">
+             width="200"
+             height="50"
+             priority
+             alt="logo">
     </ng-template>
     <ng-template #item let-item let-root="root">
         <a pRipple class="flex items-center p-menubar-item-link">

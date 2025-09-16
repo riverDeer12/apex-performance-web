@@ -99,10 +99,10 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  confirmDelete(product: Product) {
+  changeActivity(product: Product) {
     this.confirmationService.confirm({
-      message: "Are you sure that you want to deactivate this product?",
-      header: "Confirm deletion of " + product.name,
+      message: "Are you sure that you want to change activity for this product?",
+      header: "Confirm activity change of " + product.name,
       closable: true,
       closeOnEscape: true,
       icon: "pi pi-exclamation-triangle",
@@ -115,22 +115,24 @@ export class ProductsComponent implements OnInit {
         label: "Yes",
       },
       accept: () => {
-        this.productService.deleteProduct(product.id).subscribe(
-          (response) => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Product has been deactivated.",
-            });
-            this.loadData();
-          },
-          (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error",
-              detail: "Error deactivating product.",
-            });
-          },
+        this.productService.changeProductActivity(product.id).subscribe(
+            () => {
+              this.messageService.add({
+                severity: "success",
+                summary: "Success",
+                detail: "Product activity has been changed.",
+              });
+
+              this.loadData();
+
+            },
+            () => {
+              this.messageService.add({
+                severity: "error",
+                summary: "Error",
+                detail: "Error changing product activity.",
+              });
+            },
         );
       },
     });

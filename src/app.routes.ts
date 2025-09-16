@@ -4,7 +4,6 @@ import { NotFound } from "./app/shared/components/not-found/not-found";
 import { Forbidden } from "./app/shared/components/forbidden/forbidden";
 import { Error } from "./app/shared/components/error/error";
 import { AdminGuard } from "./app/guards/admin.guard";
-import { LandingComponent } from "./app/features/landing/landing.component";
 import { DashboardComponent } from "./app/features/dashboard/dashboard.component";
 import { ShoppingCartComponent } from "./app/features/shopping-cart/shopping-cart.component";
 import { ProductsComponent } from "./app/features/products/products.component";
@@ -12,7 +11,10 @@ import { ProductsComponent } from "./app/features/products/products.component";
 export const appRoutes: Routes = [
   {
     path: "",
-    component: LandingComponent,
+    loadChildren: () =>
+        import("./app/features/landing/landing.routes").then(
+            (m) => m.LandingRoutes
+        ),
   },
   {
     path: "authentication",
@@ -68,9 +70,9 @@ export const appRoutes: Routes = [
       {
         path: "products",
         loadChildren: () =>
-            import("./app/features/products/products.routes").then(
-                (m) => m.ProductsRoutes,
-            ),
+          import("./app/features/products/products.routes").then(
+            (m) => m.ProductsRoutes,
+          ),
       },
       {
         path: "time-slots",

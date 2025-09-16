@@ -6,24 +6,27 @@ import { DefaultUpdateRequest } from '../../../shared/models/default-update-requ
 import { Product } from "../models/product";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ProductService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  getProducts = () => this.http.get<Product[]>(environment.apiUrl + '/products');
-  
+  getProducts = () =>
+    this.http.get<Product[]>(environment.apiUrl + "/products");
+
   getProduct = (productId: string) =>
-      this.http.get<Product>(environment.apiUrl + '/products/' + productId);
-  
+    this.http.get<Product>(environment.apiUrl + "/products/" + productId);
+
   createProduct = (request: DefaultPostRequest) =>
-      this.http.post<Product>(environment.apiUrl + '/products/', request);
-  
+    this.http.post<Product>(environment.apiUrl + "/products/", request);
+
   updateProduct = (productId: string, request: DefaultUpdateRequest) =>
-      this.http.put<Product>(environment.apiUrl + '/products/' + productId, request);
-  
-  deleteProduct = (productId: string) =>
-      this.http.delete<Product>(environment.apiUrl + '/products/' + productId);
+    this.http.put<Product>(
+      environment.apiUrl + "/products/" + productId,
+      request,
+    );
+
+  changeProductActivity= (productId: string) =>
+      this.http.get<Product>(environment.apiUrl + "/products/" + productId + '/activity');
 }

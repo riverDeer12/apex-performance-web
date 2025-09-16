@@ -87,15 +87,17 @@
                 {{ product.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
             <td>
-                {{ product.status }}
+                {{ product.status ? 'Active' : 'Inactive' }}
             </td>
             <td class="flex">
+                <p-button (click)="changeActivity(product)" class="mr-2"
+                          [icon]=" product.status ? 'pi pi-eye' : 'pi pi-eye-slash'"
+                          severity="primary"
+                          [outlined]="true" />
                 <p-button (click)="openInfoDialog(product)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
                           [outlined]="true"/>
-                <p-button (click)="openUpdateDialog(product)" class="mr-2" icon="pi pi-pencil"
+                <p-button (click)="openUpdateDialog(product)" icon="pi pi-pencil"
                           severity="secondary"
-                          [outlined]="true"/>
-                <p-button (click)="confirmDelete(product)" icon="pi pi-trash" severity="danger"
                           [outlined]="true"/>
             </td>
         </tr>
