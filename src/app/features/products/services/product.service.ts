@@ -9,11 +9,13 @@ import { Product } from "../models/product";
   providedIn: "root",
 })
 export class ProductService {
-
   constructor(private http: HttpClient) {}
 
   getProducts = () =>
     this.http.get<Product[]>(environment.apiUrl + "/products");
+
+  getPublicProducts = () =>
+    this.http.get<Product[]>(environment.apiUrl + "/products/public");
 
   getProduct = (productId: string) =>
     this.http.get<Product>(environment.apiUrl + "/products/" + productId);
@@ -27,6 +29,38 @@ export class ProductService {
       request,
     );
 
-  changeProductActivity= (productId: string) =>
-      this.http.get<Product>(environment.apiUrl + "/products/" + productId + '/activity');
+  changeProductActivity = (productId: string) =>
+    this.http.get<Product>(
+      environment.apiUrl + "/products/" + productId + "/activity",
+    );
+
+
+  getProductsSmall() {
+    return Promise.resolve(this.getProductsData());
+  }
+
+  getProductsData() {
+    return [
+      {
+        id: '1000',
+        name: 'Bamboo Watch',
+        description: 'Product Description',
+        price: 65,
+        status: true,
+        image: 't_shirt_example_white.png',
+        createdAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now())
+      },
+      {
+        id: '1001',
+        name: 'Black Watch',
+        description: 'Product Description',
+        price: 72,
+        status: true,
+        image: 't_shirt_example_black.png',
+        createdAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now())
+      }
+    ]
+  }
 }
