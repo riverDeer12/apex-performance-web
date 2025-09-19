@@ -41,5 +41,6 @@ export class CheckoutComponent implements OnInit {
 
   clearShoppingCart(): void {
     this.shoppingCartService.clearShoppingCart();
+    this.loadData();
   }
 }

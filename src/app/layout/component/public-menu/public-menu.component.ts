@@ -30,6 +30,10 @@ import { ShoppingCartService } from "../../../features/landing/services/shopping
 export class PublicMenuComponent implements OnInit {
   items: MenuItem[] | undefined;
 
+  get showShoppingCart(): boolean {
+    return this.shoppingCartService.getShoppingCartTotalQuantity() > 0;
+  }
+
   constructor(public layoutService: LayoutService,
               private shoppingCartService: ShoppingCartService,
               private router: Router) {}
