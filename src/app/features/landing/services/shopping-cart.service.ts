@@ -39,10 +39,6 @@ export class ShoppingCartService {
     this.saveShoppingCart(shoppingCart);
   }
 
-  addShoppingCartItemQuantity(): void {
-    let shoppingCart = this.getShoppingCart();
-  }
-
   removeFromShoppingCart(shoppingCartItemId: string) {
     let shoppingCart = this.getShoppingCart();
 
@@ -51,6 +47,26 @@ export class ShoppingCartService {
     );
 
     this.saveShoppingCart(shoppingCart);
+  }
+
+  removeShoppingCartItemQuantity(shoppingCartItem: ShoppingCartItem) {
+    let shoppingCart = this.getShoppingCart();
+
+    let existingShoppingCartItem = shoppingCart.find(
+      (item) => item.id === shoppingCartItem.id,
+    );
+
+    if (!existingShoppingCartItem) {
+      return;
+    } else {
+      if(existingShoppingCartItem.quantity == 1){
+        this.removeFromShoppingCart(shoppingCartItem.id);
+      } else {
+        existingShoppingCartItem.quantity = existingShoppingCartItem.quantity - 1;
+
+        this.saveShoppingCart(shoppingCart);
+      }
+    }
   }
 
   clearShoppingCart(): void {
