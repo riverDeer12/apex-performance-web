@@ -57,6 +57,6 @@ export class PublicMenuComponent implements OnInit {
   }
 
   getShoppingCartItemsNumber(): number {
-    return this.shoppingCartService.getShoppingCart().length;
+    return this.shoppingCartService.getShoppingCartItemsTotalQuantity()
   }
 }

@@ -69,6 +69,11 @@ export class ShoppingCartService {
     }
   }
 
+  getShoppingCartItemsTotalQuantity(): number {
+    let shoppingCart = this.getShoppingCart();
+    return shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
   clearShoppingCart(): void {
     localStorage.removeItem("cart");
   }
