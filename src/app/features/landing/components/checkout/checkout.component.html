@@ -1,6 +1,6 @@
 <div class="flex flex-col">
     <div class="card">
-        <div class="font-semibold text-xl mb-2">Shopping Cart Items ({{shoppingCartItems.length}})</div>
+        <div class="font-semibold text-xl mb-2">Shopping Cart Items ({{ shoppingCartItems.length }})</div>
         <p-dataview [value]="shoppingCartItems" layout="list">
             <ng-template #list let-items>
                 <div class="flex flex-col">
@@ -27,18 +27,21 @@
                                                         0px 1px 2px 0px rgba(0, 0, 0, 0.06);
                                                 "
                                         >
-                                            ({{item.quantity}})
+                                            <p-button icon="pi pi-minus" [rounded]="true" [text]="true"
+                                                      (click)="removeShoppingCartItemQuantity(item)"
+                                                      styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
+                                            ({{ item.quantity }})
+                                            <p-button icon="pi pi-plus" [rounded]="true" [text]="true"
+                                                      (click)="updateShoppingCartItemQuantity(item)"
+                                                      styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex flex-col md:items-end gap-8">
-                                    <span class="text-xl font-semibold">$ {{ item.price }}</span>
+                                    <span class="text-xl font-semibold">{{ item.price * item.quantity | number:'1.2-2' }} €</span>
                                     <div class="flex flex-row-reverse md:flex-row gap-2">
-                                        <p-button icon="pi pi-shopping-cart" label="Add More" (click)="updateShoppingCartItemQuantity(item)"
-                                                  styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
-                                        <p-button severity="warn" icon="pi pi-times" label="Remove Quantity" (click)="removeShoppingCartItemQuantity(item)"
-                                                  styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
-                                        <p-button severity="danger" icon="pi pi-times" label="Remove Product" (click)="removeShoppingCartItem(item)"
+                                        <p-button severity="danger" icon="pi pi-trash"
+                                                  (click)="removeShoppingCartItem(item)"
                                                   styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
                                     </div>
                                 </div>

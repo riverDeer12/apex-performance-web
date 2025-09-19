@@ -56,7 +56,11 @@ export class PublicMenuComponent implements OnInit {
     this.router.navigateByUrl("/checkout").then();
   }
 
-  getShoppingCartItemsNumber(): number {
-    return this.shoppingCartService.getShoppingCartItemsTotalQuantity()
+  getShoppingCartTotalQuantity(): number {
+    return this.shoppingCartService.getShoppingCartTotalQuantity()
+  }
+
+  getShoppingCartSubtotal(): number {
+    return this.shoppingCartService.getShoppingCartSubtotal()
   }
 }

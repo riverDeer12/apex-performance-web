@@ -69,7 +69,7 @@ export class ShoppingCartService {
     }
   }
 
-  getShoppingCartItemsTotalQuantity(): number {
+  getShoppingCartTotalQuantity(): number {
     let shoppingCart = this.getShoppingCart();
     return shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
   }
