@@ -38,4 +38,8 @@ export class CheckoutComponent implements OnInit {
     this.shoppingCartService.removeFromShoppingCart(shoppingCartItem.id);
     this.loadData();
   }
+
+  clearShoppingCart(): void {
+    this.shoppingCartService.clearShoppingCart();
+  }
 }

@@ -18,9 +18,10 @@
         </a>
     </ng-template>
     <ng-template #end>
-        <i pBadge [value]="getShoppingCartTotalQuantity()" (click)="goToCheckoutPage()" class="pi pi-shopping-cart" style="font-size: 2rem">
+        <i pBadge badgeSize="xlarge" [value]="getShoppingCartTotalQuantity()" (click)="goToCheckoutPage()"
+           class="pi pi-shopping-cart mr-3" style="font-size: 2rem">
         </i>
-        <span>{{getShoppingCartSubtotal() | number:'1.2-2'}} €</span>
+        <span class="font-bold">{{ getShoppingCartSubtotal() | number:'1.2-2' }} €</span>
     </ng-template>
     <app-configurator></app-configurator>
 </p-menubar>

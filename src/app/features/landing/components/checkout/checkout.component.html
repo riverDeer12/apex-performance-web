@@ -1,6 +1,10 @@
 <div class="flex flex-col">
     <div class="card">
-        <div class="font-semibold text-xl mb-2">Shopping Cart Items ({{ shoppingCartItems.length }})</div>
+        <div class="font-semibold text-xl mb-2">Shopping Cart Items ({{ shoppingCartItems.length }})
+            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" label="Empty Shopping Cart"
+                      (click)="clearShoppingCart()" severity="danger"
+                      styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
+        </div>
         <p-dataview [value]="shoppingCartItems" layout="list">
             <ng-template #list let-items>
                 <div class="flex flex-col">
@@ -38,9 +42,11 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col md:items-end gap-8">
-                                    <span class="text-xl font-semibold">{{ item.price * item.quantity | number:'1.2-2' }} €</span>
+                                    <span
+                                        class="text-xl font-semibold">{{ item.price * item.quantity | number:'1.2-2' }}
+                                        €</span>
                                     <div class="flex flex-row-reverse md:flex-row gap-2">
-                                        <p-button severity="danger" icon="pi pi-trash"
+                                        <p-button severity="danger" icon="pi pi-trash" [rounded]="true" [text]="true"
                                                   (click)="removeShoppingCartItem(item)"
                                                   styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
                                     </div>
