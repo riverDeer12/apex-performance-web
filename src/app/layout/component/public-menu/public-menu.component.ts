@@ -22,7 +22,7 @@ import { ShoppingCartService } from "../../../features/landing/services/shopping
     Ripple,
     CommonModule,
     AppConfigurator,
-    NgOptimizedImage,
+    NgOptimizedImage
   ],
   templateUrl: "./public-menu.component.html",
   styleUrl: "./public-menu.component.scss",

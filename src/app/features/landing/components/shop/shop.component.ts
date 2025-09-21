@@ -7,6 +7,7 @@ import { CommonModule } from "@angular/common";
 import { Button } from "primeng/button";
 import { ShoppingCartItem } from "../../models/shopping-cart-item";
 import { ShoppingCartService } from "../../services/shopping-cart.service";
+import { MessageService } from "primeng/api";
 
 @Component({
   selector: "app-shop",
@@ -19,7 +20,8 @@ export class ShopComponent implements OnInit {
   products!: Product[];
 
   constructor(private productService: ProductService,
-              private shoppingCartService: ShoppingCartService) {}
+              private shoppingCartService: ShoppingCartService,
+              private messageService: MessageService) {}
 
   ngOnInit() {
     this.loadData();
@@ -36,5 +38,11 @@ export class ShopComponent implements OnInit {
   addProductToShoppingCart(product: Product): void {
     const shoppingCartItem = new ShoppingCartItem(product);
     this.shoppingCartService.addToShoppingCart(shoppingCartItem);
+    this.messageService.add({
+      severity: "success",
+      summary: "Success",
+      detail:
+          "Product added to shopping cart.",
+    });
   }
 }
