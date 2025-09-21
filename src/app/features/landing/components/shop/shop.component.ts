@@ -19,9 +19,11 @@ import { MessageService } from "primeng/api";
 export class ShopComponent implements OnInit {
   products!: Product[];
 
-  constructor(private productService: ProductService,
-              private shoppingCartService: ShoppingCartService,
-              private messageService: MessageService) {}
+  constructor(
+    private productService: ProductService,
+    private shoppingCartService: ShoppingCartService,
+    private messageService: MessageService,
+  ) {}
 
   ngOnInit() {
     this.loadData();
@@ -41,8 +43,7 @@ export class ShopComponent implements OnInit {
     this.messageService.add({
       severity: "success",
       summary: "Success",
-      detail:
-          "Product added to shopping cart.",
+      detail: product.name + " added to shopping cart.",
     });
   }
 }

@@ -5,7 +5,6 @@ import { Forbidden } from "./app/shared/components/forbidden/forbidden";
 import { Error } from "./app/shared/components/error/error";
 import { AdminGuard } from "./app/guards/admin.guard";
 import { DashboardComponent } from "./app/features/dashboard/dashboard.component";
-import { ShoppingCartComponent } from "./app/features/shopping-cart/shopping-cart.component";
 import { ProductsComponent } from "./app/features/products/products.component";
 
 export const appRoutes: Routes = [
@@ -96,10 +95,6 @@ export const appRoutes: Routes = [
   {
     path: "products",
     component: ProductsComponent,
-  },
-  {
-    path: "shopping-cart",
-    component: ShoppingCartComponent,
   },
   { path: "**", redirectTo: "/not-found" },
 ];

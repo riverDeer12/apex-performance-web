@@ -18,7 +18,7 @@
         </a>
     </ng-template>
     <ng-template #end>
-        <i *ngIf="showShoppingCart" pBadge badgeSize="xlarge" [value]="getShoppingCartTotalQuantity()" (click)="goToCheckoutPage()"
+        <i *ngIf="showShoppingCart" pBadge badgeSize="xlarge" [value]="getShoppingCartTotalQuantity()" (click)="goToShoppingCart()"
            class="pi pi-shopping-cart mr-3" style="font-size: 2rem">
         </i>
         <i *ngIf="!showShoppingCart"
