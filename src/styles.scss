@@ -3,6 +3,14 @@
 @use 'primeicons/primeicons.css';
 @use './assets/demo/demo.scss';
 
+.bg-success {
+    background-color: springgreen !important;
+}
+
+.bg-warning {
+    background-color: orange !important;
+}
+
 
 .p-toast{
     width: 30rem !important;

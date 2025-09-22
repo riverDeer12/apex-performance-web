@@ -14,6 +14,10 @@ import { HelperService } from "../../shared/services/helper.service";
 import { Button } from "primeng/button";
 import { MessageService } from "primeng/api";
 import { RecurringAppointmentService } from "../appointments/recurring-appointments/services/recurring-appointment.service";
+import { ClientService } from "../clients/services/client.service";
+import { Client } from "../clients/models/client";
+import { ProgressBarModule } from 'primeng/progressbar';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: "app-dashboard",
@@ -23,6 +27,8 @@ import { RecurringAppointmentService } from "../appointments/recurring-appointme
     AppointmentsListComponent,
     AppointmentsRequestsListComponent,
     Button,
+    ProgressBarModule,
+    Card,
   ],
   providers: [DialogService],
   templateUrl: "./dashboard.component.html",
@@ -37,6 +43,8 @@ export class DashboardComponent {
 
   userRole!: string;
 
+  loggedUserCredits!: number;
+
   get userRoles(): typeof Roles {
     return Roles;
   }
@@ -45,6 +53,7 @@ export class DashboardComponent {
     private authenticationService: AuthenticationService,
     private appointmentRequestService: AppointmentRequestService,
     private appointmentService: AppointmentService,
+    private clientService: ClientService,
     private recurringAppointmentService: RecurringAppointmentService,
     private messageService: MessageService,
     private helperService: HelperService,
@@ -82,14 +91,29 @@ export class DashboardComponent {
     this.userRole = this.authenticationService.getUserRole();
     this.loadAppointmentRequests();
     this.loadAppointments();
+
+    if (this.userRole == Roles.Client) {
+      this.getAppointmentsLeft();
+    }
+  }
+
+  private getAppointmentsLeft(): void {
+    this.clientService.getCurrentClient().subscribe({
+      next: (data: Client) => {
+        this.loggedUserCredits = data.credits;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
   private loadAppointmentRequests() {
     this.appointmentRequestService.getPendingAppointmentRequests().subscribe({
       next: (data: AppointmentRequest[]) => {
-        if(data){
+        if (data) {
           this.appointmentRequests = data.map((x: AppointmentRequest) =>
-              Object.assign(new AppointmentRequest(), x),
+            Object.assign(new AppointmentRequest(), x),
           );
         } else {
           this.appointmentRequests = [];
