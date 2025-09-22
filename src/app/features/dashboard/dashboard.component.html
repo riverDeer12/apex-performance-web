@@ -1,3 +1,16 @@
+<div class="row mb-3" *ngIf="userRole == userRoles.Client">
+    <p-card [style]="{ 'background-color': loggedUserCredits > 0 ? '#d4eddaa8' : '#f8d7dacc' }"
+            header="Credits Status">
+        <p class="m-0">
+            @if (loggedUserCredits > 0) {
+                <span>You have {{ loggedUserCredits }} appointments left.</span>
+            } @else {
+                <span>You don't have any appointments left. Contact your coach for appointments top up.</span>
+            }
+        </p>
+    </p-card>
+</div>
+
 <h4>Next Appointments</h4>
 
 <div class="my-3" *ngIf="userRole == userRoles.Coach">

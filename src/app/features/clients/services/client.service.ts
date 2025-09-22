@@ -19,6 +19,9 @@ export class ClientService {
   getCoachesClients = (request: DefaultPostRequest) =>
     this.http.post<Client[]>(environment.apiUrl + "/clients/coaches", request);
 
+  getCurrentClient = () =>
+    this.http.get<Client>(environment.apiUrl + "/clients/current-client");
+
   createClient = (request: DefaultPostRequest) =>
     this.http.post<Client>(environment.apiUrl + "/clients/", request);
 
