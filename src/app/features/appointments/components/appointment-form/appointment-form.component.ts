@@ -136,10 +136,7 @@ export class AppointmentFormComponent implements OnInit {
     } else {
       const payload = {
         coaches: this.form.controls["coaches"].value,
-        day: this.datePipe.transform(
-            this.form.controls['day'].value,
-            'yyyy-dd-MM'
-        ),
+        day: this.convertDate(this.form.controls["day"].value),
       };
 
       this.timeSlotService
@@ -291,5 +288,10 @@ export class AppointmentFormComponent implements OnInit {
 
     this.form.controls["startTime"].setValue(startTime);
     this.form.controls["endTime"].setValue(endTime);
+  }
+
+  convertDate(dateStr: string): string {
+    const [day, month, year] = dateStr.split('.');
+    return `${year}-${month}-${day}`;
   }
 }
