@@ -122,9 +122,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
       this.clientService
         .getClientsByCoachId(this.form.controls["coach"].value)
         .subscribe((response: Client[]) => {
-          this.clients = response.map((x: Client) =>
-            Object.assign(new Client(), x),
-          );
+          this.clients = response;
         });
     }
   }
@@ -260,9 +258,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   private getClients(): void {
     this.clientService.getClients().subscribe((response: Client[]) => {
-      this.clients = response.map((x: Client) =>
-        Object.assign(new Client(), x),
-      );
+      this.clients = response;
     });
   }
 
@@ -287,7 +283,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   private getAllCoaches() {
     this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+      this.coaches = response;
     });
   }
 

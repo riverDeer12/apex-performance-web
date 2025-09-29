@@ -16,7 +16,7 @@ import { Appointment } from "../../models/appointment";
 import { AppointmentService } from "../../services/appointment.service";
 import { Button } from "primeng/button";
 import { CommonModule, DatePipe, NgIf } from "@angular/common";
-import { MultiSelect } from "primeng/multiselect";
+import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from "primeng/dropdown";
 import { Select } from "primeng/select";
 import { AppointmentType } from "../../appointment-types/models/appointment-type";
@@ -36,7 +36,7 @@ import { AuthenticationService } from "../../../authentication/services/authenti
     CommonModule,
     Button,
     ReactiveFormsModule,
-    MultiSelect,
+    MultiSelectModule,
     DropdownModule,
     Select,
     DatePicker,
@@ -151,9 +151,7 @@ export class AppointmentFormComponent implements OnInit {
         this.clientService
           .getCoachesClients(payload)
           .subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-              Object.assign(new Client(), x),
-            );
+            this.clients = response;
           });
       }
     }
@@ -181,9 +179,7 @@ export class AppointmentFormComponent implements OnInit {
 
   private getClients() {
     this.clientService.getClients().subscribe((response: Client[]) => {
-      this.clients = response.map((x: Client) =>
-        Object.assign(new Client(), x),
-      );
+      this.clients = response;
     });
   }
 
@@ -250,13 +246,13 @@ export class AppointmentFormComponent implements OnInit {
 
   private getAllCoaches() {
     this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+      this.coaches = response;
     });
   }
 
   private getClientCoaches() {
     this.coachService.getClientCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+      this.coaches = response;
     });
   }
 

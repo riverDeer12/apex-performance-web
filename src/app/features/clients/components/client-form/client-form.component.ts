@@ -192,9 +192,7 @@ export class ClientFormComponent implements OnInit {
 
     private getAllCoaches() {
         this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-            this.coaches = response.map((x: Coach) =>
-                Object.assign(new Coach(), x),
-            );
+            this.coaches = response;
         });
     }
 }
