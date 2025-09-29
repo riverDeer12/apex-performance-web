@@ -275,7 +275,7 @@ export class AppointmentFormComponent implements OnInit {
       (x) => x.id === this.form.controls["timeSlot"].value,
     ) as TimeSlot;
 
-    const day = new Date(this.form.controls["day"].value);
+    const day = new Date(this.convertDate(this.form.controls["day"].value));
 
     const startTime = DateExtensions.addTimeToDate(
       day,
