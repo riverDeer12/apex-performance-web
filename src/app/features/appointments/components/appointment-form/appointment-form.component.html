@@ -44,10 +44,15 @@
     </div>
     <div class="field col-12 xl:col-6 lg:col-6 md:col-6" *ngIf="userRole !== userRoles.Client">
         <label for="clients">Clients</label>
-        <p-multi-select [filter]="true" [options]="clients"
-                        appendTo="body" styleClass="w-full"
-                        formControlName="clients" optionLabel="fullName" optionValue="id"
-                        id="clients"/>
+        <p-multi-select
+            [options]="clients"
+            optionLabel="firstName"
+            optionValue="id"
+            [filter]="true"
+            appendTo="body"
+            styleClass="w-full"
+            formControlName="clients"
+            id="clients"/>
         <small class="p-error"
                *ngIf="validationService.hasErrors(form, 'clients', 'required')"
                id="clients-input">This field is required.</small>

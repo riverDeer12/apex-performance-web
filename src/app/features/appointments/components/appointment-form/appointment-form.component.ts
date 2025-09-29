@@ -134,7 +134,7 @@ export class AppointmentFormComponent implements OnInit {
     } else {
       const payload = {
         coaches: this.form.controls["coaches"].value,
-        day: new Date(this.form.controls["day"].value).getDay(),
+        day: new Date(this.form.controls["day"].value),
       };
 
       this.timeSlotService
@@ -200,8 +200,8 @@ export class AppointmentFormComponent implements OnInit {
       endTime: [null, [Validators.required]],
       timeSlot: [null, [Validators.required]],
       type: ["", [Validators.required]],
-      clients: ["", [Validators.required]],
-      coaches: ["", [Validators.required]],
+      clients: [[], [Validators.required]],
+      coaches: [[], [Validators.required]],
     });
 
     if (this.userRole == Roles.Client) {
