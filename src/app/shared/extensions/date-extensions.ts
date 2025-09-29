@@ -4,12 +4,15 @@ export class DateExtensions {
     static addTimeToDate(base: Date, timeStr: string): Date {
         const [hours, minutes, seconds] = timeStr.split(':').map(Number);
 
-        const totalMilliseconds =
-            (hours * 60 * 60 * 1000) +
-            (minutes * 60 * 1000) +
-            ((seconds || 0) * 1000);
-
-        return new Date(base.getTime() + totalMilliseconds);
+        return new Date(
+            base.getFullYear(),
+            base.getMonth(),
+            base.getDate(),
+            hours,
+            minutes,
+            seconds || 0,
+            0
+        );
     }
 
     static getWeekDates(base: Date = new Date(), weekStartsOn: 0|1|2|3|4|5|6 = 1): Date[] {

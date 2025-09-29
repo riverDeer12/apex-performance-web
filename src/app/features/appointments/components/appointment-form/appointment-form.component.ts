@@ -272,23 +272,18 @@ export class AppointmentFormComponent implements OnInit {
 
   private setAppointmentTime() {
     const timeSlot = this.timeSlots.find(
-      (x) => x.id === this.form.controls["timeSlot"].value,
+        (x) => x.id === this.form.controls['timeSlot'].value
     ) as TimeSlot;
 
-    const day = new Date(this.convertDate(this.form.controls["day"].value));
+    const day = new Date(this.convertDate(this.form.controls['day'].value));
 
-    const startTime = DateExtensions.addTimeToDate(
-      day,
-      timeSlot.startTime.toString(),
-    );
-    const endTime = DateExtensions.addTimeToDate(
-      day,
-      timeSlot.endTime.toString(),
-    );
+    const startLocal = DateExtensions.addTimeToDate(day, timeSlot.startTime.toString());
+    const endLocal   = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
 
-    this.form.controls["startTime"].setValue(startTime);
-    this.form.controls["endTime"].setValue(endTime);
+    this.form.controls['startTime'].setValue(startLocal);
+    this.form.controls['endTime'].setValue(endLocal);
   }
+
 
   convertDate(dateStr: string): string {
     const [day, month, year] = dateStr.split('.');
