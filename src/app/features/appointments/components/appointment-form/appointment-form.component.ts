@@ -15,7 +15,7 @@ import { MessageService } from "primeng/api";
 import { Appointment } from "../../models/appointment";
 import { AppointmentService } from "../../services/appointment.service";
 import { Button } from "primeng/button";
-import { CommonModule, NgIf } from "@angular/common";
+import { CommonModule, DatePipe, NgIf } from "@angular/common";
 import { MultiSelect } from "primeng/multiselect";
 import { DropdownModule } from "primeng/dropdown";
 import { Select } from "primeng/select";
@@ -41,6 +41,7 @@ import { AuthenticationService } from "../../../authentication/services/authenti
     Select,
     DatePicker,
   ],
+  providers: [DatePipe],
   templateUrl: "./appointment-form.component.html",
   styleUrl: "./appointment-form.component.scss",
 })
@@ -75,6 +76,7 @@ export class AppointmentFormComponent implements OnInit {
 
   constructor(
     public validationService: ValidationService,
+    private datePipe: DatePipe,
     private formBuilder: FormBuilder,
     private helperService: HelperService,
     private clientService: ClientService,
@@ -134,7 +136,10 @@ export class AppointmentFormComponent implements OnInit {
     } else {
       const payload = {
         coaches: this.form.controls["coaches"].value,
-        day: new Date(this.form.controls["day"].value),
+        day: this.datePipe.transform(
+            this.form.controls['day'].value,
+            'yyyy-dd-MM'
+        ),
       };
 
       this.timeSlotService
