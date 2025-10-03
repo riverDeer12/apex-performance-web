@@ -13,7 +13,7 @@
         <ng-template #body let-appointment>
             <tr>
                 <td>({{appointment.getWeekDay()}}) {{ appointment.startTime | date: 'dd.MM.yyyy' }}
-                    {{ appointment.startTime | date: 'HH:mm' }} - {{ appointment.endTime | date: 'HH:mm' }}
+                    {{ appointment.timeSlot.description }}
                 </td>
                 <td>
                     <span *ngFor="let coach of appointment.coaches">
