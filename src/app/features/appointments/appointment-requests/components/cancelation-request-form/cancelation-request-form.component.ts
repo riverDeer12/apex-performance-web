@@ -99,7 +99,7 @@ export class CancelationRequestFormComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Error Creating AppointmentRequest",
-          detail: error.message || "An unexpected error occurred.",
+          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
         });
       },
       complete: () => {

@@ -149,7 +149,7 @@ export class ClientFormComponent implements OnInit {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Creating Client",
-                    detail: error.message || "An unexpected error occurred.",
+                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
                 });
             },
             complete: () => {
@@ -181,7 +181,7 @@ export class ClientFormComponent implements OnInit {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Updating Client",
-                    detail: error.message || "An unexpected error occurred.",
+                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
                 });
             },
             complete: () => {

@@ -173,7 +173,7 @@ export class BodyMeasurementFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Creating Body Measurement",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {
@@ -207,7 +207,7 @@ export class BodyMeasurementFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating Body Measurement",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {

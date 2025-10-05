@@ -93,7 +93,7 @@ export class ChangeUsernameFormComponent {
         this.messageService.add({
           severity: "error",
           summary: "Password Reset Error.",
-          detail: error.message,
+          detail: error.error.errors.generalErrors[0],
         });
         this.loadingData = false;
       },

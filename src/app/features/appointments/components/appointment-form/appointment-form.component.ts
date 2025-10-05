@@ -230,12 +230,10 @@ export class AppointmentFormComponent implements OnInit {
         );
       },
       error: (error) => {
-        console.error("Error:", error);
-
         this.messageService.add({
           severity: "error",
           summary: "Error Creating Appointment",
-          detail: error.message || "An unexpected error occurred.",
+          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
         });
       },
       complete: () => {

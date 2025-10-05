@@ -210,7 +210,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Creating Recurring Appointment",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {
@@ -247,7 +247,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating Recurring Appointment",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {

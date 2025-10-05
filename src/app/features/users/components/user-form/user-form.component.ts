@@ -124,7 +124,7 @@ export class UserFormComponent {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Creating User',
-                    detail: error.message || 'An unexpected error occurred.'
+                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
                 });
             },
             complete: () => {
@@ -151,7 +151,7 @@ export class UserFormComponent {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Updating User',
-                    detail: error.message || 'An unexpected error occurred.'
+                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
                 });
             },
             complete: () => {

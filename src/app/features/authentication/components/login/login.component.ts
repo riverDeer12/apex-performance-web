@@ -120,7 +120,7 @@ export class LoginComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Login Error",
-          detail: error.message,
+          detail: error.error.errors.generalErrors[0],
         });
         this.loadingData = false;
       },
