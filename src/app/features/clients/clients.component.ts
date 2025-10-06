@@ -10,16 +10,16 @@ import {ActionType} from "../../enums/action-type";
 import {DialogInfoComponent} from "../../shared/components/dialog-info/dialog-info.component";
 import {ClientService} from "./services/client.service";
 import {Client} from "./models/client";
-import {DatePipe} from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
-import {Roles} from "../../constants/roles";
 import {AuthenticationService} from "../authentication/services/authentication.service";
 
 @Component({
     selector: "app-clients",
     imports: [
+        CommonModule,
         Button,
         DatePipe,
         TableModule,
