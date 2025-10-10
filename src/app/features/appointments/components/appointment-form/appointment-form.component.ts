@@ -64,7 +64,7 @@ export class AppointmentFormComponent implements OnInit {
 
   timeSlots!: TimeSlot[];
 
-  loadingData = false;
+  loadingData!: boolean;
 
   today = new Date();
 
@@ -145,6 +145,7 @@ export class AppointmentFormComponent implements OnInit {
           this.timeSlots = response.map((x: TimeSlot) =>
             Object.assign(new TimeSlot(), x),
           );
+          this.loadingData = false;
         });
 
       if (this.userRole != Roles.Coach) {
@@ -153,6 +154,7 @@ export class AppointmentFormComponent implements OnInit {
           .subscribe((response: Client[]) => {
             this.clients = response;
           });
+        this.loadingData = false;
       }
     }
   }

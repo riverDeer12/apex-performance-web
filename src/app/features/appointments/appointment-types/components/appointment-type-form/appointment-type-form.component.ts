@@ -26,7 +26,7 @@ export class AppointmentTypeFormComponent {
 
     form!: FormGroup;
 
-    loadingData = false;
+    loadingData!: boolean;
 
     constructor(
         public validationService: ValidationService,

@@ -38,7 +38,7 @@ export class TimeSlotFormComponent {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   userRole!: string;
 

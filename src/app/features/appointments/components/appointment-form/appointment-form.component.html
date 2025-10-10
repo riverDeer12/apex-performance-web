@@ -5,7 +5,7 @@
             <p-multi-select [filter]="true" [options]="coaches"
                             appendTo="body" styleClass="w-full"
                             formControlName="coaches" optionLabel="fullName" optionValue="id"
-                            id="coaches"/>
+                            id="coaches" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'coaches', 'required')"
                    id="coaches-input">This field is required.</small>
@@ -29,7 +29,7 @@
             <label for="timeSlot">Time Slot</label>
             <p-select id="timeSlot" styleClass="w-full" [options]="timeSlots"
                       formControlName="timeSlot"
-                      optionLabel="name" optionValue="id"/>
+                      optionLabel="name" optionValue="id" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'timeSlot', 'required')"
                    id="startTime-input">This field is required.</small>
@@ -39,7 +39,7 @@
             <p-select [filter]="true" [options]="appointmentTypes"
                       appendTo="body" styleClass="w-full"
                       formControlName="type" optionLabel="name" optionValue="id"
-                      id="type"/>
+                      id="type" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'type', 'required')"
                    id="appointmentType-input">This field is required.</small>
@@ -55,12 +55,17 @@
             appendTo="body"
             styleClass="w-full"
             formControlName="clients"
-            id="clients"/>
+            id="clients" />
         <small class="p-error"
                *ngIf="validationService.hasErrors(form, 'clients', 'required')"
                id="clients-input">This field is required.</small>
     </div>
     <div class="my-3">
-        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
+        <p-button
+            type="submit"
+            [disabled]="loadingData"
+            [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+            [label]="loadingData ? 'Saving...' : 'Save'">
+        </p-button>
     </div>
 </form>

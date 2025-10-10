@@ -41,7 +41,7 @@ export class ClientFormComponent implements OnInit {
 
     coaches!: Coach[];
 
-    loadingData = false;
+    loadingData!: boolean;
 
     get userRoles(): typeof Roles {
         return Roles;

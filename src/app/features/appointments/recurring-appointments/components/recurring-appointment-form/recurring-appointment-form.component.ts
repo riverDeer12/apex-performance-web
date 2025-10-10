@@ -52,7 +52,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   appointmentTypes!: AppointmentType[];
 
-  loadingData = false;
+  loadingData!: boolean;
 
   get userRoles(): typeof Roles {
     return Roles;

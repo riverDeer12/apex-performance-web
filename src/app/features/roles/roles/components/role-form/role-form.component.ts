@@ -39,7 +39,7 @@ export class RoleFormComponent implements OnInit {
 
     form!: FormGroup;
 
-    loadingData = false;
+    loadingData!: boolean;
 
     permissions!: Permission[];
 

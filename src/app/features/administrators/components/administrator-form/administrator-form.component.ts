@@ -39,7 +39,7 @@ export class AdministratorFormComponent implements OnInit {
 
     users!: User[];
 
-    loadingData = false;
+    loadingData!: boolean;
 
     constructor(
         public validationService: ValidationService,

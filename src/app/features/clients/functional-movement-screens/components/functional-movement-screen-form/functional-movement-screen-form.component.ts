@@ -30,7 +30,7 @@ export class FunctionalMovementScreenFormComponent {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   clients!: Client[];
 

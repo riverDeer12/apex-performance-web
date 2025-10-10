@@ -38,6 +38,11 @@
     </div>
 
     <div class="my-3">
-        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save"/>
+        <p-button
+  type="submit"
+  [disabled]="loadingData"
+  [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+  [label]="loadingData ? 'Saving...' : 'Save'">
+</p-button>
     </div>
 </form>

@@ -36,7 +36,7 @@ export class BodyMeasurementFormComponent implements OnInit {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   clients!: Client[];
 

@@ -28,7 +28,7 @@ export class EmailFormComponent {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   authResponse!: AuthResponse;
 

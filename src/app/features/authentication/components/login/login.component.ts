@@ -37,7 +37,7 @@ import { LayoutService } from '../../../../layout/service/layout.service';
 export class LoginComponent implements OnInit {
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   authResponse!: AuthResponse;
 

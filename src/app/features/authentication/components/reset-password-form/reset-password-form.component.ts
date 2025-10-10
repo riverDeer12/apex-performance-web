@@ -35,7 +35,7 @@ export class ResetPasswordFormComponent {
 
     form!: FormGroup;
 
-    loadingData = false;
+    loadingData!: boolean;
 
     authResponse!: AuthResponse;
 

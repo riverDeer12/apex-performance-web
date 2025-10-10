@@ -41,7 +41,7 @@ export class UserFormComponent {
 
     roles!: Role[];
 
-    loadingData = false;
+    loadingData!: boolean;
 
     public get formType(): typeof ActionType {
         return ActionType;

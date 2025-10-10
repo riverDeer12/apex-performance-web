@@ -37,7 +37,7 @@ export class CancelationRequestFormComponent implements OnInit {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   constructor(
       public validationService: ValidationService,

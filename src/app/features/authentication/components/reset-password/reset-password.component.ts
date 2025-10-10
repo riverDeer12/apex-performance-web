@@ -23,7 +23,7 @@ import { RedirectType } from "../../../../enums/redirect-type";
 export class ResetPasswordComponent implements OnInit {
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   get redirectTypes(): typeof RedirectType {
     return RedirectType;
