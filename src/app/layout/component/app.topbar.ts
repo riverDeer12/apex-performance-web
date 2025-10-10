@@ -34,8 +34,8 @@ import { ButtonLabel } from "primeng/button";
         <img
           [ngSrc]="
             !layoutService.isDarkTheme()
-              ? 'assets/images/logo_light_theme.png'
-              : 'assets/images/logo_dark_theme.png'
+              ? 'assets/images/logo_light.png'
+              : 'assets/images/logo_dark.png'
           "
           width="200"
           height="50"
