@@ -16,10 +16,18 @@ import { MessageService } from "primeng/api";
 import { Product } from "../../models/product";
 import { ProductService } from "../../services/product.service";
 import { InputNumber } from 'primeng/inputnumber';
+import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
 
 @Component({
   selector: "app-product-form",
-  imports: [Button, InputText, NgIf, ReactiveFormsModule, InputNumber],
+  imports: [
+    Button,
+    InputText,
+    NgIf,
+    ReactiveFormsModule,
+    InputNumber,
+    FileUpload,
+  ],
   templateUrl: "./product-form.component.html",
   styleUrl: "./product-form.component.scss",
 })
@@ -68,6 +76,10 @@ export class ProductFormComponent implements OnInit {
       : this.updateProduct();
   }
 
+  onUpload(event: FileUploadEvent): void {
+    console.log(event);
+  }
+
   private initForm = () =>
     this.type == ActionType.Create
       ? this.initCreateForm()
@@ -75,6 +87,7 @@ export class ProductFormComponent implements OnInit {
 
   private initCreateForm() {
     this.form = this.formBuilder.group({
+      photos: ["", [Validators.required]],
       name: ["", [Validators.required]],
       description: ["", [Validators.required]],
       price: ["", [Validators.required]],
@@ -83,6 +96,7 @@ export class ProductFormComponent implements OnInit {
 
   private initUpdateForm() {
     this.form = this.formBuilder.group({
+      photos: [this.product.photos, [Validators.required]],
       name: [this.product.name, [Validators.required]],
       description: [this.product.description, [Validators.required]],
       price: [this.product.price, [Validators.required]],

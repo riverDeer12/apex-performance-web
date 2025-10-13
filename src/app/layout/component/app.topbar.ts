@@ -9,7 +9,6 @@ import { AuthenticationService } from "../../features/authentication/services/au
 import { DialogFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
 import { EntityType } from "../../enums/entity-type";
 import { DialogService } from "primeng/dynamicdialog";
-import { ButtonLabel } from "primeng/button";
 
 @Component({
   selector: "app-topbar",
