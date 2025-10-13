@@ -267,9 +267,20 @@ export class AppointmentFormComponent implements OnInit {
   }
 
   private setAppointmentTime() {
+
+    if(!this.timeSlots){
+      this.loadingData = false;
+      return;
+    }
+
     const timeSlot = this.timeSlots.find(
         (x) => x.id === this.form.controls['timeSlot'].value
     ) as TimeSlot;
+
+    if(!timeSlot) {
+      this.loadingData = false;
+      return;
+    }
 
     const day = new Date(this.convertDate(this.form.controls['day'].value));
 
