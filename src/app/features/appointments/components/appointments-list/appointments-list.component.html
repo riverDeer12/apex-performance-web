@@ -12,7 +12,7 @@
         </ng-template>
         <ng-template #body let-appointment>
             <tr>
-                <td>({{appointment.getWeekDay()}}) {{ appointment.startTime | date: 'dd.MM.yyyy' }}
+                <td>({{appointment.getWeekDay()}}) {{ appointment.startTime | date: 'dd.MM.yyyy' }} <br>
                     {{ appointment.timeSlot.description }}
                 </td>
                 <td *ngIf="userRole != userRoles.Client">

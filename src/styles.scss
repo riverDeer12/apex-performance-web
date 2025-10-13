@@ -4,6 +4,8 @@
 @use './assets/demo/demo.scss';
 @use './theme-overrides.scss';
 
+html, body, .layout-wrapper { min-height: 100dvh; }
+
 .bg-success {
     background-color: springgreen !important;
 }
