@@ -1,30 +1,15 @@
 <p-menubar [model]="items">
     <ng-template #start>
-        <img class="public-menu-logo" [ngSrc]="!layoutService.isDarkTheme()
-                              ? 'assets/images/logo_light_transparent.png'
-                              : 'assets/images/logo_dark_transparent.png'"
-             width="200"
-             height="50"
-             priority
-             alt="logo">
+        <img class="public-menu-logo" src="../../../../assets/images/logo_light_theme.png" alt="public-menu-logo">
     </ng-template>
     <ng-template #item let-item let-root="root">
-        <a [href]="item.routerLink" pRipple class="flex items-center p-menubar-item-link">
+        <a pRipple class="flex items-center p-menubar-item-link">
             <span>{{ item.label }}</span>
             <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
             <span *ngIf="item.shortcut"
                   class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
             <i *ngIf="item.items" [ngClass]="['ml-auto pi', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
         </a>
-    </ng-template>
-    <ng-template #end>
-        <i *ngIf="showShoppingCart" pBadge badgeSize="xlarge" [value]="getShoppingCartTotalQuantity()" (click)="goToShoppingCart()"
-           class="pi pi-shopping-cart mr-3" style="font-size: 2rem">
-        </i>
-        <i *ngIf="!showShoppingCart"
-           class="pi pi-shopping-cart mr-3" style="font-size: 2rem">
-        </i>
-        <span *ngIf="showShoppingCart" class="font-bold">{{ getShoppingCartSubtotal() | number:'1.2-2' }} €</span>
     </ng-template>
     <app-configurator></app-configurator>
 </p-menubar>

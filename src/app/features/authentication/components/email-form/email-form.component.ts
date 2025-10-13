@@ -28,7 +28,7 @@ export class EmailFormComponent {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   authResponse!: AuthResponse;
 
@@ -90,7 +90,7 @@ export class EmailFormComponent {
         this.messageService.add({
           severity: "error",
           summary: "Error sending email.",
-          detail: error.message,
+          detail: error.error.errors.generalErrors[0],
         });
         this.loadingData = false;
       },

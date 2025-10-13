@@ -39,7 +39,7 @@ export class RoleFormComponent implements OnInit {
 
     form!: FormGroup;
 
-    loadingData = false;
+    loadingData!: boolean;
 
     permissions!: Permission[];
 
@@ -125,7 +125,7 @@ export class RoleFormComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Creating Role',
-                    detail: error.message || 'An unexpected error occurred.'
+                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
                 });
             },
             complete: () => {
@@ -151,7 +151,7 @@ export class RoleFormComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Updating Role',
-                    detail: error.message || 'An unexpected error occurred.'
+                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
                 });
             },
             complete: () => {

@@ -13,6 +13,7 @@ import { MessageService } from "primeng/api";
 import { HelperService } from "../../../../shared/services/helper.service";
 import { Roles } from "../../../../constants/roles";
 import { DayOfWeek } from "../../../../enums/day-of-week";
+import { AuthenticationService } from "../../../authentication/services/authentication.service";
 
 @Component({
   selector: "app-appointments-list",
@@ -26,12 +27,19 @@ export class AppointmentsListComponent implements OnInit {
   @Input() userRole!: string;
   @Input() appointments!: Appointment[];
 
+  get userRoles(): typeof Roles {
+    return Roles;
+  }
+
   constructor(
     private dialogService: DialogService,
     private messageService: MessageService,
+    private authenticationService: AuthenticationService,
     private helperService: HelperService,
     private appointmentService: AppointmentService,
-  ) {}
+  ) {
+    this.userRole = this.authenticationService.getUserRole();
+  }
 
   ngOnInit() {}
 
@@ -52,9 +60,12 @@ export class AppointmentsListComponent implements OnInit {
   }
 
   showPendingActionButtons = (appointment: Appointment): boolean =>
-    this.userRole == Roles.Administrator ||
-    (this.userRole == Roles.Coach &&
-      appointment.status.name === BusinessStatuses.Pending);
+    appointment.status.name === BusinessStatuses.Pending &&
+    (this.userRole === Roles.Administrator || this.userRole === Roles.Coach);
+
+  showApproveActionButtons = (appointment: Appointment): boolean =>
+    appointment.status.name === BusinessStatuses.Pending &&
+    (this.userRole === Roles.Administrator || this.userRole === Roles.Coach);
 
   approve(appointment: Appointment): void {
     this.appointmentService.approveAppointment(appointment.id).subscribe({

@@ -41,7 +41,7 @@ export class ClientFormComponent implements OnInit {
 
     coaches!: Coach[];
 
-    loadingData = false;
+    loadingData!: boolean;
 
     get userRoles(): typeof Roles {
         return Roles;
@@ -149,7 +149,7 @@ export class ClientFormComponent implements OnInit {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Creating Client",
-                    detail: error.message || "An unexpected error occurred.",
+                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
                 });
             },
             complete: () => {
@@ -181,7 +181,7 @@ export class ClientFormComponent implements OnInit {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Updating Client",
-                    detail: error.message || "An unexpected error occurred.",
+                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
                 });
             },
             complete: () => {
@@ -192,9 +192,7 @@ export class ClientFormComponent implements OnInit {
 
     private getAllCoaches() {
         this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-            this.coaches = response.map((x: Coach) =>
-                Object.assign(new Coach(), x),
-            );
+            this.coaches = response;
         });
     }
 }

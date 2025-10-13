@@ -52,7 +52,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   appointmentTypes!: AppointmentType[];
 
-  loadingData = false;
+  loadingData!: boolean;
 
   get userRoles(): typeof Roles {
     return Roles;
@@ -122,9 +122,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
       this.clientService
         .getClientsByCoachId(this.form.controls["coach"].value)
         .subscribe((response: Client[]) => {
-          this.clients = response.map((x: Client) =>
-            Object.assign(new Client(), x),
-          );
+          this.clients = response;
         });
     }
   }
@@ -212,7 +210,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Creating Recurring Appointment",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {
@@ -249,7 +247,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating Recurring Appointment",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {
@@ -260,9 +258,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   private getClients(): void {
     this.clientService.getClients().subscribe((response: Client[]) => {
-      this.clients = response.map((x: Client) =>
-        Object.assign(new Client(), x),
-      );
+      this.clients = response;
     });
   }
 
@@ -287,7 +283,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   private getAllCoaches() {
     this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+      this.coaches = response;
     });
   }
 

@@ -60,7 +60,7 @@
         </tr>
     </ng-template>
     <ng-template #body let-client>
-        <tr>
+        <tr [style]="{ 'background-color': client.credits <= 0 ? '#f8d7dacc' : '' }">
             <td>
                 {{ client.fullName }}
             </td>

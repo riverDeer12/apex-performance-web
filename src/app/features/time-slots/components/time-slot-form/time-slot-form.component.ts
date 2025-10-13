@@ -38,7 +38,7 @@ export class TimeSlotFormComponent {
 
   form!: FormGroup;
 
-  loadingData = false;
+  loadingData!: boolean;
 
   userRole!: string;
 
@@ -138,7 +138,7 @@ export class TimeSlotFormComponent {
         this.messageService.add({
           severity: "error",
           summary: "Error Creating TimeSlot",
-          detail: error.message || "An unexpected error occurred.",
+          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
         });
       },
       complete: () => {
@@ -170,7 +170,7 @@ export class TimeSlotFormComponent {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating TimeSlot",
-            detail: error.message || "An unexpected error occurred.",
+            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
           });
         },
         complete: () => {

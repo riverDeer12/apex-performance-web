@@ -13,10 +13,7 @@ export class Client {
     user!: User;
     coaches!: Coach[];
     isDeleted!: boolean;
-
-    get fullName(): string {
-        return `${this.firstName} ${this.lastName}`;
-    }
+    fullName!: string;
 
     get status(): string {
         return this.isDeleted ? 'Inactive' : 'Active';

@@ -15,8 +15,8 @@ import { MessageService } from "primeng/api";
 import { Appointment } from "../../models/appointment";
 import { AppointmentService } from "../../services/appointment.service";
 import { Button } from "primeng/button";
-import { CommonModule, NgIf } from "@angular/common";
-import { MultiSelect } from "primeng/multiselect";
+import { CommonModule, DatePipe, NgIf } from "@angular/common";
+import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from "primeng/dropdown";
 import { Select } from "primeng/select";
 import { AppointmentType } from "../../appointment-types/models/appointment-type";
@@ -36,11 +36,12 @@ import { AuthenticationService } from "../../../authentication/services/authenti
     CommonModule,
     Button,
     ReactiveFormsModule,
-    MultiSelect,
+    MultiSelectModule,
     DropdownModule,
     Select,
     DatePicker,
   ],
+  providers: [DatePipe],
   templateUrl: "./appointment-form.component.html",
   styleUrl: "./appointment-form.component.scss",
 })
@@ -63,7 +64,7 @@ export class AppointmentFormComponent implements OnInit {
 
   timeSlots!: TimeSlot[];
 
-  loadingData = false;
+  loadingData!: boolean;
 
   today = new Date();
 
@@ -75,6 +76,7 @@ export class AppointmentFormComponent implements OnInit {
 
   constructor(
     public validationService: ValidationService,
+    private datePipe: DatePipe,
     private formBuilder: FormBuilder,
     private helperService: HelperService,
     private clientService: ClientService,
@@ -134,7 +136,7 @@ export class AppointmentFormComponent implements OnInit {
     } else {
       const payload = {
         coaches: this.form.controls["coaches"].value,
-        day: new Date(this.form.controls["day"].value).getDay(),
+        day: this.convertDate(this.form.controls["day"].value),
       };
 
       this.timeSlotService
@@ -143,16 +145,16 @@ export class AppointmentFormComponent implements OnInit {
           this.timeSlots = response.map((x: TimeSlot) =>
             Object.assign(new TimeSlot(), x),
           );
+          this.loadingData = false;
         });
 
       if (this.userRole != Roles.Coach) {
         this.clientService
           .getCoachesClients(payload)
           .subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-              Object.assign(new Client(), x),
-            );
+            this.clients = response;
           });
+        this.loadingData = false;
       }
     }
   }
@@ -179,9 +181,7 @@ export class AppointmentFormComponent implements OnInit {
 
   private getClients() {
     this.clientService.getClients().subscribe((response: Client[]) => {
-      this.clients = response.map((x: Client) =>
-        Object.assign(new Client(), x),
-      );
+      this.clients = response;
     });
   }
 
@@ -200,8 +200,8 @@ export class AppointmentFormComponent implements OnInit {
       endTime: [null, [Validators.required]],
       timeSlot: [null, [Validators.required]],
       type: ["", [Validators.required]],
-      clients: ["", [Validators.required]],
-      coaches: ["", [Validators.required]],
+      clients: [[], [Validators.required]],
+      coaches: [[], [Validators.required]],
     });
 
     if (this.userRole == Roles.Client) {
@@ -232,12 +232,10 @@ export class AppointmentFormComponent implements OnInit {
         );
       },
       error: (error) => {
-        console.error("Error:", error);
-
         this.messageService.add({
           severity: "error",
           summary: "Error Creating Appointment",
-          detail: error.message || "An unexpected error occurred.",
+          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
         });
       },
       complete: () => {
@@ -248,13 +246,13 @@ export class AppointmentFormComponent implements OnInit {
 
   private getAllCoaches() {
     this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+      this.coaches = response;
     });
   }
 
   private getClientCoaches() {
     this.coachService.getClientCoaches().subscribe((response: Coach[]) => {
-      this.coaches = response.map((x: Coach) => Object.assign(new Coach(), x));
+      this.coaches = response;
     });
   }
 
@@ -269,22 +267,33 @@ export class AppointmentFormComponent implements OnInit {
   }
 
   private setAppointmentTime() {
+
+    if(!this.timeSlots){
+      this.loadingData = false;
+      return;
+    }
+
     const timeSlot = this.timeSlots.find(
-      (x) => x.id === this.form.controls["timeSlot"].value,
+        (x) => x.id === this.form.controls['timeSlot'].value
     ) as TimeSlot;
 
-    const day = new Date(this.form.controls["day"].value);
+    if(!timeSlot) {
+      this.loadingData = false;
+      return;
+    }
 
-    const startTime = DateExtensions.addTimeToDate(
-      day,
-      timeSlot.startTime.toString(),
-    );
-    const endTime = DateExtensions.addTimeToDate(
-      day,
-      timeSlot.endTime.toString(),
-    );
+    const day = new Date(this.convertDate(this.form.controls['day'].value));
 
-    this.form.controls["startTime"].setValue(startTime);
-    this.form.controls["endTime"].setValue(endTime);
+    const startLocal = DateExtensions.addTimeToDate(day, timeSlot.startTime.toString());
+    const endLocal   = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
+
+    this.form.controls['startTime'].setValue(startLocal);
+    this.form.controls['endTime'].setValue(endLocal);
+  }
+
+
+  convertDate(dateStr: string): string {
+    const [day, month, year] = dateStr.split('.');
+    return `${year}-${month}-${day}`;
   }
 }

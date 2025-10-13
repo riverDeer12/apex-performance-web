@@ -21,8 +21,7 @@ import { ShoppingCartService } from "../../../features/landing/services/shopping
     InputTextModule,
     Ripple,
     CommonModule,
-    AppConfigurator,
-    NgOptimizedImage
+    AppConfigurator
   ],
   templateUrl: "./public-menu.component.html",
   styleUrl: "./public-menu.component.scss",
