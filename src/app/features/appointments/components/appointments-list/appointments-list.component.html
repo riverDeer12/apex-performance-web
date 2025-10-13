@@ -12,8 +12,8 @@
         </ng-template>
         <ng-template #body let-appointment>
             <tr>
-                <td>({{appointment.getWeekDay()}}) {{ appointment.startTime | date: 'dd.MM.yyyy' }} <br>
-                    {{ appointment.timeSlot.description }}
+                <td>{{ appointment.startTime | date: 'dd.MM.yyyy' }} ({{appointment.getWeekDay()}})  <br>
+                    <span class="py-3">{{ appointment.timeSlot.description }}</span>
                 </td>
                 <td *ngIf="userRole != userRoles.Client">
                     <span *ngFor="let client of appointment.clients">
@@ -38,7 +38,7 @@
                             (click)="cancel(appointment)">
                     </button>
                     <button
-                            *ngIf="showPendingActionButtons(appointment)"
+                            *ngIf="showApproveActionButtons(appointment)"
                             class="p-button-outlined p-button-success mr-2"
                             pButton type="button" icon="pi pi-check"
                             label="Approve"

@@ -60,9 +60,12 @@ export class AppointmentsListComponent implements OnInit {
   }
 
   showPendingActionButtons = (appointment: Appointment): boolean =>
-    this.userRole == Roles.Administrator ||
-    (this.userRole == Roles.Coach &&
-      appointment.status.name === BusinessStatuses.Pending);
+    appointment.status.name === BusinessStatuses.Pending &&
+    (this.userRole === Roles.Administrator || this.userRole === Roles.Coach);
+
+  showApproveActionButtons = (appointment: Appointment): boolean =>
+    appointment.status.name === BusinessStatuses.Pending &&
+    (this.userRole === Roles.Administrator || this.userRole === Roles.Coach);
 
   approve(appointment: Appointment): void {
     this.appointmentService.approveAppointment(appointment.id).subscribe({
