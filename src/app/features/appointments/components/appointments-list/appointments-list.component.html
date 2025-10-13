@@ -1,12 +1,12 @@
-<div class="p-3">
+<div class="py-3">
     <h5 class="mb-3">{{ type }}</h5>
 
     <p-table [value]="appointments" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
-                <th>Appointment Time</th>
-                <th>Coach</th>
-                <th>Clients</th>
+                <th>Time</th>
+                <th *ngIf="userRole != userRoles.Client">Client</th>
+                <th *ngIf="userRole != userRoles.Coach">Coach</th>
                 <th></th>
             </tr>
         </ng-template>
@@ -15,17 +15,17 @@
                 <td>({{appointment.getWeekDay()}}) {{ appointment.startTime | date: 'dd.MM.yyyy' }}
                     {{ appointment.timeSlot.description }}
                 </td>
-                <td>
-                    <span *ngFor="let coach of appointment.coaches">
-                        <p>
-                            <span>{{ coach.firstName }} {{ coach.lastName }}</span>
-                        </p>
-                    </span>
-                </td>
-                <td>
+                <td *ngIf="userRole != userRoles.Client">
                     <span *ngFor="let client of appointment.clients">
                         <p>
                             <span>{{ client.firstName }} {{ client.lastName }}</span>
+                        </p>
+                    </span>
+                </td>
+                <td *ngIf="userRole != userRoles.Coach">
+                    <span *ngFor="let coach of appointment.coaches">
+                        <p>
+                            <span>{{ coach.firstName }} {{ coach.lastName }}</span>
                         </p>
                     </span>
                 </td>
