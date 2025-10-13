@@ -2,6 +2,7 @@
 @use './assets/layout/layout.scss';
 @use 'primeicons/primeicons.css';
 @use './assets/demo/demo.scss';
+@use './theme-overrides.scss';
 
 .bg-success {
     background-color: springgreen !important;
