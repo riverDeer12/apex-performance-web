@@ -68,6 +68,10 @@ export class AppointmentFormComponent implements OnInit {
 
   today = new Date();
 
+  minDate!: Date;
+
+  tomorrow = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate() + 1);
+
   loggedClient!: Client;
 
   get userRoles(): typeof Roles {
@@ -88,6 +92,7 @@ export class AppointmentFormComponent implements OnInit {
     private authenticationService: AuthenticationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
+    this.minDate = this.userRole == Roles.Client ? this.tomorrow : this.today;
   }
 
   ngOnInit(): void {
@@ -232,11 +237,15 @@ export class AppointmentFormComponent implements OnInit {
         );
       },
       error: (error) => {
+
+        this.loadingData = false;
+
         this.messageService.add({
           severity: "error",
           summary: "Error Creating Appointment",
           detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
         });
+
       },
       complete: () => {
         this.loadingData = false;
