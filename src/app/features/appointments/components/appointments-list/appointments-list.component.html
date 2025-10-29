@@ -30,8 +30,11 @@
                     </span>
                 </td>
                 <td>
-                    <i *ngIf="!isAppointmentActive(appointment)"
-                       style="font-size: 1.5rem" class="pi pi-check"></i>
+                    <p-button *ngIf="!isAppointmentActive(appointment)"
+                              label="Completed"
+                              variant="text"
+                              icon="pi pi-check"
+                              disabled />
                     <button
                         *ngIf="isAppointmentActive(appointment)"
                         class="p-button-outlined p-button-danger"

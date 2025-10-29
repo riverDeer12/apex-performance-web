@@ -7,7 +7,7 @@ import { EntityType } from "../../../../enums/entity-type";
 import { ActionType } from "../../../../enums/action-type";
 import { DialogService } from "primeng/dynamicdialog";
 import { TableModule } from "primeng/table";
-import { ButtonDirective } from "primeng/button";
+import { Button, ButtonDirective } from 'primeng/button';
 import { AppointmentService } from "../../services/appointment.service";
 import { MessageService } from "primeng/api";
 import { HelperService } from "../../../../shared/services/helper.service";
@@ -17,7 +17,7 @@ import { AuthenticationService } from "../../../authentication/services/authenti
 
 @Component({
   selector: "app-appointments-list",
-  imports: [CommonModule, DatePipe, TableModule, ButtonDirective],
+  imports: [CommonModule, DatePipe, TableModule, ButtonDirective, Button],
   providers: [DialogService],
   templateUrl: "./appointments-list.component.html",
   styleUrl: "./appointments-list.component.scss",
