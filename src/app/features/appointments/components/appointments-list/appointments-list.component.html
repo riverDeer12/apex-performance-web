@@ -12,7 +12,7 @@
         </ng-template>
         <ng-template #body let-appointment>
             <tr [ngStyle]="!isAppointmentActive(appointment) ? {'background': '#0034c42b'} : {}">
-                <td>{{ appointment.startTime | date: 'dd.MM.yyyy' }} ({{appointment.getWeekDay()}})  <br>
+                <td>{{ appointment.startTime | date: 'dd.MM.yyyy' }} ({{ appointment.getWeekDay() }}) <br>
                     <span class="py-3">{{ appointment.timeSlot.description }}</span>
                 </td>
                 <td *ngIf="userRole != userRoles.Client">
@@ -30,26 +30,28 @@
                     </span>
                 </td>
                 <td>
+                    <i *ngIf="!isAppointmentActive(appointment)"
+                       style="font-size: 1.5rem" class="pi pi-check"></i>
                     <button
-                            *ngIf="isAppointmentActive(appointment)"
-                            class="p-button-outlined p-button-danger"
-                            pButton type="button" icon="pi pi-times"
-                            label="Cancel"
-                            (click)="cancel(appointment)">
+                        *ngIf="isAppointmentActive(appointment)"
+                        class="p-button-outlined p-button-danger"
+                        pButton type="button" icon="pi pi-times"
+                        label="Cancel"
+                        (click)="cancel(appointment)">
                     </button>
                     <button
-                            *ngIf="showApproveActionButtons(appointment)"
-                            class="p-button-outlined p-button-success mr-2"
-                            pButton type="button" icon="pi pi-check"
-                            label="Approve"
-                            (click)="approve(appointment)">
+                        *ngIf="showApproveActionButtons(appointment)"
+                        class="p-button-outlined p-button-success mr-2"
+                        pButton type="button" icon="pi pi-check"
+                        label="Approve"
+                        (click)="approve(appointment)">
                     </button>
                     <button
-                            *ngIf="showPendingActionButtons(appointment)"
-                            class="p-button-outlined p-button-danger"
-                            pButton type="button" icon="pi pi-times"
-                            label="Decline"
-                            (click)="decline(appointment)">
+                        *ngIf="showPendingActionButtons(appointment)"
+                        class="p-button-outlined p-button-danger"
+                        pButton type="button" icon="pi pi-times"
+                        label="Decline"
+                        (click)="decline(appointment)">
                     </button>
                 </td>
             </tr>
