@@ -51,7 +51,7 @@ export class AppointmentsListComponent implements OnInit {
     return DayOfWeek;
   }
 
-  showActionButtons(appointment: Appointment): boolean {
+  isAppointmentActive(appointment: Appointment): boolean {
     const isApprovedAppointment =
       appointment.status.name === BusinessStatuses.Approved;
     const isValidAppointmentTime =
