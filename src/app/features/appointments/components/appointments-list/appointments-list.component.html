@@ -11,7 +11,7 @@
             </tr>
         </ng-template>
         <ng-template #body let-appointment>
-            <tr [ngStyle]="!isAppointmentActive(appointment) ? {'background': '#0034c42b'} : {}">
+            <tr [ngStyle]="isAppointmentCompleted(appointment) ? {'background': '#0034c42b'} : {}">
                 <td>{{ appointment.startTime | date: 'dd.MM.yyyy' }} ({{ appointment.getWeekDay() }}) <br>
                     <span class="py-3">{{ appointment.timeSlot.description }}</span>
                 </td>
@@ -30,7 +30,7 @@
                     </span>
                 </td>
                 <td>
-                    <p-button *ngIf="!isAppointmentActive(appointment)"
+                    <p-button *ngIf="isAppointmentCompleted(appointment)"
                               label="Completed"
                               variant="text"
                               icon="pi pi-check"

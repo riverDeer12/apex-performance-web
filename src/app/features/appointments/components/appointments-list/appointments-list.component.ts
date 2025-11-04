@@ -51,6 +51,9 @@ export class AppointmentsListComponent implements OnInit {
     return DayOfWeek;
   }
 
+  isAppointmentCompleted = (appointment: Appointment) =>
+      !this.isAppointmentActive(appointment) && appointment.status.name !== BusinessStatuses.Pending
+
   isAppointmentActive(appointment: Appointment): boolean {
     const isApprovedAppointment =
       appointment.status.name === BusinessStatuses.Approved;
