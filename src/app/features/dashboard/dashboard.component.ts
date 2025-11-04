@@ -16,8 +16,11 @@ import { MessageService } from "primeng/api";
 import { RecurringAppointmentService } from "../appointments/recurring-appointments/services/recurring-appointment.service";
 import { ClientService } from "../clients/services/client.service";
 import { Client } from "../clients/models/client";
-import { ProgressBarModule } from 'primeng/progressbar';
-import { Card } from 'primeng/card';
+import { ProgressBarModule } from "primeng/progressbar";
+import { Card } from "primeng/card";
+import { DialogFormComponent } from '../../shared/components/dialog-form/dialog-form.component';
+import { EntityType } from '../../enums/entity-type';
+import { ActionType } from '../../enums/action-type';
 
 @Component({
   selector: "app-dashboard",
@@ -54,6 +57,7 @@ export class DashboardComponent {
     private appointmentRequestService: AppointmentRequestService,
     private appointmentService: AppointmentService,
     private clientService: ClientService,
+    private dialogService: DialogService,
     private recurringAppointmentService: RecurringAppointmentService,
     private messageService: MessageService,
     private helperService: HelperService,
@@ -79,6 +83,21 @@ export class DashboardComponent {
           console.error(err);
         },
       });
+  }
+
+  openCreateDialog() {
+    const dialogRef = this.dialogService.open(DialogFormComponent, {
+      header: "Add New Appointment",
+      data: {
+        contentType: EntityType.Appointment,
+        formType: ActionType.Create,
+        dialogId: "createAppointmentForm",
+      },
+    });
+
+    dialogRef.onClose.subscribe((response: any) => {
+      this.loadData();
+    });
   }
 
   private getDataStatus() {
@@ -128,17 +147,19 @@ export class DashboardComponent {
   private loadAppointments(): void {
     this.appointmentService.getAppointments().subscribe({
       next: (data: AppointmentsStatus) => {
-        this.approvedAppointments = data.approvedAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
+        if (data) {
+          this.approvedAppointments = data.approvedAppointments.map(
+            (x: Appointment) => Object.assign(new Appointment(), x),
+          );
 
-        this.pendingAppointments = data.pendingAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
+          this.pendingAppointments = data.pendingAppointments.map(
+            (x: Appointment) => Object.assign(new Appointment(), x),
+          );
 
-        this.inProgressAppointments = data.inProgressAppointments.map(
-          (x: Appointment) => Object.assign(new Appointment(), x),
-        );
+          this.inProgressAppointments = data.inProgressAppointments.map(
+            (x: Appointment) => Object.assign(new Appointment(), x),
+          );
+        }
       },
       error: (err) => {
         console.error(err);

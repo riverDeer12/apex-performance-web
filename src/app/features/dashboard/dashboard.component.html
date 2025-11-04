@@ -18,6 +18,11 @@
               type="button" iconPos="right" icon="pi pi-sync" label="Generate Schedule For Next Week" />
 </div>
 
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment" />
+</div>
+
 <app-appointments-list [userRole]="userRole" [appointments]="approvedAppointments"
                        type=""></app-appointments-list>
 <app-appointments-list [userRole]="userRole" [appointments]="pendingAppointments"

@@ -58,9 +58,11 @@ export class AppointmentsComponent implements OnInit {
   private loadData(): void {
     this.appointmentService.getAppointments().subscribe({
       next: (data: AppointmentsStatus) => {
-        this.appointments = data.approvedAppointments.map((x: Appointment) =>
-          Object.assign(new Appointment(), x),
-        );
+        if (data) {
+          this.appointments = data.approvedAppointments.map((x: Appointment) =>
+            Object.assign(new Appointment(), x),
+          );
+        }
       },
       error: (err) => {
         console.error(err);
