@@ -1,14 +1,17 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="photos">Product photos</label>
-            <p-fileupload formControlName="photos" id="photos"
-                          url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)"
-                          [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
-                <ng-template #empty>
-                    <div>Drag and drop photos here to upload.</div>
-                </ng-template>
-            </p-fileupload>
+            <label for="photos">Photos</label>
+            <p-fileUpload
+                name="photos"
+                [multiple]="true"
+                [customUpload]="true"
+                [showUploadButton]="false"
+                [showCancelButton]="false"
+                accept="image/*"
+                (onSelect)="onSelect($event)"
+                (onRemove)="onRemove($event)"
+            ></p-fileUpload>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'photos', 'required')"
                    id="photos-input">This field is required.</small>

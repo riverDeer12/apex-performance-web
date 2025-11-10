@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { Button } from "primeng/button";
 import { InputText } from "primeng/inputtext";
-import { NgIf } from "@angular/common";
+import { CommonModule, NgIf } from "@angular/common";
 import {
   FormBuilder,
   FormGroup,
@@ -15,12 +15,17 @@ import { HelperService } from "../../../../shared/services/helper.service";
 import { MessageService } from "primeng/api";
 import { Product } from "../../models/product";
 import { ProductService } from "../../services/product.service";
-import { InputNumber } from 'primeng/inputnumber';
-import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
+import { InputNumber } from "primeng/inputnumber";
+import {
+  FileRemoveEvent,
+  FileSelectEvent,
+  FileUpload,
+} from "primeng/fileupload";
 
 @Component({
   selector: "app-product-form",
   imports: [
+    CommonModule,
     Button,
     InputText,
     NgIf,
@@ -76,8 +81,18 @@ export class ProductFormComponent implements OnInit {
       : this.updateProduct();
   }
 
-  onUpload(event: FileUploadEvent): void {
-    console.log(event);
+  onSelect(event: FileSelectEvent) {
+    const selected = event.files;
+    const current = this.form.value.photos ?? [];
+    this.form.patchValue({ photos: [...current, ...selected] });
+  }
+
+  onRemove(event: FileRemoveEvent) {
+    const removedFile = event.file;
+    const current = this.form.value.photos ?? [];
+    this.form.patchValue({
+      photos: current.filter((f: File) => f !== removedFile),
+    });
   }
 
   private initForm = () =>
@@ -87,7 +102,7 @@ export class ProductFormComponent implements OnInit {
 
   private initCreateForm() {
     this.form = this.formBuilder.group({
-      photos: ["", [Validators.required]],
+      photos: [[], [Validators.required]],
       name: ["", [Validators.required]],
       description: ["", [Validators.required]],
       price: ["", [Validators.required]],
