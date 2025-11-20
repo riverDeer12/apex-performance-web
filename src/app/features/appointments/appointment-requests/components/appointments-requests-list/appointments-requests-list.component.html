@@ -33,8 +33,7 @@
             </td>
             <td>
                 {{ appointmentRequest.appointment.startTime | date: 'dd.MM.yyyy' }}
-                {{ appointmentRequest.appointment.startTime | date: 'HH:mm' }}
-                - {{ appointmentRequest.appointment.endTime | date: 'HH:mm' }}
+                - {{ appointment.timeSlot.description }}
             </td>
             <td>
                 <p-button
