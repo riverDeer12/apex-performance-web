@@ -14,6 +14,9 @@ export class AppointmentService {
   getAppointments = () =>
     this.http.get<AppointmentsStatus>(environment.apiUrl + "/appointments");
 
+  getAllAppointments = () =>
+      this.http.get<Appointment[]>(environment.apiUrl + "/appointments/all");
+
   createAppointment = (request: DefaultPostRequest) =>
     this.http.post<Appointment>(environment.apiUrl + "/appointments/", request);
 

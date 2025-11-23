@@ -58,7 +58,7 @@ export class AppMenu implements OnInit {
         label: "Appointments",
         items: [
           {
-            label: "Appointments",
+            label: "Appointments' History",
             icon: "pi pi-fw pi-calendar",
             visible: this.authenticationService.checkPermission(
               Permissions.CanGetAppointments,

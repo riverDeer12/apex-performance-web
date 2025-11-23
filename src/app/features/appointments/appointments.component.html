@@ -20,7 +20,6 @@
 >
     <ng-template #header>
         <tr>
-            <th *ngIf="userRole == userRoles.Administrator"></th>
             <th pSortableColumn="startTime" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     Start Time
@@ -44,25 +43,10 @@
                 Status
                 <p-sortIcon field="status.Name" />
             </th>
-            <th *ngIf="userRole == userRoles.Administrator"></th>
         </tr>
     </ng-template>
     <ng-template #body let-appointment>
         <tr>
-            <td *ngIf="userRole == userRoles.Administrator">
-                <p-button
-                    *ngIf="areActionsEnabled(appointment)"
-                    (click)="approve(appointment)" class="mr-2" icon="pi pi-check" severity="success"
-                    [outlined]="true" />
-                <p-button
-                    *ngIf="areActionsEnabled(appointment)"
-                    (click)="decline(appointment)" class="mr-2" icon="pi pi-times" severity="danger"
-                    [outlined]="true" />
-                <p *ngIf="isStatusTextVisible(appointment)"
-                   [ngClass]="getTextColor(appointment)">
-                    {{ appointment.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
-                </p>
-            </td>
             <td>
                 {{ appointment.startTime | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
@@ -81,13 +65,6 @@
             </td>
             <td>
                 {{ appointment.status.name }}
-            </td>
-            <td *ngIf="userRole == userRoles.Administrator">
-                <p-button
-                    *ngIf="areActionsEnabled(appointment)"
-                    (click)="openInfoDialog(appointment)" class="mr-2" icon="pi pi-info-circle"
-                    severity="secondary"
-                    [outlined]="true" />
             </td>
         </tr>
     </ng-template>
