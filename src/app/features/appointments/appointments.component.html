@@ -24,7 +24,7 @@
                 <div class="flex justify-between items-center">
                     Start Time
                     <p-sortIcon field="startTime" />
-                    <p-columnFilter type="text" field="startTime" display="menu" class="ml-auto" />
+                    <p-columnFilter type="text" field="startTime" display="menu" class="ml-auto"></p-columnFilter>
                 </div>
             </th>
             <th pSortableColumn="endTime" style="min-width: 12rem">
@@ -34,14 +34,17 @@
             <th pSortableColumn="clients" style="min-width: 12rem">
                 Clients
                 <p-sortIcon field="clients" />
+                <p-columnFilter type="text" field="clients" display="menu" class="ml-auto"></p-columnFilter>
             </th>
-            <th pSortableColumn="type.Name" style="min-width: 12rem">
+            <th pSortableColumn="type.name" style="min-width: 12rem">
                 Type
-                <p-sortIcon field="type.Name" />
+                <p-sortIcon field="type.name" />
+                <p-columnFilter type="text" field="type.name" display="menu" class="ml-auto"></p-columnFilter>
             </th>
-            <th pSortableColumn="status.Name" style="min-width: 12rem">
+            <th pSortableColumn="status.name" style="min-width: 12rem">
                 Status
-                <p-sortIcon field="status.Name" />
+                <p-sortIcon field="status.name" />
+                <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"></p-columnFilter>
             </th>
         </tr>
     </ng-template>
