@@ -44,13 +44,13 @@
                 Credits
                 <p-sortIcon field="credits"/>
             </th>
+            <th pSortableColumn="lastCreditsIncrease" style="min-width: 12rem">
+                Last Credits Increase
+                <p-sortIcon field="lastCreditsMove File…"/>
+            </th>
             <th pSortableColumn="status" style="min-width: 12rem">
                 Status
                 <p-sortIcon field="status"/>
-            </th>
-            <th pSortableColumn="updatedAt" style="min-width: 12rem">
-                Last Changes
-                <p-sortIcon field="updatedAt"/>
             </th>
             <th style="width: 11rem"></th>
         </tr>
@@ -64,10 +64,10 @@
                 {{ client.credits }}
             </td>
             <td>
-                {{ client.status }}
+                {{ client.lastCreditsIncrease | date : 'dd.MM.yyyy.' }}
             </td>
             <td>
-                {{ client.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+                {{ client.status }}
             </td>
             <td class="flex">
                 <p-button (click)="openInfoDialog(client)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
