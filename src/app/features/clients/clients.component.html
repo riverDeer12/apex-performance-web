@@ -40,21 +40,17 @@
                     <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
                 </div>
             </th>
-            <th pSortableColumn="createdAt" style="min-width: 12rem">
-                Created At
-                <p-sortIcon field="createdAt"/>
-            </th>
-            <th pSortableColumn="updatedAt" style="min-width: 12rem">
-                Last Changes
-                <p-sortIcon field="updatedAt"/>
+            <th pSortableColumn="credits" style="min-width: 12rem">
+                Credits
+                <p-sortIcon field="credits"/>
             </th>
             <th pSortableColumn="status" style="min-width: 12rem">
                 Status
                 <p-sortIcon field="status"/>
             </th>
-            <th pSortableColumn="credits" style="min-width: 12rem">
-                Credits
-                <p-sortIcon field="credits"/>
+            <th pSortableColumn="updatedAt" style="min-width: 12rem">
+                Last Changes
+                <p-sortIcon field="updatedAt"/>
             </th>
             <th style="width: 11rem"></th>
         </tr>
@@ -65,16 +61,13 @@
                 {{ client.fullName }}
             </td>
             <td>
-                {{ client.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
-            </td>
-            <td>
-                {{ client.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+                {{ client.credits }}
             </td>
             <td>
                 {{ client.status }}
             </td>
             <td>
-                {{ client.credits }}
+                {{ client.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
             <td class="flex">
                 <p-button (click)="openInfoDialog(client)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
