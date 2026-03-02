@@ -6,7 +6,7 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from "@angular/forms";
 import { ValidationService } from "../../../../shared/services/validation.service";
 import { HelperService } from "../../../../shared/services/helper.service";
@@ -16,7 +16,7 @@ import { Appointment } from "../../models/appointment";
 import { AppointmentService } from "../../services/appointment.service";
 import { Button } from "primeng/button";
 import { CommonModule, DatePipe, NgIf } from "@angular/common";
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelectModule } from "primeng/multiselect";
 import { DropdownModule } from "primeng/dropdown";
 import { Select } from "primeng/select";
 import { AppointmentType } from "../../appointment-types/models/appointment-type";
@@ -70,7 +70,17 @@ export class AppointmentFormComponent implements OnInit {
 
   minDate!: Date;
 
-  tomorrow = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate() + 1);
+  tomorrow = new Date(
+    this.today.getFullYear(),
+    this.today.getMonth(),
+    this.today.getDate() + 1,
+  );
+
+  dayAfterTomorrow = new Date(
+    this.today.getFullYear(),
+    this.today.getMonth(),
+    this.today.getDate() + 2,
+  );
 
   loggedClient!: Client;
 
@@ -92,7 +102,7 @@ export class AppointmentFormComponent implements OnInit {
     private authenticationService: AuthenticationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
-    this.minDate = this.userRole == Roles.Client ? this.tomorrow : this.today;
+    this.minDate = this.getMinDate();
   }
 
   ngOnInit(): void {
@@ -161,6 +171,29 @@ export class AppointmentFormComponent implements OnInit {
           });
         this.loadingData = false;
       }
+    }
+  }
+
+  /**
+   * Set minimum date for user.
+   * 1. Admin and Coach have everything available.
+   * 2. Client is not able to select date for appointment
+   * at the same day of creation.
+   * 3. Client is not able to create appointment for next
+   * day after 10pm on day of creation.
+   */
+  private getMinDate() {
+    if (this.userRole !== Roles.Client) {
+      return this.today;
+    } else {
+      const isPast10PM =
+        this.today.getHours() > 22 ||
+        (this.today.getHours() === 22 && this.today.getMinutes() > 0) ||
+        (this.today.getHours() === 22 &&
+          this.today.getMinutes() === 0 &&
+          this.today.getSeconds() > 0);
+
+      return isPast10PM ? this.dayAfterTomorrow : this.tomorrow;
     }
   }
 
@@ -237,15 +270,15 @@ export class AppointmentFormComponent implements OnInit {
         );
       },
       error: (error) => {
-
         this.loadingData = false;
 
         this.messageService.add({
           severity: "error",
           summary: "Error Creating Appointment",
-          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+          detail:
+            error.error.errors.generalErrors[0] ||
+            "An unexpected error occurred.",
         });
-
       },
       complete: () => {
         this.loadingData = false;
@@ -276,33 +309,37 @@ export class AppointmentFormComponent implements OnInit {
   }
 
   private setAppointmentTime() {
-
-    if(!this.timeSlots){
+    if (!this.timeSlots) {
       this.loadingData = false;
       return;
     }
 
     const timeSlot = this.timeSlots.find(
-        (x) => x.id === this.form.controls['timeSlot'].value
+      (x) => x.id === this.form.controls["timeSlot"].value,
     ) as TimeSlot;
 
-    if(!timeSlot) {
+    if (!timeSlot) {
       this.loadingData = false;
       return;
     }
 
-    const day = new Date(this.convertDate(this.form.controls['day'].value));
+    const day = new Date(this.convertDate(this.form.controls["day"].value));
 
-    const startLocal = DateExtensions.addTimeToDate(day, timeSlot.startTime.toString());
-    const endLocal   = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
+    const startLocal = DateExtensions.addTimeToDate(
+      day,
+      timeSlot.startTime.toString(),
+    );
+    const endLocal = DateExtensions.addTimeToDate(
+      day,
+      timeSlot.endTime.toString(),
+    );
 
-    this.form.controls['startTime'].setValue(startLocal);
-    this.form.controls['endTime'].setValue(endLocal);
+    this.form.controls["startTime"].setValue(startLocal);
+    this.form.controls["endTime"].setValue(endLocal);
   }
 
-
   convertDate(dateStr: string): string {
-    const [day, month, year] = dateStr.split('.');
+    const [day, month, year] = dateStr.split(".");
     return `${year}-${month}-${day}`;
   }
 }
