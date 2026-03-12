@@ -300,7 +300,7 @@ export class AppointmentFormComponent implements OnInit {
 
   private getAllAppointmentTypes() {
     this.appointmentTypeService
-      .getAllAppointmentTypes()
+      .getAppointmentTypes()
       .subscribe((response: AppointmentType[]) => {
         this.appointmentTypes = response.map((x: AppointmentType) =>
           Object.assign(new AppointmentType(), x),

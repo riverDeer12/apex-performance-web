@@ -289,7 +289,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
   private getAppointmentTypes() {
     this.appointmentTypeService
-      .getAllAppointmentTypes()
+      .getAppointmentTypes()
       .subscribe((response: AppointmentType[]) => {
         this.appointmentTypes = response.map((x: AppointmentType) =>
           Object.assign(new AppointmentType(), x),
