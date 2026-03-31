@@ -19,7 +19,7 @@
                           [dataType]="'string'"
                           (onSelect)="getDataForSelectedCoaches()"
                           [firstDayOfWeek]="1"
-                          [minDate]="today"
+                          [minDate]="minDate"
                           [disabledDays]="[0]"></p-datepicker>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'day', 'required')"
