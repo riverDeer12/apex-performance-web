@@ -43,4 +43,9 @@ export class AppointmentRequestService {
         "/appointment-requests/decline/" +
         appointmentRequestId,
     );
+
+  sendJoinRequest = (appointmentId: string) =>
+    this.http.get<string>(
+      environment.apiUrl + "/appointment-requests/join/" + appointmentId,
+    );
 }
