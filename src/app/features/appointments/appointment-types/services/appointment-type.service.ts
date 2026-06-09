@@ -13,7 +13,7 @@ export class AppointmentTypeService {
     }
 
     getAllAppointmentTypes = () =>
-        this.http.get<AppointmentType[]>(environment.apiUrl + "/appointment-types/all");
+        this.http.get<AppointmentType[]>(environment.apiUrl + "/appointment-types");
 
     getAppointmentType = (appointmentTypeId: string) =>
         this.http.get<AppointmentType>(

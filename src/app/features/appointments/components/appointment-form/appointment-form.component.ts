@@ -6,7 +6,7 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from "@angular/forms";
 import { ValidationService } from "../../../../shared/services/validation.service";
 import { HelperService } from "../../../../shared/services/helper.service";
@@ -16,7 +16,7 @@ import { Appointment } from "../../models/appointment";
 import { AppointmentService } from "../../services/appointment.service";
 import { Button } from "primeng/button";
 import { CommonModule, DatePipe, NgIf } from "@angular/common";
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelectModule } from "primeng/multiselect";
 import { DropdownModule } from "primeng/dropdown";
 import { Select } from "primeng/select";
 import { AppointmentType } from "../../appointment-types/models/appointment-type";
@@ -29,6 +29,7 @@ import { DatePicker } from "primeng/datepicker";
 import { DateExtensions } from "../../../../shared/extensions/date-extensions";
 import { Roles } from "../../../../constants/roles";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
+import { AppointmentRequestService } from "../../appointment-requests/services/appointment-request.service";
 
 @Component({
   selector: "app-appointment-form",
@@ -39,11 +40,11 @@ import { AuthenticationService } from "../../../authentication/services/authenti
     MultiSelectModule,
     DropdownModule,
     Select,
-    DatePicker,
+    DatePicker
   ],
   providers: [DatePipe],
   templateUrl: "./appointment-form.component.html",
-  styleUrl: "./appointment-form.component.scss",
+  styleUrl: "./appointment-form.component.scss"
 })
 export class AppointmentFormComponent implements OnInit {
   @Input() type!: ActionType;
@@ -87,9 +88,10 @@ export class AppointmentFormComponent implements OnInit {
     private timeSlotService: TimeSlotService,
     private coachService: CoachService,
     private appointmentService: AppointmentService,
+    private appointmentRequestService: AppointmentRequestService,
     private appointmentTypeService: AppointmentTypeService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {
     this.userRole = this.authenticationService.getUserRole();
     this.minDate = this.userRole == Roles.Client ? this.tomorrow : this.today;
@@ -111,7 +113,7 @@ export class AppointmentFormComponent implements OnInit {
       this.messageService.add({
         severity: "warn",
         summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        detail: "Check the entered data and try again."
       });
 
       this.loadingData = false;
@@ -119,7 +121,12 @@ export class AppointmentFormComponent implements OnInit {
       return;
     }
 
-    this.createAppointment();
+    const selectedTimeSlot = this.timeSlots
+        .find((x) => x.id === this.form.controls["timeSlot"].value);
+
+    selectedTimeSlot?.isTaken && this.userRole == Roles.Client
+      ? this.sendJoinRequest(selectedTimeSlot)
+      : this.createAppointment();
   }
 
   getDataForSelectedCoaches(): void {
@@ -132,7 +139,7 @@ export class AppointmentFormComponent implements OnInit {
       this.messageService.add({
         severity: "warn",
         summary: "Incomplete or incorrect data",
-        detail: "Please select appointment day.",
+        detail: "Please select appointment day."
       });
 
       this.loadingData = false;
@@ -141,14 +148,14 @@ export class AppointmentFormComponent implements OnInit {
     } else {
       const payload = {
         coaches: this.form.controls["coaches"].value,
-        day: this.convertDate(this.form.controls["day"].value),
+        day: this.convertDate(this.form.controls["day"].value)
       };
 
       this.timeSlotService
         .getAvailableCoachesTimeSlots(payload)
         .subscribe((response: TimeSlot[]) => {
           this.timeSlots = response.map((x: TimeSlot) =>
-            Object.assign(new TimeSlot(), x),
+            Object.assign(new TimeSlot(), x)
           );
           this.loadingData = false;
         });
@@ -194,7 +201,7 @@ export class AppointmentFormComponent implements OnInit {
     this.coachService.getCurrentCoachId().subscribe({
       next: (coachId) => {
         this.form.controls["coaches"].setValue([coachId]);
-      },
+      }
     });
   }
 
@@ -206,7 +213,7 @@ export class AppointmentFormComponent implements OnInit {
       timeSlot: [null, [Validators.required]],
       type: ["", [Validators.required]],
       clients: [[], [Validators.required]],
-      coaches: [[], [Validators.required]],
+      coaches: [[], [Validators.required]]
     });
 
     if (this.userRole == Roles.Client) {
@@ -214,9 +221,41 @@ export class AppointmentFormComponent implements OnInit {
         next: (client: Client) => {
           this.loggedClient = client as Client;
           this.form.controls["clients"].setValue([this.loggedClient.id]);
-        },
+        }
       });
     }
+  }
+
+  private sendJoinRequest(timeSlot: TimeSlot) {
+    this.appointmentRequestService.sendJoinRequest(timeSlot.appointmentId).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Join request is created successfully. Soon you will get coach response."
+        });
+
+        this.helperService.redirectUserAfterSubmit(
+          this.redirectType,
+          this.returnUrl,
+          this.dialogId
+        );
+      },
+      error: (error) => {
+
+        this.loadingData = false;
+
+        this.messageService.add({
+          severity: "error",
+          summary: "Error creating join request",
+          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred."
+        });
+
+      },
+      complete: () => {
+        this.loadingData = false;
+      }
+    });
   }
 
   private createAppointment() {
@@ -227,13 +266,13 @@ export class AppointmentFormComponent implements OnInit {
         this.messageService.add({
           severity: "success",
           summary: "Success",
-          detail: "Appointment is created successfully.",
+          detail: "Appointment is created successfully."
         });
 
         this.helperService.redirectUserAfterSubmit(
           this.redirectType,
           this.returnUrl,
-          this.dialogId,
+          this.dialogId
         );
       },
       error: (error) => {
@@ -243,13 +282,13 @@ export class AppointmentFormComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Error Creating Appointment",
-          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred."
         });
 
       },
       complete: () => {
         this.loadingData = false;
-      },
+      }
     });
   }
 
@@ -270,39 +309,39 @@ export class AppointmentFormComponent implements OnInit {
       .getAllAppointmentTypes()
       .subscribe((response: AppointmentType[]) => {
         this.appointmentTypes = response.map((x: AppointmentType) =>
-          Object.assign(new AppointmentType(), x),
+          Object.assign(new AppointmentType(), x)
         );
       });
   }
 
   private setAppointmentTime() {
 
-    if(!this.timeSlots){
+    if (!this.timeSlots) {
       this.loadingData = false;
       return;
     }
 
     const timeSlot = this.timeSlots.find(
-        (x) => x.id === this.form.controls['timeSlot'].value
+      (x) => x.id === this.form.controls["timeSlot"].value
     ) as TimeSlot;
 
-    if(!timeSlot) {
+    if (!timeSlot) {
       this.loadingData = false;
       return;
     }
 
-    const day = new Date(this.convertDate(this.form.controls['day'].value));
+    const day = new Date(this.convertDate(this.form.controls["day"].value));
 
     const startLocal = DateExtensions.addTimeToDate(day, timeSlot.startTime.toString());
-    const endLocal   = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
+    const endLocal = DateExtensions.addTimeToDate(day, timeSlot.endTime.toString());
 
-    this.form.controls['startTime'].setValue(startLocal);
-    this.form.controls['endTime'].setValue(endLocal);
+    this.form.controls["startTime"].setValue(startLocal);
+    this.form.controls["endTime"].setValue(endLocal);
   }
 
 
   convertDate(dateStr: string): string {
-    const [day, month, year] = dateStr.split('.');
+    const [day, month, year] = dateStr.split(".");
     return `${year}-${month}-${day}`;
   }
 }
