@@ -32,7 +32,7 @@ export class AppointmentTypesComponent implements OnInit {
   }
 
   private loadData(): void {
-    this.appointmentTypeService.getAppointmentTypes().subscribe({
+    this.appointmentTypeService.getAllAppointmentTypes().subscribe({
       next: (data) => {
         this.appointmentTypes = data.map((x: AppointmentType) =>
           Object.assign(new AppointmentType(), x),

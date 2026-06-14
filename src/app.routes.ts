@@ -6,8 +6,6 @@ import {Error} from "./app/shared/components/error/error";
 import {AdminGuard} from "./app/guards/admin.guard";
 import {LandingComponent} from "./app/features/landing/landing.component";
 import {DashboardComponent} from "./app/features/dashboard/dashboard.component";
-import { TimeSlotsComponent } from './app/features/time-slots/time-slots.component';
-import { Permissions } from './app/constants/permissions';
 
 export const appRoutes: Routes = [
     {
