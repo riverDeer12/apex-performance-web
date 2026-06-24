@@ -82,7 +82,7 @@ export class AppMenu implements OnInit {
           {
             label: "Recurring Appointments",
             visible: this.authenticationService.checkPermission(
-                Permissions.CanGetRecurringAppointments,
+              Permissions.CanGetRecurringAppointments,
             ),
             icon: "pi pi-fw pi-calendar-clock",
             routerLink: ["/admin/appointments/recurring-appointments"],
@@ -126,7 +126,7 @@ export class AppMenu implements OnInit {
             label: "Coaches",
             icon: "pi pi-fw pi-users",
             routerLink: ["/admin/coaches"],
-          }
+          },
         ],
       },
       {
@@ -137,13 +137,18 @@ export class AppMenu implements OnInit {
             label: "Time Slots",
             icon: "pi pi-fw pi-clock",
             routerLink: ["/admin/time-slots"],
-          }
+          },
         ],
       },
       {
         label: "Users",
         visible: this.authenticationService.validateUserRole(),
         items: [
+          {
+            label: "Device Tokens",
+            icon: "pi pi-fw pi-key",
+            routerLink: ["/admin/users/device-tokens"],
+          },
           {
             label: "Users",
             icon: "pi pi-fw pi-users",

@@ -1,11 +1,6 @@
-<div class="my-3">
-    <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Administrator"/>
-</div>
-
 <p-table
     #deviceTokensTable
-    [value]="administrators"
+    [value]="deviceTokens"
     dataKey="id"
     sortField="updatedAt"
     [sortOrder]="-1"
@@ -13,7 +8,7 @@
     [rowHover]="true"
     [showGridlines]="true"
     [paginator]="true"
-    [globalFilterFields]="['firstName', 'lastName']"
+    [globalFilterFields]="['username', 'token']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
     currentPageReportTemplate="There are {totalRecords} entries"
@@ -27,17 +22,31 @@
                     <i class="pi pi-search"></i>
                 </p-inputicon>
                 <input pInputText type="text" (input)="onGlobalFilter(deviceTokensTable, $event)"
-                       />
+                />
             </p-iconfield>
         </div>
     </ng-template>
     <ng-template #header>
         <tr>
-            <th pSortableColumn="fullName" style="min-width: 12rem">
+            <th pSortableColumn="username" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Name
-                    <p-sortIcon field="fullName"/>
-                    <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
+                    Username
+                    <p-sortIcon field="username"/>
+                    <p-columnFilter type="text" field="username" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="token" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Token
+                    <p-sortIcon field="token"/>
+                    <p-columnFilter type="text" field="token" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="platform" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Platform
+                    <p-sortIcon field="platform"/>
+                    <p-columnFilter type="text" field="platform" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
@@ -48,46 +57,35 @@
                 Last Changes
                 <p-sortIcon field="updatedAt"/>
             </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
-                Status
-                <p-sortIcon field="status"/>
-            </th>
-            <th style="width: 11rem"></th>
         </tr>
     </ng-template>
-    <ng-template #body let-administrator>
+    <ng-template #body let-deviceToken>
         <tr>
             <td>
-                {{ administrator.fullName }}
+                {{ deviceToken.username }}
             </td>
             <td>
-                {{ administrator.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
+                {{ deviceToken.token }}
             </td>
             <td>
-                {{ administrator.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+                {{ deviceToken.platform }}
             </td>
             <td>
-                {{ administrator.status }}
+                {{ deviceToken.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
             </td>
-            <td class="flex">
-                <p-button (click)="openInfoDialog(administrator)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
-                          [outlined]="true"/>
-                <p-button (click)="openUpdateDialog(administrator)" class="mr-2" icon="pi pi-pencil"
-                          severity="secondary"
-                          [outlined]="true"/>
-                <p-button (click)="confirmDelete(administrator)" icon="pi pi-trash" severity="danger"
-                          [outlined]="true"/>
+            <td>
+                {{ deviceToken.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
             </td>
         </tr>
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No administrators found.</td>
+            <td colspan="8">No device tokens found.</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading administrators data. Please wait...</td>
+            <td colspan="8">Loading device tokens data. Please wait...</td>
         </tr>
     </ng-template>
 </p-table>
