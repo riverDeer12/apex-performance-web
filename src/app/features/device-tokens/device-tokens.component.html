@@ -1,0 +1,91 @@
+<p-table
+    #deviceTokensTable
+    [value]="deviceTokens"
+    dataKey="id"
+    sortField="updatedAt"
+    [sortOrder]="-1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['username', 'token']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    currentPageReportTemplate="There are {totalRecords} entries"
+>
+    <ng-template>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(deviceTokensTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(deviceTokensTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="username" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Username
+                    <p-sortIcon field="username"/>
+                    <p-columnFilter type="text" field="username" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="token" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Token
+                    <p-sortIcon field="token"/>
+                    <p-columnFilter type="text" field="token" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="platform" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    Platform
+                    <p-sortIcon field="platform"/>
+                    <p-columnFilter type="text" field="platform" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="createdAt" style="min-width: 12rem">
+                Created At
+                <p-sortIcon field="createdAt"/>
+            </th>
+            <th pSortableColumn="updatedAt" style="min-width: 12rem">
+                Last Changes
+                <p-sortIcon field="updatedAt"/>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-deviceToken>
+        <tr>
+            <td>
+                {{ deviceToken.username }}
+            </td>
+            <td>
+                {{ deviceToken.token }}
+            </td>
+            <td>
+                {{ deviceToken.platform }}
+            </td>
+            <td>
+                {{ deviceToken.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
+            </td>
+            <td>
+                {{ deviceToken.updatedAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="8">No device tokens found.</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="8">Loading device tokens data. Please wait...</td>
+        </tr>
+    </ng-template>
+</p-table>
