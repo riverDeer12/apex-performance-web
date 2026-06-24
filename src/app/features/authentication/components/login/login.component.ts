@@ -16,6 +16,7 @@ import {EntityType} from "../../../../enums/entity-type";
 import {ActionType} from "../../../../enums/action-type";
 import {DialogService} from "primeng/dynamicdialog";
 import { LayoutService } from '../../../../layout/service/layout.service';
+import { environment } from "../../../../../environments/environment";
 
 @Component({
   selector: "app-login",
@@ -53,6 +54,9 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    console.log(environment.apiUrl)
+
     if (this.authenticationService.isUserLogged()) {
       this.router.navigateByUrl("/admin/dashboard").then();
       return;
