@@ -4,7 +4,7 @@
 </div>
 
 <p-table
-    #administratorsTable
+    #deviceTokensTable
     [value]="administrators"
     dataKey="id"
     sortField="updatedAt"
@@ -21,12 +21,12 @@
     <ng-template>
         <div class="flex justify-between items-center flex-column sm:flex-row">
             <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
-                    (click)="clear(administratorsTable)"></button>
+                    (click)="clear(deviceTokensTable)"></button>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
                     <i class="pi pi-search"></i>
                 </p-inputicon>
-                <input pInputText type="text" (input)="onGlobalFilter(administratorsTable, $event)"
+                <input pInputText type="text" (input)="onGlobalFilter(deviceTokensTable, $event)"
                        />
             </p-iconfield>
         </div>
