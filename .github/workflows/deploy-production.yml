@@ -37,9 +37,18 @@ jobs:
 
       - name: Sync built files to IIS wwwroot
         shell: cmd
-        run: >
+        run: |
           robocopy "${{ env.BUILD_OUTPUT }}" "${{ env.DEPLOY_PATH }}" /MIR /R:3 /W:5
-          & if %ERRORLEVEL% GEQ 8 (exit /b 1) else (exit /b 0)
+          if %ERRORLEVEL% GEQ 8 exit /b 1
+          exit /b 0
+
+      - name: Verify deployed files are fresh
+        shell: powershell
+        run: |
+          $indexPath = Join-Path "${{ env.DEPLOY_PATH }}" "index.html"
+          $age = (Get-Date) - (Get-Item $indexPath).LastWriteTime
+          if ($age.TotalMinutes -gt 5) { throw "index.html was not updated by this deploy (last write $($age.TotalMinutes) minutes ago) - sync likely failed silently" }
+          Write-Host "index.html is fresh (updated $([math]::Round($age.TotalSeconds))s ago)"
 
       - name: Health check
         shell: powershell
