@@ -53,7 +53,19 @@ jobs:
       - name: Health check
         shell: powershell
         run: |
-          Start-Sleep -Seconds 3
-          $response = Invoke-WebRequest -Uri "https://${{ env.SITE_NAME }}/" -UseBasicParsing -TimeoutSec 30
-          if ($response.StatusCode -ne 200) { throw "Health check failed with status $($response.StatusCode)" }
-          Write-Host "Health check passed: $($response.StatusCode)"
+          $attempts = 5
+          for ($i = 1; $i -le $attempts; $i++) {
+            Start-Sleep -Seconds 3
+            try {
+              # A concurrent backend deploy recycling the app pool can cause a
+              # transient 503 here - retry a few times before failing the job.
+              $response = Invoke-WebRequest -Uri "https://${{ env.SITE_NAME }}/" -UseBasicParsing -TimeoutSec 30
+              if ($response.StatusCode -eq 200) {
+                Write-Host "Health check passed: $($response.StatusCode)"
+                exit 0
+              }
+            } catch {
+              Write-Host "Attempt $i/$attempts failed: $($_.Exception.Message)"
+            }
+          }
+          throw "Health check failed after $attempts attempts"
