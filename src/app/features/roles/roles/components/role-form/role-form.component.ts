@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {ValidationService} from "../../../../../shared/services/validation.service";
 import {Router} from "@angular/router";
 import {HelperService} from "../../../../../shared/services/helper.service";
+import {getErrorMessage} from "../../../../../constants/error-codes";
 import {MessageService} from "primeng/api";
 import {Role} from "../../models/role";
 import {RoleService} from "../../services/role.service";
@@ -125,7 +126,7 @@ export class RoleFormComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Creating Role',
-                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
+                    detail: getErrorMessage(error)
                 });
             },
             complete: () => {
@@ -151,7 +152,7 @@ export class RoleFormComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Updating Role',
-                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
+                    detail: getErrorMessage(error)
                 });
             },
             complete: () => {

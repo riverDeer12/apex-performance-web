@@ -11,6 +11,7 @@ import { BodyMeasurementService } from "../../services/body-measurement.service"
 import { MessageService } from "primeng/api";
 import { ValidationService } from "../../../../shared/services/validation.service";
 import { HelperService } from "../../../../shared/services/helper.service";
+import { getErrorMessage } from "../../../../constants/error-codes";
 import { Component, Input, OnInit } from "@angular/core";
 import { InputText } from "primeng/inputtext";
 import { Button } from "primeng/button";
@@ -173,7 +174,7 @@ export class BodyMeasurementFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Creating Body Measurement",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {
@@ -207,7 +208,7 @@ export class BodyMeasurementFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating Body Measurement",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {

@@ -10,6 +10,7 @@ import {
 } from "@angular/forms";
 import { ValidationService } from "../../../../shared/services/validation.service";
 import { HelperService } from "../../../../shared/services/helper.service";
+import { getErrorMessage } from "../../../../constants/error-codes";
 import { ClientService } from "../../../clients/services/client.service";
 import { MessageService } from "primeng/api";
 import { Appointment } from "../../models/appointment";
@@ -248,7 +249,7 @@ export class AppointmentFormComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Error creating join request",
-          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred."
+          detail: getErrorMessage(error)
         });
 
       },
@@ -282,7 +283,7 @@ export class AppointmentFormComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Error Creating Appointment",
-          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred."
+          detail: getErrorMessage(error)
         });
 
       },

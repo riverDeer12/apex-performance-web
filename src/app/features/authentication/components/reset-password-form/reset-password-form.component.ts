@@ -15,6 +15,7 @@ import {MessageService} from 'primeng/api';
 import {UserService} from "../../../users/services/user.service";
 import {ValidationService} from '../../../../shared/services/validation.service';
 import {HelperService} from '../../../../shared/services/helper.service';
+import {getErrorMessage} from '../../../../constants/error-codes';
 import {RedirectType} from "../../../../enums/redirect-type";
 
 @Component({
@@ -105,7 +106,7 @@ export class ResetPasswordFormComponent {
                 this.messageService.add({
                     severity: "error",
                     summary: "Password Reset Error.",
-                    detail: error.error.errors.generalErrors[0],
+                    detail: getErrorMessage(error),
                 });
                 this.loadingData = false;
             },

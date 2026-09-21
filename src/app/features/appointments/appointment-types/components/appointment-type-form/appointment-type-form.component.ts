@@ -8,6 +8,7 @@ import {RedirectType} from '../../../../../enums/redirect-type';
 import {AppointmentType} from '../../models/appointment-type';
 import {ValidationService} from '../../../../../shared/services/validation.service';
 import {HelperService} from '../../../../../shared/services/helper.service';
+import {getErrorMessage} from '../../../../../constants/error-codes';
 import {AppointmentTypeService} from '../../services/appointment-type.service';
 import {MessageService} from 'primeng/api';
 
@@ -103,7 +104,7 @@ export class AppointmentTypeFormComponent {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Creating AppointmentType",
-                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+                    detail: getErrorMessage(error),
                 });
             },
             complete: () => {
@@ -137,7 +138,7 @@ export class AppointmentTypeFormComponent {
                     this.messageService.add({
                         severity: "error",
                         summary: "Error Updating AppointmentType",
-                        detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+                        detail: getErrorMessage(error),
                     });
                 },
                 complete: () => {

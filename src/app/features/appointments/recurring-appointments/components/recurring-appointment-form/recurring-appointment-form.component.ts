@@ -11,6 +11,7 @@ import { Client } from "../../../../clients/models/client";
 import { Coach } from "../../../../coaches/models/coach";
 import { TimeSlot } from "../../../../time-slots/models/time-slot";
 import { Roles } from "../../../../../constants/roles";
+import { getErrorMessage } from "../../../../../constants/error-codes";
 import { ValidationService } from "../../../../../shared/services/validation.service";
 import { HelperService } from "../../../../../shared/services/helper.service";
 import { ClientService } from "../../../../clients/services/client.service";
@@ -210,7 +211,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Creating Recurring Appointment",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {
@@ -247,7 +248,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating Recurring Appointment",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {

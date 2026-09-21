@@ -17,6 +17,7 @@ import {ActionType} from "../../../../enums/action-type";
 import {DialogService} from "primeng/dynamicdialog";
 import { LayoutService } from '../../../../layout/service/layout.service';
 import { environment } from "../../../../../environments/environment";
+import { getErrorMessage } from "../../../../constants/error-codes";
 
 @Component({
   selector: "app-login",
@@ -124,7 +125,7 @@ export class LoginComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Login Error",
-          detail: error.error.errors.generalErrors[0],
+          detail: getErrorMessage(error),
         });
         this.loadingData = false;
       },
