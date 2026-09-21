@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
 import { DefaultPostRequest } from "../../../shared/models/default-post-request";
 import { AuthResponse } from "../models/auth-response";
+import { RegisterResponse } from "../models/register-response";
 import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";
 import { Roles } from "../../../constants/roles";
@@ -23,8 +24,8 @@ export class AuthenticationService {
     );
 
   register = (request: DefaultPostRequest) =>
-    this.http.post<AuthResponse>(
-      environment.apiUrl + "/authentication/register",
+    this.http.post<RegisterResponse>(
+      environment.apiUrl + "/users/register",
       request,
     );
 
