@@ -5,7 +5,7 @@ import {InputTextModule} from "primeng/inputtext";
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ValidationService} from "../../../../shared/services/validation.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MessageService} from "primeng/api";
 import {AuthResponse} from "../../models/auth-response";
 import {PasswordModule} from "primeng/password";
@@ -30,6 +30,7 @@ import { getErrorMessage } from "../../../../constants/error-codes";
     CheckboxModule,
     AppFloatingConfigurator,
     NgOptimizedImage,
+    RouterLink,
   ],
   providers: [DialogService],
   standalone: true,
