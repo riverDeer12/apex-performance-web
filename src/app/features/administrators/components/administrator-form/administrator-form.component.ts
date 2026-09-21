@@ -11,6 +11,7 @@ import {Administrator} from "../../models/administrator";
 import {AdministratorService} from "../../services/administrator.service";
 import {RedirectType} from "../../../../enums/redirect-type";
 import {HelperService} from "../../../../shared/services/helper.service";
+import {getErrorMessage} from "../../../../constants/error-codes";
 import {Select} from "primeng/select";
 import {User} from "../../../users/models/user";
 import {UserService} from "../../../users/services/user.service";
@@ -118,7 +119,7 @@ export class AdministratorFormComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Creating Administrator',
-                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
+                    detail: getErrorMessage(error)
                 });
             },
             complete: () => {
@@ -146,7 +147,7 @@ export class AdministratorFormComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Updating Administrator',
-                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
+                    detail: getErrorMessage(error)
                 });
             },
             complete: () => {

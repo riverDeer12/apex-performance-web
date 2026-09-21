@@ -11,6 +11,7 @@ import { AuthenticationService } from "../../services/authentication.service";
 import { MessageService } from "primeng/api";
 import { AuthResponse } from "../../models/auth-response";
 import { HelperService } from "../../../../shared/services/helper.service";
+import { getErrorMessage } from "../../../../constants/error-codes";
 import { Button } from "primeng/button";
 import { InputText } from "primeng/inputtext";
 
@@ -90,7 +91,7 @@ export class EmailFormComponent {
         this.messageService.add({
           severity: "error",
           summary: "Error sending email.",
-          detail: error.error.errors.generalErrors[0],
+          detail: getErrorMessage(error),
         });
         this.loadingData = false;
       },

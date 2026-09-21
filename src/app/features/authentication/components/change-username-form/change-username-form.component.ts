@@ -10,6 +10,7 @@ import { AuthResponse } from "../../models/auth-response";
 import { AuthenticationService } from "../../services/authentication.service";
 import { MessageService } from "primeng/api";
 import { HelperService } from "../../../../shared/services/helper.service";
+import { getErrorMessage } from "../../../../constants/error-codes";
 import { Button } from "primeng/button";
 import { CommonModule } from "@angular/common";
 import { InputText } from "primeng/inputtext";
@@ -93,7 +94,7 @@ export class ChangeUsernameFormComponent {
         this.messageService.add({
           severity: "error",
           summary: "Password Reset Error.",
-          detail: error.error.errors.generalErrors[0],
+          detail: getErrorMessage(error),
         });
         this.loadingData = false;
       },

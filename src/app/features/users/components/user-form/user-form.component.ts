@@ -11,6 +11,7 @@ import {User} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {RedirectType} from "../../../../enums/redirect-type";
 import {HelperService} from "../../../../shared/services/helper.service";
+import {getErrorMessage} from "../../../../constants/error-codes";
 import {MultiSelect} from "primeng/multiselect";
 import {Role} from "../../../roles/roles/models/role";
 import {RoleService} from "../../../roles/roles/services/role.service";
@@ -124,7 +125,7 @@ export class UserFormComponent {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Creating User',
-                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
+                    detail: getErrorMessage(error)
                 });
             },
             complete: () => {
@@ -151,7 +152,7 @@ export class UserFormComponent {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error Updating User',
-                    detail: error.error.errors.generalErrors[0] || 'An unexpected error occurred.'
+                    detail: getErrorMessage(error)
                 });
             },
             complete: () => {

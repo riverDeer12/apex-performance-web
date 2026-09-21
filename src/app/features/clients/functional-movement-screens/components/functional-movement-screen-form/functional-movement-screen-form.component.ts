@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Client } from "../../../models/client";
 import { ValidationService } from "../../../../../shared/services/validation.service";
 import { HelperService } from "../../../../../shared/services/helper.service";
+import { getErrorMessage } from "../../../../../constants/error-codes";
 import { ClientService } from "../../../services/client.service";
 import { MessageService } from "primeng/api";
 import { AuthenticationService } from "../../../../authentication/services/authentication.service";
@@ -163,7 +164,7 @@ export class FunctionalMovementScreenFormComponent {
           this.messageService.add({
             severity: "error",
             summary: "Error Creating Functional Movement Screen",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {
@@ -203,7 +204,7 @@ export class FunctionalMovementScreenFormComponent {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating Functional Movement Screen",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {

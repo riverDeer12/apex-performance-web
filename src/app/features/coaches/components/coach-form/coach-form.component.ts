@@ -7,6 +7,7 @@ import {ActionType} from "../../../../enums/action-type";
 import {RedirectType} from "../../../../enums/redirect-type";
 import {ValidationService} from "../../../../shared/services/validation.service";
 import {HelperService} from "../../../../shared/services/helper.service";
+import {getErrorMessage} from "../../../../constants/error-codes";
 import {MessageService} from "primeng/api";
 import {Coach} from "../../models/coach";
 import {CoachService} from "../../services/coach.service";
@@ -120,7 +121,7 @@ export class CoachFormComponent implements OnInit {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Creating Coach",
-                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+                    detail: getErrorMessage(error),
                 });
             },
             complete: () => {
@@ -152,7 +153,7 @@ export class CoachFormComponent implements OnInit {
                 this.messageService.add({
                     severity: "error",
                     summary: "Error Updating Coach",
-                    detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+                    detail: getErrorMessage(error),
                 });
             },
             complete: () => {

@@ -8,6 +8,7 @@ import {NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ValidationService} from "../../../../../shared/services/validation.service";
 import {HelperService} from "../../../../../shared/services/helper.service";
+import {getErrorMessage} from "../../../../../constants/error-codes";
 import {AppointmentTypeService} from "../../../appointment-types/services/appointment-type.service";
 import {MessageService} from "primeng/api";
 import {AppointmentType} from "../../../appointment-types/models/appointment-type";
@@ -99,7 +100,7 @@ export class CancelationRequestFormComponent implements OnInit {
         this.messageService.add({
           severity: "error",
           summary: "Error Creating AppointmentRequest",
-          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+          detail: getErrorMessage(error),
         });
       },
       complete: () => {

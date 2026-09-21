@@ -11,6 +11,7 @@ import { ActionType } from "../../../../enums/action-type";
 import { RedirectType } from "../../../../enums/redirect-type";
 import { ValidationService } from "../../../../shared/services/validation.service";
 import { HelperService } from "../../../../shared/services/helper.service";
+import { getErrorMessage } from "../../../../constants/error-codes";
 import { MessageService } from "primeng/api";
 import { TimeSlot } from "../../models/time-slot";
 import { TimeSlotService } from "../../services/time-slot.service";
@@ -138,7 +139,7 @@ export class TimeSlotFormComponent {
         this.messageService.add({
           severity: "error",
           summary: "Error Creating TimeSlot",
-          detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+          detail: getErrorMessage(error),
         });
       },
       complete: () => {
@@ -170,7 +171,7 @@ export class TimeSlotFormComponent {
           this.messageService.add({
             severity: "error",
             summary: "Error Updating TimeSlot",
-            detail: error.error.errors.generalErrors[0] || "An unexpected error occurred.",
+            detail: getErrorMessage(error),
           });
         },
         complete: () => {
