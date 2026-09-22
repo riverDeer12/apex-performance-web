@@ -35,6 +35,13 @@ jobs:
       - name: Build (production config)
         run: npm run production
 
+      - name: Write version.json
+        shell: powershell
+        run: |
+          $version = "${{ github.sha }}-$(Get-Date -Format o)"
+          $json = @{ version = $version } | ConvertTo-Json
+          Set-Content -Path (Join-Path "${{ env.BUILD_OUTPUT }}" "version.json") -Value $json
+
       - name: Sync built files to IIS wwwroot
         shell: cmd
         run: |

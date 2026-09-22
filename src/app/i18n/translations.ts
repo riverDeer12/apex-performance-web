@@ -1,0 +1,98 @@
+export type Language = "en" | "hr";
+
+export const translations: Record<Language, Record<string, string>> = {
+  en: {
+    "common.required": "This field is required.",
+    "common.emailInvalid": "Email is not valid.",
+    "common.passwordMismatch": "Passwords are not the same.",
+    "common.incompleteTitle": "Incomplete or incorrect data",
+    "common.incompleteDetail": "Check the entered data and try again.",
+    "common.success": "Success",
+    "common.backToLogin": "Back to Login",
+
+    "login.username": "Username",
+    "login.password": "Password",
+    "login.rememberMe": "Remember me",
+    "login.forgotPassword": "Forgot Password?",
+    "login.signIn": "Sign In",
+    "login.createAccount": "Create Account",
+    "login.successDetail": "Login Is Successful.",
+    "login.errorSummary": "Login Error",
+    "login.forgotDialogHeader": "Please, enter your email in field below:",
+
+    "registration.firstName": "First Name",
+    "registration.lastName": "Last Name",
+    "registration.email": "Email",
+    "registration.phone": "Phone",
+    "registration.createAccount": "Create Account",
+    "registration.successTitle": "Registration Successful",
+    "registration.usernameIs": "Your username is",
+    "registration.checkEmail": "Check your email for a link to set your password.",
+    "registration.errorSummary": "Registration Error",
+
+    "resetPassword.newPassword": "New Password",
+    "resetPassword.confirmPassword": "Confirm Password",
+    "resetPassword.submit": "Reset Password",
+    "resetPassword.successDetail": "Password reset successfully. On next login you can use your new password.",
+    "resetPassword.errorSummary": "Password Reset Error.",
+
+    "emailForm.send": "Send",
+    "emailForm.successDetail": "Sent email successfully. You will get password link soon.",
+    "emailForm.errorSummary": "Error sending email.",
+
+    "mailConfirmation.title": "Your email has been successfully confirmed!",
+    "mailConfirmation.button": "Login to Apex Performance",
+    "mailConfirmation.successDetail": "Your email has been confirmed!",
+
+    "topbar.changeUsername": "Change Username",
+    "topbar.changePassword": "Change Password",
+    "topbar.logOut": "Log Out",
+  },
+  hr: {
+    "common.required": "Ovo polje je obavezno.",
+    "common.emailInvalid": "Email nije ispravan.",
+    "common.passwordMismatch": "Lozinke se ne podudaraju.",
+    "common.incompleteTitle": "Nepotpuni ili netočni podaci",
+    "common.incompleteDetail": "Provjerite unesene podatke i pokušajte ponovno.",
+    "common.success": "Uspjeh",
+    "common.backToLogin": "Natrag na prijavu",
+
+    "login.username": "Korisničko ime",
+    "login.password": "Lozinka",
+    "login.rememberMe": "Zapamti me",
+    "login.forgotPassword": "Zaboravljena lozinka?",
+    "login.signIn": "Prijava",
+    "login.createAccount": "Registracija",
+    "login.successDetail": "Prijava je uspješna.",
+    "login.errorSummary": "Greška pri prijavi",
+    "login.forgotDialogHeader": "Molimo unesite svoj email u polje ispod:",
+
+    "registration.firstName": "Ime",
+    "registration.lastName": "Prezime",
+    "registration.email": "Email",
+    "registration.phone": "Telefon",
+    "registration.createAccount": "Registriraj se",
+    "registration.successTitle": "Registracija uspješna",
+    "registration.usernameIs": "Vaše korisničko ime je",
+    "registration.checkEmail": "Provjerite svoj email za poveznicu za postavljanje lozinke.",
+    "registration.errorSummary": "Greška pri registraciji",
+
+    "resetPassword.newPassword": "Nova lozinka",
+    "resetPassword.confirmPassword": "Potvrdi lozinku",
+    "resetPassword.submit": "Resetiraj lozinku",
+    "resetPassword.successDetail": "Lozinka je uspješno resetirana. Kod sljedeće prijave možete koristiti novu lozinku.",
+    "resetPassword.errorSummary": "Greška pri resetiranju lozinke.",
+
+    "emailForm.send": "Pošalji",
+    "emailForm.successDetail": "Email je uspješno poslan. Poveznicu za lozinku uskoro ćete primiti.",
+    "emailForm.errorSummary": "Greška pri slanju emaila.",
+
+    "mailConfirmation.title": "Vaš email je uspješno potvrđen!",
+    "mailConfirmation.button": "Prijava u Apex Performance",
+    "mailConfirmation.successDetail": "Vaš email je potvrđen!",
+
+    "topbar.changeUsername": "Promijeni korisničko ime",
+    "topbar.changePassword": "Promijeni lozinku",
+    "topbar.logOut": "Odjava",
+  },
+};

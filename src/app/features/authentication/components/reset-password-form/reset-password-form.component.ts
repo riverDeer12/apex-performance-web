@@ -17,6 +17,8 @@ import {ValidationService} from '../../../../shared/services/validation.service'
 import {HelperService} from '../../../../shared/services/helper.service';
 import {getErrorMessage} from '../../../../constants/error-codes';
 import {RedirectType} from "../../../../enums/redirect-type";
+import {TranslationService} from "../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-reset-password-form',
@@ -24,7 +26,8 @@ import {RedirectType} from "../../../../enums/redirect-type";
         Button,
         NgIf,
         Password,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TranslatePipe
     ],
     templateUrl: './reset-password-form.component.html',
     styleUrl: './reset-password-form.component.scss'
@@ -41,6 +44,7 @@ export class ResetPasswordFormComponent {
     authResponse!: AuthResponse;
 
     constructor(public validationService: ValidationService,
+                private translationService: TranslationService,
                 private formBuilder: FormBuilder,
                 private userService: UserService,
                 private helperService: HelperService,
@@ -57,8 +61,8 @@ export class ResetPasswordFormComponent {
 
             this.messageService.add({
                 severity: "warn",
-                summary: "Incomplete or incorrect data",
-                detail: "Check the entered data and try again.",
+                summary: this.translationService.t("common.incompleteTitle"),
+                detail: this.translationService.t("common.incompleteDetail"),
             });
 
             this.loadingData = false;
@@ -94,8 +98,8 @@ export class ResetPasswordFormComponent {
                 this.authResponse = Object.assign(response as AuthResponse);
                 this.messageService.add({
                     severity: "success",
-                    summary: "Success",
-                    detail: "Password reset successfully. On next login you can use your new password.",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("resetPassword.successDetail"),
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -105,7 +109,7 @@ export class ResetPasswordFormComponent {
             (error) => {
                 this.messageService.add({
                     severity: "error",
-                    summary: "Password Reset Error.",
+                    summary: this.translationService.t("resetPassword.errorSummary"),
                     detail: getErrorMessage(error),
                 });
                 this.loadingData = false;

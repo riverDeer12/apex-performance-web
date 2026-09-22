@@ -18,6 +18,8 @@ import {DialogService} from "primeng/dynamicdialog";
 import { LayoutService } from '../../../../layout/service/layout.service';
 import { environment } from "../../../../../environments/environment";
 import { getErrorMessage } from "../../../../constants/error-codes";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-login",
@@ -31,6 +33,7 @@ import { getErrorMessage } from "../../../../constants/error-codes";
     AppFloatingConfigurator,
     NgOptimizedImage,
     RouterLink,
+    TranslatePipe,
   ],
   providers: [DialogService],
   standalone: true,
@@ -47,6 +50,7 @@ export class LoginComponent implements OnInit {
   constructor(
     public layoutService: LayoutService,
     public validationService: ValidationService,
+    private translationService: TranslationService,
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
@@ -69,7 +73,7 @@ export class LoginComponent implements OnInit {
 
   openForgotPasswordDialog(): void {
     this.dialogService.open(DialogFormComponent, {
-      header: "Please, enter your email in field below:",
+      header: this.translationService.t("login.forgotDialogHeader"),
       data: {
         contentType: EntityType.Authentication,
         formType: ActionType.Create,
@@ -86,8 +90,8 @@ export class LoginComponent implements OnInit {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -112,8 +116,8 @@ export class LoginComponent implements OnInit {
         this.authResponse = Object.assign(response as AuthResponse);
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "Login Is Successful.",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("login.successDetail"),
         });
 
         localStorage.setItem("token", this.authResponse.token);
@@ -125,7 +129,7 @@ export class LoginComponent implements OnInit {
       (error) => {
         this.messageService.add({
           severity: "error",
-          summary: "Login Error",
+          summary: this.translationService.t("login.errorSummary"),
           detail: getErrorMessage(error),
         });
         this.loadingData = false;

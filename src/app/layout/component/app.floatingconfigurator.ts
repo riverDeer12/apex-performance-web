@@ -3,6 +3,7 @@ import {ButtonModule} from 'primeng/button';
 import {StyleClassModule} from 'primeng/styleclass';
 import {AppConfigurator} from './app.configurator';
 import {LayoutService} from '../service/layout.service';
+import {TranslationService} from '../../i18n/translation.service';
 
 @Component({
     selector: 'app-floating-configurator',
@@ -16,6 +17,8 @@ import {LayoutService} from '../service/layout.service';
                           [hideOnOutsideClick]="true" type="button" rounded />
                 <app-configurator />
             </div>
+            <p-button type="button" (onClick)="toggleLanguage()" [rounded]="true"
+                      [label]="translationService.language().toUpperCase()" severity="secondary" />
             <p-button type="button" (onClick)="toggleDarkMode()" [rounded]="true"
                       [icon]="isDarkTheme() ? 'pi pi-moon' : 'pi pi-sun'" severity="secondary" />
         </div>
@@ -24,10 +27,16 @@ import {LayoutService} from '../service/layout.service';
 export class AppFloatingConfigurator {
     LayoutService = inject(LayoutService);
 
+    translationService = inject(TranslationService);
+
     isDarkTheme = computed(() => this.LayoutService.layoutConfig().darkTheme);
 
     toggleDarkMode() {
         localStorage.setItem("theme", "dark");
         this.LayoutService.layoutConfig.update((state) => ({...state, darkTheme: !state.darkTheme}));
+    }
+
+    toggleLanguage() {
+        this.translationService.toggleLanguage();
     }
 }

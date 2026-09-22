@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {Toast} from "primeng/toast";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {VersionCheckService} from "./app/core/version-check.service";
 
 @Component({
     selector: 'app-root',
@@ -17,5 +18,11 @@ import {ConfirmDialogModule} from "primeng/confirmdialog";
         <p-toast position="top-center" />
         <router-outlet></router-outlet>`
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    constructor(private versionCheckService: VersionCheckService) {
+    }
+
+    ngOnInit(): void {
+        this.versionCheckService.start();
+    }
 }

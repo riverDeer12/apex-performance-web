@@ -14,10 +14,12 @@ import { HelperService } from "../../../../shared/services/helper.service";
 import { getErrorMessage } from "../../../../constants/error-codes";
 import { Button } from "primeng/button";
 import { InputText } from "primeng/inputtext";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-email-form",
-  imports: [Button, InputText, ReactiveFormsModule],
+  imports: [Button, InputText, ReactiveFormsModule, TranslatePipe],
   standalone: true,
   templateUrl: "./email-form.component.html",
   styleUrl: "./email-form.component.scss",
@@ -35,6 +37,7 @@ export class EmailFormComponent {
 
   constructor(
     private formBuilder: FormBuilder,
+    private translationService: TranslationService,
     private helperService: HelperService,
     private authenticationService: AuthenticationService,
     private messageService: MessageService,
@@ -52,8 +55,8 @@ export class EmailFormComponent {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -75,8 +78,8 @@ export class EmailFormComponent {
       (response) => {
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "Sent email successfully. You will get password link soon.",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("emailForm.successDetail"),
         });
 
         this.helperService.redirectUserAfterSubmit(
@@ -90,7 +93,7 @@ export class EmailFormComponent {
       (error) => {
         this.messageService.add({
           severity: "error",
-          summary: "Error sending email.",
+          summary: this.translationService.t("emailForm.errorSummary"),
           detail: getErrorMessage(error),
         });
         this.loadingData = false;

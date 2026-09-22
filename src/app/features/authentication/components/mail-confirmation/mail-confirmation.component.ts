@@ -5,10 +5,12 @@ import { Button } from "primeng/button";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AppConfigurator } from "../../../../layout/component/app.configurator";
 import { MessageService } from "primeng/api";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-mail-confirmation",
-  imports: [Button, ReactiveFormsModule, AppConfigurator],
+  imports: [Button, ReactiveFormsModule, AppConfigurator, TranslatePipe],
   providers: [MessageService],
   templateUrl: "./mail-confirmation.component.html",
   styleUrl: "./mail-confirmation.component.scss",
@@ -16,6 +18,7 @@ import { MessageService } from "primeng/api";
 export class MailConfirmationComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
     private messageService: MessageService,
     private router: Router,
     private route: ActivatedRoute,
@@ -32,8 +35,8 @@ export class MailConfirmationComponent implements OnInit {
           next: () => {
             this.messageService.add({
               severity: "success",
-              summary: "Success",
-              detail: "Your email has been confirmed!",
+              summary: this.translationService.t("common.success"),
+              detail: this.translationService.t("mailConfirmation.successDetail"),
             });
           },
         });

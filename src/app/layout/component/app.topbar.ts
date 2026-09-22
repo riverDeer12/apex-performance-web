@@ -10,6 +10,8 @@ import { DialogFormComponent } from "../../shared/components/dialog-form/dialog-
 import { EntityType } from "../../enums/entity-type";
 import { DialogService } from "primeng/dynamicdialog";
 import { ButtonLabel } from "primeng/button";
+import { TranslationService } from "../../i18n/translation.service";
+import { TranslatePipe } from "../../i18n/translate.pipe";
 
 @Component({
   selector: "app-topbar",
@@ -21,6 +23,7 @@ import { ButtonLabel } from "primeng/button";
     StyleClassModule,
     AppConfigurator,
     NgOptimizedImage,
+    TranslatePipe,
   ],
   template: ` <div class="layout-topbar">
     <div class="layout-topbar-logo-container">
@@ -63,6 +66,13 @@ import { ButtonLabel } from "primeng/button";
         <button
           type="button"
           class="layout-topbar-action"
+          (click)="toggleLanguage()"
+        >
+          {{ translationService.language().toUpperCase() }}
+        </button>
+        <button
+          type="button"
+          class="layout-topbar-action"
           (click)="toggleDarkMode()"
         >
           <i
@@ -95,20 +105,20 @@ import { ButtonLabel } from "primeng/button";
             type="button"
             class="layout-topbar-action"
           >
-            <i class="pi pi-user-edit mx-2"></i> Change Username
+            <i class="pi pi-user-edit mx-2"></i> {{ "topbar.changeUsername" | translate }}
           </button>
           <button
             (click)="changePassword()"
             type="button"
             class="layout-topbar-action"
           >
-            <i class="pi pi-key mx-2"></i> Change Password
+            <i class="pi pi-key mx-2"></i> {{ "topbar.changePassword" | translate }}
           </button>
           <span class="pt-2"
             ><i class="pi pi-user mx-2"></i> <strong>{{ username }}</strong>
           </span>
           <button (click)="logOut()" type="button" class="layout-topbar-action">
-            <i class="pi pi-sign-out mx-2"></i> Log Out
+            <i class="pi pi-sign-out mx-2"></i> {{ "topbar.logOut" | translate }}
           </button>
         </div>
       </div>
@@ -122,11 +132,16 @@ export class AppTopbar {
 
   constructor(
     public layoutService: LayoutService,
+    public translationService: TranslationService,
     private dialogService: DialogService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
   ) {
     this.username = this.authenticationService.getLoggedUserUsername();
+  }
+
+  toggleLanguage() {
+    this.translationService.toggleLanguage();
   }
 
   toggleDarkMode() {
