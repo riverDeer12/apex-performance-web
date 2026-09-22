@@ -33,6 +33,8 @@ export class RegistrationComponent {
 
   registered!: boolean;
 
+  registeredUsername!: string;
+
   constructor(
     public layoutService: LayoutService,
     public validationService: ValidationService,
@@ -81,11 +83,12 @@ export class RegistrationComponent {
     this.authenticationService.register(this.form.value).subscribe(
       (response: RegisterResponse) => {
         this.registered = true;
+        this.registeredUsername = response.username;
 
         this.messageService.add({
           severity: "success",
           summary: "Registration Successful",
-          detail: "Check your email for a link to set your password.",
+          detail: `Your username is ${response.username}. Check your email for a link to set your password.`,
         });
 
         this.loadingData = false;
