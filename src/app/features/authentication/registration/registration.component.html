@@ -18,53 +18,53 @@
 
                 <div *ngIf="registered" class="text-center">
                     <p class="text-surface-900 dark:text-surface-0 text-xl mb-2">
-                        Your username is <strong>{{ registeredUsername }}</strong>.
+                        {{ "registration.usernameIs" | translate }} <strong>{{ registeredUsername }}</strong>.
                     </p>
                     <p class="text-surface-900 dark:text-surface-0 text-xl mb-8">
-                        Check your email for a link to set your password.
+                        {{ "registration.checkEmail" | translate }}
                     </p>
-                    <p-button (click)="goToLogin()" label="Back to Login" styleClass="w-full"></p-button>
+                    <p-button (click)="goToLogin()" [label]="'common.backToLogin' | translate" styleClass="w-full"></p-button>
                 </div>
 
                 <form *ngIf="!registered" [formGroup]="form" (submit)="submit()">
                     <div>
                         <label for="firstName"
-                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">First Name</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ "registration.firstName" | translate }}</label>
                         <input pInputText id="firstName" type="text"
                                class="w-full md:w-[30rem] mb-8" formControlName="firstName" />
                         <small class="p-error"
                                *ngIf="validationService.hasErrors(form, 'firstName', 'required')"
-                               id="firstName-input">This field is required.</small>
+                               id="firstName-input">{{ "common.required" | translate }}</small>
 
                         <label for="lastName"
-                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Last Name</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ "registration.lastName" | translate }}</label>
                         <input pInputText id="lastName" type="text"
                                class="w-full md:w-[30rem] mb-8" formControlName="lastName" />
                         <small class="p-error"
                                *ngIf="validationService.hasErrors(form, 'lastName', 'required')"
-                               id="lastName-input">This field is required.</small>
+                               id="lastName-input">{{ "common.required" | translate }}</small>
 
                         <label for="email"
-                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ "registration.email" | translate }}</label>
                         <input pInputText id="email" type="text"
                                class="w-full md:w-[30rem] mb-8" formControlName="email" />
                         <small class="p-error"
                                *ngIf="validationService.hasErrors(form, 'email', 'required')"
-                               id="email-input-required">This field is required.</small>
+                               id="email-input-required">{{ "common.required" | translate }}</small>
                         <small class="p-error"
                                *ngIf="validationService.hasErrors(form, 'email', 'email')"
-                               id="email-input-email-validation">Email is not valid.</small>
+                               id="email-input-email-validation">{{ "common.emailInvalid" | translate }}</small>
 
                         <label for="phone"
-                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Phone</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ "registration.phone" | translate }}</label>
                         <input pInputText id="phone" type="text"
                                class="w-full md:w-[30rem] mb-8" formControlName="phone" />
                         <small class="p-error"
                                *ngIf="validationService.hasErrors(form, 'phone', 'required')"
-                               id="phone-input">This field is required.</small>
+                               id="phone-input">{{ "common.required" | translate }}</small>
 
-                        <p-button type="submit" label="Create Account" styleClass="w-full mb-4"></p-button>
-                        <p-button [link]="true" (click)="goToLogin()" label="Back to Login" styleClass="w-full"></p-button>
+                        <p-button type="submit" [label]="'registration.createAccount' | translate" styleClass="w-full mb-4"></p-button>
+                        <p-button [link]="true" (click)="goToLogin()" [label]="'common.backToLogin' | translate" styleClass="w-full"></p-button>
                     </div>
                 </form>
             </div>

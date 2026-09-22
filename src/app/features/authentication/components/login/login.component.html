@@ -18,12 +18,12 @@
                 <form [formGroup]="form" (submit)="submit()">
                     <div>
                         <label for="username"
-                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Username</label>
+                               class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ "login.username" | translate }}</label>
                         <input pInputText id="username" type="text"
                                class="w-full md:w-[30rem] mb-8" formControlName="username" />
 
                         <label for="password"
-                               class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
+                               class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">{{ "login.password" | translate }}</label>
                         <p-password id="password" formControlName="password" [toggleMask]="true"
                                     styleClass="mb-4"
                                     [fluid]="true" [feedback]="false"></p-password>
@@ -32,15 +32,15 @@
                             <div class="flex items-center">
                                 <p-checkbox formControlName="rememberMe" id="rememberMe" binary
                                             class="mr-2"></p-checkbox>
-                                <label for="rememberMe">Remember me</label>
-                                <p-button [link]="true" (click)="openForgotPasswordDialog()" label="Forgot Password?" />
+                                <label for="rememberMe">{{ "login.rememberMe" | translate }}</label>
+                                <p-button [link]="true" (click)="openForgotPasswordDialog()" [label]="'login.forgotPassword' | translate" />
                             </div>
                         </div>
                         <div class="mb-5">
 
                         </div>
-                        <p-button type="submit" label="Sign In" styleClass="w-full mb-4"></p-button>
-                        <p-button [link]="true" routerLink="/authentication/registration" label="Create Account" styleClass="w-full"></p-button>
+                        <p-button type="submit" [label]="'login.signIn' | translate" styleClass="w-full mb-4"></p-button>
+                        <p-button [link]="true" routerLink="/authentication/registration" [label]="'login.createAccount' | translate" styleClass="w-full"></p-button>
                     </div>
                 </form>
             </div>

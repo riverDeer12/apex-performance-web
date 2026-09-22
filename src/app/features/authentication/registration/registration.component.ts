@@ -11,6 +11,8 @@ import { LayoutService } from "../../../layout/service/layout.service";
 import { AuthenticationService } from "../services/authentication.service";
 import { RegisterResponse } from "../models/register-response";
 import { getErrorMessage } from "../../../constants/error-codes";
+import { TranslationService } from "../../../i18n/translation.service";
+import { TranslatePipe } from "../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-registration",
@@ -21,6 +23,7 @@ import { getErrorMessage } from "../../../constants/error-codes";
     ReactiveFormsModule,
     AppFloatingConfigurator,
     NgOptimizedImage,
+    TranslatePipe,
   ],
   standalone: true,
   templateUrl: "./registration.component.html",
@@ -38,6 +41,7 @@ export class RegistrationComponent {
   constructor(
     public layoutService: LayoutService,
     public validationService: ValidationService,
+    private translationService: TranslationService,
     private formBuilder: FormBuilder,
     private router: Router,
     private authenticationService: AuthenticationService,
@@ -54,8 +58,8 @@ export class RegistrationComponent {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -87,8 +91,8 @@ export class RegistrationComponent {
 
         this.messageService.add({
           severity: "success",
-          summary: "Registration Successful",
-          detail: `Your username is ${response.username}. Check your email for a link to set your password.`,
+          summary: this.translationService.t("registration.successTitle"),
+          detail: `${this.translationService.t("registration.usernameIs")} ${response.username}. ${this.translationService.t("registration.checkEmail")}`,
         });
 
         this.loadingData = false;
@@ -96,7 +100,7 @@ export class RegistrationComponent {
       (error) => {
         this.messageService.add({
           severity: "error",
-          summary: "Registration Error",
+          summary: this.translationService.t("registration.errorSummary"),
           detail: getErrorMessage(error),
         });
         this.loadingData = false;
