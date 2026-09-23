@@ -52,10 +52,12 @@
 }
 
 .calendar-appointment {
+    position: relative;
     background-color: var(--p-primary-50, #eff6ff);
+    color: #1e293b;
     border-left: 3px solid var(--p-primary-color, #3b82f6);
     border-radius: 4px;
-    padding: 0.4rem 0.5rem;
+    padding: 0.4rem 1.75rem 0.4rem 0.5rem;
     font-size: 0.8rem;
 }
 
@@ -70,19 +72,24 @@
 
 .calendar-appointment-people {
     margin-top: 0.15rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .calendar-appointment-cancel {
-    margin-top: 0.4rem;
-    width: 100%;
+    position: absolute;
+    top: 0.15rem;
+    right: 0.15rem;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
 }
 
 .calendar-client {
     font-weight: 500;
 }
 
-.calendar-with {
-    opacity: 0.6;
+.calendar-coach {
+    color: var(--p-text-muted-color, #6b7280);
 }
 
 .calendar-empty {
