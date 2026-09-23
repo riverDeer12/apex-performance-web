@@ -4,16 +4,27 @@ import { Appointment } from "../../../appointments/models/appointment";
 import { DateExtensions } from "../../../../shared/extensions/date-extensions";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
+import { Button } from "primeng/button";
+import { DialogService } from "primeng/dynamicdialog";
+import { MessageService } from "primeng/api";
+import { AppointmentService } from "../../../appointments/services/appointment.service";
+import { HelperService } from "../../../../shared/services/helper.service";
+import { DialogFormComponent } from "../../../../shared/components/dialog-form/dialog-form.component";
+import { EntityType } from "../../../../enums/entity-type";
+import { ActionType } from "../../../../enums/action-type";
+import { Roles } from "../../../../constants/roles";
+import { BusinessStatuses } from "../../../../constants/business-statuses";
 
 @Component({
   selector: "app-appointments-calendar",
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, Button],
   templateUrl: "./appointments-calendar.component.html",
   styleUrl: "./appointments-calendar.component.scss",
 })
 export class AppointmentsCalendarComponent {
   @Input() appointments: Appointment[] = [];
+  @Input() userRole!: string;
 
   weekDates: Date[] = DateExtensions.getWeekDates();
 
@@ -27,7 +38,57 @@ export class AppointmentsCalendarComponent {
     "calendar.sunday",
   ];
 
-  constructor(private translationService: TranslationService) {}
+  constructor(
+    private translationService: TranslationService,
+    private dialogService: DialogService,
+    private messageService: MessageService,
+    private appointmentService: AppointmentService,
+    private helperService: HelperService,
+  ) {}
+
+  canCancel(appointment: Appointment): boolean {
+    return (
+      appointment.status.name === BusinessStatuses.Approved &&
+      new Date(appointment.startTime).getTime() > new Date().getTime()
+    );
+  }
+
+  cancel(appointment: Appointment): void {
+    if (this.userRole == Roles.Client) {
+      this.openCancelationRequestDialog(appointment.id);
+      return;
+    }
+
+    this.appointmentService.cancelAppointment(appointment.id).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: "success",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("appointmentsList.canceledDetail"),
+        });
+        this.helperService.triggerDataRefresh(true);
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+  private openCancelationRequestDialog(appointmentId: string): void {
+    const dialogRef = this.dialogService.open(DialogFormComponent, {
+      header: this.translationService.t("appointmentsList.createCancelationRequest"),
+      data: {
+        contentType: EntityType.CancelationRequest,
+        formType: ActionType.Create,
+        dialogId: "createCancelationRequestForm",
+        data: appointmentId,
+      },
+    });
+
+    dialogRef.onClose.subscribe(() => {
+      this.helperService.triggerDataRefresh(true);
+    });
+  }
 
   weekdayKeyFor(date: Date): string {
     return this.weekdayKeys[(date.getDay() + 6) % 7];

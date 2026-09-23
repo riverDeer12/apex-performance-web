@@ -1,4 +1,4 @@
-<app-appointments-calendar [appointments]="approvedAppointments"></app-appointments-calendar>
+<app-appointments-calendar [appointments]="approvedAppointments" [userRole]="userRole"></app-appointments-calendar>
 
 <div class="row mb-3" *ngIf="userRole == userRoles.Client">
     <p-card [style]="{ 'background-color': loggedUserCredits > 0 ? '#d4eddaa8' : '#f8d7dacc' }"
@@ -13,8 +13,6 @@
     </p-card>
 </div>
 
-<h4>{{ "dashboard.nextAppointments" | translate }}</h4>
-
 <div class="my-3" *ngIf="userRole == userRoles.Coach">
     <p-button (click)="generateRecurringAppointments()"
               type="button" iconPos="right" icon="pi pi-sync" [label]="'dashboard.generateSchedule' | translate" />
@@ -25,12 +23,6 @@
               type="button" iconPos="right" icon="pi pi-plus" [label]="'dashboard.newAppointment' | translate" />
 </div>
 
-<app-appointments-list [userRole]="userRole" [appointments]="approvedAppointments"
-                       type=""></app-appointments-list>
-<app-appointments-list [userRole]="userRole" [appointments]="pendingAppointments"
-                       [type]="'appointmentsList.pending' | translate"></app-appointments-list>
-<app-appointments-list [userRole]="userRole" [appointments]="inProgressAppointments"
-                       [type]="'appointmentsList.inProgress' | translate"></app-appointments-list>
 <hr>
 
 <div>
