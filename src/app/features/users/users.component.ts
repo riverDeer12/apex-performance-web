@@ -141,9 +141,9 @@ export class UsersComponent {
 
     private loadData() {
         this.userService.getAllUsers().subscribe((response: User[]) => {
-            this.users = response.map((x: User) =>
-                Object.assign(new User(), x)
-            );
+            this.users = response
+                .filter((x: User) => !x.isDeleted)
+                .map((x: User) => Object.assign(new User(), x));
         })
     }
 

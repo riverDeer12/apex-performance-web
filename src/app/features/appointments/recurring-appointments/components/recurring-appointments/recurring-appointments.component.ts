@@ -64,9 +64,9 @@ export class RecurringAppointmentsComponent implements OnInit {
   private loadData(): void {
     this.recurringAppointmentService.getRecurringAppointments().subscribe({
       next: (data: RecurringAppointment[]) => {
-        this.recurringAppointments = data.map((x: RecurringAppointment) =>
-          Object.assign(new RecurringAppointment(), x),
-        );
+        this.recurringAppointments = data
+          .filter((x: RecurringAppointment) => x.status)
+          .map((x: RecurringAppointment) => Object.assign(new RecurringAppointment(), x));
 
         if (this.userRole === Roles.Coach) {
           this.loadCoachTimeSlots();

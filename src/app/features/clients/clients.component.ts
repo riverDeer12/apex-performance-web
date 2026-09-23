@@ -62,9 +62,9 @@ export class ClientsComponent {
 
     private loadData(): void {
         this.clientService.getClients().subscribe((response: Client[]) => {
-            this.clients = response.map((x: Client) =>
-                Object.assign(new Client(), x),
-            );
+            this.clients = response
+                .filter((x: Client) => !x.isDeleted)
+                .map((x: Client) => Object.assign(new Client(), x));
         });
     }
 

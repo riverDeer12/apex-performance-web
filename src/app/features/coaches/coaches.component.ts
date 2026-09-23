@@ -143,9 +143,9 @@ export class CoachesComponent implements OnInit {
 
     private loadData() {
         this.coachService.getAllCoaches().subscribe((response: Coach[]) => {
-            this.coaches = response.map((x: Coach) =>
-                Object.assign(new Coach(), x),
-            );
+            this.coaches = response
+                .filter((x: Coach) => !x.isDeleted)
+                .map((x: Coach) => Object.assign(new Coach(), x));
         });
     }
 
