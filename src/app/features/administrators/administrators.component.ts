@@ -130,7 +130,9 @@ export class AdministratorsComponent {
 
     private loadData() {
         this.administratorService.getAllAdministrators().subscribe((response: Administrator[]) => {
-            this.administrators = response.map((x: Administrator) => Object.assign(new Administrator(), x));
+            this.administrators = response
+                .filter((x: Administrator) => !x.isDeleted)
+                .map((x: Administrator) => Object.assign(new Administrator(), x));
         });
     }
 

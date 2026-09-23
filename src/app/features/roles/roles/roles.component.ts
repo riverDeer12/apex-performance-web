@@ -150,9 +150,9 @@ export class RolesComponent {
 
     private loadData() {
         this.roleService.getAllRoles().subscribe((response: Role[]) => {
-            this.roles = response.map((x: Role) =>
-                Object.assign(new Role(), x)
-            );
+            this.roles = response
+                .filter((x: Role) => !x.isDeleted)
+                .map((x: Role) => Object.assign(new Role(), x));
         })
     }
 }

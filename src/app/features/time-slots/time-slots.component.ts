@@ -143,6 +143,9 @@ export class TimeSlotsComponent implements OnInit {
   }
 
   private loadAdminTimeSlots() {
+    // Note: GET /time-slots/all does not return a `status` field (unlike the
+    // coach-scoped endpoint below), so active/inactive filtering can't be
+    // applied here without a backend change.
     this.timeSlotService.getAllTimeSlots().subscribe((response: TimeSlot[]) => {
       this.timeSlots = response.map((x: TimeSlot) =>
         Object.assign(new TimeSlot(), x),
@@ -153,9 +156,9 @@ export class TimeSlotsComponent implements OnInit {
   private loadCoachTimeSlots(): void {
     this.timeSlotService.getCoachTimeSlots().subscribe({
       next: (data: TimeSlot[]) => {
-        this.timeSlots = data.map((x: TimeSlot) =>
-          Object.assign(new TimeSlot(), x),
-        );
+        this.timeSlots = data
+          .filter((x: TimeSlot) => x.status)
+          .map((x: TimeSlot) => Object.assign(new TimeSlot(), x));
       },
       error: (err) => {
         console.error(err);
