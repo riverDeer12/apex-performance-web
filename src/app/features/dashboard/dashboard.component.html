@@ -1,5 +1,3 @@
-<app-appointments-calendar [appointments]="approvedAppointments" [userRole]="userRole"></app-appointments-calendar>
-
 <div class="row mb-3" *ngIf="userRole == userRoles.Client">
     <p-card [style]="{ 'background-color': loggedUserCredits > 0 ? '#d4eddaa8' : '#f8d7dacc' }"
             [header]="'dashboard.creditsStatus' | translate">
@@ -22,6 +20,8 @@
     <p-button (click)="openCreateDialog()"
               type="button" iconPos="right" icon="pi pi-plus" [label]="'dashboard.newAppointment' | translate" />
 </div>
+
+<app-appointments-calendar [appointments]="approvedAppointments" [userRole]="userRole"></app-appointments-calendar>
 
 <hr>
 

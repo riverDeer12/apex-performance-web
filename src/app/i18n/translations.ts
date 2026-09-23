@@ -348,7 +348,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "changeUsername.errorSummary": "Username Change Error.",
 
     "calendar.title": "Weekly Schedule",
-    "calendar.with": "with",
     "calendar.noAppointments": "No appointments",
     "calendar.monday": "Monday",
     "calendar.tuesday": "Tuesday",
@@ -705,7 +704,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "changeUsername.errorSummary": "Greška pri promjeni korisničkog imena.",
 
     "calendar.title": "Tjedni raspored termina",
-    "calendar.with": "sa",
     "calendar.noAppointments": "Nema termina",
     "calendar.monday": "Ponedjeljak",
     "calendar.tuesday": "Utorak",
