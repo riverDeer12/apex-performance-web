@@ -4,7 +4,6 @@ import { DialogService } from "primeng/dynamicdialog";
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { Appointment } from "../appointments/models/appointment";
 import { AppointmentService } from "../appointments/services/appointment.service";
-import { AppointmentsListComponent } from "../appointments/components/appointments-list/appointments-list.component";
 import { AppointmentsStatus } from "../../shared/data-transfer-objects/appointments-status";
 import { Roles } from "../../constants/roles";
 import { AppointmentsRequestsListComponent } from "../appointments/appointment-requests/components/appointments-requests-list/appointments-requests-list.component";
@@ -30,7 +29,6 @@ import { AppointmentsCalendarComponent } from './components/appointments-calenda
   standalone: true,
   imports: [
     CommonModule,
-    AppointmentsListComponent,
     AppointmentsRequestsListComponent,
     Button,
     ProgressBarModule,
@@ -44,8 +42,6 @@ import { AppointmentsCalendarComponent } from './components/appointments-calenda
 })
 export class DashboardComponent {
   approvedAppointments!: Appointment[];
-  pendingAppointments!: Appointment[];
-  inProgressAppointments!: Appointment[];
 
   appointmentRequests!: AppointmentRequest[];
 
@@ -155,14 +151,6 @@ export class DashboardComponent {
       next: (data: AppointmentsStatus) => {
         if (data) {
           this.approvedAppointments = data.approvedAppointments.map(
-            (x: Appointment) => Object.assign(new Appointment(), x),
-          );
-
-          this.pendingAppointments = data.pendingAppointments.map(
-            (x: Appointment) => Object.assign(new Appointment(), x),
-          );
-
-          this.inProgressAppointments = data.inProgressAppointments.map(
             (x: Appointment) => Object.assign(new Appointment(), x),
           );
         }
