@@ -21,11 +21,13 @@ import {CoachService} from "../../../coaches/services/coach.service";
 import {MultiSelect} from "primeng/multiselect";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import {Roles} from "../../../../constants/roles";
+import {TranslationService} from "../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../i18n/translate.pipe";
 
 @Component({
     selector: "app-client-form",
     standalone: true,
-    imports: [Button, InputText, NgIf, ReactiveFormsModule, MultiSelect],
+    imports: [Button, InputText, NgIf, ReactiveFormsModule, MultiSelect, TranslatePipe],
     templateUrl: "./client-form.component.html",
     styleUrl: "./client-form.component.scss",
 })
@@ -56,6 +58,7 @@ export class ClientFormComponent implements OnInit {
         private coachService: CoachService,
         private authenticationService: AuthenticationService,
         private messageService: MessageService,
+        private translationService: TranslationService,
     ) {
         this.userRole = this.authenticationService.getUserRole();
     }
@@ -73,8 +76,8 @@ export class ClientFormComponent implements OnInit {
 
             this.messageService.add({
                 severity: "warn",
-                summary: "Incomplete or incorrect data",
-                detail: "Check the entered data and try again.",
+                summary: this.translationService.t("common.incompleteTitle"),
+                detail: this.translationService.t("common.incompleteDetail"),
             });
 
             this.loadingData = false;
@@ -135,8 +138,8 @@ export class ClientFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "success",
-                    summary: "Success",
-                    detail: "Client is created successfully.",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("clients.createdDetail"),
                 });
 
                 this.helperService.redirectUserAfterSubmit(
@@ -149,7 +152,7 @@ export class ClientFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error Creating Client",
+                    summary: this.translationService.t("clients.createErrorSummary"),
                     detail: getErrorMessage(error),
                 });
             },
@@ -166,8 +169,8 @@ export class ClientFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "success",
-                    summary: "Success",
-                    detail: "Client is updated successfully.",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("clients.updatedDetail"),
                 });
 
                 this.helperService.redirectUserAfterSubmit(
@@ -181,7 +184,7 @@ export class ClientFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error Updating Client",
+                    summary: this.translationService.t("clients.updateErrorSummary"),
                     detail: getErrorMessage(error),
                 });
             },

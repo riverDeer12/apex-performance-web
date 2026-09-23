@@ -10,13 +10,16 @@ import {Appointment} from '../../../models/appointment';
 import {MessageService} from 'primeng/api';
 import {BusinessStatuses} from '../../../../../constants/business-statuses';
 import {CommonModule} from '@angular/common';
+import {TranslationService} from '../../../../../i18n/translation.service';
+import {TranslatePipe} from '../../../../../i18n/translate.pipe';
 
 @Component({
     selector: 'app-appointment-requests',
     imports: [
         CommonModule,
         Button,
-        TableModule
+        TableModule,
+        TranslatePipe
     ],
     providers: [DialogService],
     templateUrl: './appointment-requests.component.html',
@@ -34,6 +37,7 @@ export class AppointmentRequestsComponent implements OnInit {
         private appointmentRequestService: AppointmentRequestService,
         private messageService: MessageService,
         private dialogService: DialogService,
+        private translationService: TranslationService,
     ) {
     }
 
@@ -67,8 +71,8 @@ export class AppointmentRequestsComponent implements OnInit {
             next: (data) => {
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Appointment Request has been approved.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('appointmentRequests.approvedDetail')
                 });
                 this.loadData();
             },
@@ -83,8 +87,8 @@ export class AppointmentRequestsComponent implements OnInit {
             next: (data) => {
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Appointment Request has been declined.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('appointmentRequests.declinedDetail')
                 });
                 this.loadData();
             },
@@ -96,7 +100,7 @@ export class AppointmentRequestsComponent implements OnInit {
 
     openInfoDialog(appointmentRequest: AppointmentRequest) {
         this.dialogService.open(DialogInfoComponent, {
-            header: "Details for appointment request",
+            header: this.translationService.t('appointmentRequests.detailsForRequest'),
             data: {
                 contentType: EntityType.AppointmentRequest,
                 data: appointmentRequest,
@@ -106,7 +110,7 @@ export class AppointmentRequestsComponent implements OnInit {
 
     openAppointmentInfo(appointment: Appointment) {
         this.dialogService.open(DialogInfoComponent, {
-            header: "Details for appointment",
+            header: this.translationService.t('appointmentRequests.detailsForAppointment'),
             data: {
                 contentType: EntityType.Appointment,
                 data: appointment,

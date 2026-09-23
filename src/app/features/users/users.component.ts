@@ -14,6 +14,8 @@ import {DialogInfoComponent} from "../../shared/components/dialog-info/dialog-in
 import {DialogService} from "primeng/dynamicdialog";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {HelperService} from "../../shared/services/helper.service";
+import {TranslationService} from "../../i18n/translation.service";
+import {TranslatePipe} from "../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-users',
@@ -24,7 +26,8 @@ import {HelperService} from "../../shared/services/helper.service";
         InputText,
         TableModule,
         Button,
-        DatePipe
+        DatePipe,
+        TranslatePipe
     ],
     standalone: true,
     providers: [
@@ -42,7 +45,8 @@ export class UsersComponent {
                 private dialogService: DialogService,
                 private helperService: HelperService,
                 private confirmationService: ConfirmationService,
-                private messageService: MessageService) {
+                private messageService: MessageService,
+                private translationService: TranslationService) {
     }
 
     ngOnInit(): void {
@@ -61,7 +65,7 @@ export class UsersComponent {
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Add New User',
+            header: this.translationService.t('users.addNew'),
             data: {
                 contentType: EntityType.User,
                 formType: ActionType.Create,
@@ -76,7 +80,7 @@ export class UsersComponent {
 
     openInfoDialog(user: User) {
         this.dialogService.open(DialogInfoComponent, {
-            header: 'Details for: ' + user.username,
+            header: this.translationService.t('users.detailsFor') + ' ' + user.username,
             data: {
                 contentType: EntityType.User,
                 data: user
@@ -86,7 +90,7 @@ export class UsersComponent {
 
     openUpdateDialog(user: User) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Update data for: ' + user.username,
+            header: this.translationService.t('users.updateDataFor') + ' ' + user.username,
             data: {
                 contentType: EntityType.User,
                 formType: ActionType.Update,
@@ -102,33 +106,33 @@ export class UsersComponent {
 
     confirmDelete(user: User) {
         this.confirmationService.confirm({
-            message: 'Are you sure that you want to deactivate this user?',
-            header: 'Confirm deletion of ' + user.username,
+            message: this.translationService.t('users.confirmDeactivate'),
+            header: this.translationService.t('common.confirmDeletionHeader') + ' ' + user.username,
             closable: true,
             closeOnEscape: true,
             icon: 'pi pi-exclamation-triangle',
             rejectButtonProps: {
-                label: 'No',
+                label: this.translationService.t('common.no'),
                 severity: 'secondary',
                 outlined: true,
             },
             acceptButtonProps: {
-                label: 'Yes',
+                label: this.translationService.t('common.yes'),
             },
             accept: () => {
                 this.userService.deleteUser(user.id)
                     .subscribe(() => {
                         this.messageService.add({
                             severity: 'success',
-                            summary: 'Success',
-                            detail: 'User has been deactivated.'
+                            summary: this.translationService.t('common.success'),
+                            detail: this.translationService.t('users.deactivatedDetail')
                         });
                         this.loadData();
                     }, () => {
                         this.messageService.add({
                             severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error deactivating user.'
+                            summary: this.translationService.t('common.error'),
+                            detail: this.translationService.t('users.deactivateErrorDetail')
                         });
                     });
             }

@@ -12,11 +12,13 @@ import { DialogInfoComponent } from "../../shared/components/dialog-info/dialog-
 import { Roles } from "../../constants/roles";
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { Permissions } from "../../constants/permissions";
+import { TranslationService } from "../../i18n/translation.service";
+import { TranslatePipe } from "../../i18n/translate.pipe";
 
 @Component({
   selector: "app-appointments",
   standalone: true,
-  imports: [CommonModule, Button, DatePipe, TableModule],
+  imports: [CommonModule, Button, DatePipe, TableModule, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./appointments.component.html",
   styleUrl: "./appointments.component.scss",
@@ -40,6 +42,7 @@ export class AppointmentsComponent implements OnInit {
     private appointmentService: AppointmentService,
     private authenticationService: AuthenticationService,
     private dialogService: DialogService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -65,7 +68,7 @@ export class AppointmentsComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Add New Appointment",
+      header: this.translationService.t("appointments.addNew"),
       data: {
         contentType: EntityType.Appointment,
         formType: ActionType.Create,
@@ -81,7 +84,7 @@ export class AppointmentsComponent implements OnInit {
   openInfoDialog(appointment: Appointment) {
     this.dialogService.open(DialogInfoComponent, {
       header:
-        "Details for: " +
+        this.translationService.t("appointments.detailsFor") + " " +
         formatDate(appointment.startTime, "dd.MM.yyyy HH:mm", "en-US"),
       data: {
         contentType: EntityType.Appointment,

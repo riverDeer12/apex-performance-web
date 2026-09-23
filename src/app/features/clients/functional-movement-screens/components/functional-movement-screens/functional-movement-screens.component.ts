@@ -16,6 +16,8 @@ import { DialogInfoComponent } from '../../../../../shared/components/dialog-inf
 import { FunctionalMovementScreenService } from '../../services/functional-movement-screen.service';
 import { FunctionalMovementScreen } from '../../models/functional-movement-screen';
 import { CommonModule, DatePipe } from '@angular/common';
+import { TranslationService } from '../../../../../i18n/translation.service';
+import { TranslatePipe } from '../../../../../i18n/translate.pipe';
 
 @Component({
     selector: 'app-functional-movement-screens',
@@ -27,7 +29,8 @@ import { CommonModule, DatePipe } from '@angular/common';
         IconField,
         InputText,
         InputIcon,
-        ButtonDirective
+        ButtonDirective,
+        TranslatePipe
     ],
     providers: [DialogService],
     templateUrl: './functional-movement-screens.component.html',
@@ -58,7 +61,8 @@ export class FunctionalMovementScreensComponent {
         private messageService: MessageService,
         private helperService: HelperService,
         private confirmationService: ConfirmationService,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private translationService: TranslationService
     ) {
         this.userRole = this.authenticationService.getUserRole();
     }
@@ -90,7 +94,7 @@ export class FunctionalMovementScreensComponent {
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Add New Functional Movement Screen',
+            header: this.translationService.t('fms.addNew'),
             data: {
                 contentType: EntityType.FunctionalMovementScreen,
                 formType: ActionType.Create,
@@ -105,7 +109,7 @@ export class FunctionalMovementScreensComponent {
 
     openInfoDialog(functionalMovementScreen: FunctionalMovementScreen) {
         this.dialogService.open(DialogInfoComponent, {
-            header: 'Details for: ' + functionalMovementScreen.id,
+            header: this.translationService.t('fms.detailsFor') + ' ' + functionalMovementScreen.id,
             data: {
                 contentType: EntityType.FunctionalMovementScreen,
                 data: functionalMovementScreen
@@ -115,7 +119,7 @@ export class FunctionalMovementScreensComponent {
 
     openUpdateDialog(functionalMovementScreen: FunctionalMovementScreen) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Update data for: ' + functionalMovementScreen.id,
+            header: this.translationService.t('fms.updateDataFor') + ' ' + functionalMovementScreen.id,
             data: {
                 contentType: EntityType.FunctionalMovementScreen,
                 formType: ActionType.Update,
@@ -131,19 +135,18 @@ export class FunctionalMovementScreensComponent {
 
     confirmDelete(functionalMovementScreen: FunctionalMovementScreen) {
         this.confirmationService.confirm({
-            message:
-                'Are you sure that you want to deactivate this Functional Movement Screen?',
-            header: 'Confirm deletion of ' + functionalMovementScreen.id,
+            message: this.translationService.t('fms.confirmDeactivate'),
+            header: this.translationService.t('common.confirmDeletionHeader') + ' ' + functionalMovementScreen.id,
             closable: true,
             closeOnEscape: true,
             icon: 'pi pi-exclamation-triangle',
             rejectButtonProps: {
-                label: 'No',
+                label: this.translationService.t('common.no'),
                 severity: 'secondary',
                 outlined: true
             },
             acceptButtonProps: {
-                label: 'Yes'
+                label: this.translationService.t('common.yes')
             },
             accept: () => {
                 this.functionalMovementScreenService
@@ -152,8 +155,8 @@ export class FunctionalMovementScreensComponent {
                         (response) => {
                             this.messageService.add({
                                 severity: 'success',
-                                summary: 'Success',
-                                detail: 'Functional Movement Screen has been deactivated.'
+                                summary: this.translationService.t('common.success'),
+                                detail: this.translationService.t('fms.deactivatedDetail')
                             });
 
                             this.loadData();
@@ -161,8 +164,8 @@ export class FunctionalMovementScreensComponent {
                         (error) => {
                             this.messageService.add({
                                 severity: 'error',
-                                summary: 'Error',
-                                detail: 'Error deactivating Functional Movement Screen.'
+                                summary: this.translationService.t('common.error'),
+                                detail: this.translationService.t('fms.deactivateErrorDetail')
                             });
                         }
                     );

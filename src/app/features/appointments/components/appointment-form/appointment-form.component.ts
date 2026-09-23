@@ -31,6 +31,8 @@ import { DateExtensions } from "../../../../shared/extensions/date-extensions";
 import { Roles } from "../../../../constants/roles";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { AppointmentRequestService } from "../../appointment-requests/services/appointment-request.service";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-appointment-form",
@@ -41,7 +43,8 @@ import { AppointmentRequestService } from "../../appointment-requests/services/a
     MultiSelectModule,
     DropdownModule,
     Select,
-    DatePicker
+    DatePicker,
+    TranslatePipe
   ],
   providers: [DatePipe],
   templateUrl: "./appointment-form.component.html",
@@ -92,7 +95,8 @@ export class AppointmentFormComponent implements OnInit {
     private appointmentRequestService: AppointmentRequestService,
     private appointmentTypeService: AppointmentTypeService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private translationService: TranslationService
   ) {
     this.userRole = this.authenticationService.getUserRole();
     this.minDate = this.userRole == Roles.Client ? this.tomorrow : this.today;
@@ -113,8 +117,8 @@ export class AppointmentFormComponent implements OnInit {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again."
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail")
       });
 
       this.loadingData = false;
@@ -139,8 +143,8 @@ export class AppointmentFormComponent implements OnInit {
     ) {
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Please select appointment day."
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("appointments.pleaseSelectDay")
       });
 
       this.loadingData = false;
@@ -232,8 +236,8 @@ export class AppointmentFormComponent implements OnInit {
       next: (response) => {
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "Join request is created successfully. Soon you will get coach response."
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("appointments.joinRequestCreatedDetail")
         });
 
         this.helperService.redirectUserAfterSubmit(
@@ -248,7 +252,7 @@ export class AppointmentFormComponent implements OnInit {
 
         this.messageService.add({
           severity: "error",
-          summary: "Error creating join request",
+          summary: this.translationService.t("appointments.joinRequestErrorSummary"),
           detail: getErrorMessage(error)
         });
 
@@ -266,8 +270,8 @@ export class AppointmentFormComponent implements OnInit {
 
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "Appointment is created successfully."
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("appointments.createdDetail")
         });
 
         this.helperService.redirectUserAfterSubmit(
@@ -282,7 +286,7 @@ export class AppointmentFormComponent implements OnInit {
 
         this.messageService.add({
           severity: "error",
-          summary: "Error Creating Appointment",
+          summary: this.translationService.t("appointments.createErrorSummary"),
           detail: getErrorMessage(error)
         });
 

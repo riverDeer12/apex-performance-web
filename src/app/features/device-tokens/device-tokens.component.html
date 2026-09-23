@@ -11,11 +11,11 @@
     [globalFilterFields]="['username', 'token']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template>
         <div class="flex justify-between items-center flex-column sm:flex-row">
-            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
                     (click)="clear(deviceTokensTable)"></button>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
@@ -30,31 +30,31 @@
         <tr>
             <th pSortableColumn="username" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Username
+                    {{ "common.username" | translate }}
                     <p-sortIcon field="username"/>
                     <p-columnFilter type="text" field="username" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="token" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Token
+                    {{ "common.token" | translate }}
                     <p-sortIcon field="token"/>
                     <p-columnFilter type="text" field="token" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="platform" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Platform
+                    {{ "common.platform" | translate }}
                     <p-sortIcon field="platform"/>
                     <p-columnFilter type="text" field="platform" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
-                Created At
+                {{ "common.createdAt" | translate }}
                 <p-sortIcon field="createdAt"/>
             </th>
             <th pSortableColumn="updatedAt" style="min-width: 12rem">
-                Last Changes
+                {{ "common.lastChanges" | translate }}
                 <p-sortIcon field="updatedAt"/>
             </th>
         </tr>
@@ -80,12 +80,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No device tokens found.</td>
+            <td colspan="8">{{ "deviceTokens.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading device tokens data. Please wait...</td>
+            <td colspan="8">{{ "deviceTokens.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

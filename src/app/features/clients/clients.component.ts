@@ -15,6 +15,8 @@ import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
 import {AuthenticationService} from "../authentication/services/authentication.service";
+import {TranslationService} from "../../i18n/translation.service";
+import {TranslatePipe} from "../../i18n/translate.pipe";
 
 @Component({
     selector: "app-clients",
@@ -27,6 +29,7 @@ import {AuthenticationService} from "../authentication/services/authentication.s
         InputIcon,
         InputText,
         ButtonDirective,
+        TranslatePipe,
     ],
     providers: [DialogService],
     templateUrl: "./clients.component.html",
@@ -46,6 +49,7 @@ export class ClientsComponent {
         private helperService: HelperService,
         private authenticationService: AuthenticationService,
         private confirmationService: ConfirmationService,
+        private translationService: TranslationService,
     ) {
         this.userRole = this.authenticationService.getUserRole();
     }
@@ -75,7 +79,7 @@ export class ClientsComponent {
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: "Add New Client",
+            header: this.translationService.t("clients.addNew"),
             data: {
                 contentType: EntityType.Client,
                 formType: ActionType.Create,
@@ -90,7 +94,7 @@ export class ClientsComponent {
 
     openInfoDialog(client: Client) {
         this.dialogService.open(DialogInfoComponent, {
-            header: "Details for: " + client.fullName,
+            header: this.translationService.t("clients.detailsFor") + " " + client.fullName,
             data: {
                 contentType: EntityType.Client,
                 data: client,
@@ -100,7 +104,7 @@ export class ClientsComponent {
 
     openUpdateDialog(client: Client) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: "Update data for: " + client.fullName,
+            header: this.translationService.t("clients.updateDataFor") + " " + client.fullName,
             data: {
                 contentType: EntityType.Client,
                 formType: ActionType.Update,
@@ -116,26 +120,26 @@ export class ClientsComponent {
 
     confirmDelete(client: Client) {
         this.confirmationService.confirm({
-            message: "Are you sure that you want to deactivate this client?",
-            header: "Confirm deletion of " + client.id,
+            message: this.translationService.t("clients.confirmDeactivate"),
+            header: this.translationService.t("common.confirmDeletionHeader") + " " + client.id,
             closable: true,
             closeOnEscape: true,
             icon: "pi pi-exclamation-triangle",
             rejectButtonProps: {
-                label: "No",
+                label: this.translationService.t("common.no"),
                 severity: "secondary",
                 outlined: true,
             },
             acceptButtonProps: {
-                label: "Yes",
+                label: this.translationService.t("common.yes"),
             },
             accept: () => {
                 this.clientService.deleteClient(client.id).subscribe(
                     (response) => {
                         this.messageService.add({
                             severity: "success",
-                            summary: "Success",
-                            detail: "Client has been deactivated.",
+                            summary: this.translationService.t("common.success"),
+                            detail: this.translationService.t("clients.deactivatedDetail"),
                         });
 
                         this.loadData();
@@ -143,8 +147,8 @@ export class ClientsComponent {
                     (error) => {
                         this.messageService.add({
                             severity: "error",
-                            summary: "Error",
-                            detail: "Error deactivating client.",
+                            summary: this.translationService.t("common.error"),
+                            detail: this.translationService.t("clients.deactivateErrorDetail"),
                         });
                     },
                 );

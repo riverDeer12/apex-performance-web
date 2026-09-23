@@ -4,9 +4,9 @@
     <p-table [value]="appointments" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
-                <th>Time</th>
-                <th *ngIf="userRole != userRoles.Client">Client</th>
-                <th *ngIf="userRole != userRoles.Coach">Coach</th>
+                <th>{{ "appointmentsList.time" | translate }}</th>
+                <th *ngIf="userRole != userRoles.Client">{{ "appointmentsList.client" | translate }}</th>
+                <th *ngIf="userRole != userRoles.Coach">{{ "appointmentsList.coach" | translate }}</th>
                 <th></th>
             </tr>
         </ng-template>
@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     <p-button *ngIf="isAppointmentCompleted(appointment)"
-                              label="Completed"
+                              [label]="'appointmentsList.completed' | translate"
                               variant="text"
                               icon="pi pi-check"
                               disabled />
@@ -39,21 +39,21 @@
                         *ngIf="isAppointmentActive(appointment)"
                         class="p-button-outlined p-button-danger"
                         pButton type="button" icon="pi pi-times"
-                        label="Cancel"
+                        [label]="'appointmentsList.cancel' | translate"
                         (click)="cancel(appointment)">
                     </button>
                     <button
                         *ngIf="showApproveActionButtons(appointment)"
                         class="p-button-outlined p-button-success mr-2"
                         pButton type="button" icon="pi pi-check"
-                        label="Approve"
+                        [label]="'appointmentsList.approve' | translate"
                         (click)="approve(appointment)">
                     </button>
                     <button
                         *ngIf="showPendingActionButtons(appointment)"
                         class="p-button-outlined p-button-danger"
                         pButton type="button" icon="pi pi-times"
-                        label="Decline"
+                        [label]="'appointmentsList.decline' | translate"
                         (click)="decline(appointment)">
                     </button>
                 </td>
@@ -61,12 +61,12 @@
         </ng-template>
         <ng-template #emptymessage>
             <tr>
-                <td colspan="8">There are no {{ type }} appointments.</td>
+                <td colspan="8">{{ "appointmentsList.noAppointmentsPrefix" | translate }} {{ type }} {{ "appointmentsList.noAppointmentsSuffix" | translate }}</td>
             </tr>
         </ng-template>
         <ng-template #loadingbody>
             <tr>
-                <td colspan="8">Loading appointments data. Please wait...</td>
+                <td colspan="8">{{ "appointmentsList.loading" | translate }}</td>
             </tr>
         </ng-template>
     </p-table>

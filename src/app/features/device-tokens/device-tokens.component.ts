@@ -8,6 +8,7 @@ import { Table, TableModule } from "primeng/table";
 import { HelperService } from "../../shared/services/helper.service";
 import { DeviceTokenService } from "./services/device-token.service";
 import { DeviceToken } from "./core/device-token";
+import { TranslatePipe } from "../../i18n/translate.pipe";
 
 @Component({
   selector: "app-device-tokens",
@@ -17,7 +18,8 @@ import { DeviceToken } from "./core/device-token";
     IconField,
     InputIcon,
     InputText,
-    TableModule
+    TableModule,
+    TranslatePipe
   ],
   templateUrl: "./device-tokens.component.html",
   styleUrl: "./device-tokens.component.scss"

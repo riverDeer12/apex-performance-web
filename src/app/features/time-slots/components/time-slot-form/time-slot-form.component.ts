@@ -23,10 +23,12 @@ import { Roles } from "../../../../constants/roles";
 import { Coach } from "../../../coaches/models/coach";
 import { CoachService } from "../../../coaches/services/coach.service";
 import { DayOfWeek } from "../../../../enums/day-of-week";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-time-slot-form",
-  imports: [Button, NgIf, ReactiveFormsModule, Select, DatePicker],
+  imports: [Button, NgIf, ReactiveFormsModule, Select, DatePicker, TranslatePipe],
   templateUrl: "./time-slot-form.component.html",
   styleUrl: "./time-slot-form.component.scss",
 })
@@ -59,6 +61,7 @@ export class TimeSlotFormComponent {
     private coachService: CoachService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -75,8 +78,8 @@ export class TimeSlotFormComponent {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -125,8 +128,8 @@ export class TimeSlotFormComponent {
 
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "TimeSlot is created successfully.",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("timeSlots.createdDetail"),
         });
 
         this.helperService.redirectUserAfterSubmit(
@@ -138,7 +141,7 @@ export class TimeSlotFormComponent {
       error: (error) => {
         this.messageService.add({
           severity: "error",
-          summary: "Error Creating TimeSlot",
+          summary: this.translationService.t("timeSlots.createErrorSummary"),
           detail: getErrorMessage(error),
         });
       },
@@ -157,8 +160,8 @@ export class TimeSlotFormComponent {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "TimeSlot is updated successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("timeSlots.updatedDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -170,7 +173,7 @@ export class TimeSlotFormComponent {
         error: (error) => {
           this.messageService.add({
             severity: "error",
-            summary: "Error Updating TimeSlot",
+            summary: this.translationService.t("timeSlots.updateErrorSummary"),
             detail: getErrorMessage(error),
           });
         },

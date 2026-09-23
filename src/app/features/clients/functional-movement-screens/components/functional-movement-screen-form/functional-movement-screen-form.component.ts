@@ -15,10 +15,12 @@ import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { CommonModule } from '@angular/common';
+import { TranslationService } from "../../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-functional-movement-screen-form",
-  imports: [CommonModule, Button, ReactiveFormsModule, InputText, Select],
+  imports: [CommonModule, Button, ReactiveFormsModule, InputText, Select, TranslatePipe],
   templateUrl: "./functional-movement-screen-form.component.html",
   styleUrl: "./functional-movement-screen-form.component.scss",
 })
@@ -45,6 +47,7 @@ export class FunctionalMovementScreenFormComponent {
     private clientService: ClientService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -70,8 +73,8 @@ export class FunctionalMovementScreenFormComponent {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -148,8 +151,8 @@ export class FunctionalMovementScreenFormComponent {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Functional Movement Screen is created successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("fms.createdDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -163,7 +166,7 @@ export class FunctionalMovementScreenFormComponent {
 
           this.messageService.add({
             severity: "error",
-            summary: "Error Creating Functional Movement Screen",
+            summary: this.translationService.t("fms.createErrorSummary"),
             detail: getErrorMessage(error),
           });
         },
@@ -188,8 +191,8 @@ export class FunctionalMovementScreenFormComponent {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Functional Movement Screen is updated successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("fms.updatedDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -203,7 +206,7 @@ export class FunctionalMovementScreenFormComponent {
 
           this.messageService.add({
             severity: "error",
-            summary: "Error Updating Functional Movement Screen",
+            summary: this.translationService.t("fms.updateErrorSummary"),
             detail: getErrorMessage(error),
           });
         },

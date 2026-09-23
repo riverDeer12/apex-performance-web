@@ -15,6 +15,8 @@ import {getErrorMessage} from "../../../../constants/error-codes";
 import {Select} from "primeng/select";
 import {User} from "../../../users/models/user";
 import {UserService} from "../../../users/services/user.service";
+import {TranslationService} from "../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-administrator-form',
@@ -23,7 +25,8 @@ import {UserService} from "../../../users/services/user.service";
         ButtonModule,
         InputTextModule,
         ReactiveFormsModule,
-        Select
+        Select,
+        TranslatePipe
     ],
     standalone: true,
     templateUrl: './administrator-form.component.html',
@@ -49,7 +52,8 @@ export class AdministratorFormComponent implements OnInit {
         private helperService: HelperService,
         private userService: UserService,
         private administratorService: AdministratorService,
-        private messageService: MessageService) {
+        private messageService: MessageService,
+        private translationService: TranslationService) {
     }
 
     ngOnInit(): void {
@@ -67,8 +71,8 @@ export class AdministratorFormComponent implements OnInit {
             this.messageService
                 .add({
                     severity: 'warn',
-                    summary: 'Incomplete or incorrect data',
-                    detail: 'Check the entered data and try again.'
+                    summary: this.translationService.t('common.incompleteTitle'),
+                    detail: this.translationService.t('common.incompleteDetail')
                 });
 
             this.loadingData = false;
@@ -107,8 +111,8 @@ export class AdministratorFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Administrator is created successfully.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('administrators.createdDetail')
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -118,7 +122,7 @@ export class AdministratorFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error Creating Administrator',
+                    summary: this.translationService.t('administrators.createErrorSummary'),
                     detail: getErrorMessage(error)
                 });
             },
@@ -135,8 +139,8 @@ export class AdministratorFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Administrator is updated successfully.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('administrators.updatedDetail')
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -146,7 +150,7 @@ export class AdministratorFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error Updating Administrator',
+                    summary: this.translationService.t('administrators.updateErrorSummary'),
                     detail: getErrorMessage(error)
                 });
             },

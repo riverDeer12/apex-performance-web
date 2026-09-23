@@ -16,6 +16,8 @@ import {Permission} from "../../models/permission";
 import {CommonModule} from "@angular/common";
 import {User} from "../../../../users/models/user";
 import {UserService} from "../../../../users/services/user.service";
+import {TranslationService} from "../../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-role-form',
@@ -25,7 +27,8 @@ import {UserService} from "../../../../users/services/user.service";
         FormsModule,
         InputText,
         ReactiveFormsModule,
-        MultiSelect
+        MultiSelect,
+        TranslatePipe
     ],
     standalone: true,
     templateUrl: './role-form.component.html',
@@ -53,7 +56,8 @@ export class RoleFormComponent implements OnInit {
         private helperService: HelperService,
         private roleService: RoleService,
         private userService: UserService,
-        private messageService: MessageService) {
+        private messageService: MessageService,
+        private translationService: TranslationService) {
     }
 
     ngOnInit(): void {
@@ -72,8 +76,8 @@ export class RoleFormComponent implements OnInit {
             this.messageService
                 .add({
                     severity: 'warn',
-                    summary: 'Incomplete or incorrect data',
-                    detail: 'Check the entered data and try again.'
+                    summary: this.translationService.t('common.incompleteTitle'),
+                    detail: this.translationService.t('common.incompleteDetail')
                 });
 
             this.loadingData = false;
@@ -114,8 +118,8 @@ export class RoleFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Role is created successfully.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('roles.createdDetail')
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -125,7 +129,7 @@ export class RoleFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error Creating Role',
+                    summary: this.translationService.t('roles.createErrorSummary'),
                     detail: getErrorMessage(error)
                 });
             },
@@ -142,8 +146,8 @@ export class RoleFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'Role is updated successfully.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('roles.updatedDetail')
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -151,7 +155,7 @@ export class RoleFormComponent implements OnInit {
             error: (error) => {
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error Updating Role',
+                    summary: this.translationService.t('roles.updateErrorSummary'),
                     detail: getErrorMessage(error)
                 });
             },

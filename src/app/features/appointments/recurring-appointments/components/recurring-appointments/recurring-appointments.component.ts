@@ -16,10 +16,12 @@ import { TimeSlot } from "../../../../time-slots/models/time-slot";
 import { TimeSlotService } from "../../../../time-slots/services/time-slot.service";
 import { DayOfWeek } from "../../../../../enums/day-of-week";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { TranslationService } from "../../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-recurring-appointments",
-  imports: [CommonModule, Button, NgIf, TableModule],
+  imports: [CommonModule, Button, NgIf, TableModule, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./recurring-appointments.component.html",
   styleUrl: "./recurring-appointments.component.scss",
@@ -50,6 +52,7 @@ export class RecurringAppointmentsComponent implements OnInit {
     private messageService: MessageService,
     private recurringAppointmentService: RecurringAppointmentService,
     private dialogService: DialogService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -90,7 +93,7 @@ export class RecurringAppointmentsComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Add New Recurring Appointment",
+      header: this.translationService.t("recurringAppointments.addNew"),
       data: {
         contentType: EntityType.RecurringAppointment,
         formType: ActionType.Create,
@@ -105,7 +108,7 @@ export class RecurringAppointmentsComponent implements OnInit {
 
   openUpdateDialog(recurringAppointment: RecurringAppointment) {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Update Recurring Appointment",
+      header: this.translationService.t("recurringAppointments.updateHeader"),
       data: {
         contentType: EntityType.RecurringAppointment,
         formType: ActionType.Update,
@@ -121,20 +124,19 @@ export class RecurringAppointmentsComponent implements OnInit {
 
   changeActivity(recurringAppointment: RecurringAppointment) {
     this.confirmationService.confirm({
-      message:
-        "Are you sure that you want to change activity for this recurring appointment?",
+      message: this.translationService.t("recurringAppointments.confirmActivityChange"),
       header:
-        "Confirm activity change of " + recurringAppointment.timeSlot.name,
+        this.translationService.t("recurringAppointments.confirmActivityChangeHeader") + " " + recurringAppointment.timeSlot.name,
       closable: true,
       closeOnEscape: true,
       icon: "pi pi-exclamation-triangle",
       rejectButtonProps: {
-        label: "No",
+        label: this.translationService.t("common.no"),
         severity: "secondary",
         outlined: true,
       },
       acceptButtonProps: {
-        label: "Yes",
+        label: this.translationService.t("common.yes"),
       },
       accept: () => {
         this.recurringAppointmentService
@@ -143,8 +145,8 @@ export class RecurringAppointmentsComponent implements OnInit {
             () => {
               this.messageService.add({
                 severity: "success",
-                summary: "Success",
-                detail: "Recurring Appointment activity has been changed.",
+                summary: this.translationService.t("common.success"),
+                detail: this.translationService.t("recurringAppointments.activityChangedDetail"),
               });
 
               this.loadData();
@@ -152,8 +154,8 @@ export class RecurringAppointmentsComponent implements OnInit {
             () => {
               this.messageService.add({
                 severity: "error",
-                summary: "Error",
-                detail: "Error changing Recurring Appointment activity.",
+                summary: this.translationService.t("common.error"),
+                detail: this.translationService.t("recurringAppointments.activityChangeErrorDetail"),
               });
             },
           );

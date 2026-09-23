@@ -21,6 +21,8 @@ import { Card } from "primeng/card";
 import { DialogFormComponent } from '../../shared/components/dialog-form/dialog-form.component';
 import { EntityType } from '../../enums/entity-type';
 import { ActionType } from '../../enums/action-type';
+import { TranslationService } from '../../i18n/translation.service';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: "app-dashboard",
@@ -32,6 +34,7 @@ import { ActionType } from '../../enums/action-type';
     Button,
     ProgressBarModule,
     Card,
+    TranslatePipe,
   ],
   providers: [DialogService],
   templateUrl: "./dashboard.component.html",
@@ -54,6 +57,7 @@ export class DashboardComponent {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
     private appointmentRequestService: AppointmentRequestService,
     private appointmentService: AppointmentService,
     private clientService: ClientService,
@@ -73,8 +77,8 @@ export class DashboardComponent {
         next: (data: boolean) => {
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Appointments are successfully generated.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("dashboard.appointmentsGenerated"),
           });
 
           this.loadData();
@@ -87,7 +91,7 @@ export class DashboardComponent {
 
   openCreateDialog() {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Add New Appointment",
+      header: this.translationService.t("dashboard.addNewAppointment"),
       data: {
         contentType: EntityType.Appointment,
         formType: ActionType.Create,
