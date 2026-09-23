@@ -40,8 +40,8 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
               ? 'assets/images/logo_light_theme.png'
               : 'assets/images/logo_dark_theme.png'
           "
-          width="200"
-          height="50"
+          width="602"
+          height="262"
           alt="menu-logo"
         />
       </a>

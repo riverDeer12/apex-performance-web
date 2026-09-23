@@ -8,9 +8,11 @@
             </div>
             <div class="calendar-day-body">
                 <div class="calendar-appointment" *ngFor="let appointment of appointmentsForDay(date)">
-                    <p-button *ngIf="canCancel(appointment)" (click)="cancel(appointment)"
-                              icon="pi pi-times" severity="danger" [text]="true" [rounded]="true" size="small"
-                              styleClass="calendar-appointment-cancel" />
+                    <div class="calendar-appointment-actions" *ngIf="canCancel(appointment)">
+                        <p-button (click)="cancel(appointment)"
+                                  [label]="'appointmentsList.cancel' | translate"
+                                  icon="pi pi-times" severity="danger" [text]="true" size="small" />
+                    </div>
                     <div class="calendar-appointment-time">
                         {{ formatTime(appointment.startTime) }} - {{ formatTime(appointment.endTime) }}
                     </div>
