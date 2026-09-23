@@ -23,6 +23,7 @@ import { EntityType } from '../../enums/entity-type';
 import { ActionType } from '../../enums/action-type';
 import { TranslationService } from '../../i18n/translation.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { AppointmentsCalendarComponent } from './components/appointments-calendar/appointments-calendar.component';
 
 @Component({
   selector: "app-dashboard",
@@ -35,6 +36,7 @@ import { TranslatePipe } from '../../i18n/translate.pipe';
     ProgressBarModule,
     Card,
     TranslatePipe,
+    AppointmentsCalendarComponent,
   ],
   providers: [DialogService],
   templateUrl: "./dashboard.component.html",
