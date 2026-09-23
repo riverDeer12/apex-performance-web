@@ -27,10 +27,12 @@ import { CommonModule } from "@angular/common";
 import { MultiSelect } from "primeng/multiselect";
 import { AppointmentType } from "../../../appointment-types/models/appointment-type";
 import { AppointmentTypeService } from "../../../appointment-types/services/appointment-type.service";
+import { TranslationService } from "../../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-recurring-appointment-form",
-  imports: [CommonModule, Select, Button, ReactiveFormsModule, MultiSelect],
+  imports: [CommonModule, Select, Button, ReactiveFormsModule, MultiSelect, TranslatePipe],
   templateUrl: "./recurring-appointment-form.component.html",
   styleUrl: "./recurring-appointment-form.component.scss",
 })
@@ -74,6 +76,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
     private recurringAppointmentService: RecurringAppointmentService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -90,8 +93,8 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -110,8 +113,8 @@ export class RecurringAppointmentFormComponent implements OnInit {
     if (this.form.controls["coach"].invalid) {
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Please select coach before proceeding.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("recurringAppointments.pleaseSelectCoach"),
       });
 
       this.loadingData = false;
@@ -195,8 +198,8 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Recurring Appointment is created successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("recurringAppointments.createdDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -210,7 +213,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "error",
-            summary: "Error Creating Recurring Appointment",
+            summary: this.translationService.t("recurringAppointments.createErrorSummary"),
             detail: getErrorMessage(error),
           });
         },
@@ -232,8 +235,8 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Recurring Appointment is updated successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("recurringAppointments.updatedDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -247,7 +250,7 @@ export class RecurringAppointmentFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "error",
-            summary: "Error Updating Recurring Appointment",
+            summary: this.translationService.t("recurringAppointments.updateErrorSummary"),
             detail: getErrorMessage(error),
           });
         },

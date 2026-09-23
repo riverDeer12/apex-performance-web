@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()" *ngIf="userCanCreateAppointment"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment" />
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'appointments.new' | translate" />
 </div>
 
 <p-table
@@ -16,33 +16,33 @@
     [globalFilterFields]="['startTime', 'endTime']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template #header>
         <tr>
             <th pSortableColumn="startTime" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Start Time
+                    {{ "common.startTime" | translate }}
                     <p-sortIcon field="startTime" />
                     <p-columnFilter type="text" field="startTime" display="menu" class="ml-auto"></p-columnFilter>
                 </div>
             </th>
             <th pSortableColumn="endTime" style="min-width: 12rem">
-                End Time
+                {{ "common.endTime" | translate }}
                 <p-sortIcon field="endTime" />
             </th>
             <th pSortableColumn="clients" style="min-width: 12rem">
-                Clients
+                {{ "common.clients" | translate }}
                 <p-sortIcon field="clients" />
                 <p-columnFilter type="text" field="clients" display="menu" class="ml-auto"></p-columnFilter>
             </th>
             <th pSortableColumn="type.name" style="min-width: 12rem">
-                Type
+                {{ "common.type" | translate }}
                 <p-sortIcon field="type.name" />
                 <p-columnFilter type="text" field="type.name" display="menu" class="ml-auto"></p-columnFilter>
             </th>
             <th pSortableColumn="status.name" style="min-width: 12rem">
-                Status
+                {{ "common.status" | translate }}
                 <p-sortIcon field="status.name" />
                 <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"></p-columnFilter>
             </th>
@@ -73,12 +73,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No appointments found.</td>
+            <td colspan="8">{{ "appointments.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading appointments data. Please wait...</td>
+            <td colspan="8">{{ "appointments.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

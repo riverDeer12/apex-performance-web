@@ -21,10 +21,12 @@ import { ClientService } from "../../../clients/services/client.service";
 import { Client } from "../../../clients/models/client";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { Roles } from "../../../../constants/roles";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-body-measurement-form",
-  imports: [CommonModule, InputText, ReactiveFormsModule, Button, Select],
+  imports: [CommonModule, InputText, ReactiveFormsModule, Button, Select, TranslatePipe],
   templateUrl: "./body-measurement-form.component.html",
   styleUrl: "./body-measurement-form.component.scss",
 })
@@ -51,6 +53,7 @@ export class BodyMeasurementFormComponent implements OnInit {
     private clientService: ClientService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -76,8 +79,8 @@ export class BodyMeasurementFormComponent implements OnInit {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -158,8 +161,8 @@ export class BodyMeasurementFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Body Measurement is created successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("bodyMeasurements.createdDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -173,7 +176,7 @@ export class BodyMeasurementFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "error",
-            summary: "Error Creating Body Measurement",
+            summary: this.translationService.t("bodyMeasurements.createErrorSummary"),
             detail: getErrorMessage(error),
           });
         },
@@ -192,8 +195,8 @@ export class BodyMeasurementFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Body Measurement is updated successfully.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("bodyMeasurements.updatedDetail"),
           });
 
           this.helperService.redirectUserAfterSubmit(
@@ -207,7 +210,7 @@ export class BodyMeasurementFormComponent implements OnInit {
 
           this.messageService.add({
             severity: "error",
-            summary: "Error Updating Body Measurement",
+            summary: this.translationService.t("bodyMeasurements.updateErrorSummary"),
             detail: getErrorMessage(error),
           });
         },

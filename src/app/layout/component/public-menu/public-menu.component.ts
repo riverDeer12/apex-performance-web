@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Ripple } from 'primeng/ripple';
 import { Menubar } from 'primeng/menubar';
 import { AppConfigurator } from '../app.configurator';
+import { TranslationService } from '../../../i18n/translation.service';
 
 @Component({
   selector: "app-public-menu",
@@ -25,19 +26,32 @@ import { AppConfigurator } from '../app.configurator';
 export class PublicMenuComponent {
   items: MenuItem[] | undefined;
 
+  constructor(private translationService: TranslationService) {
+    effect(() => {
+      this.translationService.language();
+      this.buildMenu();
+    });
+  }
+
   ngOnInit() {
+    this.buildMenu();
+  }
+
+  private buildMenu() {
+    const t = (key: string) => this.translationService.t(key);
+
     this.items = [
       {
-        label: "Home",
+        label: t("publicMenu.home"),
       },
       {
-        label: "About",
+        label: t("publicMenu.about"),
       },
       {
-        label: "Shop",
+        label: t("publicMenu.shop"),
       },
       {
-        label: "Contact",
+        label: t("publicMenu.contact"),
       },
     ];
   }

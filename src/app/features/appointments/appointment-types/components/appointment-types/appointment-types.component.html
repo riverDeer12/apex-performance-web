@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment Type"/>
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'appointmentTypes.new' | translate"/>
 </div>
 
 <p-table
@@ -16,13 +16,13 @@
     [globalFilterFields]="['firstName', 'lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template #header>
         <tr>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Name
+                    {{ "common.name" | translate }}
                     <p-sortIcon field="name"/>
                     <p-columnFilter type="text" field="name" display="menu" class="ml-auto"/>
                 </div>
@@ -44,12 +44,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No appointment types found.</td>
+            <td colspan="8">{{ "appointmentTypes.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading appointment types data. Please wait...</td>
+            <td colspan="8">{{ "appointmentTypes.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

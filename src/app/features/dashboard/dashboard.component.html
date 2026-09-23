@@ -1,38 +1,38 @@
 <div class="row mb-3" *ngIf="userRole == userRoles.Client">
     <p-card [style]="{ 'background-color': loggedUserCredits > 0 ? '#d4eddaa8' : '#f8d7dacc' }"
-            header="Credits Status">
+            [header]="'dashboard.creditsStatus' | translate">
         <p class="m-0">
             @if (loggedUserCredits > 0) {
-                <span>You have {{ loggedUserCredits }} appointments left.</span>
+                <span>{{ "dashboard.youHave" | translate }} {{ loggedUserCredits }} {{ "dashboard.appointmentsLeftSuffix" | translate }}</span>
             } @else {
-                <span>You don't have any appointments left. Contact your coach for appointments top up.</span>
+                <span>{{ "dashboard.noAppointmentsLeft" | translate }}</span>
             }
         </p>
     </p-card>
 </div>
 
-<h4>Next Appointments</h4>
+<h4>{{ "dashboard.nextAppointments" | translate }}</h4>
 
 <div class="my-3" *ngIf="userRole == userRoles.Coach">
     <p-button (click)="generateRecurringAppointments()"
-              type="button" iconPos="right" icon="pi pi-sync" label="Generate Schedule For Next Week" />
+              type="button" iconPos="right" icon="pi pi-sync" [label]="'dashboard.generateSchedule' | translate" />
 </div>
 
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Appointment" />
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'dashboard.newAppointment' | translate" />
 </div>
 
 <app-appointments-list [userRole]="userRole" [appointments]="approvedAppointments"
                        type=""></app-appointments-list>
 <app-appointments-list [userRole]="userRole" [appointments]="pendingAppointments"
-                       type="Pending"></app-appointments-list>
+                       [type]="'appointmentsList.pending' | translate"></app-appointments-list>
 <app-appointments-list [userRole]="userRole" [appointments]="inProgressAppointments"
-                       type="In Progress"></app-appointments-list>
+                       [type]="'appointmentsList.inProgress' | translate"></app-appointments-list>
 <hr>
 
 <div>
-    <h4>Appointment Requests</h4>
+    <h4>{{ "menu.appointmentRequests" | translate }}</h4>
     <app-appointments-requests-list [appointmentRequests]="appointmentRequests"></app-appointments-requests-list>
 </div>
 

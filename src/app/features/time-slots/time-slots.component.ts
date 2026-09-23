@@ -16,6 +16,8 @@ import { CommonModule } from "@angular/common";
 import { Roles } from '../../constants/roles';
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { CoachService } from "../coaches/services/coach.service";
+import { TranslationService } from "../../i18n/translation.service";
+import { TranslatePipe } from "../../i18n/translate.pipe";
 
 @Component({
   selector: "app-time-slots",
@@ -27,6 +29,7 @@ import { CoachService } from "../coaches/services/coach.service";
     InputIcon,
     InputText,
     TableModule,
+    TranslatePipe,
   ],
   providers: [DialogService],
   templateUrl: "./time-slots.component.html",
@@ -49,6 +52,7 @@ export class TimeSlotsComponent implements OnInit {
     private messageService: MessageService,
     private helperService: HelperService,
     private confirmationService: ConfirmationService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -78,7 +82,7 @@ export class TimeSlotsComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Add New TimeSlot",
+      header: this.translationService.t("timeSlots.addNew"),
       data: {
         contentType: EntityType.TimeSlot,
         formType: ActionType.Create,
@@ -93,26 +97,26 @@ export class TimeSlotsComponent implements OnInit {
 
   changeActivity(timeSlot: TimeSlot) {
     this.confirmationService.confirm({
-      message: "Are you sure that you want to change activity for this time slot?",
-      header: "Confirm activity change of " + timeSlot.startTime + '-' + timeSlot.endTime,
+      message: this.translationService.t("timeSlots.confirmActivityChange"),
+      header: this.translationService.t("timeSlots.confirmActivityChangeHeader") + " " + timeSlot.startTime + '-' + timeSlot.endTime,
       closable: true,
       closeOnEscape: true,
       icon: "pi pi-exclamation-triangle",
       rejectButtonProps: {
-        label: "No",
+        label: this.translationService.t("common.no"),
         severity: "secondary",
         outlined: true,
       },
       acceptButtonProps: {
-        label: "Yes",
+        label: this.translationService.t("common.yes"),
       },
       accept: () => {
         this.timeSlotService.changeCoachTimeSlotActivity(timeSlot.id, this.coachId).subscribe(
           () => {
             this.messageService.add({
               severity: "success",
-              summary: "Success",
-              detail: "Time Slot activity has been changed.",
+              summary: this.translationService.t("common.success"),
+              detail: this.translationService.t("timeSlots.activityChangedDetail"),
             });
 
             this.loadData();
@@ -121,8 +125,8 @@ export class TimeSlotsComponent implements OnInit {
           () => {
             this.messageService.add({
               severity: "error",
-              summary: "Error",
-              detail: "Error changing Time Slot activity.",
+              summary: this.translationService.t("common.error"),
+              detail: this.translationService.t("timeSlots.activityChangeErrorDetail"),
             });
           },
         );

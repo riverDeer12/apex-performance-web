@@ -14,6 +14,8 @@ import {CoachService} from "../../services/coach.service";
 import {Client} from "../../../clients/models/client";
 import {ClientService} from "../../../clients/services/client.service";
 import {MultiSelect} from "primeng/multiselect";
+import {TranslationService} from "../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: 'app-coach-form',
@@ -22,7 +24,8 @@ import {MultiSelect} from "primeng/multiselect";
         InputText,
         NgIf,
         ReactiveFormsModule,
-        MultiSelect
+        MultiSelect,
+        TranslatePipe
     ],
   templateUrl: './coach-form.component.html',
   styleUrl: './coach-form.component.scss'
@@ -46,7 +49,8 @@ export class CoachFormComponent implements OnInit {
         private helperService: HelperService,
         private coachService: CoachService,
         private messageService: MessageService,
-        private clientService: ClientService
+        private clientService: ClientService,
+        private translationService: TranslationService,
     ) {
     }
 
@@ -63,8 +67,8 @@ export class CoachFormComponent implements OnInit {
 
             this.messageService.add({
                 severity: "warn",
-                summary: "Incomplete or incorrect data",
-                detail: "Check the entered data and try again.",
+                summary: this.translationService.t("common.incompleteTitle"),
+                detail: this.translationService.t("common.incompleteDetail"),
             });
 
             this.loadingData = false;
@@ -107,8 +111,8 @@ export class CoachFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "success",
-                    summary: "Success",
-                    detail: "Coach is created successfully.",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("coaches.createdDetail"),
                 });
 
                 this.helperService.redirectUserAfterSubmit(
@@ -120,7 +124,7 @@ export class CoachFormComponent implements OnInit {
             error: (error) => {
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error Creating Coach",
+                    summary: this.translationService.t("coaches.createErrorSummary"),
                     detail: getErrorMessage(error),
                 });
             },
@@ -137,8 +141,8 @@ export class CoachFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "success",
-                    summary: "Success",
-                    detail: "Coach is updated successfully.",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("coaches.updatedDetail"),
                 });
 
                 this.helperService.redirectUserAfterSubmit(
@@ -152,7 +156,7 @@ export class CoachFormComponent implements OnInit {
 
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error Updating Coach",
+                    summary: this.translationService.t("coaches.updateErrorSummary"),
                     detail: getErrorMessage(error),
                 });
             },

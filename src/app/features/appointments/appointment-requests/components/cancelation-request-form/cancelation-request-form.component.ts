@@ -15,6 +15,8 @@ import {AppointmentType} from "../../../appointment-types/models/appointment-typ
 import {AppointmentRequestService} from "../../services/appointment-request.service";
 import {AppointmentRequest} from "../../models/appointment-request";
 import {StatusResponse} from "../../../../../shared/status-response";
+import {TranslationService} from "../../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../../i18n/translate.pipe";
 
 @Component({
   selector: 'app-cancelation-request-form',
@@ -22,7 +24,8 @@ import {StatusResponse} from "../../../../../shared/status-response";
     Button,
     InputText,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslatePipe
   ],
   templateUrl: './cancelation-request-form.component.html',
   styleUrl: './cancelation-request-form.component.scss'
@@ -46,6 +49,7 @@ export class CancelationRequestFormComponent implements OnInit {
       private helperService: HelperService,
       private appointmentRequestService: AppointmentRequestService,
       private messageService: MessageService,
+      private translationService: TranslationService,
   ) {
   }
 
@@ -61,8 +65,8 @@ export class CancelationRequestFormComponent implements OnInit {
 
       this.messageService.add({
         severity: "warn",
-        summary: "Incomplete or incorrect data",
-        detail: "Check the entered data and try again.",
+        summary: this.translationService.t("common.incompleteTitle"),
+        detail: this.translationService.t("common.incompleteDetail"),
       });
 
       this.loadingData = false;
@@ -86,8 +90,8 @@ export class CancelationRequestFormComponent implements OnInit {
 
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "AppointmentRequest is created successfully.",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("appointmentRequests.createdDetail"),
         });
 
         this.helperService.redirectUserAfterSubmit(
@@ -99,7 +103,7 @@ export class CancelationRequestFormComponent implements OnInit {
       error: (error: any) => {
         this.messageService.add({
           severity: "error",
-          summary: "Error Creating AppointmentRequest",
+          summary: this.translationService.t("appointmentRequests.createErrorSummary"),
           detail: getErrorMessage(error),
         });
       },

@@ -3,20 +3,20 @@
         <tr>
             <th pSortableColumn="sender.firstName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Sender
+                    {{ "appointmentRequests.sender" | translate }}
                 </div>
             </th>
             <th pSortableColumn="type.name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Type
+                    {{ "common.type" | translate }}
                 </div>
             </th>
             <th pSortableColumn="comment" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Comment
+                    {{ "appointmentRequests.comment" | translate }}
                 </div>
             </th>
-            <th>Related Appointment</th>
+            <th>{{ "appointmentRequests.relatedAppointment" | translate }}</th>
             <th></th>
         </tr>
     </ng-template>
@@ -39,25 +39,25 @@
                 <p-button
                     *ngIf="showActionButtons"
                     (click)="approve(appointmentRequest)" class="mr-2" icon="pi pi-check" severity="success"
-                    label="Approve"
+                    [label]="'appointmentsList.approve' | translate"
                     [outlined]="true" />
                 <p-button
                     *ngIf="showActionButtons"
                     (click)="decline(appointmentRequest)" class="mr-2" icon="pi pi-times"
                     severity="danger"
-                    label="Decline"
+                    [label]="'appointmentsList.decline' | translate"
                     [outlined]="true" />
             </td>
         </tr>
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No appointment requests found.</td>
+            <td colspan="8">{{ "appointmentRequests.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading appointment requests data. Please wait...</td>
+            <td colspan="8">{{ "appointmentRequests.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

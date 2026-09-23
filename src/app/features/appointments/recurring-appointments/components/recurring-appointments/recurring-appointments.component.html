@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()" *ngIf="userCanCreateRecurringAppointment"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Recurring Appointment" />
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'recurringAppointments.new' | translate" />
 </div>
 
 <p-table
@@ -16,25 +16,25 @@
     [globalFilterFields]="['startTime', 'endTime']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template #header>
         <tr>
             <th pSortableColumn="name" style="min-width: 12rem">
-                Time
+                {{ "appointmentsList.time" | translate }}
                 <p-sortIcon field="name" />
             </th>
             <th pSortableColumn="clients" style="min-width: 12rem">
-                Clients
+                {{ "common.clients" | translate }}
                 <p-sortIcon field="clients" />
             </th>
             <th pSortableColumn="type.name" style="min-width: 12rem">
-                Type
+                {{ "common.type" | translate }}
                 <p-sortIcon field="type.name" />
             </th>
             <th pSortableColumn="status" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Status
+                    {{ "common.status" | translate }}
                     <p-sortIcon field="status" />
                 </div>
             </th>
@@ -55,7 +55,7 @@
                 {{ recurringAppointment.type.name }}
             </td>
             <td>
-                {{ recurringAppointment.status ? 'Active' : 'InActive' }}
+                {{ recurringAppointment.status ? ('common.active' | translate) : ('common.inactive' | translate) }}
             </td>
             <td class="flex">
                 <p-button (click)="changeActivity(recurringAppointment)"
@@ -72,12 +72,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No recurring appointments found.</td>
+            <td colspan="8">{{ "recurringAppointments.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading recurring appointments data. Please wait...</td>
+            <td colspan="8">{{ "recurringAppointments.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

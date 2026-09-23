@@ -1,53 +1,53 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="firstName">First Name</label>
+            <label for="firstName">{{ "common.firstName" | translate }}</label>
             <input
                     class="w-full {{validationService.getInputClass(form, 'firstName', 'required')}}"
                     type="text" id="firstName" pInputText formControlName="firstName"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'firstName', 'required')"
-                   id="firstName-input">This field is required.</small>
+                   id="firstName-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="lastName">Last Name</label>
+            <label for="lastName">{{ "common.lastName" | translate }}</label>
             <input type="text" class="w-full {{validationService.getInputClass(form, 'lastName', 'required')}}"
                    id="lastName"
                    pInputText formControlName="lastName"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'lastName', 'required')"
-                   id="lastName-input">This field is required.</small>
+                   id="lastName-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="lastName">Email</label>
+            <label for="lastName">{{ "common.email" | translate }}</label>
             <input type="text" class="w-full {{validationService.getInputClass(form, 'email', 'required')}}"
                    id="email"
                    pInputText formControlName="email"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'email', 'required')"
-                   id="email-input">This field is required.</small>
+                   id="email-input">{{ "common.required" | translate }}</small>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'email', 'email')"
-                   id="email-input-email-validation">Email is not valid.</small>
+                   id="email-input-email-validation">{{ "common.emailInvalid" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="phone">Phone Number</label>
+            <label for="phone">{{ "common.phoneNumber" | translate }}</label>
             <input type="text" class="w-full {{validationService.getInputClass(form, 'phone', 'required')}}"
                    id="phone"
                    pInputText formControlName="phone"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'phone', 'required')"
-                   id="phone-input">This field is required.</small>
+                   id="phone-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="clients">Clients</label>
+            <label for="clients">{{ "common.clients" | translate }}</label>
             <p-multi-select [filter]="true" [options]="clients"
                             appendTo="body" styleClass="w-full"
                             formControlName="clients" optionLabel="fullName" optionValue="id"
                             id="clients" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'clients', 'required')"
-                   id="clients-input">This field is required.</small>
+                   id="clients-input">{{ "common.required" | translate }}</small>
         </div>
     </div>
 
@@ -56,7 +56,7 @@
   type="submit"
   [disabled]="loadingData"
   [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
-  [label]="loadingData ? 'Saving...' : 'Save'">
+  [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)">
 </p-button>
     </div>
 </form>

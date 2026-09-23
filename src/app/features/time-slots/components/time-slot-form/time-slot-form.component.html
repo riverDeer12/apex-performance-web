@@ -1,7 +1,7 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div *ngIf="userRole != userRoles.Coach" class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="coach">Coach</label>
+            <label for="coach">{{ "common.coach" | translate }}</label>
             <p-select
                 [options]="coaches"
                 appendTo="body"
@@ -10,10 +10,10 @@
                 id="coach" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'coach', 'required')"
-                   id="coach-input">This field is required.</small>
+                   id="coach-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="day">Day</label>
+            <label for="day">{{ "common.day" | translate }}</label>
             <p-select
                 [options]="weekDays"
                 appendTo="body"
@@ -22,10 +22,10 @@
                 id="day" />
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'day', 'required')"
-                   id="day-input">This field is required.</small>
+                   id="day-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label>Start Time</label>
+            <label>{{ "common.startTime" | translate }}</label>
             <p-datepicker appendTo="body" id="startTime" dateFormat="HH:mm" styleClass="w-full"
                           formControlName="startTime"
                           [showTime]="true"
@@ -35,10 +35,10 @@
                           [disabledDays]="[0]"></p-datepicker>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'startTime', 'required')"
-                   id="startTime-input">This field is required.</small>
+                   id="startTime-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label>End Time</label>
+            <label>{{ "common.endTime" | translate }}</label>
             <p-datepicker appendTo="body" id="endTime" dateFormat="HH:mm" styleClass="w-full"
                           formControlName="endTime"
                           [showTime]="true"
@@ -48,10 +48,10 @@
                           [disabledDays]="[0]"></p-datepicker>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'endTime', 'required')"
-                   id="endTime-input">This field is required.</small>
+                   id="endTime-input">{{ "common.required" | translate }}</small>
         </div>
     </div>
     <div class="my-3">
-        <p-button type="submit" iconPos="right" icon="pi pi-save" label="Save" />
+        <p-button type="submit" iconPos="right" icon="pi pi-save" [label]="'common.save' | translate" />
     </div>
 </form>

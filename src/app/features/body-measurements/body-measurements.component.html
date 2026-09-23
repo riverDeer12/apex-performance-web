@@ -1,6 +1,6 @@
 <div class="my-3" *ngIf="canManageBodyMeasurements">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Body Measurement" />
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'bodyMeasurements.new' | translate" />
 </div>
 
 <p-table
@@ -16,11 +16,11 @@
     [globalFilterFields]="['firstName', 'lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template>
         <div class="flex justify-between items-center flex-column sm:flex-row">
-            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
                     (click)="clear(bodyMeasurementsTable)"></button>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
@@ -35,52 +35,52 @@
         <tr>
             <th *ngIf="canManageBodyMeasurements" pSortableColumn="firstName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Firstname
+                    {{ "bodyMeasurements.firstname" | translate }}
                     <p-sortIcon field="firstName" />
                     <p-columnFilter type="text" field="firstName" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th *ngIf="canManageBodyMeasurements" pSortableColumn="lastName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Lastname
+                    {{ "bodyMeasurements.lastname" | translate }}
                     <p-sortIcon field="lastName" />
                     <p-columnFilter type="text" field="lastName" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
-                Measured At
+                {{ "bodyMeasurements.measuredAt" | translate }}
                 <p-sortIcon field="createdAt" />
             </th>
             <th pSortableColumn="weight" style="min-width: 12rem">
-                Weight
+                {{ "bodyMeasurements.weight" | translate }}
                 <p-sortIcon field="weight" />
             </th>
             <th pSortableColumn="shoulders" style="min-width: 12rem">
-                Shoulders
+                {{ "bodyMeasurements.shoulders" | translate }}
                 <p-sortIcon field="shoulders" />
             </th>
             <th pSortableColumn="chest" style="min-width: 12rem">
-                Chest
+                {{ "bodyMeasurements.chest" | translate }}
                 <p-sortIcon field="chest" />
             </th>
             <th pSortableColumn="upperArm" style="min-width: 12rem">
-                Upper Arm
+                {{ "bodyMeasurements.upperArm" | translate }}
                 <p-sortIcon field="upperArm" />
             </th>
             <th pSortableColumn="waist" style="min-width: 12rem">
-                Waist
+                {{ "bodyMeasurements.waist" | translate }}
                 <p-sortIcon field="waist" />
             </th>
             <th pSortableColumn="thigh" style="min-width: 12rem">
-                Thigh
+                {{ "bodyMeasurements.thigh" | translate }}
                 <p-sortIcon field="thigh" />
             </th>
             <th pSortableColumn="calves" style="min-width: 12rem">
-                Calves
+                {{ "bodyMeasurements.calves" | translate }}
                 <p-sortIcon field="calves" />
             </th>
             <th pSortableColumn="glutes" style="min-width: 12rem">
-                Glutes
+                {{ "bodyMeasurements.glutes" | translate }}
                 <p-sortIcon field="glutes" />
             </th>
             <th *ngIf="canManageBodyMeasurements" style="width: 11rem"></th>
@@ -119,12 +119,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No Body Measurements found.</td>
+            <td colspan="8">{{ "bodyMeasurements.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading Body Measurements data. Please wait...</td>
+            <td colspan="8">{{ "bodyMeasurements.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

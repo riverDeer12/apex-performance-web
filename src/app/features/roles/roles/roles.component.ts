@@ -14,6 +14,8 @@ import {DialogInfoComponent} from "../../../shared/components/dialog-info/dialog
 import {Role} from "./models/role";
 import {RoleService} from "./services/role.service";
 import {HelperService} from "../../../shared/services/helper.service";
+import {TranslationService} from "../../../i18n/translation.service";
+import {TranslatePipe} from "../../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-roles',
@@ -24,7 +26,8 @@ import {HelperService} from "../../../shared/services/helper.service";
         IconField,
         InputIcon,
         InputText,
-        TableModule
+        TableModule,
+        TranslatePipe
     ],
     standalone: true,
     providers: [
@@ -42,7 +45,8 @@ export class RolesComponent {
                 private dialogService: DialogService,
                 private helperService: HelperService,
                 private confirmationService: ConfirmationService,
-                private messageService: MessageService) {
+                private messageService: MessageService,
+                private translationService: TranslationService) {
     }
 
     ngOnInit(): void {
@@ -61,7 +65,7 @@ export class RolesComponent {
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Add New Role',
+            header: this.translationService.t('roles.addNew'),
             data: {
                 contentType: EntityType.Role,
                 formType: ActionType.Create,
@@ -76,7 +80,7 @@ export class RolesComponent {
 
     openInfoDialog(role: Role) {
         this.dialogService.open(DialogInfoComponent, {
-            header: 'Details for: ' + role.name,
+            header: this.translationService.t('roles.detailsFor') + ' ' + role.name,
             data: {
                 contentType: EntityType.Role,
                 data: role
@@ -86,7 +90,7 @@ export class RolesComponent {
 
     openUpdateDialog(role: Role) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Update data for: ' + role.name,
+            header: this.translationService.t('roles.updateDataFor') + ' ' + role.name,
             data: {
                 contentType: EntityType.Role,
                 formType: ActionType.Update,
@@ -102,34 +106,34 @@ export class RolesComponent {
 
     confirmDelete(role: Role) {
         this.confirmationService.confirm({
-            message: 'Are you sure that you want to deactivate this role?',
-            header: 'Confirm deletion of ' + role.name,
+            message: this.translationService.t('roles.confirmDeactivate'),
+            header: this.translationService.t('common.confirmDeletionHeader') + ' ' + role.name,
             closable: true,
             closeOnEscape: true,
             icon: 'pi pi-exclamation-triangle',
             rejectButtonProps: {
-                label: 'No',
+                label: this.translationService.t('common.no'),
                 severity: 'secondary',
                 outlined: true,
             },
             acceptButtonProps: {
-                label: 'Yes',
+                label: this.translationService.t('common.yes'),
             },
             accept: () => {
                 this.roleService.deleteRole(role.id)
                     .subscribe(() => {
                         this.messageService.add({
                             severity: 'success',
-                            summary: 'Success',
-                            detail: 'Role has been deactivated.'
+                            summary: this.translationService.t('common.success'),
+                            detail: this.translationService.t('roles.deactivatedDetail')
                         });
 
                         this.loadData();
                     }, () => {
                         this.messageService.add({
                             severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error deactivating role.'
+                            summary: this.translationService.t('common.error'),
+                            detail: this.translationService.t('roles.deactivateErrorDetail')
                         });
                     });
             }

@@ -16,6 +16,8 @@ import {MultiSelect} from "primeng/multiselect";
 import {Role} from "../../../roles/roles/models/role";
 import {RoleService} from "../../../roles/roles/services/role.service";
 import {Password} from "primeng/password";
+import {TranslationService} from "../../../../i18n/translation.service";
+import {TranslatePipe} from "../../../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-user-form',
@@ -25,7 +27,8 @@ import {Password} from "primeng/password";
         CommonModule,
         ReactiveFormsModule,
         MultiSelect,
-        Password
+        Password,
+        TranslatePipe
     ],
     standalone: true,
     templateUrl: './user-form.component.html',
@@ -55,7 +58,8 @@ export class UserFormComponent {
         private helperService: HelperService,
         private roleService: RoleService,
         private userService: UserService,
-        private messageService: MessageService) {
+        private messageService: MessageService,
+        private translationService: TranslationService) {
     }
 
     ngOnInit(): void {
@@ -73,8 +77,8 @@ export class UserFormComponent {
             this.messageService
                 .add({
                     severity: 'warn',
-                    summary: 'Incomplete or incorrect data',
-                    detail: 'Check the entered data and try again.'
+                    summary: this.translationService.t('common.incompleteTitle'),
+                    detail: this.translationService.t('common.incompleteDetail')
                 });
 
             this.loadingData = false;
@@ -115,8 +119,8 @@ export class UserFormComponent {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'User is created successfully.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('users.createdDetail')
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -124,7 +128,7 @@ export class UserFormComponent {
             error: (error) => {
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error Creating User',
+                    summary: this.translationService.t('users.createErrorSummary'),
                     detail: getErrorMessage(error)
                 });
             },
@@ -141,8 +145,8 @@ export class UserFormComponent {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Success',
-                    detail: 'User is updated successfully.'
+                    summary: this.translationService.t('common.success'),
+                    detail: this.translationService.t('users.updatedDetail')
                 });
 
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
@@ -151,7 +155,7 @@ export class UserFormComponent {
 
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error Updating User',
+                    summary: this.translationService.t('users.updateErrorSummary'),
                     detail: getErrorMessage(error)
                 });
             },

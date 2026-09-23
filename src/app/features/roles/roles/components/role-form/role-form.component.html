@@ -1,35 +1,35 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="formgrid grid">
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="name">Name</label>
+            <label for="name">{{ "common.name" | translate }}</label>
             <input
                 class="w-full {{validationService.getInputClass(form, 'name', 'required')}}"
                 type="text" id="name" pInputText formControlName="name"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'name', 'required')"
-                   id="name-input">This field is required.</small>
+                   id="name-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="description">Description</label>
+            <label for="description">{{ "common.description" | translate }}</label>
             <input
                 class="w-full {{validationService.getInputClass(form, 'description', 'required')}}"
                 type="text" id="description" pInputText formControlName="description"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'description', 'required')"
-                   id="description-input">This field is required.</small>
+                   id="description-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="permissions">Permissions</label>
+            <label for="permissions">{{ "common.permissions" | translate }}</label>
             <p-multiselect [filter]="true" appendTo="body"
                            styleClass="w-full" [options]="permissions"
                            formControlName="permissions" optionLabel="name" optionValue="id"
                            id="permissions"/>
             <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'permissions', 'required')"
-                   id="permissions-input">This field is required.</small>
+                   id="permissions-input">{{ "common.required" | translate }}</small>
         </div>
         <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
-            <label for="users">Users</label>
+            <label for="users">{{ "common.users" | translate }}</label>
             <p-multiselect [filter]="true" appendTo="body"
                            styleClass="w-full" [options]="users"
                            formControlName="users" optionLabel="username" optionValue="id"
@@ -42,7 +42,7 @@
   type="submit"
   [disabled]="loadingData"
   [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
-  [label]="loadingData ? 'Saving...' : 'Save'">
+  [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)">
 </p-button>
     </div>
 </form>

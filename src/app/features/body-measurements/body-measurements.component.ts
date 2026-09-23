@@ -16,6 +16,8 @@ import { BodyMeasurement } from "./models/body-measurement";
 import { BodyMeasurementService } from "./services/body-measurement.service";
 import { Roles } from "../../constants/roles";
 import { AuthenticationService } from "../authentication/services/authentication.service";
+import { TranslationService } from "../../i18n/translation.service";
+import { TranslatePipe } from "../../i18n/translate.pipe";
 
 @Component({
   selector: "app-body-measurements",
@@ -28,6 +30,7 @@ import { AuthenticationService } from "../authentication/services/authentication
     InputIcon,
     InputText,
     TableModule,
+    TranslatePipe,
   ],
   providers: [DialogService],
   templateUrl: "./body-measurements.component.html",
@@ -59,6 +62,7 @@ export class BodyMeasurementsComponent implements OnInit {
     private helperService: HelperService,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -89,7 +93,7 @@ export class BodyMeasurementsComponent implements OnInit {
 
   openCreateDialog() {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Add New Body Measurement",
+      header: this.translationService.t("bodyMeasurements.addNew"),
       data: {
         contentType: EntityType.BodyMeasurement,
         formType: ActionType.Create,
@@ -104,7 +108,7 @@ export class BodyMeasurementsComponent implements OnInit {
 
   openInfoDialog(bodyMeasurement: BodyMeasurement) {
     this.dialogService.open(DialogInfoComponent, {
-      header: "Details for: " + bodyMeasurement.id,
+      header: this.translationService.t("bodyMeasurements.detailsFor") + " " + bodyMeasurement.id,
       data: {
         contentType: EntityType.BodyMeasurement,
         data: bodyMeasurement,
@@ -114,7 +118,7 @@ export class BodyMeasurementsComponent implements OnInit {
 
   openUpdateDialog(bodyMeasurement: BodyMeasurement) {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Update data for: " + bodyMeasurement.id,
+      header: this.translationService.t("bodyMeasurements.updateDataFor") + " " + bodyMeasurement.id,
       data: {
         contentType: EntityType.BodyMeasurement,
         formType: ActionType.Update,
@@ -130,19 +134,18 @@ export class BodyMeasurementsComponent implements OnInit {
 
   confirmDelete(bodyMeasurement: BodyMeasurement) {
     this.confirmationService.confirm({
-      message:
-        "Are you sure that you want to deactivate this Body Measurement?",
-      header: "Confirm deletion of " + bodyMeasurement.id,
+      message: this.translationService.t("bodyMeasurements.confirmDeactivate"),
+      header: this.translationService.t("common.confirmDeletionHeader") + " " + bodyMeasurement.id,
       closable: true,
       closeOnEscape: true,
       icon: "pi pi-exclamation-triangle",
       rejectButtonProps: {
-        label: "No",
+        label: this.translationService.t("common.no"),
         severity: "secondary",
         outlined: true,
       },
       acceptButtonProps: {
-        label: "Yes",
+        label: this.translationService.t("common.yes"),
       },
       accept: () => {
         this.bodyMeasurementService
@@ -151,8 +154,8 @@ export class BodyMeasurementsComponent implements OnInit {
             (response) => {
               this.messageService.add({
                 severity: "success",
-                summary: "Success",
-                detail: "Body Measurement has been deactivated.",
+                summary: this.translationService.t("common.success"),
+                detail: this.translationService.t("bodyMeasurements.deactivatedDetail"),
               });
 
               this.loadData();
@@ -161,8 +164,8 @@ export class BodyMeasurementsComponent implements OnInit {
             (error) => {
               this.messageService.add({
                 severity: "error",
-                summary: "Error",
-                detail: "Error deactivating Body Measurement.",
+                summary: this.translationService.t("common.error"),
+                detail: this.translationService.t("bodyMeasurements.deactivateErrorDetail"),
               });
             },
           );

@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Coach"/>
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'coaches.new' | translate"/>
 </div>
 
 <p-table
@@ -16,11 +16,11 @@
     [globalFilterFields]="['firstName', 'lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template>
         <div class="flex justify-between items-center flex-column sm:flex-row">
-            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
                     (click)="clear(coachesTable)"></button>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
@@ -35,21 +35,21 @@
         <tr>
             <th pSortableColumn="fullName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Name
+                    {{ "common.name" | translate }}
                     <p-sortIcon field="fullName"/>
                     <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
-                Created At
+                {{ "common.createdAt" | translate }}
                 <p-sortIcon field="createdAt"/>
             </th>
             <th pSortableColumn="updatedAt" style="min-width: 12rem">
-                Last Changes
+                {{ "common.lastChanges" | translate }}
                 <p-sortIcon field="updatedAt"/>
             </th>
             <th pSortableColumn="status" style="min-width: 12rem">
-                Status
+                {{ "common.status" | translate }}
                 <p-sortIcon field="status"/>
             </th>
             <th style="width: 11rem"></th>
@@ -82,12 +82,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No coaches found.</td>
+            <td colspan="8">{{ "coaches.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading coaches data. Please wait...</td>
+            <td colspan="8">{{ "coaches.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

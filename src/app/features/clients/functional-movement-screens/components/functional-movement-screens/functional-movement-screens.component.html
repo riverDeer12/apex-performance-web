@@ -1,6 +1,6 @@
 <div class="my-3">
     <p-button (click)="openCreateDialog()"
-              type="button" iconPos="right" icon="pi pi-plus" label="New Functional Movement Screen" />
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'fms.new' | translate" />
 </div>
 
 <p-table
@@ -16,11 +16,11 @@
     [globalFilterFields]="['firstName', 'lastName']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template>
         <div class="flex justify-between items-center flex-column sm:flex-row">
-            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
                     (click)="clear(functionalMovementScreensTable)"></button>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
@@ -35,67 +35,67 @@
         <tr>
             <th pSortableColumn="firstName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Firstname
+                    {{ "fms.firstname" | translate }}
                     <p-sortIcon field="firstName" />
                     <p-columnFilter type="text" field="firstName" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="lastName" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Lastname
+                    {{ "fms.lastname" | translate }}
                     <p-sortIcon field="lastName" />
                     <p-columnFilter type="text" field="lastName" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
-                Created At
+                {{ "common.createdAt" | translate }}
                 <p-sortIcon field="createdAt"/>
             </th>
             <th pSortableColumn="deepSquat" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Deep Squat
+                    {{ "fms.deepSquat" | translate }}
                     <p-sortIcon field="deepSquat" />
                     <p-columnFilter type="text" field="deepSquat" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="hurdleStep" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Hurdle Step
+                    {{ "fms.hurdleStep" | translate }}
                     <p-sortIcon field="hurdleStep" />
                     <p-columnFilter type="text" field="hurdleStep" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="inLineLunge" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Inline Lunge
+                    {{ "fms.inLineLunge" | translate }}
                     <p-sortIcon field="inLineLunge" />
                     <p-columnFilter type="text" field="inLineLunge" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="activeStraightLegRaise" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Active Straight Leg Raise
+                    {{ "fms.activeStraightLegRaise" | translate }}
                     <p-sortIcon field="activeStraightLegRaise" />
                     <p-columnFilter type="text" field="activeStraightLegRaise" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="trunkStabilityPushUp" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Trunk Stability PushUp
+                    {{ "fms.trunkStabilityPushUp" | translate }}
                     <p-sortIcon field="trunkStabilityPushUp" />
                     <p-columnFilter type="text" field="trunkStabilityPushUp" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="rotaryStability" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Rotary Stability
+                    {{ "fms.rotaryStability" | translate }}
                     <p-sortIcon field="rotaryStability" />
                     <p-columnFilter type="text" field="rotaryStability" display="menu" class="ml-auto" />
                 </div>
             </th>
             <th pSortableColumn="shoulderMobility" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Shoulder Mobility
+                    {{ "fms.shoulderMobility" | translate }}
                     <p-sortIcon field="shoulderMobility" />
                     <p-columnFilter type="text" field="shoulderMobility" display="menu" class="ml-auto" />
                 </div>
@@ -135,12 +135,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No Functional Movement Screens found.</td>
+            <td colspan="8">{{ "fms.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading Functional Movement Screens data. Please wait...</td>
+            <td colspan="8">{{ "fms.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

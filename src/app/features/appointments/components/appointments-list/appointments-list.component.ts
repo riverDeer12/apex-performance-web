@@ -14,10 +14,12 @@ import { HelperService } from "../../../../shared/services/helper.service";
 import { Roles } from "../../../../constants/roles";
 import { DayOfWeek } from "../../../../enums/day-of-week";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
+import { TranslationService } from "../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-appointments-list",
-  imports: [CommonModule, DatePipe, TableModule, ButtonDirective, Button],
+  imports: [CommonModule, DatePipe, TableModule, ButtonDirective, Button, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./appointments-list.component.html",
   styleUrl: "./appointments-list.component.scss",
@@ -37,6 +39,7 @@ export class AppointmentsListComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private helperService: HelperService,
     private appointmentService: AppointmentService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -75,8 +78,8 @@ export class AppointmentsListComponent implements OnInit {
       next: (data) => {
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "Appointment has been approved.",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("appointmentsList.approvedDetail"),
         });
         this.helperService.triggerDataRefresh(true);
       },
@@ -91,8 +94,8 @@ export class AppointmentsListComponent implements OnInit {
       next: (data) => {
         this.messageService.add({
           severity: "success",
-          summary: "Success",
-          detail: "Appointment has been declined.",
+          summary: this.translationService.t("common.success"),
+          detail: this.translationService.t("appointmentsList.declinedDetail"),
         });
         this.helperService.triggerDataRefresh(true);
       },
@@ -111,8 +114,8 @@ export class AppointmentsListComponent implements OnInit {
         next: (data) => {
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Appointment has been canceled.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("appointmentsList.canceledDetail"),
           });
           this.helperService.triggerDataRefresh(true);
         },
@@ -125,7 +128,7 @@ export class AppointmentsListComponent implements OnInit {
 
   openCancelationRequestDialog(appointmentId: string): void {
     const dialogRef = this.dialogService.open(DialogFormComponent, {
-      header: "Create Cancelation Request",
+      header: this.translationService.t("appointmentsList.createCancelationRequest"),
       data: {
         contentType: EntityType.CancelationRequest,
         formType: ActionType.Create,

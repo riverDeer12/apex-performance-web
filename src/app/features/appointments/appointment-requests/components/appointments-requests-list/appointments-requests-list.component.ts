@@ -8,10 +8,12 @@ import { MessageService } from "primeng/api";
 import { HelperService } from "../../../../../shared/services/helper.service";
 import { AuthenticationService } from "../../../../authentication/services/authentication.service";
 import { Roles } from "../../../../../constants/roles";
+import { TranslationService } from "../../../../../i18n/translation.service";
+import { TranslatePipe } from "../../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-appointments-requests-list",
-  imports: [CommonModule, Button, DatePipe, TableModule],
+  imports: [CommonModule, Button, DatePipe, TableModule, TranslatePipe],
   templateUrl: "./appointments-requests-list.component.html",
   styleUrl: "./appointments-requests-list.component.scss",
 })
@@ -33,6 +35,7 @@ export class AppointmentsRequestsListComponent {
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
     private helperService: HelperService,
+    private translationService: TranslationService,
   ) {
     this.userRole = this.authenticationService.getUserRole();
   }
@@ -44,8 +47,8 @@ export class AppointmentsRequestsListComponent {
         next: (data) => {
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Appointment Request has been approved.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("appointmentRequests.approvedDetail"),
           });
 
           this.helperService.triggerDataRefresh(true);
@@ -63,8 +66,8 @@ export class AppointmentsRequestsListComponent {
         next: (data) => {
           this.messageService.add({
             severity: "success",
-            summary: "Success",
-            detail: "Appointment Request has been declined.",
+            summary: this.translationService.t("common.success"),
+            detail: this.translationService.t("appointmentRequests.declinedDetail"),
           });
 
           this.helperService.triggerDataRefresh(true);

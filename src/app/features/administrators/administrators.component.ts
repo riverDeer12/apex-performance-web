@@ -14,10 +14,12 @@ import {ActionType} from "../../enums/action-type";
 import {DialogInfoComponent} from "../../shared/components/dialog-info/dialog-info.component";
 import {DatePipe} from "@angular/common";
 import {HelperService} from "../../shared/services/helper.service";
+import {TranslationService} from "../../i18n/translation.service";
+import {TranslatePipe} from "../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-administrators',
-    imports: [ButtonDirective, IconField, InputIcon, InputText, TableModule, Button, DatePipe],
+    imports: [ButtonDirective, IconField, InputIcon, InputText, TableModule, Button, DatePipe, TranslatePipe],
     standalone: true,
     providers: [DialogService],
     templateUrl: './administrators.component.html',
@@ -32,7 +34,8 @@ export class AdministratorsComponent {
                 private dialogService: DialogService,
                 private messageService: MessageService,
                 private helperService: HelperService,
-                private confirmationService: ConfirmationService) {
+                private confirmationService: ConfirmationService,
+                private translationService: TranslationService) {
     }
 
     ngOnInit(): void {
@@ -51,7 +54,7 @@ export class AdministratorsComponent {
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Add New Administrator',
+            header: this.translationService.t('administrators.addNew'),
             data: {
                 contentType: EntityType.Administrator,
                 formType: ActionType.Create,
@@ -66,7 +69,7 @@ export class AdministratorsComponent {
 
     openInfoDialog(administrator: Administrator) {
         this.dialogService.open(DialogInfoComponent, {
-            header: 'Details for: ' + administrator.fullName,
+            header: this.translationService.t('administrators.detailsFor') + ' ' + administrator.fullName,
             data: {
                 contentType: EntityType.Administrator,
                 data: administrator
@@ -76,7 +79,7 @@ export class AdministratorsComponent {
 
     openUpdateDialog(administrator: Administrator) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: 'Update data for: ' + administrator.fullName,
+            header: this.translationService.t('administrators.updateDataFor') + ' ' + administrator.fullName,
             data: {
                 contentType: EntityType.Administrator,
                 formType: ActionType.Update,
@@ -92,33 +95,33 @@ export class AdministratorsComponent {
 
     confirmDelete(administrator: Administrator) {
         this.confirmationService.confirm({
-            message: 'Are you sure that you want to deactivate this administrator?',
-            header: 'Confirm deletion of ' + administrator.fullName,
+            message: this.translationService.t('administrators.confirmDeactivate'),
+            header: this.translationService.t('common.confirmDeletionHeader') + ' ' + administrator.fullName,
             closable: true,
             closeOnEscape: true,
             icon: 'pi pi-exclamation-triangle',
             rejectButtonProps: {
-                label: 'No',
+                label: this.translationService.t('common.no'),
                 severity: 'secondary',
                 outlined: true,
             },
             acceptButtonProps: {
-                label: 'Yes',
+                label: this.translationService.t('common.yes'),
             },
             accept: () => {
                 this.administratorService.deleteAdministrator(administrator.id)
                     .subscribe((response) => {
                         this.messageService.add({
                             severity: 'success',
-                            summary: 'Success',
-                            detail: 'Administrator has been deactivated.'
+                            summary: this.translationService.t('common.success'),
+                            detail: this.translationService.t('administrators.deactivatedDetail')
                         });
                         this.loadData();
                     }, error => {
                         this.messageService.add({
                             severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error deactivating administrator.'
+                            summary: this.translationService.t('common.error'),
+                            detail: this.translationService.t('administrators.deactivateErrorDetail')
                         });
                     });
             }

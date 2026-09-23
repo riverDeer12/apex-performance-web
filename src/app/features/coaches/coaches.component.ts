@@ -14,6 +14,8 @@ import {DatePipe} from "@angular/common";
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
+import {TranslationService} from "../../i18n/translation.service";
+import {TranslatePipe} from "../../i18n/translate.pipe";
 
 @Component({
     selector: 'app-coaches',
@@ -24,7 +26,8 @@ import {InputText} from "primeng/inputtext";
         IconField,
         InputIcon,
         InputText,
-        TableModule
+        TableModule,
+        TranslatePipe
     ],
     providers: [DialogService],
     templateUrl: './coaches.component.html',
@@ -41,6 +44,7 @@ export class CoachesComponent implements OnInit {
         private messageService: MessageService,
         private helperService: HelperService,
         private confirmationService: ConfirmationService,
+        private translationService: TranslationService,
     ) {
     }
 
@@ -60,7 +64,7 @@ export class CoachesComponent implements OnInit {
 
     openCreateDialog() {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: "Add New Coach",
+            header: this.translationService.t("coaches.addNew"),
             data: {
                 contentType: EntityType.Coach,
                 formType: ActionType.Create,
@@ -75,7 +79,7 @@ export class CoachesComponent implements OnInit {
 
     openInfoDialog(coach: Coach) {
         this.dialogService.open(DialogInfoComponent, {
-            header: "Details for: " + coach.fullName,
+            header: this.translationService.t("coaches.detailsFor") + " " + coach.fullName,
             data: {
                 contentType: EntityType.Coach,
                 data: coach,
@@ -85,7 +89,7 @@ export class CoachesComponent implements OnInit {
 
     openUpdateDialog(coach: Coach) {
         const dialogRef = this.dialogService.open(DialogFormComponent, {
-            header: "Update data for: " + coach.fullName,
+            header: this.translationService.t("coaches.updateDataFor") + " " + coach.fullName,
             data: {
                 contentType: EntityType.Coach,
                 formType: ActionType.Update,
@@ -101,26 +105,26 @@ export class CoachesComponent implements OnInit {
 
     confirmDelete(coach: Coach) {
         this.confirmationService.confirm({
-            message: "Are you sure that you want to deactivate this coach?",
-            header: "Confirm deletion of " + coach.id,
+            message: this.translationService.t("coaches.confirmDeactivate"),
+            header: this.translationService.t("common.confirmDeletionHeader") + " " + coach.id,
             closable: true,
             closeOnEscape: true,
             icon: "pi pi-exclamation-triangle",
             rejectButtonProps: {
-                label: "No",
+                label: this.translationService.t("common.no"),
                 severity: "secondary",
                 outlined: true,
             },
             acceptButtonProps: {
-                label: "Yes",
+                label: this.translationService.t("common.yes"),
             },
             accept: () => {
                 this.coachService.deleteCoach(coach.id).subscribe(
                     (response) => {
                         this.messageService.add({
                             severity: "success",
-                            summary: "Success",
-                            detail: "Coach has been deactivated.",
+                            summary: this.translationService.t("common.success"),
+                            detail: this.translationService.t("coaches.deactivatedDetail"),
                         });
 
                         this.loadData();
@@ -128,8 +132,8 @@ export class CoachesComponent implements OnInit {
                     (error) => {
                         this.messageService.add({
                             severity: "error",
-                            summary: "Error",
-                            detail: "Error deactivating coach.",
+                            summary: this.translationService.t("common.error"),
+                            detail: this.translationService.t("coaches.deactivateErrorDetail"),
                         });
                     },
                 );

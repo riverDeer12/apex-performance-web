@@ -11,10 +11,12 @@ import {HelperService} from '../../../../../shared/services/helper.service';
 import {getErrorMessage} from '../../../../../constants/error-codes';
 import {AppointmentTypeService} from '../../services/appointment-type.service';
 import {MessageService} from 'primeng/api';
+import {TranslationService} from '../../../../../i18n/translation.service';
+import {TranslatePipe} from '../../../../../i18n/translate.pipe';
 
 @Component({
     selector: "app-appointment-type-form",
-    imports: [InputText, NgIf, ReactiveFormsModule, Button],
+    imports: [InputText, NgIf, ReactiveFormsModule, Button, TranslatePipe],
     templateUrl: "./appointment-type-form.component.html",
     styleUrl: "./appointment-type-form.component.scss",
 })
@@ -35,6 +37,7 @@ export class AppointmentTypeFormComponent {
         private helperService: HelperService,
         private appointmentTypeService: AppointmentTypeService,
         private messageService: MessageService,
+        private translationService: TranslationService,
     ) {
     }
 
@@ -50,8 +53,8 @@ export class AppointmentTypeFormComponent {
 
             this.messageService.add({
                 severity: "warn",
-                summary: "Incomplete or incorrect data",
-                detail: "Check the entered data and try again.",
+                summary: this.translationService.t("common.incompleteTitle"),
+                detail: this.translationService.t("common.incompleteDetail"),
             });
 
             this.loadingData = false;
@@ -88,8 +91,8 @@ export class AppointmentTypeFormComponent {
 
                 this.messageService.add({
                     severity: "success",
-                    summary: "Success",
-                    detail: "AppointmentType is created successfully.",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("appointmentTypes.createdDetail"),
                 });
 
                 this.helperService.redirectUserAfterSubmit(
@@ -103,7 +106,7 @@ export class AppointmentTypeFormComponent {
 
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error Creating AppointmentType",
+                    summary: this.translationService.t("appointmentTypes.createErrorSummary"),
                     detail: getErrorMessage(error),
                 });
             },
@@ -122,8 +125,8 @@ export class AppointmentTypeFormComponent {
 
                     this.messageService.add({
                         severity: "success",
-                        summary: "Success",
-                        detail: "AppointmentType is updated successfully.",
+                        summary: this.translationService.t("common.success"),
+                        detail: this.translationService.t("appointmentTypes.updatedDetail"),
                     });
 
                     this.helperService.redirectUserAfterSubmit(
@@ -137,7 +140,7 @@ export class AppointmentTypeFormComponent {
 
                     this.messageService.add({
                         severity: "error",
-                        summary: "Error Updating AppointmentType",
+                        summary: this.translationService.t("appointmentTypes.updateErrorSummary"),
                         detail: getErrorMessage(error),
                     });
                 },

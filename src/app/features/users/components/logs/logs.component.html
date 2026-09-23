@@ -11,48 +11,48 @@
     [globalFilterFields]="['timeStamp']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
-    currentPageReportTemplate="There are {totalRecords} entries"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
 >
     <ng-template #header>
         <tr>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Timestamp
+                    {{ "logs.timestamp" | translate }}
                     <p-sortIcon field="timeStamp"/>
                     <p-columnFilter type="date" field="timeStamp" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Level
+                    {{ "logs.level" | translate }}
                     <p-sortIcon field="level"/>
                     <p-columnFilter type="text" field="level" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    RequestMethod
+                    {{ "logs.requestMethod" | translate }}
                     <p-sortIcon field="properties.requestMethod"/>
                     <p-columnFilter type="text" field="properties.requestMethod" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    RequestPath
+                    {{ "logs.requestPath" | translate }}
                     <p-sortIcon field="properties.requestPath"/>
                     <p-columnFilter type="text" field="properties.requestPath" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    StatusCode
+                    {{ "logs.statusCode" | translate }}
                     <p-sortIcon field="properties.statusCode"/>
                     <p-columnFilter type="text" field="properties.statusCode" display="menu" class="ml-auto"/>
                 </div>
             </th>
             <th pSortableColumn="name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
-                    Exception
+                    {{ "logs.exception" | translate }}
                     <p-sortIcon field="exception"/>
                     <p-columnFilter type="text" field="exception" display="menu" class="ml-auto"/>
                 </div>
@@ -83,12 +83,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">No logs found.</td>
+            <td colspan="8">{{ "logs.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">Loading logs data. Please wait...</td>
+            <td colspan="8">{{ "logs.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

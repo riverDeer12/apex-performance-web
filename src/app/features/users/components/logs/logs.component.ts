@@ -3,12 +3,14 @@ import {TableModule} from "primeng/table";
 import {Log} from '../../models/log';
 import {LogService} from '../../services/log.service';
 import {CommonModule} from '@angular/common';
+import {TranslatePipe} from '../../../../i18n/translate.pipe';
 
 @Component({
     selector: 'app-logs',
     imports: [
         CommonModule,
-        TableModule
+        TableModule,
+        TranslatePipe
     ],
     templateUrl: './logs.component.html',
     styleUrl: './logs.component.scss'
