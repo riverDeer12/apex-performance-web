@@ -1,0 +1,27 @@
+<div class="calendar-wrapper">
+    <h4>{{ "calendar.title" | translate }}</h4>
+    <div class="calendar-grid">
+        <div class="calendar-day" *ngFor="let date of weekDates" [class.today]="isToday(date)">
+            <div class="calendar-day-header">
+                <div class="calendar-day-name">{{ weekdayKeyFor(date) | translate }}</div>
+                <div class="calendar-day-date">{{ formatDayDate(date) }}</div>
+            </div>
+            <div class="calendar-day-body">
+                <div class="calendar-appointment" *ngFor="let appointment of appointmentsForDay(date)">
+                    <div class="calendar-appointment-time">
+                        {{ formatTime(appointment.startTime) }} - {{ formatTime(appointment.endTime) }}
+                    </div>
+                    <div class="calendar-appointment-type">{{ appointment.type.name }}</div>
+                    <div class="calendar-appointment-people">
+                        <span class="calendar-client">{{ clientNames(appointment) }}</span>
+                        <span class="calendar-with"> {{ "calendar.with" | translate }} </span>
+                        <span class="calendar-coach">{{ coachNames(appointment) }}</span>
+                    </div>
+                </div>
+                <div class="calendar-empty" *ngIf="appointmentsForDay(date).length === 0">
+                    {{ "calendar.noAppointments" | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
