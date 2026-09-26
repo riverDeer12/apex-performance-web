@@ -181,6 +181,19 @@ export class AppMenu implements OnInit {
           },
         ],
       },
+      {
+        label: t("menu.workouts"),
+        visible:
+          this.authenticationService.validateUserRole(Roles.Administrator) ||
+          this.authenticationService.validateUserRole(Roles.Coach),
+        items: [
+          {
+            label: t("menu.workouts"),
+            icon: "pi pi-fw pi-bolt",
+            routerLink: ["/admin/workouts"],
+          },
+        ],
+      },
     ];
   }
 }

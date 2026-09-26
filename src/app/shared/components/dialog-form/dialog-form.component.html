@@ -117,5 +117,13 @@
         [user]="data">
 </app-user-form>
 
+<app-workout-form
+        *ngIf="contentType === entityType.Workout"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [workout]="data">
+</app-workout-form>
+
 
 

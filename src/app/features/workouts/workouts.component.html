@@ -1,0 +1,98 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()"
+              type="button" iconPos="right" icon="pi pi-plus" [label]="'workouts.new' | translate" />
+</div>
+
+<p-table
+    #workoutsTable
+    [value]="workouts"
+    dataKey="id"
+    sortField="displayName"
+    [sortOrder]="1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['displayName', 'displayDescription', 'displayWorkoutTypes']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
+>
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(workoutsTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input #filter pInputText type="text" (input)="onGlobalFilter(workoutsTable, $event)"
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th style="width: 8rem">{{ "workouts.thumbnail" | translate }}</th>
+            <th pSortableColumn="displayName" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    {{ "common.name" | translate }}
+                    <p-sortIcon field="displayName" />
+                    <p-columnFilter type="text" field="displayName" display="menu" class="ml-auto" />
+                </div>
+            </th>
+            <th style="min-width: 16rem">{{ "common.description" | translate }}</th>
+            <th pSortableColumn="displayWorkoutTypes" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    {{ "workouts.workoutTypes" | translate }}
+                    <p-sortIcon field="displayWorkoutTypes" />
+                    <p-columnFilter type="text" field="displayWorkoutTypes" display="menu" class="ml-auto" />
+                </div>
+            </th>
+            <th style="width: 8rem">{{ "workouts.video" | translate }}</th>
+            <th style="width: 8rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-workout>
+        <tr>
+            <td>
+                <img *ngIf="workout.thumbnailUrl" class="workout-thumbnail"
+                     [src]="workout.thumbnailUrl" [alt]="workout.displayName" loading="lazy" />
+            </td>
+            <td>{{ workout.displayName }}</td>
+            <td>
+                <span class="workout-description" [title]="workout.displayDescription">
+                    {{ workout.displayDescription }}
+                </span>
+            </td>
+            <td>
+                <div class="flex flex-wrap gap-1">
+                    <p-tag *ngFor="let workoutType of workout.displayWorkoutTypeList"
+                           [value]="workoutType" severity="secondary" />
+                </div>
+            </td>
+            <td>
+                <a *ngIf="workout.videoUrl" [href]="workout.videoUrl" target="_blank" rel="noopener noreferrer">
+                    <i class="pi pi-youtube mr-1"></i>{{ "workouts.watch" | translate }}
+                </a>
+            </td>
+            <td class="flex">
+                <p-button (click)="openUpdateDialog(workout)" class="mr-2" icon="pi pi-pencil"
+                          severity="secondary"
+                          [outlined]="true" />
+                <p-button (click)="confirmDelete(workout)" icon="pi pi-trash" severity="danger"
+                          [outlined]="true" />
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="6">{{ "workouts.noneFound" | translate }}</td>
+        </tr>
+    </ng-template>
+    <ng-template #loadingbody>
+        <tr>
+            <td colspan="6">{{ "workouts.loading" | translate }}</td>
+        </tr>
+    </ng-template>
+</p-table>

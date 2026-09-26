@@ -1,0 +1,82 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="nameHr">{{ "workouts.nameHr" | translate }}</label>
+            <input type="text" class="w-full {{ validationService.getInputClass(form, 'nameHr', 'required') }}"
+                   id="nameHr"
+                   pInputText formControlName="nameHr"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'nameHr', 'required')"
+                   id="nameHr-input">{{ "common.required" | translate }}</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'nameHr', 'maxlength')"
+                   id="nameHr-input-maxlength">{{ "workouts.nameTooLong" | translate }}</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="nameEn">{{ "workouts.nameEn" | translate }}</label>
+            <input type="text" class="w-full"
+                   id="nameEn"
+                   pInputText formControlName="nameEn"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'nameEn', 'maxlength')"
+                   id="nameEn-input-maxlength">{{ "workouts.nameTooLong" | translate }}</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="descriptionHr">{{ "workouts.descriptionHr" | translate }}</label>
+            <textarea id="descriptionHr" pInputText rows="4"
+                      class="w-full {{ validationService.getInputClass(form, 'descriptionHr', 'required') }}"
+                      formControlName="descriptionHr"></textarea>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'descriptionHr', 'required')"
+                   id="descriptionHr-input">{{ "common.required" | translate }}</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="descriptionEn">{{ "workouts.descriptionEn" | translate }}</label>
+            <textarea id="descriptionEn" pInputText rows="4"
+                      class="w-full"
+                      formControlName="descriptionEn"></textarea>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="videoUrl">{{ "workouts.videoUrl" | translate }}</label>
+            <input type="url" class="w-full {{ validationService.getInputClass(form, 'videoUrl', 'required') }}"
+                   id="videoUrl" placeholder="https://www.youtube.com/watch?v=..."
+                   pInputText formControlName="videoUrl"/>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'videoUrl', 'required')"
+                   id="videoUrl-input">{{ "common.required" | translate }}</small>
+            <small class="p-error"
+                   *ngIf="validationService.hasErrors(form, 'videoUrl', 'pattern')"
+                   id="videoUrl-input-pattern">{{ "workouts.videoUrlInvalid" | translate }}</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="thumbnailUrl">{{ "workouts.thumbnailUrl" | translate }}</label>
+            <input type="url" class="w-full"
+                   id="thumbnailUrl"
+                   pInputText formControlName="thumbnailUrl"/>
+            <small>{{ "workouts.thumbnailUrlHint" | translate }}</small>
+        </div>
+
+        <div class="field col-12">
+            <label for="workoutTypes">{{ "workouts.workoutTypes" | translate }}</label>
+            <p-multiselect [filter]="true" appendTo="body"
+                           styleClass="w-full" [options]="workoutTypes"
+                           formControlName="workoutTypes" optionLabel="displayName" optionValue="id"
+                           display="chip"
+                           id="workoutTypes"/>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <p-button
+            type="submit"
+            [disabled]="loadingData"
+            [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+            [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)">
+        </p-button>
+    </div>
+</form>

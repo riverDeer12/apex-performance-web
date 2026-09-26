@@ -77,6 +77,13 @@ export const appRoutes: Routes = [
             (m) => m.UsersRoutes,
           ),
       },
+      {
+        path: "workouts",
+        loadChildren: () =>
+          import("./app/features/workouts/workouts.routes").then(
+            (m) => m.WorkoutsRoutes,
+          ),
+      },
     ],
   },
   { path: "not-found", component: NotFound },
