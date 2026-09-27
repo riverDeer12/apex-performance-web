@@ -169,14 +169,11 @@ export class WorkoutsComponent implements OnInit {
                     severity: "success",
                     summary: this.translationService.t("workouts.importSuccessSummary"),
                     detail: this.translationService.t("workouts.importSuccessDetail")
-                        .replace("{created}", String(response.createdWorkoutsCount))
-                        .replace("{skipped}", String(response.skippedWorkoutsCount))
-                        .replace("{types}", String(response.createdWorkoutTypesCount)),
-                    life: 8000,
+                        .replace("{count}", String(response.queuedWorkoutsCount)),
+                    life: 10000,
                 });
 
                 this.importing = false;
-                this.loadData();
             },
             error: (error) => {
                 console.error("Error:", error);
