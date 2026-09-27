@@ -296,6 +296,10 @@ export const translations: Record<Language, Record<string, string>> = {
 
     "deviceTokens.noneFound": "No device tokens found.",
     "deviceTokens.loading": "Loading device tokens data. Please wait...",
+    "deviceTokens.appVersion": "App Version",
+    "deviceTokens.buildNumber": "Build Number",
+    "deviceTokens.osVersion": "OS Version",
+    "deviceTokens.deviceModel": "Device Model",
 
     "appointments.new": "New Appointment",
     "appointments.addNew": "Add New Appointment",
@@ -687,6 +691,10 @@ export const translations: Record<Language, Record<string, string>> = {
 
     "deviceTokens.noneFound": "Nema pronađenih tokena uređaja.",
     "deviceTokens.loading": "Učitavanje podataka o tokenima uređaja. Pričekajte...",
+    "deviceTokens.appVersion": "Verzija aplikacije",
+    "deviceTokens.buildNumber": "Broj builda",
+    "deviceTokens.osVersion": "Verzija OS-a",
+    "deviceTokens.deviceModel": "Model uređaja",
 
     "appointments.new": "Novi termin",
     "appointments.addNew": "Dodaj novi termin",

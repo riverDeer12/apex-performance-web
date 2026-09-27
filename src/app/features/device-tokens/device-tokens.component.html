@@ -8,7 +8,7 @@
     [rowHover]="true"
     [showGridlines]="true"
     [paginator]="true"
-    [globalFilterFields]="['username', 'token']"
+    [globalFilterFields]="['username', 'token', 'platform', 'appVersion', 'buildNumber', 'osVersion', 'deviceModel']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
     [currentPageReportTemplate]="'common.entriesTemplate' | translate"
@@ -49,6 +49,34 @@
                     <p-columnFilter type="text" field="platform" display="menu" class="ml-auto"/>
                 </div>
             </th>
+            <th pSortableColumn="appVersion" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "deviceTokens.appVersion" | translate }}
+                    <p-sortIcon field="appVersion"/>
+                    <p-columnFilter type="text" field="appVersion" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="buildNumber" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "deviceTokens.buildNumber" | translate }}
+                    <p-sortIcon field="buildNumber"/>
+                    <p-columnFilter type="text" field="buildNumber" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="osVersion" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "deviceTokens.osVersion" | translate }}
+                    <p-sortIcon field="osVersion"/>
+                    <p-columnFilter type="text" field="osVersion" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="deviceModel" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "deviceTokens.deviceModel" | translate }}
+                    <p-sortIcon field="deviceModel"/>
+                    <p-columnFilter type="text" field="deviceModel" display="menu" class="ml-auto"/>
+                </div>
+            </th>
             <th pSortableColumn="createdAt" style="min-width: 12rem">
                 {{ "common.createdAt" | translate }}
                 <p-sortIcon field="createdAt"/>
@@ -71,6 +99,18 @@
                 {{ deviceToken.platform }}
             </td>
             <td>
+                {{ deviceToken.appVersion || '-' }}
+            </td>
+            <td>
+                {{ deviceToken.buildNumber || '-' }}
+            </td>
+            <td>
+                {{ deviceToken.osVersion || '-' }}
+            </td>
+            <td>
+                {{ deviceToken.deviceModel || '-' }}
+            </td>
+            <td>
                 {{ deviceToken.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}
             </td>
             <td>
@@ -80,12 +120,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">{{ "deviceTokens.noneFound" | translate }}</td>
+            <td colspan="9">{{ "deviceTokens.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">{{ "deviceTokens.loading" | translate }}</td>
+            <td colspan="9">{{ "deviceTokens.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>
