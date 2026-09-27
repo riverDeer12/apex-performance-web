@@ -10,3 +10,11 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.import-template-link {
+  margin-left: 0.5rem;
+}
+
+:host ::ng-deep .p-toast-detail {
+  white-space: pre-line;
+}

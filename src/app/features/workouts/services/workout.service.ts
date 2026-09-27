@@ -3,6 +3,7 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {Workout, WorkoutRequest} from "../models/workout";
 import {WorkoutType} from "../models/workout-type";
+import {ImportWorkoutsResponse} from "../models/import-workouts-response";
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +24,13 @@ export class WorkoutService {
 
     updateWorkout = (workoutId: string, request: WorkoutRequest) =>
         this.http.put<Workout>(environment.apiUrl + "/workouts/" + workoutId, request);
+
+    importWorkouts = (file: File) => {
+        const formData = new FormData();
+        formData.append("file", file, file.name);
+
+        return this.http.post<ImportWorkoutsResponse>(environment.apiUrl + "/workouts/import", formData);
+    };
 
     deleteWorkout = (workoutId: string) =>
         this.http.delete(environment.apiUrl + "/workouts/" + workoutId);

@@ -1,6 +1,17 @@
-<div class="my-3">
+<div class="my-3 flex flex-wrap items-center gap-2">
     <p-button (click)="openCreateDialog()"
               type="button" iconPos="right" icon="pi pi-plus" [label]="'workouts.new' | translate" />
+    <p-button (click)="openImportFileDialog()"
+              type="button" iconPos="right" severity="secondary" [outlined]="true"
+              [disabled]="importing"
+              [icon]="importing ? 'pi pi-spin pi-spinner' : 'pi pi-upload'"
+              [label]="(importing ? 'workouts.importing' : 'workouts.import') | translate" />
+    <input #importFileInput type="file" class="hidden"
+           accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+           (change)="onImportFileSelected($event)" />
+    <a [href]="importTemplateUrl" download class="import-template-link">
+        <i class="pi pi-download mr-1"></i>{{ "workouts.downloadTemplate" | translate }}
+    </a>
 </div>
 
 <p-table

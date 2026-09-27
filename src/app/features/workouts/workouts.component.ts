@@ -14,9 +14,11 @@ import {EntityType} from "../../enums/entity-type";
 import {ActionType} from "../../enums/action-type";
 import {TranslationService} from "../../i18n/translation.service";
 import {TranslatePipe} from "../../i18n/translate.pipe";
+import {ERROR_CODE_MESSAGES, getErrorMessage} from "../../constants/error-codes";
 import {Workout} from "./models/workout";
 import {getTranslation} from "./models/localized-property";
 import {WorkoutService} from "./services/workout.service";
+import {ImportWorkoutsResponse} from "./models/import-workouts-response";
 
 @Component({
     selector: "app-workouts",
@@ -39,6 +41,12 @@ export class WorkoutsComponent implements OnInit {
     workouts!: Workout[];
 
     @ViewChild(`filter`) filter!: ElementRef;
+
+    @ViewChild(`importFileInput`) importFileInput!: ElementRef<HTMLInputElement>;
+
+    importing = false;
+
+    readonly importTemplateUrl = "assets/templates/workouts-import-template.xlsx";
 
     constructor(
         private workoutService: WorkoutService,
@@ -128,6 +136,75 @@ export class WorkoutsComponent implements OnInit {
         dialogRef.onClose.subscribe(() => {
             this.loadData();
         });
+    }
+
+    openImportFileDialog() {
+        this.importFileInput.nativeElement.click();
+    }
+
+    onImportFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+
+        // Reset input so the same file
+        // can be selected again after fixing it.
+        input.value = "";
+
+        if (!file) return;
+
+        if (!file.name.toLowerCase().endsWith(".xlsx")) {
+            this.messageService.add({
+                severity: "warn",
+                summary: this.translationService.t("workouts.importErrorSummary"),
+                detail: this.translationService.t("workouts.importInvalidFile"),
+            });
+            return;
+        }
+
+        this.importing = true;
+
+        this.workoutService.importWorkouts(file).subscribe({
+            next: (response: ImportWorkoutsResponse) => {
+                this.messageService.add({
+                    severity: "success",
+                    summary: this.translationService.t("workouts.importSuccessSummary"),
+                    detail: this.translationService.t("workouts.importSuccessDetail")
+                        .replace("{created}", String(response.createdWorkoutsCount))
+                        .replace("{skipped}", String(response.skippedWorkoutsCount))
+                        .replace("{types}", String(response.createdWorkoutTypesCount)),
+                    life: 8000,
+                });
+
+                this.importing = false;
+                this.loadData();
+            },
+            error: (error) => {
+                console.error("Error:", error);
+
+                this.messageService.add({
+                    severity: "error",
+                    summary: this.translationService.t("workouts.importErrorSummary"),
+                    detail: this.getImportErrorMessage(error),
+                    sticky: true,
+                });
+
+                this.importing = false;
+            },
+        });
+    }
+
+    /**
+     * Import can return several errors at once
+     * (one per invalid row), prefixed with error code.
+     */
+    private getImportErrorMessage(error: any): string {
+        const errors: string[] = error?.error?.errors?.generalErrors ?? [];
+
+        if (errors.length === 0) return getErrorMessage(error);
+
+        return errors
+            .map(x => ERROR_CODE_MESSAGES[x] ?? x.replace(/^\d{4}\s*/, ""))
+            .join("\n");
     }
 
     confirmDelete(workout: Workout) {
