@@ -182,10 +182,9 @@ export class AppMenu implements OnInit {
         ],
       },
       {
+        // Clients can view workouts, only
+        // administrators and coaches can manage them.
         label: t("menu.workouts"),
-        visible:
-          this.authenticationService.validateUserRole(Roles.Administrator) ||
-          this.authenticationService.validateUserRole(Roles.Coach),
         items: [
           {
             label: t("menu.workouts"),

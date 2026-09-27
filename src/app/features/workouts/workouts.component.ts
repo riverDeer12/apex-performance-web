@@ -19,6 +19,8 @@ import {Workout} from "./models/workout";
 import {getTranslation} from "./models/localized-property";
 import {WorkoutService} from "./services/workout.service";
 import {ImportWorkoutsResponse} from "./models/import-workouts-response";
+import {AuthenticationService} from "../authentication/services/authentication.service";
+import {Roles} from "../../constants/roles";
 
 @Component({
     selector: "app-workouts",
@@ -48,6 +50,12 @@ export class WorkoutsComponent implements OnInit {
 
     readonly importTemplateUrl = "assets/templates/workouts-import-template.xlsx";
 
+    /**
+     * Administrators and coaches can create, import,
+     * edit and delete workouts, clients can only view them.
+     */
+    readonly canManageWorkouts: boolean;
+
     constructor(
         private workoutService: WorkoutService,
         private dialogService: DialogService,
@@ -55,7 +63,12 @@ export class WorkoutsComponent implements OnInit {
         private helperService: HelperService,
         private confirmationService: ConfirmationService,
         private translationService: TranslationService,
+        private authenticationService: AuthenticationService,
     ) {
+        this.canManageWorkouts =
+            this.authenticationService.validateUserRole(Roles.Administrator) ||
+            this.authenticationService.validateUserRole(Roles.Coach);
+
         // Re-translate table values
         // when user changes language.
         effect(() => {

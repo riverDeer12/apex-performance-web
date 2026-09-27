@@ -1,4 +1,4 @@
-<div class="my-3 flex flex-wrap items-center gap-2">
+<div class="my-3 flex flex-wrap items-center gap-2" *ngIf="canManageWorkouts">
     <p-button (click)="openCreateDialog()"
               type="button" iconPos="right" icon="pi pi-plus" [label]="'workouts.new' | translate" />
     <p-button (click)="openImportFileDialog()"
@@ -61,7 +61,7 @@
                 </div>
             </th>
             <th style="width: 8rem">{{ "workouts.video" | translate }}</th>
-            <th style="width: 8rem"></th>
+            <th *ngIf="canManageWorkouts" style="width: 8rem"></th>
         </tr>
     </ng-template>
     <ng-template #body let-workout>
@@ -87,7 +87,7 @@
                     <i class="pi pi-youtube mr-1"></i>{{ "workouts.watch" | translate }}
                 </a>
             </td>
-            <td class="flex">
+            <td class="flex" *ngIf="canManageWorkouts">
                 <p-button (click)="openUpdateDialog(workout)" class="mr-2" icon="pi pi-pencil"
                           severity="secondary"
                           [outlined]="true" />
