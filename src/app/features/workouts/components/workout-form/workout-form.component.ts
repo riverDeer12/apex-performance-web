@@ -25,6 +25,9 @@ import {WorkoutService} from "../../services/workout.service";
 const YOUTUBE_URL_PATTERN =
     /^https?:\/\/((www|m)\.)?(youtube\.com\/(watch\?(.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)[\w-]+/i;
 
+// ErrorCodes.AlreadyExists on API.
+const DUPLICATE_ERROR_CODE = "1300";
+
 @Component({
     selector: "app-workout-form",
     imports: [CommonModule, InputText, ReactiveFormsModule, Button, MultiSelect, TranslatePipe],
@@ -151,6 +154,16 @@ export class WorkoutFormComponent implements OnInit {
         };
     }
 
+    /**
+     * Duplicate workout (same croatian name
+     * and description) gets translated message.
+     */
+    private getWorkoutErrorMessage(error: any): string {
+        return error?.error?.errors?.generalErrors?.[0] === DUPLICATE_ERROR_CODE
+            ? this.translationService.t("workouts.duplicate")
+            : getErrorMessage(error);
+    }
+
     private createWorkout() {
         this.workoutService
             .createWorkout(this.buildRequest())
@@ -176,7 +189,7 @@ export class WorkoutFormComponent implements OnInit {
                     this.messageService.add({
                         severity: "error",
                         summary: this.translationService.t("workouts.createErrorSummary"),
-                        detail: getErrorMessage(error),
+                        detail: this.getWorkoutErrorMessage(error),
                     });
 
                     this.loadingData = false;
@@ -212,7 +225,7 @@ export class WorkoutFormComponent implements OnInit {
                     this.messageService.add({
                         severity: "error",
                         summary: this.translationService.t("workouts.updateErrorSummary"),
-                        detail: getErrorMessage(error),
+                        detail: this.getWorkoutErrorMessage(error),
                     });
 
                     this.loadingData = false;
