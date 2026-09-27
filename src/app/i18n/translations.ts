@@ -240,7 +240,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "workouts.importInvalidFile": "Please select an Excel (.xlsx) file.",
     "workouts.importErrorSummary": "Error Importing Workouts",
     "workouts.importSuccessSummary": "Import Started",
-    "workouts.importSuccessDetail": "The file is valid and {count} workouts are being imported in the background. You will receive an email when the import is finished.",
+    "workouts.importSuccessDetail": "{count} rows are being imported in the background. All valid workouts will be saved and you will receive an email with the result and a list of workouts that could not be saved.",
 
     "timeSlots.new": "New Time Slot",
     "timeSlots.startEndTime": "Start Time - End Time",
@@ -630,7 +630,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "workouts.importInvalidFile": "Odaberite Excel (.xlsx) datoteku.",
     "workouts.importErrorSummary": "Greška pri uvozu vježbi",
     "workouts.importSuccessSummary": "Uvoz pokrenut",
-    "workouts.importSuccessDetail": "Datoteka je ispravna i {count} vježbi se uvozi u pozadini. Kada uvoz završi, dobit ćete email.",
+    "workouts.importSuccessDetail": "{count} redaka se uvozi u pozadini. Sve ispravne vježbe bit će spremljene, a na email ćete dobiti rezultat i popis vježbi koje nisu spremljene.",
 
     "timeSlots.new": "Novi vremenski termin",
     "timeSlots.startEndTime": "Vrijeme početka - Vrijeme završetka",
