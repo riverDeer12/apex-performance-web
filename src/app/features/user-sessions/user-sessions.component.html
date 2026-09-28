@@ -1,0 +1,122 @@
+<p-table
+    #userSessionsTable
+    [value]="userSessions"
+    dataKey="userId"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['username', 'fullName', 'email', 'displayRoles', 'lastDevice', 'lastIpAddress']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
+>
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(userSessionsTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input #filter pInputText type="text" (input)="onGlobalFilter(userSessionsTable, $event)"/>
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="username" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "common.username" | translate }}
+                    <p-sortIcon field="username"/>
+                    <p-columnFilter type="text" field="username" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="fullName" style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                    {{ "common.name" | translate }}
+                    <p-sortIcon field="fullName"/>
+                    <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="displayRoles" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "common.roles" | translate }}
+                    <p-sortIcon field="displayRoles"/>
+                    <p-columnFilter type="text" field="displayRoles" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="lastLoginAt" style="min-width: 12rem">
+                {{ "userSessions.lastLogin" | translate }}
+                <p-sortIcon field="lastLoginAt"/>
+            </th>
+            <th pSortableColumn="lastDevice" style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    {{ "userSessions.device" | translate }}
+                    <p-sortIcon field="lastDevice"/>
+                    <p-columnFilter type="text" field="lastDevice" display="menu" class="ml-auto"/>
+                </div>
+            </th>
+            <th pSortableColumn="loginsCount" style="min-width: 8rem">
+                {{ "userSessions.loginsCount" | translate }}
+                <p-sortIcon field="loginsCount"/>
+            </th>
+            <th style="width: 5rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-userSession>
+        <tr>
+            <td>{{ userSession.username }}</td>
+            <td>{{ userSession.fullName || '-' }}</td>
+            <td>{{ userSession.displayRoles || '-' }}</td>
+            <td>
+                <span *ngIf="userSession.lastLoginAt; else neverLoggedIn">
+                    {{ userSession.lastLoginAt | date : 'dd.MM.yyyy. HH:mm:ss' }}
+                </span>
+                <ng-template #neverLoggedIn>
+                    <span class="never-logged-in">{{ "userSessions.never" | translate }}</span>
+                </ng-template>
+            </td>
+            <td [title]="userSession.lastUserAgent || ''">{{ userSession.lastDevice || '-' }}</td>
+            <td>{{ userSession.loginsCount }}</td>
+            <td>
+                <p-button (click)="openHistory(userSession)" icon="pi pi-history" severity="secondary"
+                          [outlined]="true" [disabled]="userSession.loginsCount === 0"
+                          [ariaLabel]="'userSessions.history' | translate"/>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="7">{{ "userSessions.noneFound" | translate }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="historyVisible" [modal]="true" [dismissableMask]="true" [header]="historyHeader"
+          [style]="{ width: '50rem' }" [breakpoints]="{ '960px': '95vw' }">
+    <p-table [value]="history" [loading]="historyLoading" [rows]="10" [paginator]="history.length > 10"
+             [showGridlines]="true" responsiveLayout="scroll">
+        <ng-template #header>
+            <tr>
+                <th>{{ "userSessions.loggedInAt" | translate }}</th>
+                <th>{{ "userSessions.device" | translate }}</th>
+                <th>{{ "userSessions.ipAddress" | translate }}</th>
+                <th>{{ "userSessions.rememberMe" | translate }}</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-session>
+            <tr>
+                <td>{{ session.loggedInAt | date : 'dd.MM.yyyy. HH:mm:ss' }}</td>
+                <td [title]="session.userAgent || ''">{{ session.device }}</td>
+                <td>{{ session.ipAddress || '-' }}</td>
+                <td>{{ (session.rememberMe ? 'common.yes' : 'common.no') | translate }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="4">{{ "userSessions.noneFound" | translate }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>

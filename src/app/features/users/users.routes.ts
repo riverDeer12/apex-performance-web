@@ -4,6 +4,7 @@ import { RolesComponent } from "../roles/roles/roles.component";
 import { Permissions } from "../../constants/permissions";
 import { LogsComponent } from "./components/logs/logs.component";
 import { DeviceTokensComponent } from "../device-tokens/device-tokens.component";
+import { UserSessionsComponent } from "../user-sessions/user-sessions.component";
 
 export const UsersRoutes: Routes = [
   {
@@ -16,6 +17,10 @@ export const UsersRoutes: Routes = [
   {
     path: "device-tokens",
     component: DeviceTokensComponent
+  },
+  {
+    path: "sessions",
+    component: UserSessionsComponent
   },
   {
     path: "roles",

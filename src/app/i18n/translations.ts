@@ -106,6 +106,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "menu.userRoles": "User Roles",
     "menu.logs": "Logs",
     "menu.workouts": "Workouts",
+    "menu.userSessions": "Sessions",
 
     "publicMenu.home": "Home",
     "publicMenu.about": "About",
@@ -300,6 +301,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "deviceTokens.buildNumber": "Build Number",
     "deviceTokens.osVersion": "OS Version",
     "deviceTokens.deviceModel": "Device Model",
+
+    "userSessions.lastLogin": "Last Login",
+    "userSessions.never": "Never logged in",
+    "userSessions.device": "Device",
+    "userSessions.loginsCount": "Logins",
+    "userSessions.history": "Login history",
+    "userSessions.historyFor": "Login history for",
+    "userSessions.loggedInAt": "Logged In At",
+    "userSessions.ipAddress": "IP Address",
+    "userSessions.rememberMe": "Remember Me",
+    "userSessions.noneFound": "No sessions found.",
+    "userSessions.mobileApp": "Mobile app",
 
     "appointments.new": "New Appointment",
     "appointments.addNew": "Add New Appointment",
@@ -501,6 +514,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "menu.userRoles": "Korisničke uloge",
     "menu.logs": "Zapisnici",
     "menu.workouts": "Vježbe",
+    "menu.userSessions": "Sesije",
 
     "publicMenu.home": "Početna",
     "publicMenu.about": "O nama",
@@ -695,6 +709,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "deviceTokens.buildNumber": "Broj builda",
     "deviceTokens.osVersion": "Verzija OS-a",
     "deviceTokens.deviceModel": "Model uređaja",
+
+    "userSessions.lastLogin": "Zadnja prijava",
+    "userSessions.never": "Nikad se nije prijavio",
+    "userSessions.device": "Uređaj",
+    "userSessions.loginsCount": "Broj prijava",
+    "userSessions.history": "Povijest prijava",
+    "userSessions.historyFor": "Povijest prijava za",
+    "userSessions.loggedInAt": "Vrijeme prijave",
+    "userSessions.ipAddress": "IP adresa",
+    "userSessions.rememberMe": "Zapamti me",
+    "userSessions.noneFound": "Nema pronađenih sesija.",
+    "userSessions.mobileApp": "Mobilna aplikacija",
 
     "appointments.new": "Novi termin",
     "appointments.addNew": "Dodaj novi termin",

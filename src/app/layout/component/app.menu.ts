@@ -157,25 +157,38 @@ export class AppMenu implements OnInit {
       },
       {
         label: t("menu.users"),
-        visible: this.authenticationService.validateUserRole(),
+        // Coaches see only sessions of their clients,
+        // other user management is for super admin.
+        visible:
+          this.authenticationService.validateUserRole() ||
+          this.authenticationService.validateUserRole(Roles.Coach),
         items: [
           {
+            label: t("menu.userSessions"),
+            icon: "pi pi-fw pi-sign-in",
+            routerLink: ["/admin/users/sessions"],
+          },
+          {
             label: t("menu.deviceTokens"),
+            visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-key",
             routerLink: ["/admin/users/device-tokens"],
           },
           {
             label: t("menu.users"),
+            visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-users",
             routerLink: ["/admin/users"],
           },
           {
             label: t("menu.userRoles"),
+            visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-crown",
             routerLink: ["/admin/users/roles"],
           },
           {
             label: t("menu.logs"),
+            visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-file",
             routerLink: ["/admin/users/logs"],
           },
