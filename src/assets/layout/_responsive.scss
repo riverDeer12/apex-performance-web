@@ -20,6 +20,7 @@
                 left: 0;
                 top: 0;
                 height: 100vh;
+                height: 100dvh;
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
                 border-right: 1px solid var(--surface-border);
@@ -79,6 +80,7 @@
             left: 0;
             top: 0;
             height: 100vh;
+            height: 100dvh;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
             transition:
