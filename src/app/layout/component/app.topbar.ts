@@ -37,8 +37,8 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
         <img
           [ngSrc]="
             !layoutService.isDarkTheme()
-              ? 'assets/images/logo_light_theme.png'
-              : 'assets/images/logo_dark_theme.png'
+              ? 'assets/images/logo_light.svg'
+              : 'assets/images/logo_dark.svg'
           "
           width="602"
           height="262"

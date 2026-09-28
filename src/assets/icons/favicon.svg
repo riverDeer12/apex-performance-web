@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="263 165 1246 542">
+  <style>
+    polygon { fill: #000000; }
+    @media (prefers-color-scheme: dark) { polygon { fill: #FFFFFF; } }
+  </style>
+<polygon id="U_left" points="283,190 744,430 865,683 716,468 470,338"/>
+<polygon id="U_right" points="1489,190 1028,430 907,683 1056,468 1302,338"/>
+<polygon id="L_left" points="441,348 517,396 547,469 712,534 778,615 707,557 512,497 475,399"/>
+<polygon id="L_right" points="1331,348 1255,396 1225,469 1060,534 994,615 1065,557 1260,497 1297,399"/>
+</svg>

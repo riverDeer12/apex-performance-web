@@ -45,6 +45,20 @@ html, body, .layout-wrapper { min-height: 100dvh; }
     width: 8rem;
 }
 
+// Pages that show both logo variants display
+// only the one matching current theme.
+.logo-for-dark{
+    display: none;
+}
+
+.app-dark .logo-for-light{
+    display: none;
+}
+
+.app-dark .logo-for-dark{
+    display: inline-block;
+}
+
 .p-timeline-event{
     margin-bottom: 1rem;
     margin-top: 1rem;
