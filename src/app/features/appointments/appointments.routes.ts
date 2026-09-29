@@ -3,6 +3,7 @@ import {Permissions} from "../../constants/permissions";
 import {AppointmentsComponent} from "./appointments.component";
 import {AppointmentTypesComponent} from './appointment-types/components/appointment-types/appointment-types.component';
 import {AppointmentRequestsComponent} from "./appointment-requests/components/appointment-requests/appointment-requests.component";
+import {AppointmentLocationsComponent} from "./appointment-locations/components/appointment-locations/appointment-locations.component";
 import { RecurringAppointmentsComponent } from "./recurring-appointments/components/recurring-appointments/recurring-appointments.component";
 
 export const AppointmentsRoutes: Routes = [
@@ -19,6 +20,10 @@ export const AppointmentsRoutes: Routes = [
         data: {
             permissions: [Permissions.CanGetAppointmentTypes]
         }
+    },
+    {
+        path: 'appointment-locations',
+        component: AppointmentLocationsComponent
     },
     {
         path: 'appointment-requests',

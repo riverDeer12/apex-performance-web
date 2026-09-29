@@ -87,6 +87,12 @@ export class AppMenu implements OnInit {
             routerLink: ["/admin/appointments/appointment-types"],
           },
           {
+            label: t("menu.appointmentLocations"),
+            visible: this.authenticationService.validateUserRole(),
+            icon: "pi pi-fw pi-map-marker",
+            routerLink: ["/admin/appointments/appointment-locations"],
+          },
+          {
             label: t("menu.appointmentRequests"),
             visible: this.authenticationService.checkPermission(
               Permissions.CanGetAppointmentRequests,

@@ -1,0 +1,55 @@
+<form [formGroup]="form" (submit)="submit()">
+    <div class="formgrid grid">
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="name">{{ "common.name" | translate }}</label>
+            <input type="text" id="name" pInputText formControlName="name"
+                   class="w-full {{ validationService.getInputClass(form, 'name', 'required') }}"/>
+            <small class="p-error" *ngIf="validationService.hasErrors(form, 'name', 'required')">
+                {{ "common.required" | translate }}</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="address">{{ "appointmentLocations.address" | translate }}</label>
+            <input type="text" id="address" pInputText formControlName="address" class="w-full"/>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="latitude">{{ "appointmentLocations.latitude" | translate }}</label>
+            <input type="number" step="0.000001" id="latitude" pInputText formControlName="latitude"
+                   (paste)="onLatitudePaste($event)" placeholder="45.352688"
+                   class="w-full {{ validationService.getInputClass(form, 'latitude', 'required') }}"/>
+            <small>{{ "appointmentLocations.coordinatesHint" | translate }}</small>
+            <small class="p-error block" *ngIf="validationService.hasErrors(form, 'latitude', 'required')">
+                {{ "common.required" | translate }}</small>
+            <small class="p-error block"
+                   *ngIf="validationService.hasErrors(form, 'latitude', 'min') || validationService.hasErrors(form, 'latitude', 'max')">
+                {{ "appointmentLocations.latitudeRange" | translate }}</small>
+        </div>
+
+        <div class="field col-12 xl:col-6 lg:col-6 md:col-6">
+            <label for="longitude">{{ "appointmentLocations.longitude" | translate }}</label>
+            <input type="number" step="0.000001" id="longitude" pInputText formControlName="longitude"
+                   placeholder="14.416438"
+                   class="w-full {{ validationService.getInputClass(form, 'longitude', 'required') }}"/>
+            <small class="p-error block" *ngIf="validationService.hasErrors(form, 'longitude', 'required')">
+                {{ "common.required" | translate }}</small>
+            <small class="p-error block"
+                   *ngIf="validationService.hasErrors(form, 'longitude', 'min') || validationService.hasErrors(form, 'longitude', 'max')">
+                {{ "appointmentLocations.longitudeRange" | translate }}</small>
+        </div>
+
+        <div class="field col-12">
+            <label for="googleMapsUrl">{{ "appointmentLocations.googleMapsUrl" | translate }}</label>
+            <input type="url" id="googleMapsUrl" pInputText formControlName="googleMapsUrl" class="w-full"
+                   placeholder="https://maps.app.goo.gl/..."/>
+            <small class="p-error" *ngIf="validationService.hasErrors(form, 'googleMapsUrl', 'pattern')">
+                {{ "appointmentLocations.googleMapsUrlInvalid" | translate }}</small>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <p-button type="submit" [disabled]="loadingData"
+                  [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+                  [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)"/>
+    </div>
+</form>

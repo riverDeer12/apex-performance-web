@@ -1,0 +1,77 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()" type="button" iconPos="right" icon="pi pi-plus"
+              [label]="'appointmentLocations.new' | translate"/>
+</div>
+
+<p-table
+    #appointmentLocationsTable
+    [value]="appointmentLocations"
+    dataKey="id"
+    sortField="name"
+    [sortOrder]="1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'address']"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
+>
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                    (click)="clear(appointmentLocationsTable)"></button>
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input #filter pInputText type="text" (input)="onGlobalFilter(appointmentLocationsTable, $event)"/>
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                {{ "common.name" | translate }}
+                <p-sortIcon field="name"/>
+            </th>
+            <th pSortableColumn="address" style="min-width: 10rem">
+                {{ "appointmentLocations.address" | translate }}
+                <p-sortIcon field="address"/>
+            </th>
+            <th style="min-width: 12rem">{{ "appointmentLocations.coordinates" | translate }}</th>
+            <th style="min-width: 12rem">Google Maps</th>
+            <th style="width: 8rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-location>
+        <tr>
+            <td>{{ location.name }}</td>
+            <td>{{ location.address || '-' }}</td>
+            <td>{{ location.latitude }}, {{ location.longitude }}</td>
+            <td>
+                <div class="flex flex-column gap-1">
+                    <a *ngIf="location.googleMapsUrl" [href]="location.googleMapsUrl" target="_blank" rel="noopener noreferrer">
+                        <i class="pi pi-map-marker mr-1"></i>{{ "appointmentLocations.openInMaps" | translate }}
+                    </a>
+                    <a [href]="navigationUrl(location)" target="_blank" rel="noopener noreferrer">
+                        <i class="pi pi-directions mr-1"></i>{{ "appointmentLocations.navigate" | translate }}
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="flex">
+                    <p-button (click)="openUpdateDialog(location)" class="mr-2" icon="pi pi-pencil"
+                              severity="secondary" [outlined]="true"/>
+                    <p-button (click)="confirmDelete(location)" icon="pi pi-trash" severity="danger" [outlined]="true"/>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="5">{{ "appointmentLocations.noneFound" | translate }}</td>
+        </tr>
+    </ng-template>
+</p-table>

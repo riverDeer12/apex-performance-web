@@ -36,6 +36,7 @@ import { TimeSlotFormComponent } from '../../../features/time-slots/components/t
 import {
   FunctionalMovementScreenFormComponent
 } from '../../../features/clients/functional-movement-screens/components/functional-movement-screen-form/functional-movement-screen-form.component';
+import { AppointmentLocationFormComponent } from '../../../features/appointments/appointment-locations/components/appointment-location-form/appointment-location-form.component';
 import { WorkoutFormComponent } from '../../../features/workouts/components/workout-form/workout-form.component';
 
 @Component({
@@ -61,6 +62,7 @@ import { WorkoutFormComponent } from '../../../features/workouts/components/work
     TimeSlotFormComponent,
     FunctionalMovementScreenFormComponent,
     WorkoutFormComponent,
+    AppointmentLocationFormComponent,
   ],
   standalone: true,
   templateUrl: "./dialog-form.component.html",

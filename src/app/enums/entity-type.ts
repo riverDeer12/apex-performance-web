@@ -3,6 +3,7 @@ export enum EntityType {
     Authentication,
     Appointment,
     AppointmentRequest,
+    AppointmentLocation,
     AppointmentType,
     BodyMeasurement,
     CancelationRequest,
