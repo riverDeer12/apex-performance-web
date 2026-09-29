@@ -87,6 +87,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "topbar.changeUsername": "Change Username",
     "topbar.changePassword": "Change Password",
     "topbar.logOut": "Log Out",
+    "topbar.profile": "Profile",
 
     "menu.home": "Home",
     "menu.dashboard": "Dashboard",
@@ -338,6 +339,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "appointmentLocations.createErrorSummary": "Error Creating Location",
     "appointmentLocations.updateErrorSummary": "Error Updating Location",
 
+    "profile.personalData": "Personal Data",
+    "profile.savedDetail": "Profile is updated successfully.",
+    "profile.saveErrorSummary": "Error Updating Profile",
+    "profile.changePicture": "Change Picture",
+    "profile.removePicture": "Remove",
+    "profile.pictureHint": "JPG, PNG or WebP up to 10 MB. The picture is resized automatically.",
+    "profile.pictureInvalidType": "Select a JPG, PNG or WebP image.",
+    "profile.pictureTooLarge": "Picture is too large. Maximum size is 10 MB.",
+    "profile.pictureErrorSummary": "Error Uploading Picture",
+    "profile.pictureSavedDetail": "Profile picture is updated.",
+    "profile.pictureRemovedDetail": "Profile picture is removed.",
+
     "appointments.new": "New Appointment",
     "appointments.addNew": "Add New Appointment",
     "appointments.detailsFor": "Details for:",
@@ -519,6 +532,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "topbar.changeUsername": "Promijeni korisničko ime",
     "topbar.changePassword": "Promijeni lozinku",
     "topbar.logOut": "Odjava",
+    "topbar.profile": "Profil",
 
     "menu.home": "Početna",
     "menu.dashboard": "Nadzorna ploča",
@@ -769,6 +783,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "appointmentLocations.updatedDetail": "Lokacija je uspješno ažurirana.",
     "appointmentLocations.createErrorSummary": "Greška pri kreiranju lokacije",
     "appointmentLocations.updateErrorSummary": "Greška pri ažuriranju lokacije",
+
+    "profile.personalData": "Osobni podaci",
+    "profile.savedDetail": "Profil je uspješno ažuriran.",
+    "profile.saveErrorSummary": "Greška pri ažuriranju profila",
+    "profile.changePicture": "Promijeni sliku",
+    "profile.removePicture": "Ukloni",
+    "profile.pictureHint": "JPG, PNG ili WebP do 10 MB. Slika se automatski smanjuje.",
+    "profile.pictureInvalidType": "Odaberite JPG, PNG ili WebP sliku.",
+    "profile.pictureTooLarge": "Slika je prevelika. Najveća dopuštena veličina je 10 MB.",
+    "profile.pictureErrorSummary": "Greška pri spremanju slike",
+    "profile.pictureSavedDetail": "Profilna slika je ažurirana.",
+    "profile.pictureRemovedDetail": "Profilna slika je uklonjena.",
 
     "appointments.new": "Novi termin",
     "appointments.addNew": "Dodaj novi termin",

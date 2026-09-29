@@ -1,14 +1,12 @@
 import { Component } from "@angular/core";
-import { MenuItem, MessageService } from "primeng/api";
+import { MenuItem } from "primeng/api";
 import { RouterModule } from "@angular/router";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { StyleClassModule } from "primeng/styleclass";
 import { AppConfigurator } from "./app.configurator";
 import { LayoutService } from "../service/layout.service";
 import { AuthenticationService } from "../../features/authentication/services/authentication.service";
-import { DialogFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
-import { EntityType } from "../../enums/entity-type";
-import { DialogService } from "primeng/dynamicdialog";
+import { ProfileService } from "../../features/profile/services/profile.service";
 import { ButtonLabel } from "primeng/button";
 import { TranslationService } from "../../i18n/translation.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
@@ -16,7 +14,6 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
 @Component({
   selector: "app-topbar",
   standalone: true,
-  providers: [DialogService, MessageService],
   imports: [
     RouterModule,
     CommonModule,
@@ -100,23 +97,22 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
 
       <div class="layout-topbar-menu hidden lg:block">
         <div class="layout-topbar-menu-content">
-          <button
-            (click)="changeUsername()"
-            type="button"
-            class="layout-topbar-action"
+          <a
+            routerLink="/admin/profile"
+            class="layout-topbar-action topbar-profile-link"
+            [attr.aria-label]="'topbar.profile' | translate"
           >
-            <i class="pi pi-user-edit mx-2"></i> {{ "topbar.changeUsername" | translate }}
-          </button>
-          <button
-            (click)="changePassword()"
-            type="button"
-            class="layout-topbar-action"
-          >
-            <i class="pi pi-key mx-2"></i> {{ "topbar.changePassword" | translate }}
-          </button>
-          <span class="pt-2"
-            ><i class="pi pi-user mx-2"></i> <strong>{{ username }}</strong>
-          </span>
+            <img
+              *ngIf="profileService.pictureUrl() as pictureUrl; else noPicture"
+              class="topbar-avatar"
+              [src]="pictureUrl"
+              alt=""
+            />
+            <ng-template #noPicture>
+              <i class="pi pi-user mx-2"></i>
+            </ng-template>
+            <strong>{{ profileService.profile()?.username ?? username }}</strong>
+          </a>
           <button (click)="logOut()" type="button" class="layout-topbar-action">
             <i class="pi pi-sign-out mx-2"></i> {{ "topbar.logOut" | translate }}
           </button>
@@ -133,11 +129,11 @@ export class AppTopbar {
   constructor(
     public layoutService: LayoutService,
     public translationService: TranslationService,
-    private dialogService: DialogService,
-    private messageService: MessageService,
     private authenticationService: AuthenticationService,
+    public profileService: ProfileService,
   ) {
     this.username = this.authenticationService.getLoggedUserUsername();
+    this.profileService.load();
   }
 
   toggleLanguage() {
@@ -154,40 +150,8 @@ export class AppTopbar {
     }));
   }
 
-  logOut = () =>
-      this.authenticationService.logOut("/authentication/login");
-
-  changePassword(): void {
-    this.dialogService.open(DialogFormComponent, {
-      header: "Set Your New Password",
-      data: {
-        contentType: EntityType.ResetUserPassword,
-        dialogId: "resetUserPasswordForm",
-      },
-    });
-  }
-
-  changeUsername(): void {
-    const changeUsernameDialogRef = this.dialogService.open(
-      DialogFormComponent,
-      {
-        header: "Set Your New Username",
-        data: {
-          contentType: EntityType.ChangeUsername,
-          dialogId: "resetUsernameForm",
-        },
-      },
-    );
-
-    changeUsernameDialogRef.onClose.subscribe((response: any) => {
-      this.messageService.add({
-        severity: "success",
-        summary: "Success",
-        detail:
-          "Username changed successfully. On next login you can use your new username.",
-      });
-
-      this.username = this.authenticationService.getLoggedUserUsername();
-    });
+  logOut(): void {
+    this.profileService.clear();
+    this.authenticationService.logOut("/authentication/login");
   }
 }

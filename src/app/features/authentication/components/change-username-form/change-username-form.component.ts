@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { RedirectType } from "../../../../enums/redirect-type";
 import {
   FormBuilder,
@@ -29,6 +29,9 @@ export class ChangeUsernameFormComponent {
   @Input() redirectType!: RedirectType;
   @Input() dialogId!: string;
   @Input() returnUrl!: string;
+
+  // Emitted after username is changed, used by profile page.
+  @Output() saved = new EventEmitter<void>();
 
   form!: FormGroup;
 
@@ -83,6 +86,10 @@ export class ChangeUsernameFormComponent {
           summary: this.translationService.t("common.success"),
           detail: this.translationService.t("changeUsername.changedDetail"),
         });
+
+        this.saved.emit();
+
+        this.form.reset();
 
         this.helperService.redirectUserAfterSubmit(
           this.redirectType,

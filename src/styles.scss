@@ -63,3 +63,18 @@ html, body, .layout-wrapper { min-height: 100dvh; }
     margin-bottom: 1rem;
     margin-top: 1rem;
 }
+// Profile link with small profile picture in top bar.
+.topbar-profile-link{
+    gap: 0.5rem;
+    padding: 0 0.75rem;
+    border-radius: var(--content-border-radius) !important;
+    text-decoration: none;
+}
+
+.topbar-avatar{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--surface-border);
+}

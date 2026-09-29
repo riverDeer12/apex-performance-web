@@ -64,6 +64,13 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: "profile",
+        loadComponent: () =>
+          import("./app/features/profile/profile.component").then(
+            (m) => m.ProfileComponent,
+          ),
+      },
+      {
         path: "time-slots",
         loadChildren: () =>
           import("./app/features/time-slots/time-slots.routes").then(

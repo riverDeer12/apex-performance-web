@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Button} from "primeng/button";
 import {NgIf} from "@angular/common";
 import {Password} from "primeng/password";
@@ -36,6 +36,9 @@ export class ResetPasswordFormComponent {
     @Input() redirectType!: RedirectType;
     @Input() dialogId!: string;
     @Input() returnUrl!: string;
+
+    // Emitted after password is changed, used by profile page.
+    @Output() saved = new EventEmitter<void>();
 
     form!: FormGroup;
 
@@ -102,6 +105,8 @@ export class ResetPasswordFormComponent {
                     detail: this.translationService.t("resetPassword.successDetail"),
                 });
 
+                this.saved.emit();
+                this.form.reset();
                 this.helperService.redirectUserAfterSubmit(this.redirectType, this.returnUrl, this.dialogId);
 
                 this.loadingData = false;

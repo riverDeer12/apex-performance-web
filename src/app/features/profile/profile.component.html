@@ -1,0 +1,90 @@
+<div class="grid grid-cols-12 gap-6" *ngIf="profile() as profile">
+    <div class="col-span-12 lg:col-span-4">
+        <div class="card flex flex-col items-center gap-3 mb-0">
+            <img *ngIf="profileService.pictureUrl() as pictureUrl; else noPicture"
+                 class="profile-picture" [src]="pictureUrl" [alt]="profile.username"/>
+            <ng-template #noPicture>
+                <div class="profile-picture-placeholder"><i class="pi pi-user"></i></div>
+            </ng-template>
+
+            <div class="text-xl font-semibold">{{ profile.firstName ? profile.firstName + ' ' + profile.lastName : profile.username }}</div>
+            <div class="text-muted-color">{{ profile.roles.join(', ') }}</div>
+
+            <input #pictureInput type="file" class="hidden" accept="image/jpeg,image/png,image/webp"
+                   (change)="onPictureSelected($event)"/>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <p-button (click)="choosePicture()" [disabled]="uploadingPicture"
+                          [icon]="uploadingPicture ? 'pi pi-spin pi-spinner' : 'pi pi-camera'"
+                          [label]="'profile.changePicture' | translate"/>
+                <p-button *ngIf="profile.hasProfilePicture" (click)="removePicture()" severity="secondary"
+                          [outlined]="true" icon="pi pi-trash" [label]="'profile.removePicture' | translate"/>
+            </div>
+            <small class="text-center">{{ "profile.pictureHint" | translate }}</small>
+        </div>
+    </div>
+
+    <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+        <div class="card mb-0">
+            <div class="font-semibold text-xl mb-4">{{ "profile.personalData" | translate }}</div>
+            <form [formGroup]="form" (submit)="save()">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-6">
+                    <div class="flex flex-col gap-2">
+                        <label>{{ "common.username" | translate }}</label>
+                        <input type="text" pInputText class="w-full" [value]="profile.username" disabled/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="email">{{ "common.email" | translate }}</label>
+                        <input type="email" id="email" pInputText formControlName="email"
+                               class="w-full {{ validationService.getInputClass(form, 'email', 'required') }}"/>
+                        <small class="p-error" *ngIf="validationService.hasErrors(form, 'email', 'required')">
+                            {{ "common.required" | translate }}</small>
+                        <small class="p-error" *ngIf="validationService.hasErrors(form, 'email', 'email')">
+                            {{ "common.emailInvalid" | translate }}</small>
+                    </div>
+                    <ng-container *ngIf="hasPersonalData()">
+                        <div class="flex flex-col gap-2">
+                            <label for="firstName">{{ "common.firstName" | translate }}</label>
+                            <input type="text" id="firstName" pInputText formControlName="firstName"
+                                   class="w-full {{ validationService.getInputClass(form, 'firstName', 'required') }}"/>
+                            <small class="p-error" *ngIf="validationService.hasErrors(form, 'firstName', 'required')">
+                                {{ "common.required" | translate }}</small>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="lastName">{{ "common.lastName" | translate }}</label>
+                            <input type="text" id="lastName" pInputText formControlName="lastName"
+                                   class="w-full {{ validationService.getInputClass(form, 'lastName', 'required') }}"/>
+                            <small class="p-error" *ngIf="validationService.hasErrors(form, 'lastName', 'required')">
+                                {{ "common.required" | translate }}</small>
+                        </div>
+                    </ng-container>
+                    <div class="flex flex-col gap-2" *ngIf="hasPhone()">
+                        <label for="phone">{{ "common.phoneNumber" | translate }}</label>
+                        <input type="tel" id="phone" pInputText formControlName="phone"
+                               class="w-full {{ validationService.getInputClass(form, 'phone', 'required') }}"/>
+                        <small class="p-error" *ngIf="validationService.hasErrors(form, 'phone', 'required')">
+                            {{ "common.required" | translate }}</small>
+                    </div>
+                </div>
+                <p-button type="submit" [disabled]="saving"
+                          [icon]="saving ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+                          [label]="saving ? ('common.saving' | translate) : ('common.save' | translate)"/>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <div class="card h-full mb-0">
+                    <div class="font-semibold text-xl mb-4">{{ "topbar.changeUsername" | translate }}</div>
+                    <app-change-username-form [redirectType]="redirectTypes.NoRedirect"
+                                              (saved)="onUsernameChanged()"/>
+                </div>
+            </div>
+            <div>
+                <div class="card h-full mb-0">
+                    <div class="font-semibold text-xl mb-4">{{ "topbar.changePassword" | translate }}</div>
+                    <app-reset-password-form [redirectType]="redirectTypes.NoRedirect"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
