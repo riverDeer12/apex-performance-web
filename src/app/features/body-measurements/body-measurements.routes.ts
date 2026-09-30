@@ -7,6 +7,7 @@ export const BodyMeasurementsRoutes: Routes = [
         path: "",
         component: BodyMeasurementsComponent,
         data: {
+            title: "menu.bodyMeasurements", section: "menu.bodyMeasurements",
             permissions: [Permissions.CanGetBodyMeasurements],
         },
     },

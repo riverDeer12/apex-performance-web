@@ -78,3 +78,61 @@ html, body, .layout-wrapper { min-height: 100dvh; }
     object-fit: cover;
     border: 1px solid var(--surface-border);
 }
+
+// Headings use an extended font in the style of Eurostile Bold Extended.
+// Eurostile itself is used when installed on the device, otherwise the
+// self-hosted Michroma (assets/fonts/michroma), which has the same look.
+:root{
+    --heading-font-family: "Eurostile Extended", "Eurostile Bold Extended", "Michroma", "Lato", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.page-title,
+.p-dialog-title,
+.layout-menu .layout-root-menuitem > .layout-menuitem-root-text,
+.card > .font-semibold.text-xl{
+    font-family: var(--heading-font-family);
+    // Extended font is wide and heavy, so regular weight
+    // and a bit tighter spacing keep it readable.
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+.layout-menu .layout-root-menuitem > .layout-menuitem-root-text{
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+}
+
+.p-dialog-title{
+    font-size: 1.1rem;
+}
+
+.card > .font-semibold.text-xl{
+    font-size: 1.05rem;
+}
+
+// Page title above every admin page (see AppPageHeader).
+.page-header{
+    margin-bottom: 1.5rem;
+}
+
+.page-header-section{
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-color-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.page-title{
+    font-size: 1.6rem;
+    line-height: 1.25;
+    margin: 0;
+    color: var(--text-color);
+}
+
+@media (max-width: 575px){
+    .page-title{
+        font-size: 1.25rem;
+    }
+}

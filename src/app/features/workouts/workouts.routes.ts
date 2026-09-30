@@ -5,5 +5,6 @@ export const WorkoutsRoutes: Routes = [
     {
         path: "",
         component: WorkoutsComponent,
+        data: { title: "menu.workouts", section: "menu.workouts" },
     },
 ];

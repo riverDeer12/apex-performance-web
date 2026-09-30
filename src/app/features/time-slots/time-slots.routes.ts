@@ -7,6 +7,7 @@ export const TimeSlotsRoutes: Routes = [
         path: "",
         component: TimeSlotsComponent,
         data: {
+            title: "menu.timeSlots", section: "menu.timeSlots",
             permissions: [Permissions.CanGetTimeSlots],
         },
     }

@@ -7,6 +7,7 @@ export const AdministratorsRoutes: Routes = [
         path: '',
         component: AdministratorsComponent,
         data: {
+            title: "menu.administrators", section: "menu.administrators",
             permissions: [Permissions.CanGetAdministrators]
         }
     }

@@ -8,6 +8,7 @@ export const CoachesRoutes: Routes = [
         path: "",
         component: CoachesComponent,
         data: {
+            title: "menu.coaches", section: "menu.coaches",
             permissions: [Permissions.CanGetCoaches],
         },
     }

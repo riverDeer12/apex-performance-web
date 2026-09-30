@@ -11,6 +11,7 @@ export const AppointmentsRoutes: Routes = [
         path: "",
         component: AppointmentsComponent,
         data: {
+            title: "menu.appointmentsHistory", section: "menu.appointments",
             permissions: [Permissions.CanGetAppointments],
         }
     },
@@ -18,17 +19,20 @@ export const AppointmentsRoutes: Routes = [
         path: 'appointment-types',
         component: AppointmentTypesComponent,
         data: {
+            title: "menu.appointmentTypes", section: "menu.appointments",
             permissions: [Permissions.CanGetAppointmentTypes]
         }
     },
     {
         path: 'appointment-locations',
-        component: AppointmentLocationsComponent
+        component: AppointmentLocationsComponent,
+        data: { title: "menu.appointmentLocations", section: "menu.appointments" },
     },
     {
         path: 'appointment-requests',
         component: AppointmentRequestsComponent,
         data: {
+            title: "menu.appointmentRequests", section: "menu.appointments",
             permissions: [Permissions.CanGetAppointmentRequests]
         }
     },
@@ -36,6 +40,7 @@ export const AppointmentsRoutes: Routes = [
         path: 'recurring-appointments',
         component: RecurringAppointmentsComponent,
         data: {
+            title: "menu.recurringAppointments", section: "menu.appointments",
             permissions: [Permissions.CanGetRecurringAppointments]
         }
     }

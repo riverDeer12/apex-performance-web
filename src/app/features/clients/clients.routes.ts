@@ -8,6 +8,7 @@ export const ClientsRoutes: Routes = [
     path: "",
     component: ClientsComponent,
     data: {
+      title: "menu.clients", section: "menu.clients",
       permissions: [Permissions.CanGetClients],
     },
   },
@@ -15,6 +16,7 @@ export const ClientsRoutes: Routes = [
     path: "functional-movement-screens",
     component: FunctionalMovementScreensComponent,
     data: {
+      title: "menu.fms", section: "menu.clients",
       permissions: [Permissions.CanGetFunctionalMovementScreens],
     },
   },

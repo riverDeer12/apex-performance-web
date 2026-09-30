@@ -27,6 +27,7 @@ export const appRoutes: Routes = [
       {
         path: "dashboard",
         component: DashboardComponent,
+        data: { title: "menu.dashboard", section: "menu.home" },
       },
       {
         path: "administrators",
@@ -69,6 +70,7 @@ export const appRoutes: Routes = [
           import("./app/features/profile/profile.component").then(
             (m) => m.ProfileComponent,
           ),
+        data: { title: "topbar.profile", section: "topbar.profile" },
       },
       {
         path: "time-slots",
