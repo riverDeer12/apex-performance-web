@@ -7,7 +7,14 @@
                 <div class="calendar-day-date">{{ formatDayDate(date) }}</div>
             </div>
             <div class="calendar-day-body">
-                <div class="calendar-appointment" *ngFor="let appointment of appointmentsForDay(date)">
+                <ng-container *ngFor="let entry of entriesForDay(date)">
+                <div class="calendar-appointment calendar-occupied" *ngIf="!entry.appointment">
+                    <div class="calendar-appointment-time">
+                        {{ formatTime(entry.startTime) }} - {{ formatTime(entry.endTime) }}
+                    </div>
+                    <div class="calendar-appointment-type">{{ "calendar.occupied" | translate }}</div>
+                </div>
+                <div class="calendar-appointment" *ngIf="entry.appointment as appointment">
                     <div class="calendar-appointment-actions" *ngIf="canCancel(appointment)">
                         <p-button (click)="cancel(appointment)"
                                   [label]="'appointmentsList.cancel' | translate"
@@ -22,7 +29,8 @@
                         <div class="calendar-coach">{{ coachNames(appointment) }}</div>
                     </div>
                 </div>
-                <div class="calendar-empty" *ngIf="appointmentsForDay(date).length === 0">
+                </ng-container>
+                <div class="calendar-empty" *ngIf="entriesForDay(date).length === 0">
                     {{ "calendar.noAppointments" | translate }}
                 </div>
             </div>

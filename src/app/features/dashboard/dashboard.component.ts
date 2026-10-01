@@ -4,6 +4,7 @@ import { DialogService } from "primeng/dynamicdialog";
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { Appointment } from "../appointments/models/appointment";
 import { AppointmentService } from "../appointments/services/appointment.service";
+import { OccupiedAppointment } from "../appointments/models/occupied-appointment";
 import { AppointmentsStatus } from "../../shared/data-transfer-objects/appointments-status";
 import { Roles } from "../../constants/roles";
 import { AppointmentsRequestsListComponent } from "../appointments/appointment-requests/components/appointments-requests-list/appointments-requests-list.component";
@@ -42,6 +43,8 @@ import { AppointmentsCalendarComponent } from './components/appointments-calenda
 })
 export class DashboardComponent {
   approvedAppointments!: Appointment[];
+
+  occupiedAppointments: OccupiedAppointment[] = [];
 
   appointmentRequests!: AppointmentRequest[];
 
@@ -115,6 +118,7 @@ export class DashboardComponent {
 
     if (this.userRole == Roles.Client) {
       this.getAppointmentsLeft();
+      this.loadOccupiedAppointments();
     }
   }
 
@@ -139,6 +143,17 @@ export class DashboardComponent {
         } else {
           this.appointmentRequests = [];
         }
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+  private loadOccupiedAppointments(): void {
+    this.appointmentService.getOccupiedAppointments().subscribe({
+      next: (data: OccupiedAppointment[]) => {
+        this.occupiedAppointments = data ?? [];
       },
       error: (err) => {
         console.error(err);

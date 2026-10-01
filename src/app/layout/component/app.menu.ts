@@ -71,6 +71,8 @@ export class AppMenu implements OnInit {
       },
       {
         label: t("menu.appointments"),
+        // Clients see their appointments on the dashboard.
+        visible: this.authenticationService.getUserRole() !== Roles.Client,
         items: [
           {
             label: t("menu.appointmentsHistory"),

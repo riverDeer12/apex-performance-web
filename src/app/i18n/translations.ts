@@ -446,6 +446,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     "calendar.title": "Weekly Schedule",
     "calendar.noAppointments": "No appointments",
+    "calendar.occupied": "Occupied",
     "calendar.monday": "Monday",
     "calendar.tuesday": "Tuesday",
     "calendar.wednesday": "Wednesday",
@@ -899,6 +900,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     "calendar.title": "Tjedni raspored termina",
     "calendar.noAppointments": "Nema termina",
+    "calendar.occupied": "Zauzeto",
     "calendar.monday": "Ponedjeljak",
     "calendar.tuesday": "Utorak",
     "calendar.wednesday": "Srijeda",

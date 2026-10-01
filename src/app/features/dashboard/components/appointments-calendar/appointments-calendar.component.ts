@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Appointment } from "../../../appointments/models/appointment";
+import { OccupiedAppointment } from "../../../appointments/models/occupied-appointment";
 import { DateExtensions } from "../../../../shared/extensions/date-extensions";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
@@ -15,6 +16,13 @@ import { ActionType } from "../../../../enums/action-type";
 import { Roles } from "../../../../constants/roles";
 import { BusinessStatuses } from "../../../../constants/business-statuses";
 
+interface CalendarEntry {
+  startTime: Date;
+  endTime: Date;
+  // Missing for occupied appointments of other clients.
+  appointment?: Appointment;
+}
+
 @Component({
   selector: "app-appointments-calendar",
   standalone: true,
@@ -25,6 +33,9 @@ import { BusinessStatuses } from "../../../../constants/business-statuses";
 export class AppointmentsCalendarComponent {
   @Input() appointments: Appointment[] = [];
   @Input() userRole!: string;
+  // Appointments of other clients, shown to clients
+  // only as occupied times without any details.
+  @Input() occupiedAppointments: OccupiedAppointment[] = [];
 
   weekDates: Date[] = DateExtensions.getWeekDates();
 
@@ -94,9 +105,21 @@ export class AppointmentsCalendarComponent {
     return this.weekdayKeys[(date.getDay() + 6) % 7];
   }
 
-  appointmentsForDay(date: Date): Appointment[] {
-    return (this.appointments ?? [])
-      .filter((appointment) => this.isSameDay(new Date(appointment.startTime), date))
+  entriesForDay(date: Date): CalendarEntry[] {
+    const entries: CalendarEntry[] = [
+      ...(this.appointments ?? []).map((appointment) => ({
+        startTime: appointment.startTime,
+        endTime: appointment.endTime,
+        appointment,
+      })),
+      ...(this.occupiedAppointments ?? []).map((occupied) => ({
+        startTime: occupied.startTime,
+        endTime: occupied.endTime,
+      })),
+    ];
+
+    return entries
+      .filter((entry) => this.isSameDay(new Date(entry.startTime), date))
       .sort(
         (a, b) =>
           new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),

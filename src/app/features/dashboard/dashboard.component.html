@@ -21,7 +21,8 @@
               type="button" iconPos="right" icon="pi pi-plus" [label]="'dashboard.newAppointment' | translate" />
 </div>
 
-<app-appointments-calendar [appointments]="approvedAppointments" [userRole]="userRole"></app-appointments-calendar>
+<app-appointments-calendar [appointments]="approvedAppointments" [occupiedAppointments]="occupiedAppointments"
+                           [userRole]="userRole"></app-appointments-calendar>
 
 <hr>
 

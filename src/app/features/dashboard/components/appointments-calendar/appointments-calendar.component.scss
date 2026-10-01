@@ -60,6 +60,12 @@
     font-size: 0.8rem;
 }
 
+.calendar-occupied {
+    background-color: var(--p-content-hover-background, #f1f5f9);
+    color: var(--p-text-muted-color, #6b7280);
+    border-left-color: var(--p-content-border-color, #cbd5e1);
+}
+
 .calendar-appointment-actions {
     display: flex;
     justify-content: flex-end;

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { OccupiedAppointment } from "../models/occupied-appointment";
 import { Appointment } from "../models/appointment";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
@@ -13,6 +14,9 @@ export class AppointmentService {
 
   getAppointments = () =>
     this.http.get<AppointmentsStatus>(environment.apiUrl + "/appointments");
+
+  getOccupiedAppointments = () =>
+    this.http.get<OccupiedAppointment[]>(environment.apiUrl + "/appointments/occupied");
 
   getAllAppointments = () =>
       this.http.get<Appointment[]>(environment.apiUrl + "/appointments/all");
