@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Appointment } from "../../../appointments/models/appointment";
 import { OccupiedAppointment } from "../../../appointments/models/occupied-appointment";
@@ -30,7 +30,7 @@ interface CalendarEntry {
   templateUrl: "./appointments-calendar.component.html",
   styleUrl: "./appointments-calendar.component.scss",
 })
-export class AppointmentsCalendarComponent {
+export class AppointmentsCalendarComponent implements OnChanges {
   @Input() appointments: Appointment[] = [];
   @Input() userRole!: string;
   // Appointments of other clients, shown to clients
@@ -38,6 +38,11 @@ export class AppointmentsCalendarComponent {
   @Input() occupiedAppointments: OccupiedAppointment[] = [];
 
   weekDates: Date[] = DateExtensions.getWeekDates();
+
+  // Entries are built once per input change so the
+  // template keeps the same objects between change
+  // detection runs and buttons inside them stay clickable.
+  entriesByDay: CalendarEntry[][] = this.weekDates.map(() => []);
 
   weekdayKeys = [
     "calendar.monday",
@@ -105,7 +110,11 @@ export class AppointmentsCalendarComponent {
     return this.weekdayKeys[(date.getDay() + 6) % 7];
   }
 
-  entriesForDay(date: Date): CalendarEntry[] {
+  ngOnChanges(): void {
+    this.entriesByDay = this.weekDates.map((date) => this.entriesForDay(date));
+  }
+
+  private entriesForDay(date: Date): CalendarEntry[] {
     const entries: CalendarEntry[] = [
       ...(this.appointments ?? []).map((appointment) => ({
         startTime: appointment.startTime,

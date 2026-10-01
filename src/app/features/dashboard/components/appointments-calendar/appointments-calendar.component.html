@@ -1,13 +1,13 @@
 <div class="calendar-wrapper">
     <h4>{{ "calendar.title" | translate }}</h4>
     <div class="calendar-grid">
-        <div class="calendar-day" *ngFor="let date of weekDates" [class.today]="isToday(date)">
+        <div class="calendar-day" *ngFor="let date of weekDates; let dayIndex = index" [class.today]="isToday(date)">
             <div class="calendar-day-header">
                 <div class="calendar-day-name">{{ weekdayKeyFor(date) | translate }}</div>
                 <div class="calendar-day-date">{{ formatDayDate(date) }}</div>
             </div>
             <div class="calendar-day-body">
-                <ng-container *ngFor="let entry of entriesForDay(date)">
+                <ng-container *ngFor="let entry of entriesByDay[dayIndex]">
                 <div class="calendar-appointment calendar-occupied" *ngIf="!entry.appointment">
                     <div class="calendar-appointment-time">
                         {{ formatTime(entry.startTime) }} - {{ formatTime(entry.endTime) }}
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 </ng-container>
-                <div class="calendar-empty" *ngIf="entriesForDay(date).length === 0">
+                <div class="calendar-empty" *ngIf="entriesByDay[dayIndex].length === 0">
                     {{ "calendar.noAppointments" | translate }}
                 </div>
             </div>
