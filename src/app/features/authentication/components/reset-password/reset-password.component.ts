@@ -36,6 +36,14 @@ export class ResetPasswordComponent implements OnInit {
     private authenticationService: AuthenticationService,
   ) {}
 
+  /**
+   * The link token only allows setting the password,
+   * so it is removed and the user logs in with the new one.
+   */
+  onSaved(): void {
+    localStorage.removeItem("token");
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       const token = params["token"];
