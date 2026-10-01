@@ -18,6 +18,7 @@ import { Roles } from "../../constants/roles";
 import { AuthenticationService } from "../authentication/services/authentication.service";
 import { TranslationService } from "../../i18n/translation.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
+import { WeightProgressChartComponent } from "./components/weight-progress-chart/weight-progress-chart.component";
 
 @Component({
   selector: "app-body-measurements",
@@ -31,6 +32,7 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
     InputText,
     TableModule,
     TranslatePipe,
+    WeightProgressChartComponent,
   ],
   providers: [DialogService],
   templateUrl: "./body-measurements.component.html",

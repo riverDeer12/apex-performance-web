@@ -15,4 +15,5 @@ export class BodyMeasurement {
     calves!: number;
     glutes!: number;
     client!: Client;
+    createdAt!: string;
 }

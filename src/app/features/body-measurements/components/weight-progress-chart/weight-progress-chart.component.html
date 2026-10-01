@@ -1,0 +1,36 @@
+<div class="card mb-6" *ngIf="clients().length > 0">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div class="font-semibold text-xl">{{ "bodyMeasurements.weightProgress" | translate }}</div>
+        <p-select *ngIf="showClientPicker() && clients().length > 1"
+                  [options]="clients()" optionLabel="name" optionValue="id" [filter]="true"
+                  [ngModel]="selectedClientId()" (ngModelChange)="selectedClientId.set($event)"
+                  [ariaLabel]="'common.clients' | translate"
+                  styleClass="w-full sm:w-72"/>
+    </div>
+
+    <div class="flex flex-wrap gap-8 mb-4" *ngIf="latest() as latest">
+        <div>
+            <div class="weight-stat-label">{{ "bodyMeasurements.latestWeight" | translate }}</div>
+            <div class="weight-stat-value">{{ latest.weight | number: '1.0-1' }} kg</div>
+            <div class="weight-stat-hint">{{ latest.date | date: 'dd.MM.yyyy.' }}</div>
+        </div>
+        <div *ngIf="change() !== null">
+            <div class="weight-stat-label">{{ "bodyMeasurements.weightChange" | translate }}</div>
+            <div class="weight-stat-value">
+                {{ change()! > 0 ? '+' : '' }}{{ change() | number: '1.0-1' }} kg
+            </div>
+            <div class="weight-stat-hint">{{ "bodyMeasurements.sinceFirstMeasurement" | translate }}</div>
+        </div>
+        <div>
+            <div class="weight-stat-label">{{ "bodyMeasurements.measurementsCount" | translate }}</div>
+            <div class="weight-stat-value">{{ points().length }}</div>
+        </div>
+    </div>
+
+    <div class="weight-chart" *ngIf="points().length > 1; else notEnoughData">
+        <p-chart type="line" [data]="chartData()" [options]="chartOptions()" height="100%"/>
+    </div>
+    <ng-template #notEnoughData>
+        <div class="weight-stat-hint">{{ "bodyMeasurements.notEnoughForChart" | translate }}</div>
+    </ng-template>
+</div>

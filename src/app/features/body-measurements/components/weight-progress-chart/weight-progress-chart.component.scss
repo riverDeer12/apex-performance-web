@@ -1,0 +1,21 @@
+.weight-chart {
+  position: relative;
+  height: 18rem;
+}
+
+.weight-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.weight-stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.weight-stat-hint {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}

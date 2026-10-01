@@ -101,6 +101,8 @@ export class FunctionalMovementScreenFormComponent {
       trunkStabilityPushUp: ["", [Validators.required]],
       rotaryStability: ["", [Validators.required]],
       shoulderMobility: ["", [Validators.required]],
+      xTest: ["", [Validators.required, Validators.maxLength(50)]],
+      description: ["", [Validators.maxLength(2000)]],
       client: ["", [Validators.required]],
     });
   }
@@ -134,6 +136,14 @@ export class FunctionalMovementScreenFormComponent {
       shoulderMobility: [
         this.functionalMovementScreen.shoulderMobility,
         [Validators.required],
+      ],
+      xTest: [
+        this.functionalMovementScreen.xTest ?? "",
+        [Validators.required, Validators.maxLength(50)],
+      ],
+      description: [
+        this.functionalMovementScreen.description ?? "",
+        [Validators.maxLength(2000)],
       ],
       client: [this.functionalMovementScreen.client.id, [Validators.required]],
     });

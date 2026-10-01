@@ -11,5 +11,7 @@ export class FunctionalMovementScreen {
   trunkStabilityPushUp!: string;
   rotaryStability!: string;
   shoulderMobility!: string;
+  xTest!: string;
+  description?: string | null;
   client!: Client;
 }

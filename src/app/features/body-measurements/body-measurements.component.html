@@ -3,6 +3,9 @@
               type="button" iconPos="right" icon="pi pi-plus" [label]="'bodyMeasurements.new' | translate" />
 </div>
 
+<app-weight-progress-chart [measurements]="bodyMeasurements"
+                           [showClientPicker]="canManageBodyMeasurements"/>
+
 <p-table
     #bodyMeasurementsTable
     [value]="bodyMeasurements"
