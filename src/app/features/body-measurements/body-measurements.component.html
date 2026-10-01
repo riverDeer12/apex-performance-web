@@ -122,12 +122,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">{{ "bodyMeasurements.noneFound" | translate }}</td>
+            <td [attr.colspan]="canManageBodyMeasurements ? 12 : 9">{{ "bodyMeasurements.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">{{ "bodyMeasurements.loading" | translate }}</td>
+            <td [attr.colspan]="canManageBodyMeasurements ? 12 : 9">{{ "bodyMeasurements.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

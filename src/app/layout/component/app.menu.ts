@@ -112,9 +112,12 @@ export class AppMenu implements OnInit {
       },
       {
         label: t("menu.bodyMeasurements"),
-        visible: this.authenticationService.checkPermission(
-          Permissions.CanGetBodyMeasurements,
-        ),
+        // Clients always see their own measurements,
+        // the API returns only measurements of the logged client.
+        visible:
+          this.authenticationService.checkPermission(
+            Permissions.CanGetBodyMeasurements,
+          ) || this.authenticationService.validateUserRole(Roles.Client),
         items: [
           {
             label: t("menu.bodyMeasurements"),
