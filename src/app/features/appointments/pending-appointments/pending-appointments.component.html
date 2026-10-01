@@ -1,0 +1,58 @@
+<p-table
+    [value]="appointments"
+    dataKey="id"
+    sortField="startTime"
+    [sortOrder]="1"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="startTime" style="min-width: 12rem">
+                {{ "appointmentsList.time" | translate }}
+                <p-sortIcon field="startTime" />
+            </th>
+            <th *ngIf="userRole != userRoles.Client" style="min-width: 12rem">{{ "appointmentsList.client" | translate }}</th>
+            <th *ngIf="userRole != userRoles.Coach" style="min-width: 12rem">{{ "appointmentsList.coach" | translate }}</th>
+            <th pSortableColumn="type.name" style="min-width: 10rem">
+                {{ "common.type" | translate }}
+                <p-sortIcon field="type.name" />
+            </th>
+            <th style="min-width: 14rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-appointment>
+        <tr>
+            <td>
+                {{ appointment.startTime | date : 'dd.MM.yyyy.' }}<br>
+                {{ appointment.startTime | date : 'HH:mm' }} - {{ appointment.endTime | date : 'HH:mm' }}
+            </td>
+            <td *ngIf="userRole != userRoles.Client">
+                <p *ngFor="let client of appointment.clients" class="m-0">{{ client.firstName }} {{ client.lastName }}</p>
+            </td>
+            <td *ngIf="userRole != userRoles.Coach">
+                <p *ngFor="let coach of appointment.coaches" class="m-0">{{ coach.firstName }} {{ coach.lastName }}</p>
+            </td>
+            <td>{{ appointment.type.name }}</td>
+            <td>
+                <ng-container *ngIf="canManage; else waiting">
+                    <button class="p-button-outlined p-button-success mr-2" pButton type="button" icon="pi pi-check"
+                            [label]="'appointmentsList.approve' | translate" (click)="approve(appointment)"></button>
+                    <button class="p-button-outlined p-button-danger" pButton type="button" icon="pi pi-times"
+                            [label]="'appointmentsList.decline' | translate" (click)="decline(appointment)"></button>
+                </ng-container>
+                <ng-template #waiting>{{ "appointmentsList.pending" | translate }}</ng-template>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="5">{{ "pendingAppointments.noneFound" | translate }}</td>
+        </tr>
+    </ng-template>
+</p-table>

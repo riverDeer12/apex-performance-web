@@ -9,4 +9,6 @@ export class AppointmentRequest {
     appointment!: Appointment;
     sender!: Client;
     comment!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
 }

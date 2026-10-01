@@ -26,7 +26,7 @@
                 {{ appointmentRequest.sender.firstName }} {{ appointmentRequest.sender.lastName }}
             </td>
             <td>
-                {{ appointmentRequest.type.name }}
+                {{ ('requestTypes.' + appointmentRequest.type.name) | translate }}
             </td>
             <td>
                 {{ appointmentRequest.comment }}

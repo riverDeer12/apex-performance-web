@@ -95,20 +95,34 @@ export class AppMenu implements OnInit {
             routerLink: ["/admin/appointments/appointment-locations"],
           },
           {
-            label: t("menu.appointmentRequests"),
-            visible: this.authenticationService.checkPermission(
-              Permissions.CanGetAppointmentRequests,
-            ),
-            icon: "pi pi-fw pi-file-check",
-            routerLink: ["/admin/appointments/appointment-requests"],
-          },
-          {
             label: t("menu.recurringAppointments"),
             visible: this.authenticationService.checkPermission(
               Permissions.CanGetRecurringAppointments,
             ),
             icon: "pi pi-fw pi-calendar-clock",
             routerLink: ["/admin/appointments/recurring-appointments"],
+          },
+        ],
+      },
+      {
+        // Every role sees requests, the API returns
+        // only requests the logged user can see.
+        label: t("menu.requests"),
+        items: [
+          {
+            label: t("menu.appointmentRequests"),
+            icon: "pi pi-fw pi-file-check",
+            routerLink: ["/admin/appointments/appointment-requests"],
+          },
+          {
+            label: t("menu.cancelationRequests"),
+            icon: "pi pi-fw pi-calendar-times",
+            routerLink: ["/admin/appointments/cancelation-requests"],
+          },
+          {
+            label: t("menu.joinRequests"),
+            icon: "pi pi-fw pi-user-plus",
+            routerLink: ["/admin/appointments/join-requests"],
           },
         ],
       },

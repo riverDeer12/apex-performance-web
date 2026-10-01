@@ -12,6 +12,9 @@ import {BusinessStatuses} from '../../../../../constants/business-statuses';
 import {CommonModule} from '@angular/common';
 import {TranslationService} from '../../../../../i18n/translation.service';
 import {TranslatePipe} from '../../../../../i18n/translate.pipe';
+import {ActivatedRoute} from '@angular/router';
+import {AuthenticationService} from '../../../../authentication/services/authentication.service';
+import {Roles} from '../../../../../constants/roles';
 
 @Component({
     selector: 'app-appointment-requests',
@@ -29,6 +32,10 @@ export class AppointmentRequestsComponent implements OnInit {
     @Input() isAdmin: boolean = true;
     appointmentRequests!: AppointmentRequest[];
 
+    // Request type shown on this page (CancelationRequest or JoinRequest),
+    // all types are shown when the route does not set it.
+    requestType?: string;
+
     public get businessStatuses(): typeof BusinessStatuses {
         return BusinessStatuses;
     }
@@ -38,16 +45,25 @@ export class AppointmentRequestsComponent implements OnInit {
         private messageService: MessageService,
         private dialogService: DialogService,
         private translationService: TranslationService,
+        private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
     ) {
+        this.requestType = route.snapshot.data['requestType'];
+        // Only coaches and administrators can approve or decline requests,
+        // clients see the status of requests they have sent.
+        this.isAdmin = this.authenticationService.getUserRole() !== Roles.Client;
     }
+
+    statusLabel = (appointmentRequest: AppointmentRequest) =>
+        this.translationService.t('businessStatuses.' + appointmentRequest.status.name)
 
     ngOnInit() {
         this.loadData();
     }
 
     areActionsEnabled = (appointmentRequest: AppointmentRequest) =>
-        this.isAdmin && appointmentRequest.status.name == BusinessStatuses.Pending ||
-        appointmentRequest.status.name == BusinessStatuses.InProgress
+        this.isAdmin && (appointmentRequest.status.name == BusinessStatuses.Pending ||
+            appointmentRequest.status.name == BusinessStatuses.InProgress)
 
     getTextColor = (appointmentRequest: AppointmentRequest) => {
         switch (appointmentRequest.status.name) {
@@ -63,7 +79,7 @@ export class AppointmentRequestsComponent implements OnInit {
     }
 
     isStatusTextVisible = (appointmentRequest: AppointmentRequest) =>
-        this.isAdmin && appointmentRequest.status.name != BusinessStatuses.Pending &&
+        appointmentRequest.status.name != BusinessStatuses.Pending &&
         appointmentRequest.status.name != BusinessStatuses.InProgress;
 
     approve(appointmentRequest: AppointmentRequest): void {
@@ -121,9 +137,9 @@ export class AppointmentRequestsComponent implements OnInit {
     private loadData(): void {
         this.appointmentRequestService.getAppointmentRequests().subscribe({
             next: (data) => {
-                this.appointmentRequests = data.map((x: AppointmentRequest) =>
-                    Object.assign(new AppointmentRequest(), x),
-                );
+                this.appointmentRequests = data
+                    .filter((x: AppointmentRequest) => !this.requestType || x.type.name == this.requestType)
+                    .map((x: AppointmentRequest) => Object.assign(new AppointmentRequest(), x));
             },
             error: (err) => {
                 console.error(err);

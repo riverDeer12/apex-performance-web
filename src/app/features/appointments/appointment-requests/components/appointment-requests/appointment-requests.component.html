@@ -23,12 +23,20 @@
                     <p-columnFilter type="text" field="status.name" display="menu" class="ml-auto"/>
                 </div>
             </th>
-            <th pSortableColumn="type.name" style="min-width: 12rem">
+            <th *ngIf="!requestType" pSortableColumn="type.name" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
                     {{ "appointmentRequests.requestType" | translate }}
                     <p-sortIcon field="type.name"/>
                     <p-columnFilter type="text" field="type.name" display="menu" class="ml-auto"/>
                 </div>
+            </th>
+            <th *ngIf="isAdmin" pSortableColumn="sender.lastName" style="min-width: 12rem">
+                {{ "appointmentRequests.sender" | translate }}
+                <p-sortIcon field="sender.lastName"/>
+            </th>
+            <th pSortableColumn="createdAt" style="min-width: 10rem">
+                {{ "appointmentRequests.sentAt" | translate }}
+                <p-sortIcon field="createdAt"/>
             </th>
             <th pSortableColumn="comment" style="min-width: 12rem">
                 <div class="flex justify-between items-center">
@@ -59,10 +67,16 @@
                 </p>
             </td>
             <td>
-                {{ appointmentRequest.status.name }}
+                {{ statusLabel(appointmentRequest) }}
+            </td>
+            <td *ngIf="!requestType">
+                {{ ('requestTypes.' + appointmentRequest.type.name) | translate }}
+            </td>
+            <td *ngIf="isAdmin">
+                {{ appointmentRequest.sender?.firstName }} {{ appointmentRequest.sender?.lastName }}
             </td>
             <td>
-                {{ appointmentRequest.type.name }}
+                {{ appointmentRequest.createdAt | date : 'dd.MM.yyyy. HH:mm' }}
             </td>
             <td>
                 {{ appointmentRequest.comment }}
@@ -84,12 +98,12 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="8">{{ "appointmentRequests.noneFound" | translate }}</td>
+            <td colspan="9">{{ "appointmentRequests.noneFound" | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>
         <tr>
-            <td colspan="8">{{ "appointmentRequests.loading" | translate }}</td>
+            <td colspan="9">{{ "appointmentRequests.loading" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>
