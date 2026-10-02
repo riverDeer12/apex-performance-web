@@ -17,6 +17,9 @@ import {InputText} from "primeng/inputtext";
 import {AuthenticationService} from "../authentication/services/authentication.service";
 import {TranslationService} from "../../i18n/translation.service";
 import {TranslatePipe} from "../../i18n/translate.pipe";
+import {FormsModule} from "@angular/forms";
+import {Select} from "primeng/select";
+import {ClientPlans} from "../../constants/client-plans";
 
 @Component({
     selector: "app-clients",
@@ -30,6 +33,8 @@ import {TranslatePipe} from "../../i18n/translate.pipe";
         InputText,
         ButtonDirective,
         TranslatePipe,
+        FormsModule,
+        Select,
     ],
     providers: [DialogService],
     templateUrl: "./clients.component.html",
@@ -41,6 +46,16 @@ export class ClientsComponent {
     @Input() clients!: Client[];
 
     @ViewChild(`filter`) filter!: ElementRef;
+
+    // Plan shown in the table, all plans when empty.
+    selectedPlan: string | null = null;
+
+    get planOptions(): { label: string; value: string }[] {
+        return ClientPlans.All.map(plan => ({
+            label: this.translationService.t("clientPlans." + plan),
+            value: plan,
+        }));
+    }
 
     constructor(
         private clientService: ClientService,
@@ -74,7 +89,7 @@ export class ClientsComponent {
 
     clear(table: Table) {
         table.clear();
-        this.filter.nativeElement.value = "";
+        if (this.filter?.nativeElement) this.filter.nativeElement.value = "";
     }
 
     openCreateDialog() {

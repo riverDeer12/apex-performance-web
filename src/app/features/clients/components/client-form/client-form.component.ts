@@ -19,6 +19,8 @@ import {ClientService} from "../../services/client.service";
 import {Coach} from "../../../coaches/models/coach";
 import {CoachService} from "../../../coaches/services/coach.service";
 import {MultiSelect} from "primeng/multiselect";
+import {Select} from "primeng/select";
+import {ClientPlans} from "../../../../constants/client-plans";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import {Roles} from "../../../../constants/roles";
 import {TranslationService} from "../../../../i18n/translation.service";
@@ -27,7 +29,7 @@ import {TranslatePipe} from "../../../../i18n/translate.pipe";
 @Component({
     selector: "app-client-form",
     standalone: true,
-    imports: [Button, InputText, NgIf, ReactiveFormsModule, MultiSelect, TranslatePipe],
+    imports: [Button, InputText, NgIf, ReactiveFormsModule, MultiSelect, Select, TranslatePipe],
     templateUrl: "./client-form.component.html",
     styleUrl: "./client-form.component.scss",
 })
@@ -45,6 +47,13 @@ export class ClientFormComponent implements OnInit {
     coaches!: Coach[];
 
     loadingData!: boolean;
+
+    get planOptions(): { label: string; value: string }[] {
+        return ClientPlans.All.map(plan => ({
+            label: this.translationService.t("clientPlans." + plan),
+            value: plan,
+        }));
+    }
 
     get userRoles(): typeof Roles {
         return Roles;
@@ -116,6 +125,7 @@ export class ClientFormComponent implements OnInit {
             email: ["", [Validators.required, Validators.email]],
             phone: ["", [Validators.required]],
             credits: ["", [Validators.required]],
+            plan: [ClientPlans.PrivateCoaching, [Validators.required]],
             coaches: [[]]
         });
     }
@@ -127,6 +137,7 @@ export class ClientFormComponent implements OnInit {
             email: [this.client.email, [Validators.required, Validators.email]],
             phone: [this.client.phone, [Validators.required]],
             credits: [this.client.credits, [Validators.required]],
+            plan: [this.client.plan ?? ClientPlans.PrivateCoaching, [Validators.required]],
             coaches: [this.client.coaches?.map(x => x.id)]
         });
     }
