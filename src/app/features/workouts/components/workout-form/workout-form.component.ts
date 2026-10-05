@@ -105,7 +105,8 @@ export class WorkoutFormComponent implements OnInit {
             nameEn: [this.getValue(workout?.name, "EN"), [Validators.maxLength(60)]],
             descriptionHr: [this.getValue(workout?.description, "HR"), [Validators.required]],
             descriptionEn: [this.getValue(workout?.description, "EN")],
-            videoUrl: [workout?.videoUrl ?? "", [Validators.required, Validators.pattern(YOUTUBE_URL_PATTERN)]],
+            // Optional, video can be added later.
+            videoUrl: [workout?.videoUrl ?? "", [Validators.pattern(YOUTUBE_URL_PATTERN)]],
             thumbnailUrl: [workout?.thumbnailUrl ?? ""],
             workoutTypes: [workout?.workoutTypes?.map(x => x.id) ?? []],
         });
@@ -146,7 +147,7 @@ export class WorkoutFormComponent implements OnInit {
         return {
             name: this.buildLocalizedProperty(existing?.name, value.nameHr, value.nameEn),
             description: this.buildLocalizedProperty(existing?.description, value.descriptionHr, value.descriptionEn),
-            videoUrl: value.videoUrl.trim(),
+            videoUrl: value.videoUrl?.trim() ?? "",
             // Empty thumbnail is generated
             // from YouTube video on API.
             thumbnailUrl: value.thumbnailUrl?.trim() ?? "",

@@ -46,9 +46,6 @@
                    id="videoUrl" placeholder="https://www.youtube.com/watch?v=..."
                    pInputText formControlName="videoUrl"/>
             <small class="p-error"
-                   *ngIf="validationService.hasErrors(form, 'videoUrl', 'required')"
-                   id="videoUrl-input">{{ "common.required" | translate }}</small>
-            <small class="p-error"
                    *ngIf="validationService.hasErrors(form, 'videoUrl', 'pattern')"
                    id="videoUrl-input-pattern">{{ "workouts.videoUrlInvalid" | translate }}</small>
         </div>
