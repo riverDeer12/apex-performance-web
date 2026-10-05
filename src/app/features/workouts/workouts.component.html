@@ -86,6 +86,7 @@
                 <a *ngIf="workout.videoUrl" [href]="workout.videoUrl" target="_blank" rel="noopener noreferrer">
                     <i class="pi pi-youtube mr-1"></i>{{ "workouts.watch" | translate }}
                 </a>
+                <span *ngIf="!workout.videoUrl" class="text-muted-color">{{ "workouts.noVideo" | translate }}</span>
             </td>
             <td class="flex" *ngIf="canManageWorkouts">
                 <p-button (click)="openUpdateDialog(workout)" class="mr-2" icon="pi pi-pencil"
