@@ -12,6 +12,13 @@ import { AuthResponse } from "../../authentication/models/auth-response";
 export class UserService {
   constructor(private http: HttpClient) {}
 
+  /**
+   * Token for opening background jobs (Hangfire)
+   * dashboard, super admin only.
+   */
+  getJobsDashboardToken = () =>
+    this.http.get<{ token: string }>(environment.apiUrl + "/background-jobs/dashboard-token");
+
   getAllUsers = () => this.http.get<User[]>(environment.apiUrl + "/users");
   getUser = (userId: string) =>
     this.http.get<User>(environment.apiUrl + "/users/" + userId);

@@ -7,6 +7,8 @@ import { AuthenticationService } from "../../features/authentication/services/au
 import { Permissions } from "../../constants/permissions";
 import { Roles } from "../../constants/roles";
 import { TranslationService } from "../../i18n/translation.service";
+import { UserService } from "../../features/users/services/user.service";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "app-menu",
@@ -33,6 +35,7 @@ export class AppMenu implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private translationService: TranslationService,
+    private userService: UserService,
   ) {
     effect(() => {
       this.translationService.language();
@@ -42,6 +45,27 @@ export class AppMenu implements OnInit {
 
   ngOnInit() {
     this.buildMenu();
+  }
+
+  /**
+   * Dashboard runs on the API, the window is opened before the
+   * token request so the browser doesn't block it as a popup.
+   */
+  private openJobsDashboard(): void {
+    const dashboardWindow = window.open("", "_blank");
+
+    this.userService.getJobsDashboardToken().subscribe({
+      next: (response) => {
+        const url = new URL("/jobs", new URL(environment.apiUrl).origin);
+        url.searchParams.set("token", response.token);
+
+        if (dashboardWindow) dashboardWindow.location.href = url.toString();
+      },
+      error: (err) => {
+        dashboardWindow?.close();
+        console.error(err);
+      },
+    });
   }
 
   private buildMenu() {
@@ -210,6 +234,12 @@ export class AppMenu implements OnInit {
             visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-crown",
             routerLink: ["/admin/users/roles"],
+          },
+          {
+            label: t("menu.backgroundJobs"),
+            visible: this.authenticationService.validateUserRole(),
+            icon: "pi pi-fw pi-cog",
+            command: () => this.openJobsDashboard(),
           },
           {
             label: t("menu.logs"),
