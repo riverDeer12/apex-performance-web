@@ -160,6 +160,11 @@ export class AppMenu implements OnInit {
             icon: "pi pi-fw pi-list-check",
             routerLink: ["/admin/trainings"],
           },
+          {
+            label: t("menu.trainingProgress"),
+            icon: "pi pi-fw pi-chart-line",
+            routerLink: ["/admin/trainings/progress"],
+          },
         ],
       },
       {

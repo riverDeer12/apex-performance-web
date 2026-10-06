@@ -1,0 +1,105 @@
+<div class="flex flex-wrap items-center gap-3 mb-4">
+    <p-select *ngIf="showClientPicker && clients().length > 0"
+              [options]="clients()" optionLabel="name" optionValue="id" [filter]="true"
+              [ngModel]="selectedClientId()" (ngModelChange)="selectedClientId.set($event)"
+              [ariaLabel]="'trainings.client' | translate" styleClass="w-full sm:w-72" />
+    <p-selectbutton [options]="periodOptions()" optionLabel="label" optionValue="value" [allowEmpty]="false"
+                    [ngModel]="period()" (ngModelChange)="period.set($event)" />
+</div>
+
+<div *ngIf="loaded() && points().length === 0" class="card progress-hint">
+    {{ "trainingProgress.noCompletedTrainings" | translate }}
+</div>
+
+<div *ngIf="points().length > 0" class="grid grid-cols-12 gap-4">
+    <!-- Strength trend -->
+    <div class="col-span-12 lg:col-span-6 card m-0">
+        <div class="flex items-start justify-between gap-2 mb-1">
+            <div class="font-semibold text-lg">{{ "trainingProgress.strength" | translate }}</div>
+            <div class="progress-change" *ngIf="strengthChange() !== null">
+                {{ strengthChange()! > 0 ? '+' : '' }}{{ strengthChange() | number: '1.0-0' }} %
+            </div>
+        </div>
+        <div class="progress-hint mb-3">{{ "trainingProgress.strengthHint" | translate }}</div>
+        <div class="progress-chart" *ngIf="strength().length > 1; else notEnough">
+            <p-chart type="line" [data]="strengthChart()" [options]="strengthOptions()" height="100%" />
+        </div>
+    </div>
+
+    <!-- Max weight per exercise -->
+    <div class="col-span-12 lg:col-span-6 card m-0">
+        <div class="flex items-start justify-between gap-2 mb-1">
+            <div class="font-semibold text-lg">{{ "trainingProgress.maxWeight" | translate }}</div>
+            <div class="progress-change" *ngIf="maxWeightChange() !== null">
+                {{ maxWeightChange()! > 0 ? '+' : '' }}{{ maxWeightChange() | number: '1.0-0' }} %
+            </div>
+        </div>
+        <p-select *ngIf="exerciseOptions().length > 0" [options]="exerciseOptions()" optionLabel="label"
+                  optionValue="value" [filter]="true" styleClass="w-full sm:w-72 mb-3"
+                  [ngModel]="selectedExerciseId()" (ngModelChange)="selectedExerciseId.set($event)"
+                  [ariaLabel]="'trainings.exercise' | translate" />
+        <div class="progress-chart" *ngIf="maxWeight().length > 0; else notEnough">
+            <p-chart type="bar" [data]="maxWeightChart()" [options]="maxWeightOptions()" height="100%" />
+        </div>
+    </div>
+
+    <!-- Total reps per workout -->
+    <div class="col-span-12 lg:col-span-6 card m-0">
+        <div class="flex items-start justify-between gap-2 mb-3">
+            <div class="font-semibold text-lg">{{ "trainingProgress.totalReps" | translate }}</div>
+            <div class="progress-change" *ngIf="totalRepsChange() !== null">
+                {{ totalRepsChange()! > 0 ? '+' : '' }}{{ totalRepsChange() | number: '1.0-0' }} %
+            </div>
+        </div>
+        <div class="progress-chart" *ngIf="totalReps().length > 1; else notEnough">
+            <p-chart type="line" [data]="totalRepsChart()" [options]="totalRepsOptions()" height="100%" />
+        </div>
+    </div>
+
+    <!-- Average reps per set -->
+    <div class="col-span-12 lg:col-span-6 card m-0">
+        <div class="font-semibold text-lg mb-3">{{ "trainingProgress.avgReps" | translate }}</div>
+        <div class="progress-chart" *ngIf="avgReps().length > 1; else notEnough">
+            <p-chart type="line" [data]="avgRepsChart()" [options]="avgRepsOptions()" height="100%" />
+        </div>
+    </div>
+
+    <!-- Workouts per week -->
+    <div class="col-span-12 lg:col-span-6 card m-0">
+        <div class="flex items-start justify-between gap-2 mb-3">
+            <div class="font-semibold text-lg">{{ "trainingProgress.perWeek" | translate }}</div>
+            <div class="progress-hint text-right">
+                {{ "trainingProgress.avgPerWeek" | translate }}
+                <span class="progress-change">{{ avgPerWeek() | number: '1.0-1' }}</span>
+            </div>
+        </div>
+        <div class="progress-chart">
+            <p-chart type="bar" [data]="perWeekChart()" [options]="perWeekOptions()" height="100%" />
+        </div>
+    </div>
+
+    <!-- Sets per muscle group -->
+    <div class="col-span-12 lg:col-span-6 card m-0">
+        <div class="font-semibold text-lg mb-3">{{ "trainingProgress.muscleGroups" | translate }}</div>
+        <div class="flex flex-wrap items-center gap-6" *ngIf="muscleDistribution().total > 0; else notEnough">
+            <div class="muscle-chart">
+                <p-chart type="doughnut" [data]="muscleChart()" [options]="muscleOptions()" height="100%" />
+                <div class="muscle-total">
+                    <strong>{{ muscleDistribution().total }}</strong>
+                    <span>{{ "trainingProgress.sets" | translate }}</span>
+                </div>
+            </div>
+            <ul class="list-none p-0 m-0 flex flex-col gap-2 grow">
+                <li *ngFor="let item of muscleLegend()" class="flex items-center gap-2">
+                    <span class="muscle-swatch" [style.background]="item.color"></span>
+                    <span class="grow">{{ item.label }}</span>
+                    <span class="progress-change">{{ item.percent | number: '1.0-0' }} %</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ng-template #notEnough>
+    <div class="progress-hint">{{ "trainingProgress.notEnoughData" | translate }}</div>
+</ng-template>
