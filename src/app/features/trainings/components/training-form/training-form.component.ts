@@ -51,6 +51,10 @@ export class TrainingFormComponent implements OnInit {
 
     workoutOptions: { label: string; value: string }[] = [];
 
+    // Trainings visible to the user, used to show what the
+    // client did in the same exercise last time.
+    private trainings: Training[] = [];
+
     constructor(
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
@@ -70,6 +74,7 @@ export class TrainingFormComponent implements OnInit {
         this.initForm();
         this.loadClients();
         this.loadWorkouts();
+        this.trainingService.getTrainings().subscribe(trainings => this.trainings = trainings);
     }
 
     addExercise(exercise?: TrainingExercise): void {
@@ -117,6 +122,46 @@ export class TrainingFormComponent implements OnInit {
 
         while (sets.length < count) this.addSet(exerciseIndex);
         while (sets.length > count) sets.removeAt(sets.length - 1);
+    }
+
+    /**
+     * Sets of the same exercise from client's latest training
+     * before this one, or null when the client didn't do it yet.
+     */
+    previousSets(exerciseIndex: number): { date: string; sets: TrainingExerciseSet[] } | null {
+        const clientId = this.form.controls["client"].value;
+        const workoutId = this.exercises.at(exerciseIndex).get("workout")?.value;
+
+        if (!clientId || !workoutId) return null;
+
+        const date = this.form.controls["date"].value as Date | null;
+        const before = date ? date.getTime() : Number.MAX_SAFE_INTEGER;
+
+        const previous = this.trainings
+            .filter(training => training.client?.id === clientId &&
+                training.id !== this.training?.id &&
+                new Date(training.date).getTime() <= before)
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .map(training => ({
+                date: training.date,
+                exercise: training.exercises.find(x => x.workoutId === workoutId && x.sets?.length),
+            }))
+            .find(x => !!x.exercise);
+
+        return previous
+            ? { date: previous.date, sets: [...previous.exercise!.sets].sort((a, b) => a.order - b.order) }
+            : null;
+    }
+
+    /**
+     * Replace exercise sets with the ones from the previous training.
+     */
+    usePreviousSets(exerciseIndex: number): void {
+        const previous = this.previousSets(exerciseIndex);
+        if (!previous) return;
+
+        this.setsOf(exerciseIndex).clear();
+        previous.sets.forEach(set => this.addSet(exerciseIndex, set));
     }
 
     removeSet(exerciseIndex: number, setIndex: number): void {
