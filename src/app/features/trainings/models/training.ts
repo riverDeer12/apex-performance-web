@@ -1,13 +1,18 @@
+export class TrainingExerciseSet {
+    id!: string;
+    order!: number;
+    reps?: string | null;
+    weight?: number | null;
+}
+
 export class TrainingExercise {
     id!: string;
     workoutId!: string;
     // Persisted JSON with workout name translations.
     workoutName!: string;
     order!: number;
-    sets?: number | null;
-    reps?: string | null;
-    weight?: number | null;
     note?: string | null;
+    sets!: TrainingExerciseSet[];
 }
 
 export class TrainingClient {
@@ -30,12 +35,15 @@ export class Training {
     updatedAt!: string;
 }
 
-export interface TrainingExerciseRequest {
-    workout: string;
-    sets: number | null;
+export interface TrainingExerciseSetRequest {
     reps: string | null;
     weight: number | null;
+}
+
+export interface TrainingExerciseRequest {
+    workout: string;
     note: string | null;
+    sets: TrainingExerciseSetRequest[];
 }
 
 export interface TrainingRequest {

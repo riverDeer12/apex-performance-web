@@ -26,7 +26,7 @@ import { Client } from "../../../clients/models/client";
 import { WorkoutService } from "../../../workouts/services/workout.service";
 import { Workout } from "../../../workouts/models/workout";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { Training, TrainingExercise, TrainingRequest } from "../../models/training";
+import { Training, TrainingExercise, TrainingExerciseSet, TrainingRequest } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
 
 @Component({
@@ -73,13 +73,40 @@ export class TrainingFormComponent implements OnInit {
     }
 
     addExercise(exercise?: TrainingExercise): void {
-        this.exercises.push(this.formBuilder.group({
+        const group = this.formBuilder.group({
             workout: [exercise?.workoutId ?? null, [Validators.required]],
-            sets: [exercise?.sets ?? null, [Validators.min(1), Validators.max(100)]],
-            reps: [exercise?.reps ?? "", [Validators.maxLength(50)]],
-            weight: [exercise?.weight ?? null, [Validators.min(0), Validators.max(9999)]],
             note: [exercise?.note ?? "", [Validators.maxLength(500)]],
+            sets: this.formBuilder.array<FormGroup>([]),
+        });
+
+        this.exercises.push(group);
+
+        const sets = [...(exercise?.sets ?? [])].sort((a, b) => a.order - b.order);
+
+        // New exercise starts with one empty set.
+        (sets.length ? sets : [undefined]).forEach(set => this.addSet(this.exercises.length - 1, set));
+    }
+
+    setsOf(exerciseIndex: number): FormArray<FormGroup> {
+        return this.exercises.at(exerciseIndex).get("sets") as FormArray<FormGroup>;
+    }
+
+    /**
+     * Add set to exercise. Without values the last set is
+     * copied, as sets usually repeat or change only a little.
+     */
+    addSet(exerciseIndex: number, set?: TrainingExerciseSet): void {
+        const sets = this.setsOf(exerciseIndex);
+        const previous = sets.length ? sets.at(sets.length - 1).value : null;
+
+        sets.push(this.formBuilder.group({
+            reps: [set ? set.reps ?? "" : previous?.reps ?? "", [Validators.maxLength(50)]],
+            weight: [set ? set.weight ?? null : previous?.weight ?? null, [Validators.min(0), Validators.max(9999)]],
         }));
+    }
+
+    removeSet(exerciseIndex: number, setIndex: number): void {
+        this.setsOf(exerciseIndex).removeAt(setIndex);
     }
 
     removeExercise(index: number): void {
@@ -182,10 +209,12 @@ export class TrainingFormComponent implements OnInit {
             isCompleted: !!value.isCompleted,
             exercises: (value.exercises ?? []).map((x: any) => ({
                 workout: x.workout,
-                sets: number(x.sets),
-                reps: text(x.reps),
-                weight: number(x.weight),
                 note: text(x.note),
+                // Sets without repetitions and weight are not saved.
+                sets: (x.sets ?? [])
+                    .map((set: any) => ({ reps: text(set.reps), weight: number(set.weight) }))
+                    .filter((set: { reps: string | null; weight: number | null }) =>
+                        set.reps !== null || set.weight !== null),
             })),
         };
     }

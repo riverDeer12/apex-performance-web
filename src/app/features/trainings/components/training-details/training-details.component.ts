@@ -6,7 +6,7 @@ import { Tag } from "primeng/tag";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { Training, TrainingExercise } from "../../models/training";
+import { Training, TrainingExercise, TrainingExerciseSet } from "../../models/training";
 
 /**
  * Read only view of a training with its exercises,
@@ -26,6 +26,10 @@ export class TrainingDetailsComponent {
     constructor(config: DynamicDialogConfig, private translationService: TranslationService) {
         this.training = config.data.training;
         this.exercises = [...(this.training.exercises ?? [])].sort((a, b) => a.order - b.order);
+    }
+
+    sortedSets(exercise: TrainingExercise): TrainingExerciseSet[] {
+        return [...(exercise.sets ?? [])].sort((a, b) => a.order - b.order);
     }
 
     workoutName(exercise: TrainingExercise): string {
