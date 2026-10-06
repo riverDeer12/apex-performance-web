@@ -43,6 +43,12 @@ export class BodyMeasurementFormComponent implements OnInit {
 
   clients!: Client[];
 
+  // Height of client's last measurement, height is asked
+  // only at the first measurement and reused afterwards.
+  previousHeight: number | null = null;
+
+  private previousHeights = new Map<string, number>();
+
   userRole!: string;
 
   constructor(
@@ -61,6 +67,41 @@ export class BodyMeasurementFormComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadClients();
+
+    if (this.type == ActionType.Create) {
+      this.loadPreviousHeights();
+      this.form.controls["client"].valueChanges.subscribe(() => this.updateHeightField());
+    }
+  }
+
+  private loadPreviousHeights(): void {
+    this.bodyMeasurementService.getBodyMeasurements().subscribe((response: BodyMeasurement[]) => {
+      const latestFirst = [...response]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      for (const measurement of latestFirst) {
+        const clientId = measurement.client?.id;
+        if (clientId && measurement.height > 0 && !this.previousHeights.has(clientId))
+          this.previousHeights.set(clientId, Number(measurement.height));
+      }
+
+      this.updateHeightField();
+    });
+  }
+
+  private updateHeightField(): void {
+    const height = this.form.controls["height"];
+
+    this.previousHeight = this.previousHeights.get(this.form.controls["client"].value) ?? null;
+
+    if (this.previousHeight !== null) {
+      height.clearValidators();
+      height.setValue(null);
+    } else {
+      height.setValidators([Validators.required, Validators.min(0)]);
+    }
+
+    height.updateValueAndValidity();
   }
 
   private loadClients(): void {
