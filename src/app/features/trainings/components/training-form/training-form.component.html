@@ -45,7 +45,12 @@
                     <small class="p-error" *ngIf="exerciseHasError(i, 'workout', 'required')">
                         {{ "common.required" | translate }}</small>
                 </div>
-                <div class="col-span-12 md:col-span-5 flex flex-col gap-1">
+                <div class="col-span-4 md:col-span-2 flex flex-col gap-1">
+                    <label class="text-sm" [for]="'setCount' + i">{{ "trainings.setCount" | translate }}</label>
+                    <input pInputText type="number" min="0" max="50" class="w-full" [id]="'setCount' + i"
+                           [value]="setsOf(i).length" (change)="setSetCount(i, $any($event.target).value)" />
+                </div>
+                <div class="col-span-8 md:col-span-3 flex flex-col gap-1">
                     <label class="text-sm">{{ "trainings.note" | translate }}</label>
                     <input pInputText formControlName="note" class="w-full" />
                 </div>

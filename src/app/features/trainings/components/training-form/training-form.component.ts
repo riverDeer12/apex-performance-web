@@ -105,6 +105,20 @@ export class TrainingFormComponent implements OnInit {
         }));
     }
 
+    /**
+     * Show as many set rows as chosen. New sets copy the
+     * last one, extra sets are removed from the end.
+     */
+    setSetCount(exerciseIndex: number, value: string | number): void {
+        if (value === "" || value === null) return;
+
+        const count = Math.min(Math.max(Math.floor(Number(value) || 0), 0), 50);
+        const sets = this.setsOf(exerciseIndex);
+
+        while (sets.length < count) this.addSet(exerciseIndex);
+        while (sets.length > count) sets.removeAt(sets.length - 1);
+    }
+
     removeSet(exerciseIndex: number, setIndex: number): void {
         this.setsOf(exerciseIndex).removeAt(setIndex);
     }
