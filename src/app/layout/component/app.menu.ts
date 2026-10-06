@@ -151,6 +151,18 @@ export class AppMenu implements OnInit {
         ],
       },
       {
+        // Coaches and administrators manage trainings,
+        // clients see their own trainings.
+        label: t("menu.trainings"),
+        items: [
+          {
+            label: t("menu.trainings"),
+            icon: "pi pi-fw pi-list-check",
+            routerLink: ["/admin/trainings"],
+          },
+        ],
+      },
+      {
         label: t("menu.bodyMeasurements"),
         // Clients always see their own measurements,
         // the API returns only measurements of the logged client.

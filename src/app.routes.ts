@@ -51,6 +51,13 @@ export const appRoutes: Routes = [
           ).then((m) => m.BodyMeasurementsRoutes),
       },
       {
+        path: "trainings",
+        loadChildren: () =>
+          import("./app/features/trainings/trainings.routes").then(
+            (m) => m.TrainingsRoutes,
+          ),
+      },
+      {
         path: "clients",
         loadChildren: () =>
           import("./app/features/clients/clients.routes").then(

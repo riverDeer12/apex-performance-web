@@ -1,3 +1,4 @@
+import { TrainingFormComponent } from "../../../features/trainings/components/training-form/training-form.component";
 import { Component } from "@angular/core";
 import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
@@ -54,6 +55,7 @@ import { WorkoutFormComponent } from '../../../features/workouts/components/work
     AppointmentTypeFormComponent,
     EmailFormComponent,
     BodyMeasurementFormComponent,
+    TrainingFormComponent,
     CoachFormComponent,
     ResetPasswordFormComponent,
     CancelationRequestFormComponent,

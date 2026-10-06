@@ -16,6 +16,7 @@ export enum EntityType {
     RecurringAppointment ,
     ResetUserPassword ,
     TimeSlot ,
+    Training,
     User,
     Workout
 }

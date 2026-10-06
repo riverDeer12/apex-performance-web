@@ -1,0 +1,35 @@
+<div class="flex flex-col gap-3">
+    <div class="flex flex-wrap gap-x-6 gap-y-2 items-center">
+        <span><strong>{{ "trainings.date" | translate }}:</strong> {{ training.date | date: 'dd.MM.yyyy.' }}</span>
+        <span><strong>{{ "trainings.client" | translate }}:</strong> {{ training.client.fullName }}</span>
+        <p-tag [severity]="training.isCompleted ? 'success' : 'secondary'"
+               [value]="(training.isCompleted ? 'trainings.completed' : 'trainings.notCompleted') | translate" />
+    </div>
+    <p *ngIf="training.note" class="m-0 whitespace-pre-line">{{ training.note }}</p>
+
+    <p-table [value]="exercises" [tableStyle]="{ 'min-width': '36rem' }" [showGridlines]="true">
+        <ng-template #header>
+            <tr>
+                <th style="width: 3rem">#</th>
+                <th>{{ "trainings.exercise" | translate }}</th>
+                <th style="width: 6rem">{{ "trainings.sets" | translate }}</th>
+                <th style="width: 8rem">{{ "trainings.reps" | translate }}</th>
+                <th style="width: 6rem">{{ "trainings.weight" | translate }}</th>
+                <th>{{ "trainings.note" | translate }}</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-exercise let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ workoutName(exercise) }}</td>
+                <td>{{ exercise.sets ?? '-' }}</td>
+                <td>{{ exercise.reps || '-' }}</td>
+                <td>{{ exercise.weight != null ? exercise.weight + ' kg' : '-' }}</td>
+                <td>{{ exercise.note || '' }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr><td colspan="6">{{ "trainings.noExercises" | translate }}</td></tr>
+        </ng-template>
+    </p-table>
+</div>

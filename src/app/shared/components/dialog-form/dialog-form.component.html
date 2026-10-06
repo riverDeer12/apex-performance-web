@@ -42,6 +42,14 @@
         [bodyMeasurement]="data">
 </app-body-measurement-form>
 
+<app-training-form
+        *ngIf="contentType === entityType.Training"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [training]="data">
+</app-training-form>
+
 <app-cancelation-request-form
         *ngIf="contentType === entityType.CancelationRequest"
         [type]="formType"
