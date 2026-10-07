@@ -1,9 +1,40 @@
-<div class="my-3">
+<div class="my-3 flex flex-wrap items-center justify-between gap-2">
     <p-button (click)="openCreateDialog()" *ngIf="userCanCreateRecurringAppointment"
               type="button" iconPos="right" icon="pi pi-plus" [label]="'recurringAppointments.new' | translate" />
+    <p-selectbutton class="ml-auto" [options]="viewOptions" optionLabel="label" optionValue="value"
+                    [allowEmpty]="false" [(ngModel)]="view">
+        <ng-template #item let-option>{{ option.label | translate }}</ng-template>
+    </p-selectbutton>
 </div>
 
-<p-table
+<div *ngIf="view === 'calendar'" class="recurring-calendar">
+    <div *ngFor="let day of calendarDays" class="recurring-calendar-day">
+        <div class="recurring-calendar-day-header">
+            <span>{{ day.key | translate }}</span>
+            <span class="recurring-calendar-count" *ngIf="day.appointments.length">{{ day.appointments.length }}</span>
+        </div>
+        <div class="recurring-calendar-day-body">
+            <div *ngFor="let appointment of day.appointments" class="recurring-calendar-entry"
+                 [class.clickable]="userCanCreateRecurringAppointment"
+                 (click)="userCanCreateRecurringAppointment && openUpdateDialog(appointment)">
+                <div class="recurring-calendar-time">
+                    <i class="pi pi-clock"></i>
+                    {{ formatTime(appointment.timeSlot.startTime) }} – {{ formatTime(appointment.timeSlot.endTime) }}
+                </div>
+                <div class="recurring-calendar-clients">{{ clientNames(appointment) }}</div>
+                <div class="recurring-calendar-meta">
+                    <span *ngIf="showCoach && appointment.coach"><i class="pi pi-user"></i> {{ appointment.coach.firstName }} {{ appointment.coach.lastName }}</span>
+                    <span *ngIf="appointment.type">{{ appointment.type.name }}</span>
+                </div>
+            </div>
+            <div *ngIf="!day.appointments.length" class="recurring-calendar-empty">
+                {{ "recurringAppointments.noneThisDay" | translate }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-table *ngIf="view === 'table'"
     #recurringAppointmentsTable
     [value]="recurringAppointments"
     dataKey="id"
