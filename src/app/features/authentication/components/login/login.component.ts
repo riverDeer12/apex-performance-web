@@ -68,7 +68,28 @@ export class LoginComponent implements OnInit {
       return;
     } else {
       this.initForm();
+      this.showSessionEndedMessage();
     }
+  }
+
+  private showSessionEndedMessage(): void {
+    let sessionEnded = false;
+
+    try {
+      sessionEnded = sessionStorage.getItem("sessionEnded") === "1";
+      sessionStorage.removeItem("sessionEnded");
+    } catch {
+    }
+
+    if (!sessionEnded) return;
+
+    setTimeout(() =>
+      this.messageService.add({
+        severity: "warn",
+        summary: this.translationService.t("login.sessionEndedSummary"),
+        detail: this.translationService.t("login.sessionEndedDetail"),
+        life: 8000,
+      }));
   }
 
   openForgotPasswordDialog(): void {

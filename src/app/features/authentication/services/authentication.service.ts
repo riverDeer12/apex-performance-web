@@ -87,6 +87,12 @@ export class AuthenticationService {
    * @param redirectUrl preferred redirect url.
    */
   logOut(redirectUrl: string): void {
+    // Ends the session on the server, token is removed right away
+    // since the request already carries it in Authorization header.
+    if (this.isUserLogged()) {
+      this.http.post(environment.apiUrl + "/authentication/logout", {}).subscribe({ error: () => {} });
+    }
+
     localStorage.removeItem("token");
     this.router.navigateByUrl(redirectUrl).then();
   }

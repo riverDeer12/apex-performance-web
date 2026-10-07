@@ -16,4 +16,7 @@ export class UserSessionService {
 
     getUserSessionHistory = (userId: string) =>
         this.http.get<UserSession[]>(environment.apiUrl + "/user-sessions/" + userId);
+
+    revokeUserSession = (sessionId: string) =>
+        this.http.post(environment.apiUrl + "/user-sessions/" + sessionId + "/revoke", {});
 }

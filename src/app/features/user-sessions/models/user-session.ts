@@ -8,6 +8,7 @@ export class UserLastSession {
     lastIpAddress?: string | null;
     lastUserAgent?: string | null;
     loginsCount!: number;
+    activeSessionId?: string | null;
 
     // Values prepared for table display and filtering.
     displayRoles!: string;
@@ -20,8 +21,13 @@ export class UserSession {
     ipAddress?: string | null;
     userAgent?: string | null;
     rememberMe!: boolean;
+    expiresAt?: string | null;
+    revokedAt?: string | null;
+    revokeReason?: string | null;
+    isActive!: boolean;
 
     device!: string;
+    statusKey!: string;
 }
 
 /**

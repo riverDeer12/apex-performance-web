@@ -29,6 +29,14 @@ export const DefaultInterceptor: HttpInterceptorFn = (request, next) => {
         // Navigate on errors as before
         catchError((error) => {
             if (error.status === 401) {
+                // Session ended on the server (login on another device,
+                // revoked by administrator), login page tells the user why.
+                if (req.headers.has('Authorization') && !req.url.endsWith('/authentication/logout')) {
+                    try {
+                        sessionStorage.setItem('sessionEnded', '1');
+                    } catch {
+                    }
+                }
                 localStorage.removeItem('token');
                 router.navigateByUrl('authentication/login');
             } else if (error.status === 403) {
