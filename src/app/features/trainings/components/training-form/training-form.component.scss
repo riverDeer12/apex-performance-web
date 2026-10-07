@@ -1,0 +1,17 @@
+// Exercises of a superset share a colored left border,
+// linked ones sit close to the previous exercise.
+.superset-exercise {
+  border-left: 3px solid var(--p-primary-color);
+}
+
+.superset-linked {
+  margin-top: -0.5rem;
+}
+
+.superset-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--p-primary-color);
+}

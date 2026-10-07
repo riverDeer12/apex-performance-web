@@ -18,8 +18,12 @@
         </ng-template>
         <ng-template #body let-exercise let-i="rowIndex">
             <tr>
-                <td>{{ i + 1 }}</td>
-                <td>{{ workoutName(exercise) }}</td>
+                <td>{{ exerciseLabel(i) }}</td>
+                <td>
+                    {{ workoutName(exercise) }}
+                    <span *ngIf="isSuperset(i)" class="block text-xs font-semibold uppercase text-primary">
+                        {{ "trainings.superset" | translate }}</span>
+                </td>
                 <td>
                     <div *ngFor="let set of sortedSets(exercise); let s = index">
                         {{ s + 1 }}. {{ set.reps || '-' }}<span *ngIf="set.weight != null"> × {{ set.weight }} kg</span>

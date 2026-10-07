@@ -35,6 +35,7 @@ import { TrainingService } from "../../services/training.service";
     imports: [CommonModule, ReactiveFormsModule, Button, InputText, Select, DatePicker, Checkbox, Textarea,
         TranslatePipe],
     templateUrl: "./training-form.component.html",
+    styleUrl: "./training-form.component.scss",
 })
 export class TrainingFormComponent implements OnInit {
     @Input() type!: ActionType;
@@ -78,18 +79,76 @@ export class TrainingFormComponent implements OnInit {
     }
 
     addExercise(exercise?: TrainingExercise): void {
+        this.insertExercise(this.exercises.length, exercise, !!exercise?.isSupersetWithPrevious);
+    }
+
+    /**
+     * Add exercise that is done right after this one without rest.
+     * It is added after the last exercise of the superset and gets
+     * the same number of sets, as they are done together.
+     */
+    addSupersetExercise(exerciseIndex: number): void {
+        const [, last] = this.supersetRange(exerciseIndex);
+        const setCount = this.setsOf(exerciseIndex).length;
+
+        this.insertExercise(last + 1, undefined, true);
+        this.setSetCount(last + 1, setCount);
+    }
+
+    isSuperset(exerciseIndex: number): boolean {
+        const [first, last] = this.supersetRange(exerciseIndex);
+        return last > first;
+    }
+
+    /**
+     * Exercise label: number for single exercises, number with a letter
+     * in supersets (2a, 2b), so exercises done together are recognizable.
+     */
+    exerciseLabel(exerciseIndex: number): string {
+        let number = 0;
+        let letter = 0;
+
+        for (let i = 0; i <= exerciseIndex; i++) {
+            if (this.isLinked(i)) {
+                letter++;
+            } else {
+                number++;
+                letter = 0;
+            }
+        }
+
+        return this.isSuperset(exerciseIndex) ? `${number}${String.fromCharCode(97 + letter)}` : `${number}.`;
+    }
+
+    private isLinked(exerciseIndex: number): boolean {
+        return exerciseIndex > 0 && !!this.exercises.at(exerciseIndex).get("isSupersetWithPrevious")?.value;
+    }
+
+    // First and last index of the superset the exercise belongs to.
+    private supersetRange(exerciseIndex: number): [number, number] {
+        let first = exerciseIndex;
+        let last = exerciseIndex;
+
+        while (this.isLinked(first)) first--;
+        while (last + 1 < this.exercises.length && this.isLinked(last + 1)) last++;
+
+        return [first, last];
+    }
+
+    private insertExercise(index: number, exercise: TrainingExercise | undefined, superset: boolean): void {
         const group = this.formBuilder.group({
             workout: [exercise?.workoutId ?? null, [Validators.required]],
             note: [exercise?.note ?? "", [Validators.maxLength(500)]],
+            isSupersetWithPrevious: [superset],
             sets: this.formBuilder.array<FormGroup>([]),
         });
 
-        this.exercises.push(group);
+        this.exercises.insert(index, group);
 
         const sets = [...(exercise?.sets ?? [])].sort((a, b) => a.order - b.order);
 
         // New exercise starts with one empty set.
-        (sets.length ? sets : [undefined]).forEach(set => this.addSet(this.exercises.length - 1, set));
+        (sets.length ? sets : [undefined]).forEach(set => this.addSet(index, set));
     }
 
     setsOf(exerciseIndex: number): FormArray<FormGroup> {
@@ -118,10 +177,15 @@ export class TrainingFormComponent implements OnInit {
         if (value === "" || value === null) return;
 
         const count = Math.min(Math.max(Math.floor(Number(value) || 0), 0), 50);
-        const sets = this.setsOf(exerciseIndex);
+        const [first, last] = this.supersetRange(exerciseIndex);
 
-        while (sets.length < count) this.addSet(exerciseIndex);
-        while (sets.length > count) sets.removeAt(sets.length - 1);
+        // Exercises of a superset are done together, so they have the same number of sets.
+        for (let i = first; i <= last; i++) {
+            const sets = this.setsOf(i);
+
+            while (sets.length < count) this.addSet(i);
+            while (sets.length > count) sets.removeAt(sets.length - 1);
+        }
     }
 
     /**
@@ -169,6 +233,11 @@ export class TrainingFormComponent implements OnInit {
     }
 
     removeExercise(index: number): void {
+        // When the first exercise of a superset is removed,
+        // the next one starts the superset instead.
+        if (!this.isLinked(index) && index + 1 < this.exercises.length && this.isLinked(index + 1))
+            this.exercises.at(index + 1).get("isSupersetWithPrevious")?.setValue(false);
+
         this.exercises.removeAt(index);
     }
 
@@ -180,6 +249,9 @@ export class TrainingFormComponent implements OnInit {
         const exercise = this.exercises.at(index);
         this.exercises.removeAt(index);
         this.exercises.insert(target, exercise);
+
+        // The first exercise can't be in a superset with a previous one.
+        this.exercises.at(0).get("isSupersetWithPrevious")?.setValue(false);
     }
 
     exerciseHasError(index: number, field: string, error: string): boolean {
@@ -269,6 +341,7 @@ export class TrainingFormComponent implements OnInit {
             exercises: (value.exercises ?? []).map((x: any) => ({
                 workout: x.workout,
                 note: text(x.note),
+                isSupersetWithPrevious: !!x.isSupersetWithPrevious,
                 // Sets without repetitions and weight are not saved.
                 sets: (x.sets ?? [])
                     .map((set: any) => ({ reps: text(set.reps), weight: number(set.weight) }))

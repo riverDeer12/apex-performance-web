@@ -13,6 +13,8 @@ export class TrainingExercise {
     order!: number;
     note?: string | null;
     sets!: TrainingExerciseSet[];
+    // Done right after the previous exercise without rest (superset).
+    isSupersetWithPrevious?: boolean;
 }
 
 export class TrainingClient {
@@ -44,6 +46,7 @@ export interface TrainingExerciseRequest {
     workout: string;
     note: string | null;
     sets: TrainingExerciseSetRequest[];
+    isSupersetWithPrevious: boolean;
 }
 
 export interface TrainingRequest {

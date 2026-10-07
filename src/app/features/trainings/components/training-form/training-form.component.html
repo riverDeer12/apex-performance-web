@@ -35,10 +35,14 @@
 
     <div formArrayName="exercises" class="flex flex-col gap-3">
         <div *ngFor="let exercise of exercises.controls; let i = index" [formGroupName]="i"
-             class="training-exercise flex flex-col gap-3 p-3 rounded border border-surface">
+             class="training-exercise flex flex-col gap-3 p-3 rounded border border-surface"
+             [class.superset-exercise]="isSuperset(i)" [class.superset-linked]="i > 0 && exercise.value.isSupersetWithPrevious">
             <div class="grid grid-cols-12 gap-2 items-start">
                 <div class="col-span-12 md:col-span-5 flex flex-col gap-1">
-                    <label class="text-sm">{{ i + 1 }}. {{ "trainings.exercise" | translate }}</label>
+                    <label class="text-sm flex items-center gap-2">
+                        <span>{{ exerciseLabel(i) }} {{ "trainings.exercise" | translate }}</span>
+                        <span *ngIf="isSuperset(i)" class="superset-tag">{{ "trainings.superset" | translate }}</span>
+                    </label>
                     <p-select [filter]="true" [options]="workoutOptions" optionLabel="label" optionValue="value"
                               appendTo="body" styleClass="w-full" formControlName="workout"
                               [placeholder]="'trainings.selectExercise' | translate" />
@@ -61,6 +65,15 @@
                               [disabled]="i === exercises.length - 1" (click)="moveExercise(i, 1)" />
                     <p-button type="button" icon="pi pi-trash" severity="danger" [text]="true" size="small"
                               (click)="removeExercise(i)" />
+                </div>
+                <div class="col-span-12 flex flex-wrap items-center gap-4">
+                    <div *ngIf="i > 0" class="flex items-center gap-2">
+                        <p-checkbox formControlName="isSupersetWithPrevious" [binary]="true"
+                                    [inputId]="'superset' + i" />
+                        <label class="text-sm" [for]="'superset' + i">{{ "trainings.supersetWithPrevious" | translate }}</label>
+                    </div>
+                    <p-button type="button" icon="pi pi-link" severity="secondary" [text]="true" size="small"
+                              [label]="'trainings.addSuperset' | translate" (click)="addSupersetExercise(i)" />
                 </div>
             </div>
 
