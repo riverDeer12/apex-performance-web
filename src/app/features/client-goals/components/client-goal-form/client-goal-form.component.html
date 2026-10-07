@@ -1,0 +1,49 @@
+<form [formGroup]="form" (submit)="submit()">
+    <p *ngIf="loadingGoal" class="text-muted-color">{{ "clientGoals.loading" | translate }}</p>
+
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 flex flex-col gap-2">
+            <label for="goal">{{ "clientGoals.goal" | translate }}</label>
+            <textarea pTextarea id="goal" formControlName="goal" rows="3" class="w-full" maxlength="1000"
+                      [placeholder]="'clientGoals.goalPlaceholder' | translate"></textarea>
+            <small class="p-error" *ngIf="validationService.hasErrors(form, 'goal', 'maxlength')">
+                {{ "clientGoals.maxLength1000" | translate }}</small>
+        </div>
+        <div class="col-span-12 flex flex-col gap-2">
+            <label for="currentBlock">{{ "clientGoals.currentBlock" | translate }}</label>
+            <textarea pTextarea id="currentBlock" formControlName="currentBlock" rows="3" class="w-full"
+                      maxlength="1000" [placeholder]="'clientGoals.currentBlockPlaceholder' | translate"></textarea>
+            <small class="p-error" *ngIf="validationService.hasErrors(form, 'currentBlock', 'maxlength')">
+                {{ "clientGoals.maxLength1000" | translate }}</small>
+        </div>
+        <div class="col-span-12 flex flex-col gap-2">
+            <label for="focus">{{ "clientGoals.focus" | translate }}</label>
+            <textarea pTextarea id="focus" formControlName="focus" rows="3" class="w-full" maxlength="1000"
+                      [placeholder]="'clientGoals.focusPlaceholder' | translate"></textarea>
+            <small class="p-error" *ngIf="validationService.hasErrors(form, 'focus', 'maxlength')">
+                {{ "clientGoals.maxLength1000" | translate }}</small>
+        </div>
+        <div class="col-span-12 md:col-span-8 flex flex-col gap-2">
+            <label for="nextAssessment">{{ "clientGoals.nextAssessment" | translate }}</label>
+            <textarea pTextarea id="nextAssessment" formControlName="nextAssessment" rows="2" class="w-full"
+                      maxlength="500" [placeholder]="'clientGoals.nextAssessmentPlaceholder' | translate"></textarea>
+            <small class="p-error" *ngIf="validationService.hasErrors(form, 'nextAssessment', 'maxlength')">
+                {{ "clientGoals.maxLength500" | translate }}</small>
+        </div>
+        <div class="col-span-12 md:col-span-4 flex flex-col gap-2">
+            <label for="nextAssessmentDate">{{ "clientGoals.nextAssessmentDate" | translate }}</label>
+            <p-datepicker formControlName="nextAssessmentDate" dateFormat="dd.mm.yy" appendTo="body"
+                          styleClass="w-full" inputId="nextAssessmentDate" [showIcon]="true"
+                          [showButtonBar]="true" />
+        </div>
+    </div>
+
+    <small *ngIf="updatedAt" class="block mt-3 text-muted-color">
+        {{ "clientGoals.lastUpdated" | translate }} {{ updatedAt | date: 'dd.MM.yyyy. HH:mm' }}</small>
+
+    <div class="my-3">
+        <p-button type="submit" [disabled]="loadingData || loadingGoal"
+                  [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+                  [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)" />
+    </div>
+</form>

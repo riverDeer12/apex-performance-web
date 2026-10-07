@@ -1,0 +1,27 @@
+<p-card [header]="'clientGoals.myTitle' | translate">
+    @if (!loaded) {
+        <p class="m-0 text-muted-color">{{ "clientGoals.loading" | translate }}</p>
+    } @else if (isEmpty) {
+        <p class="m-0 text-muted-color">{{ "clientGoals.emptyForClient" | translate }}</p>
+    } @else {
+        <div class="grid grid-cols-12 gap-4">
+            <div *ngIf="clientGoal?.goal" class="col-span-12 md:col-span-6 flex flex-col gap-1">
+                <span class="font-semibold"><i class="pi pi-flag mr-2"></i>{{ "clientGoals.goal" | translate }}</span>
+                <p class="m-0 whitespace-pre-line">{{ clientGoal?.goal }}</p>
+            </div>
+            <div *ngIf="clientGoal?.currentBlock" class="col-span-12 md:col-span-6 flex flex-col gap-1">
+                <span class="font-semibold"><i class="pi pi-calendar mr-2"></i>{{ "clientGoals.currentBlock" | translate }}</span>
+                <p class="m-0 whitespace-pre-line">{{ clientGoal?.currentBlock }}</p>
+            </div>
+            <div *ngIf="clientGoal?.focus" class="col-span-12 md:col-span-6 flex flex-col gap-1">
+                <span class="font-semibold"><i class="pi pi-bullseye mr-2"></i>{{ "clientGoals.focus" | translate }}</span>
+                <p class="m-0 whitespace-pre-line">{{ clientGoal?.focus }}</p>
+            </div>
+            <div *ngIf="clientGoal?.nextAssessment || nextAssessmentDate" class="col-span-12 md:col-span-6 flex flex-col gap-1">
+                <span class="font-semibold"><i class="pi pi-check-square mr-2"></i>{{ "clientGoals.nextAssessment" | translate }}</span>
+                <p *ngIf="nextAssessmentDate" class="m-0 font-medium">{{ nextAssessmentDate | date: 'dd.MM.yyyy.' }}</p>
+                <p *ngIf="clientGoal?.nextAssessment" class="m-0 whitespace-pre-line">{{ clientGoal?.nextAssessment }}</p>
+            </div>
+        </div>
+    }
+</p-card>

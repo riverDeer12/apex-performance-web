@@ -72,6 +72,14 @@
         [client]="data">
 </app-client-form>
 
+<app-client-goal-form
+        *ngIf="contentType === entityType.ClientGoal"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [client]="data">
+</app-client-goal-form>
+
 <app-coach-form
         *ngIf="contentType === entityType.Coach"
         [type]="formType"
