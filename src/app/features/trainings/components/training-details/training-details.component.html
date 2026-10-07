@@ -2,7 +2,7 @@
     <div class="flex flex-wrap gap-x-6 gap-y-2 items-center">
         <span><strong>{{ "trainings.date" | translate }}:</strong> {{ training.date | date: 'dd.MM.yyyy.' }}</span>
         <span><strong>{{ "trainings.client" | translate }}:</strong> {{ training.client.fullName }}</span>
-        <p-tag [severity]="training.isCompleted ? 'success' : 'secondary'"
+        <p-tag *ngIf="!isClient" [severity]="training.isCompleted ? 'success' : 'secondary'"
                [value]="(training.isCompleted ? 'trainings.completed' : 'trainings.notCompleted') | translate" />
     </div>
     <p *ngIf="training.note" class="m-0 whitespace-pre-line">{{ training.note }}</p>

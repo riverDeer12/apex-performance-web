@@ -24,6 +24,8 @@ import { ActionType } from '../../enums/action-type';
 import { TranslationService } from '../../i18n/translation.service';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { AppointmentsCalendarComponent } from './components/appointments-calendar/appointments-calendar.component';
+import { ClientGoalCardComponent } from '../client-goals/components/client-goal-card/client-goal-card.component';
+import { MonthlyReviewsListComponent } from '../monthly-reviews/components/monthly-reviews-list/monthly-reviews-list.component';
 
 @Component({
   selector: "app-dashboard",
@@ -36,6 +38,8 @@ import { AppointmentsCalendarComponent } from './components/appointments-calenda
     Card,
     TranslatePipe,
     AppointmentsCalendarComponent,
+    ClientGoalCardComponent,
+    MonthlyReviewsListComponent,
   ],
   providers: [DialogService],
   templateUrl: "./dashboard.component.html",

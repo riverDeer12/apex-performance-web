@@ -19,7 +19,9 @@ import {TranslationService} from "../../i18n/translation.service";
 import {TranslatePipe} from "../../i18n/translate.pipe";
 import {FormsModule} from "@angular/forms";
 import {Select} from "primeng/select";
+import {Tooltip} from "primeng/tooltip";
 import {ClientPlans} from "../../constants/client-plans";
+import {MonthlyReviewsManagerComponent} from "../monthly-reviews/components/monthly-reviews-manager/monthly-reviews-manager.component";
 
 @Component({
     selector: "app-clients",
@@ -35,6 +37,7 @@ import {ClientPlans} from "../../constants/client-plans";
         TranslatePipe,
         FormsModule,
         Select,
+        Tooltip,
     ],
     providers: [DialogService],
     templateUrl: "./clients.component.html",
@@ -130,6 +133,30 @@ export class ClientsComponent {
 
         dialogRef.onClose.subscribe((response: any) => {
             this.loadData();
+        });
+    }
+
+    openGoalDialog(client: Client) {
+        this.dialogService.open(DialogFormComponent, {
+            header: this.translationService.t("clientGoals.title") + ": " + client.fullName,
+            data: {
+                contentType: EntityType.ClientGoal,
+                formType: ActionType.Update,
+                dialogId: "updateClientGoalForm",
+                data: client,
+            },
+        });
+    }
+
+    openMonthlyReviewsDialog(client: Client) {
+        this.dialogService.open(MonthlyReviewsManagerComponent, {
+            header: this.translationService.t("monthlyReviews.title") + ": " + client.fullName,
+            modal: true,
+            dismissableMask: true,
+            closable: true,
+            width: "60rem",
+            breakpoints: { "960px": "95vw" },
+            data: { client },
         });
     }
 

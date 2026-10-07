@@ -18,5 +18,6 @@ export enum EntityType {
     TimeSlot ,
     Training,
     User,
-    Workout
+    Workout,
+    ClientGoal
 }

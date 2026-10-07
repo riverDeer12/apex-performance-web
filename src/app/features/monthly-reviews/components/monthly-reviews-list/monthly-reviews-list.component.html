@@ -1,0 +1,16 @@
+<p-card [header]="'monthlyReviews.title' | translate">
+    @if (!loaded) {
+        <p class="m-0 text-muted-color">{{ "monthlyReviews.loading" | translate }}</p>
+    } @else if (!reviews.length) {
+        <p class="m-0 text-muted-color">{{ "monthlyReviews.emptyForClient" | translate }}</p>
+    } @else {
+        <div class="flex flex-col gap-3">
+            @for (review of reviews; track review.id) {
+                <div class="flex flex-col gap-2 p-3 rounded border border-surface">
+                    <span class="font-semibold">{{ monthName(review) }}</span>
+                    <p class="m-0 whitespace-pre-line">{{ review.content }}</p>
+                </div>
+            }
+        </div>
+    }
+</p-card>

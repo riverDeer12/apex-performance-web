@@ -1,7 +1,8 @@
 <div class="my-3 flex flex-wrap items-center gap-3">
     <p-button *ngIf="canManageTrainings" (click)="openCreateDialog()" type="button" iconPos="right" icon="pi pi-plus"
               [label]="'trainings.new' | translate" />
-    <p-select [(ngModel)]="selectedCompletion" [options]="completionOptions" optionLabel="label" optionValue="value"
+    <!-- Clients only receive completed trainings, so filtering by completion is staff only. -->
+    <p-select *ngIf="!isClient" [(ngModel)]="selectedCompletion" [options]="completionOptions" optionLabel="label" optionValue="value"
               [placeholder]="'trainings.allTrainings' | translate" [showClear]="true" styleClass="w-56"
               (onChange)="trainingsTable.filter($event.value, 'isCompleted', 'equals')" />
 </div>
@@ -41,7 +42,7 @@
                 </div>
             </th>
             <th style="width: 8rem">{{ "trainings.exercises" | translate }}</th>
-            <th pSortableColumn="isCompleted" style="width: 10rem">
+            <th *ngIf="!isClient" pSortableColumn="isCompleted" style="width: 10rem">
                 {{ "trainings.completed" | translate }}
                 <p-sortIcon field="isCompleted" />
             </th>
@@ -54,7 +55,7 @@
             <td *ngIf="!isClient">{{ training.client.fullName }}</td>
             <td>{{ training.name }}</td>
             <td>{{ training.exercises.length }}</td>
-            <td>
+            <td *ngIf="!isClient">
                 <p-checkbox *ngIf="canManageTrainings; else completionTag" [binary]="true"
                             [(ngModel)]="training.isCompleted"
                             (onChange)="toggleCompleted(training, $event.checked)" />

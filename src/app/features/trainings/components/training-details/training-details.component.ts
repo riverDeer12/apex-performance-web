@@ -7,6 +7,8 @@ import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { getTranslation } from "../../../workouts/models/localized-property";
 import { Training, TrainingExercise, TrainingExerciseSet } from "../../models/training";
+import { AuthenticationService } from "../../../authentication/services/authentication.service";
+import { Roles } from "../../../../constants/roles";
 
 /**
  * Read only view of a training with its exercises,
@@ -23,7 +25,12 @@ export class TrainingDetailsComponent {
 
     exercises: TrainingExercise[];
 
-    constructor(config: DynamicDialogConfig, private translationService: TranslationService) {
+    // Clients only receive completed trainings, completion status is shown to staff only.
+    isClient: boolean;
+
+    constructor(config: DynamicDialogConfig, private translationService: TranslationService,
+                authenticationService: AuthenticationService) {
+        this.isClient = authenticationService.getUserRole() === Roles.Client;
         this.training = config.data.training;
         this.exercises = [...(this.training.exercises ?? [])].sort((a, b) => a.order - b.order);
     }

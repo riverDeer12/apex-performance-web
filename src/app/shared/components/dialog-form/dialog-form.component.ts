@@ -38,6 +38,7 @@ import {
   FunctionalMovementScreenFormComponent
 } from '../../../features/clients/functional-movement-screens/components/functional-movement-screen-form/functional-movement-screen-form.component';
 import { AppointmentLocationFormComponent } from '../../../features/appointments/appointment-locations/components/appointment-location-form/appointment-location-form.component';
+import { ClientGoalFormComponent } from '../../../features/client-goals/components/client-goal-form/client-goal-form.component';
 import { WorkoutFormComponent } from '../../../features/workouts/components/workout-form/workout-form.component';
 
 @Component({
@@ -51,6 +52,7 @@ import { WorkoutFormComponent } from '../../../features/workouts/components/work
     UserFormComponent,
     RoleFormComponent,
     ClientFormComponent,
+    ClientGoalFormComponent,
     AppointmentFormComponent,
     AppointmentTypeFormComponent,
     EmailFormComponent,
