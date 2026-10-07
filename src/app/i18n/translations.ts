@@ -494,6 +494,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "recurringAppointments.updatedDetail": "Recurring Appointment is updated successfully.",
     "recurringAppointments.createErrorSummary": "Error Creating Recurring Appointment",
     "recurringAppointments.updateErrorSummary": "Error Updating Recurring Appointment",
+    "recurringAppointments.calendarView": "Calendar",
+    "recurringAppointments.tableView": "Table",
+    "recurringAppointments.noneThisDay": "No fixed appointments",
 
     "fms.new": "New Functional Movement Screen",
     "fms.firstname": "Firstname",
@@ -1028,6 +1031,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "recurringAppointments.updatedDetail": "Ponavljajući termin je uspješno ažuriran.",
     "recurringAppointments.createErrorSummary": "Greška pri kreiranju ponavljajućeg termina",
     "recurringAppointments.updateErrorSummary": "Greška pri ažuriranju ponavljajućeg termina",
+    "recurringAppointments.calendarView": "Kalendar",
+    "recurringAppointments.tableView": "Tablica",
+    "recurringAppointments.noneThisDay": "Nema fiksnih termina",
 
     "fms.new": "Novi funkcionalni pokretni pregled",
     "fms.firstname": "Ime",
