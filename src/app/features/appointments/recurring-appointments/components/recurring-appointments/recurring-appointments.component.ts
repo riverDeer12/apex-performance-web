@@ -18,10 +18,17 @@ import { DayOfWeek } from "../../../../../enums/day-of-week";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { TranslationService } from "../../../../../i18n/translation.service";
 import { TranslatePipe } from "../../../../../i18n/translate.pipe";
+import { FormsModule } from "@angular/forms";
+import { SelectButton } from "primeng/selectbutton";
+
+export interface RecurringCalendarDay {
+  key: string;
+  appointments: RecurringAppointment[];
+}
 
 @Component({
   selector: "app-recurring-appointments",
-  imports: [CommonModule, Button, NgIf, TableModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, Button, NgIf, TableModule, SelectButton, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./recurring-appointments.component.html",
   styleUrl: "./recurring-appointments.component.scss",
@@ -34,6 +41,19 @@ export class RecurringAppointmentsComponent implements OnInit {
   userRole!: string;
 
   weekDays = DateExtensions.getWeekDays(DayOfWeek.Monday);
+
+  view: "calendar" | "table" = "calendar";
+
+  calendarDays: RecurringCalendarDay[] = [];
+
+  viewOptions = [
+    { label: "recurringAppointments.calendarView", value: "calendar" },
+    { label: "recurringAppointments.tableView", value: "table" },
+  ];
+
+  get showCoach(): boolean {
+    return this.userRole !== Roles.Coach;
+  }
 
   get userCanCreateRecurringAppointment(): boolean {
     return this.authenticationService.checkPermission(
@@ -68,6 +88,8 @@ export class RecurringAppointmentsComponent implements OnInit {
           .filter((x: RecurringAppointment) => x.status)
           .map((x: RecurringAppointment) => Object.assign(new RecurringAppointment(), x));
 
+        this.calendarDays = this.buildCalendarDays(this.recurringAppointments);
+
         if (this.userRole === Roles.Coach) {
           this.loadCoachTimeSlots();
         }
@@ -76,6 +98,31 @@ export class RecurringAppointmentsComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  // Groups active recurring appointments by week day
+  // (Monday first), sorted by start time within a day.
+  private buildCalendarDays(appointments: RecurringAppointment[]): RecurringCalendarDay[] {
+    return this.weekDays.map((day) => ({
+      key: "calendar." + day.name.toLowerCase(),
+      appointments: appointments
+        .filter((x) => this.dayOf(x) === day.value)
+        .sort((a, b) => this.formatTime(a.timeSlot.startTime).localeCompare(this.formatTime(b.timeSlot.startTime))),
+    }));
+  }
+
+  private dayOf(appointment: RecurringAppointment): DayOfWeek {
+    const day: unknown = appointment.timeSlot?.day;
+    return typeof day === "string" ? DayOfWeek[day as keyof typeof DayOfWeek] : (day as DayOfWeek);
+  }
+
+  formatTime(time: unknown): string {
+    if (time instanceof Date) return time.toTimeString().slice(0, 5);
+    return typeof time === "string" ? time.slice(0, 5) : "";
+  }
+
+  clientNames(appointment: RecurringAppointment): string {
+    return appointment.clients.map((x) => x.firstName + " " + x.lastName).join(", ");
   }
 
   private loadCoachTimeSlots(): void {
