@@ -11,6 +11,10 @@
     </p-card>
 </div>
 
+<div class="row mb-3" *ngIf="userRole == userRoles.Client">
+    <app-client-goal-card></app-client-goal-card>
+</div>
+
 <div class="my-3" *ngIf="userRole == userRoles.Coach">
     <p-button (click)="generateRecurringAppointments()"
               type="button" iconPos="right" icon="pi pi-sync" [label]="'dashboard.generateSchedule' | translate" />
@@ -29,5 +33,9 @@
 <div>
     <h4>{{ "dashboard.pendingRequests" | translate }}</h4>
     <app-appointments-requests-list [appointmentRequests]="appointmentRequests"></app-appointments-requests-list>
+</div>
+
+<div class="my-3" *ngIf="userRole == userRoles.Client">
+    <app-monthly-reviews-list></app-monthly-reviews-list>
 </div>
 

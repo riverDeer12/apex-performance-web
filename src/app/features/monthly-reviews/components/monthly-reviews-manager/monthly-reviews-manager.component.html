@@ -1,0 +1,53 @@
+<div class="flex flex-col gap-6">
+    <form [formGroup]="form" (submit)="submit()" class="flex flex-col gap-4">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12 md:col-span-6 flex flex-col gap-2">
+                <label for="month">{{ "monthlyReviews.month" | translate }}</label>
+                <p-select [options]="monthOptions" optionLabel="label" optionValue="value" appendTo="body"
+                          styleClass="w-full" formControlName="month" inputId="month" />
+            </div>
+            <div class="col-span-12 md:col-span-6 flex flex-col gap-2">
+                <label for="year">{{ "monthlyReviews.year" | translate }}</label>
+                <p-select [options]="yearOptions" optionLabel="label" optionValue="value" appendTo="body"
+                          styleClass="w-full" formControlName="year" inputId="year" />
+            </div>
+            <div class="col-span-12 flex flex-col gap-2">
+                <label for="content">
+                    {{ (selectedReview ? "monthlyReviews.editReview" : "monthlyReviews.newReview") | translate }}
+                </label>
+                <textarea pTextarea id="content" formControlName="content" rows="8" class="w-full" maxlength="4000"
+                          [placeholder]="'monthlyReviews.contentPlaceholder' | translate"></textarea>
+                <div class="flex justify-between">
+                    <small class="p-error">
+                        <ng-container *ngIf="validationService.hasErrors(form, 'content', 'required')">
+                            {{ "common.required" | translate }}</ng-container>
+                        <ng-container *ngIf="validationService.hasErrors(form, 'content', 'maxlength')">
+                            {{ "monthlyReviews.maxLength" | translate }}</ng-container>
+                    </small>
+                    <small class="text-muted-color">{{ form.value.content?.length ?? 0 }} / 4000</small>
+                </div>
+            </div>
+        </div>
+        <div>
+            <p-button type="submit" [disabled]="loadingData"
+                      [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+                      [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)" />
+        </div>
+    </form>
+
+    <div class="flex flex-col gap-3">
+        <h6 class="m-0">{{ "monthlyReviews.writtenReviews" | translate }}</h6>
+        <p *ngIf="loaded && !reviews.length" class="m-0 text-muted-color">{{ "monthlyReviews.noneForClient" | translate }}</p>
+        <div *ngFor="let review of reviews" class="flex flex-col gap-2 p-3 rounded border border-surface">
+            <div class="flex items-center justify-between gap-2">
+                <span class="font-semibold">{{ monthName(review) }}</span>
+                <div class="flex">
+                    <p-button (click)="edit(review)" class="mr-2" icon="pi pi-pencil" severity="secondary"
+                              [outlined]="true" />
+                    <p-button (click)="confirmDelete(review)" icon="pi pi-trash" severity="danger" [outlined]="true" />
+                </div>
+            </div>
+            <p class="m-0 whitespace-pre-line">{{ review.content }}</p>
+        </div>
+    </div>
+</div>

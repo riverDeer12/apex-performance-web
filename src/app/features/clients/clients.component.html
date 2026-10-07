@@ -61,7 +61,7 @@
                 {{ "common.status" | translate }}
                 <p-sortIcon field="status"/>
             </th>
-            <th style="width: 11rem"></th>
+            <th style="width: 18rem"></th>
         </tr>
     </ng-template>
     <ng-template #body let-client>
@@ -84,6 +84,10 @@
             <td class="flex">
                 <p-button (click)="openInfoDialog(client)" class="mr-2" icon="pi pi-info-circle" severity="secondary"
                           [outlined]="true"/>
+                <p-button (click)="openGoalDialog(client)" class="mr-2" icon="pi pi-flag" severity="secondary"
+                          [outlined]="true" [pTooltip]="'clientGoals.title' | translate" tooltipPosition="top"/>
+                <p-button (click)="openMonthlyReviewsDialog(client)" class="mr-2" icon="pi pi-book" severity="secondary"
+                          [outlined]="true" [pTooltip]="'monthlyReviews.title' | translate" tooltipPosition="top"/>
                 <p-button (click)="openUpdateDialog(client)" class="mr-2" icon="pi pi-pencil"
                           severity="secondary"
                           [outlined]="true"/>
