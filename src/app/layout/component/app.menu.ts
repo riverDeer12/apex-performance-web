@@ -70,6 +70,9 @@ export class AppMenu implements OnInit {
 
   private buildMenu() {
     const t = (key: string) => this.translationService.t(key);
+    // Coaches and administrators manage trainings, templates and records.
+    const userRole = this.authenticationService.getUserRole();
+    const canManageTrainings = userRole === Roles.Administrator || userRole === Roles.Coach;
 
     this.model = [
       {
@@ -164,6 +167,19 @@ export class AppMenu implements OnInit {
             label: t("menu.trainingProgress"),
             icon: "pi pi-fw pi-chart-line",
             routerLink: ["/admin/trainings/progress"],
+          },
+          {
+            label: t("menu.trainingTemplates"),
+            icon: "pi pi-fw pi-bookmark",
+            visible: canManageTrainings,
+            routerLink: ["/admin/trainings/templates"],
+          },
+          {
+            // Shown to clients later, the API already returns their own records.
+            label: t("menu.personalRecords"),
+            icon: "pi pi-fw pi-trophy",
+            visible: canManageTrainings,
+            routerLink: ["/admin/trainings/records"],
           },
         ],
       },

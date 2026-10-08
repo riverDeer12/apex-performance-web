@@ -1,0 +1,86 @@
+<div class="my-3">
+    <p-button (click)="openCreateDialog()" type="button" iconPos="right" icon="pi pi-plus"
+              [label]="'trainingTemplates.new' | translate" />
+</div>
+
+<p-table
+    [value]="templates"
+    dataKey="id"
+    sortField="name"
+    [rows]="10"
+    [rowHover]="true"
+    [showGridlines]="true"
+    [paginator]="true"
+    responsiveLayout="scroll"
+    showCurrentPageReport="true"
+    [currentPageReportTemplate]="'common.entriesTemplate' | translate"
+>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                {{ "trainings.name" | translate }}
+                <p-sortIcon field="name" />
+            </th>
+            <th style="min-width: 16rem">{{ "trainings.exercises" | translate }}</th>
+            <th pSortableColumn="authorName" style="min-width: 10rem">
+                {{ "trainingTemplates.author" | translate }}
+                <p-sortIcon field="authorName" />
+            </th>
+            <th style="width: 12rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-template>
+        <tr>
+            <td>
+                <div class="font-semibold">{{ template.name }}</div>
+                <div *ngIf="template.note" class="text-sm text-muted-color">{{ template.note }}</div>
+            </td>
+            <td>
+                <span class="font-semibold">{{ template.exercises.length }}</span>
+                <span *ngIf="template.exercises.length" class="text-sm text-muted-color"> · {{ exerciseNames(template) }}</span>
+            </td>
+            <td>{{ template.authorName || '-' }}</td>
+            <td>
+                <div class="flex gap-2">
+                    <p-button (click)="openAssignDialog(template)" icon="pi pi-send" severity="primary"
+                              [outlined]="true" [pTooltip]="'trainingTemplates.assign' | translate"
+                              tooltipPosition="top" />
+                    <ng-container *ngIf="template.canEdit">
+                        <p-button (click)="openUpdateDialog(template)" icon="pi pi-pencil" severity="secondary"
+                                  [outlined]="true" />
+                        <p-button (click)="confirmDelete(template)" icon="pi pi-trash" severity="danger"
+                                  [outlined]="true" />
+                    </ng-container>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="4">{{ "trainingTemplates.noneFound" | translate }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="assignVisible" [modal]="true" [dismissableMask]="true"
+          [header]="('trainingTemplates.assign' | translate) + ': ' + (assignTemplate?.name ?? '')"
+          [style]="{ width: '32rem' }" [breakpoints]="{ '640px': '95vw' }">
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+            <label for="assignClients">{{ "common.clients" | translate }}</label>
+            <p-multiselect [options]="clients" [(ngModel)]="assignClients" optionLabel="fullName" optionValue="id"
+                           [filter]="true" appendTo="body" styleClass="w-full" inputId="assignClients"
+                           display="chip" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="assignDate">{{ "trainings.date" | translate }}</label>
+            <p-datepicker [(ngModel)]="assignDate" dateFormat="dd.mm.yy" appendTo="body" styleClass="w-full"
+                          inputId="assignDate" [showIcon]="true" />
+        </div>
+        <p class="text-sm text-muted-color m-0">{{ "trainingTemplates.assignHint" | translate }}</p>
+        <div>
+            <p-button (click)="assign()" icon="pi pi-send" [label]="'trainingTemplates.assign' | translate"
+                      [disabled]="!assignClients.length || !assignDate || assigning" [loading]="assigning" />
+        </div>
+    </div>
+</p-dialog>

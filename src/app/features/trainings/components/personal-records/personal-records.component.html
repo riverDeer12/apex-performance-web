@@ -1,0 +1,77 @@
+<div *ngIf="!isClient" class="my-3 flex flex-col gap-2 max-w-md">
+    <label for="client">{{ "trainings.client" | translate }}</label>
+    <p-select [filter]="true" [options]="clients" [(ngModel)]="selectedClient" optionLabel="fullName" optionValue="id"
+              appendTo="body" styleClass="w-full" inputId="client" [showClear]="true"
+              [placeholder]="'personalRecords.selectClient' | translate" (onChange)="loadRecords()" />
+</div>
+
+<p class="text-sm text-muted-color mt-0 mb-3">{{ "personalRecords.hint" | translate }}</p>
+
+<p-table *ngIf="isClient || selectedClient" [value]="exercises" dataKey="workoutId" [loading]="loading"
+         [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll" [rows]="20"
+         [paginator]="exercises.length > 20">
+    <ng-template #header>
+        <tr>
+            <th style="width: 3rem"></th>
+            <th pSortableColumn="name" style="min-width: 12rem">
+                {{ "trainings.exercise" | translate }}
+                <p-sortIcon field="name" />
+            </th>
+            <th style="min-width: 11rem">{{ "personalRecords.maxWeight" | translate }}</th>
+            <th style="min-width: 11rem">{{ "personalRecords.oneRepMax" | translate }}</th>
+            <th pSortableColumn="lastAchievedAt" style="min-width: 10rem">
+                {{ "personalRecords.lastRecord" | translate }}
+                <p-sortIcon field="lastAchievedAt" />
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-exercise let-expanded="expanded">
+        <tr>
+            <td>
+                <p-button type="button" [pRowToggler]="exercise" [text]="true" [rounded]="true" severity="secondary"
+                          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            </td>
+            <td class="font-semibold">{{ exercise.name }}</td>
+            <td>
+                <ng-container *ngIf="exercise.maxWeight as record; else empty">
+                    <span class="font-semibold">{{ record.value | number: '1.0-2' }} kg</span>
+                    <span *ngIf="record.reps" class="text-sm text-muted-color"> × {{ record.reps | number: '1.0-1' }}</span>
+                    <div class="text-sm text-muted-color">{{ record.achievedAt | date: 'dd.MM.yyyy.' }}</div>
+                </ng-container>
+            </td>
+            <td>
+                <ng-container *ngIf="exercise.oneRepMax as record; else empty">
+                    <span class="font-semibold">{{ record.value | number: '1.0-1' }} kg</span>
+                    <span class="text-sm text-muted-color">
+                        ({{ record.weight | number: '1.0-2' }} kg × {{ (record.reps ?? 1) | number: '1.0-1' }})</span>
+                    <div class="text-sm text-muted-color">{{ record.achievedAt | date: 'dd.MM.yyyy.' }}</div>
+                </ng-container>
+            </td>
+            <td>
+                {{ exercise.lastAchievedAt | date: 'dd.MM.yyyy.' }}
+                <p-tag *ngIf="exercise.isRecent" severity="success" class="ml-2"
+                       [value]="'personalRecords.new' | translate" />
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #expandedrow let-exercise>
+        <tr>
+            <td colspan="5">
+                <div class="text-sm font-semibold mb-2">{{ "personalRecords.history" | translate }}</div>
+                <div *ngFor="let record of exercise.history" class="text-sm flex flex-wrap gap-x-3 py-1">
+                    <span class="w-24">{{ record.achievedAt | date: 'dd.MM.yyyy.' }}</span>
+                    <span class="w-40 text-muted-color">{{ typeLabel(record) }}</span>
+                    <span class="font-semibold">{{ record.value | number: '1.0-1' }} kg</span>
+                    <span class="text-muted-color">({{ record.weight | number: '1.0-2' }} kg × {{ (record.reps ?? 1) | number: '1.0-1' }})</span>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="5">{{ "personalRecords.noneFound" | translate }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<ng-template #empty>-</ng-template>

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
 import { CommonModule } from "@angular/common";
 import {
     FormArray,
@@ -28,6 +29,8 @@ import { Workout } from "../../../workouts/models/workout";
 import { getTranslation } from "../../../workouts/models/localized-property";
 import { Training, TrainingExercise, TrainingExerciseSet, TrainingRequest } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
+import { TrainingTemplate, TrainingTemplateRequest } from "../../models/training-template";
+import { TrainingTemplateService } from "../../services/training-template.service";
 
 @Component({
     selector: "app-training-form",
@@ -39,10 +42,15 @@ import { TrainingService } from "../../services/training.service";
 })
 export class TrainingFormComponent implements OnInit {
     @Input() type!: ActionType;
+    // Training, or a template when isTemplate is set (it has the same name, note and exercises).
     @Input() training!: Training;
     @Input() redirectType!: RedirectType;
     @Input() dialogId!: string;
     @Input() returnUrl!: string;
+
+    // Form edits a training template (no client, date or completion).
+    // In create mode a given training or template is copied.
+    @Input() isTemplate = false;
 
     form!: FormGroup;
 
@@ -51,6 +59,9 @@ export class TrainingFormComponent implements OnInit {
     clients: Client[] = [];
 
     workoutOptions: { label: string; value: string }[] = [];
+
+    // Templates a new training can be filled from.
+    templates: TrainingTemplate[] = [];
 
     // Trainings visible to the user, used to show what the
     // client did in the same exercise last time.
@@ -61,6 +72,7 @@ export class TrainingFormComponent implements OnInit {
         private formBuilder: FormBuilder,
         private helperService: HelperService,
         private trainingService: TrainingService,
+        private trainingTemplateService: TrainingTemplateService,
         private clientService: ClientService,
         private workoutService: WorkoutService,
         private messageService: MessageService,
@@ -73,9 +85,30 @@ export class TrainingFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.initForm();
-        this.loadClients();
         this.loadWorkouts();
+
+        if (this.isTemplate) return;
+
+        this.loadClients();
         this.trainingService.getTrainings().subscribe(trainings => this.trainings = trainings);
+
+        if (this.type == ActionType.Create)
+            this.trainingTemplateService.getTemplates().subscribe(templates => this.templates = templates);
+    }
+
+    /**
+     * Fill the training with name, note and exercises of the template.
+     */
+    applyTemplate(templateId: string | null): void {
+        const template = this.templates.find(x => x.id === templateId);
+        if (!template) return;
+
+        this.form.patchValue({ name: template.name, note: template.note ?? "" });
+
+        this.exercises.clear();
+        [...template.exercises]
+            .sort((a, b) => a.order - b.order)
+            .forEach(exercise => this.addExercise(exercise));
     }
 
     addExercise(exercise?: TrainingExercise): void {
@@ -193,6 +226,8 @@ export class TrainingFormComponent implements OnInit {
      * before this one, or null when the client didn't do it yet.
      */
     previousSets(exerciseIndex: number): { date: string; sets: TrainingExerciseSet[] } | null {
+        if (this.isTemplate) return null;
+
         const clientId = this.form.controls["client"].value;
         const workoutId = this.exercises.at(exerciseIndex).get("workout")?.value;
 
@@ -277,11 +312,15 @@ export class TrainingFormComponent implements OnInit {
             return;
         }
 
-        const request = this.toRequest();
+        const save$: Observable<unknown> = this.isTemplate
+            ? this.type == ActionType.Create
+                ? this.trainingTemplateService.createTemplate(this.toTemplateRequest())
+                : this.trainingTemplateService.updateTemplate(this.training.id, this.toTemplateRequest())
+            : this.type == ActionType.Create
+                ? this.trainingService.createTraining(this.toRequest())
+                : this.trainingService.updateTraining(this.training.id, this.toRequest());
 
-        const save$ = this.type == ActionType.Create
-            ? this.trainingService.createTraining(request)
-            : this.trainingService.updateTraining(this.training.id, request);
+        const prefix = this.isTemplate ? "trainingTemplates" : "trainings";
 
         save$.subscribe({
             next: () => {
@@ -289,8 +328,8 @@ export class TrainingFormComponent implements OnInit {
                     severity: "success",
                     summary: this.translationService.t("common.success"),
                     detail: this.translationService.t(this.type == ActionType.Create
-                        ? "trainings.createdDetail"
-                        : "trainings.updatedDetail"),
+                        ? `${prefix}.createdDetail`
+                        : `${prefix}.updatedDetail`),
                 });
 
                 this.loadingData = false;
@@ -310,20 +349,35 @@ export class TrainingFormComponent implements OnInit {
     }
 
     private initForm(): void {
-        const training = this.type == ActionType.Update ? this.training : null;
+        // Training (or template) being edited, or copied when creating.
+        const source = this.training ?? null;
+        const isUpdate = this.type == ActionType.Update;
 
-        this.form = this.formBuilder.group({
-            client: [training?.client?.id ?? null, [Validators.required]],
-            name: [training?.name ?? "", [Validators.required, Validators.maxLength(200)]],
-            date: [training ? new Date(training.date) : new Date(), [Validators.required]],
-            note: [training?.note ?? "", [Validators.maxLength(2000)]],
-            isCompleted: [training?.isCompleted ?? false],
-            exercises: this.formBuilder.array<FormGroup>([]),
-        });
+        this.form = this.isTemplate
+            ? this.formBuilder.group({
+                name: [source?.name ?? "", [Validators.required, Validators.maxLength(200)]],
+                note: [source?.note ?? "", [Validators.maxLength(2000)]],
+                exercises: this.formBuilder.array<FormGroup>([]),
+            })
+            : this.formBuilder.group({
+                client: [source?.client?.id ?? null, [Validators.required]],
+                name: [source?.name ?? "", [Validators.required, Validators.maxLength(200)]],
+                // A copy is planned for today and not completed yet.
+                date: [isUpdate && source ? new Date(source.date) : new Date(), [Validators.required]],
+                note: [source?.note ?? "", [Validators.maxLength(2000)]],
+                isCompleted: [isUpdate ? source?.isCompleted ?? false : false],
+                exercises: this.formBuilder.array<FormGroup>([]),
+            });
 
-        [...(training?.exercises ?? [])]
+        [...(source?.exercises ?? [])]
             .sort((a, b) => a.order - b.order)
             .forEach(exercise => this.addExercise(exercise));
+    }
+
+    private toTemplateRequest(): TrainingTemplateRequest {
+        const request = this.toRequest();
+
+        return { name: request.name, note: request.note, exercises: request.exercises };
     }
 
     private toRequest(): TrainingRequest {
@@ -335,7 +389,7 @@ export class TrainingFormComponent implements OnInit {
         return {
             client: value.client,
             name: value.name.trim(),
-            date: (value.date as Date).toISOString(),
+            date: value.date ? (value.date as Date).toISOString() : "",
             note: text(value.note),
             isCompleted: !!value.isCompleted,
             exercises: (value.exercises ?? []).map((x: any) => ({

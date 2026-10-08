@@ -70,6 +70,12 @@
                 <ng-container *ngIf="canManageTrainings">
                     <p-button (click)="openUpdateDialog(training)" class="mr-2" icon="pi pi-pencil"
                               severity="secondary" [outlined]="true" />
+                    <p-button (click)="openCopyDialog(training)" class="mr-2" icon="pi pi-copy"
+                              severity="secondary" [outlined]="true"
+                              [pTooltip]="'trainings.copy' | translate" tooltipPosition="top" />
+                    <p-button (click)="openSaveAsTemplateDialog(training)" class="mr-2" icon="pi pi-bookmark"
+                              severity="secondary" [outlined]="true"
+                              [pTooltip]="'trainingTemplates.saveAsTemplate' | translate" tooltipPosition="top" />
                     <p-button (click)="confirmDelete(training)" icon="pi pi-trash" severity="danger"
                               [outlined]="true" />
                 </ng-container>

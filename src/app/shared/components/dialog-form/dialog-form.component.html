@@ -50,6 +50,15 @@
         [training]="data">
 </app-training-form>
 
+<app-training-form
+        *ngIf="contentType === entityType.TrainingTemplate"
+        [type]="formType"
+        [dialogId]="dialogId"
+        [redirectType]="redirectType"
+        [isTemplate]="true"
+        [training]="data">
+</app-training-form>
+
 <app-cancelation-request-form
         *ngIf="contentType === entityType.CancelationRequest"
         [type]="formType"

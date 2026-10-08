@@ -19,5 +19,6 @@ export enum EntityType {
     Training,
     User,
     Workout,
-    ClientGoal
+    ClientGoal,
+    TrainingTemplate
 }

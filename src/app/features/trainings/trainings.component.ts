@@ -1,3 +1,4 @@
+import { Tooltip } from "primeng/tooltip";
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -24,7 +25,7 @@ import { TrainingDetailsComponent } from "./components/training-details/training
 @Component({
     selector: "app-trainings",
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, Button, Checkbox, Tag, Select, TranslatePipe],
+    imports: [CommonModule, FormsModule, TableModule, Button, Checkbox, Tag, Select, Tooltip, TranslatePipe],
     providers: [DialogService],
     templateUrl: "./trainings.component.html",
 })
@@ -70,6 +71,23 @@ export class TrainingsComponent implements OnInit {
 
     openUpdateDialog(training: Training): void {
         this.openFormDialog(ActionType.Update, "trainings.edit", training);
+    }
+
+    // New training with the same client, exercises and sets, planned for today.
+    openCopyDialog(training: Training): void {
+        this.openFormDialog(ActionType.Create, "trainings.copy", training);
+    }
+
+    openSaveAsTemplateDialog(training: Training): void {
+        this.dialogService.open(DialogFormComponent, {
+            header: this.translationService.t("trainingTemplates.saveAsTemplate"),
+            data: {
+                contentType: EntityType.TrainingTemplate,
+                formType: ActionType.Create,
+                dialogId: "createTrainingTemplateForm",
+                data: training,
+            },
+        });
     }
 
     openDetailsDialog(training: Training): void {

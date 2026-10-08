@@ -1,27 +1,34 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 md:col-span-6 flex flex-col gap-2">
+        <div *ngIf="!isTemplate && templates.length" class="col-span-12 flex flex-col gap-2">
+            <label for="template">{{ "trainingTemplates.fromTemplate" | translate }}</label>
+            <p-select [filter]="true" [options]="templates" appendTo="body" styleClass="w-full"
+                      optionLabel="name" optionValue="id" inputId="template" [showClear]="true"
+                      [placeholder]="'trainingTemplates.selectTemplate' | translate"
+                      (onChange)="applyTemplate($event.value)" />
+        </div>
+        <div *ngIf="!isTemplate" class="col-span-12 md:col-span-6 flex flex-col gap-2">
             <label for="client">{{ "trainings.client" | translate }}</label>
             <p-select [filter]="true" [options]="clients" appendTo="body" styleClass="w-full"
                       formControlName="client" optionLabel="fullName" optionValue="id" inputId="client" />
             <small class="p-error" *ngIf="validationService.hasErrors(form, 'client', 'required')">
                 {{ "common.required" | translate }}</small>
         </div>
-        <div class="col-span-12 md:col-span-6 flex flex-col gap-2">
+        <div *ngIf="!isTemplate" class="col-span-12 md:col-span-6 flex flex-col gap-2">
             <label for="date">{{ "trainings.date" | translate }}</label>
             <p-datepicker formControlName="date" dateFormat="dd.mm.yy" appendTo="body" styleClass="w-full"
                           inputId="date" [showIcon]="true" />
             <small class="p-error" *ngIf="validationService.hasErrors(form, 'date', 'required')">
                 {{ "common.required" | translate }}</small>
         </div>
-        <div class="col-span-12 md:col-span-8 flex flex-col gap-2">
+        <div class="col-span-12 flex flex-col gap-2" [ngClass]="isTemplate ? '' : 'md:col-span-8'">
             <label for="name">{{ "trainings.name" | translate }}</label>
             <input pInputText id="name" formControlName="name" class="w-full"
                    [placeholder]="'trainings.namePlaceholder' | translate" />
             <small class="p-error" *ngIf="validationService.hasErrors(form, 'name', 'required')">
                 {{ "common.required" | translate }}</small>
         </div>
-        <div class="col-span-12 md:col-span-4 flex items-center gap-2 md:pt-7">
+        <div *ngIf="!isTemplate" class="col-span-12 md:col-span-4 flex items-center gap-2 md:pt-7">
             <p-checkbox formControlName="isCompleted" [binary]="true" inputId="isCompleted" />
             <label for="isCompleted">{{ "trainings.completed" | translate }}</label>
         </div>
