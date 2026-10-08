@@ -4,24 +4,27 @@ import { FormsModule } from "@angular/forms";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { RouterLink } from "@angular/router";
 import { Select } from "primeng/select";
-import { Tag } from "primeng/tag";
 import { environment } from "../../../../../environments/environment";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
-import { TodayOverview } from "./today-overview";
+import { TodayAppointment, TodayOverview } from "./today-overview";
 
 // Longer lists are cut, the rest is shown as "and N more".
-const LIST_LIMIT = 6;
+const LIST_LIMIT = 5;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+type AppointmentState = "past" | "current" | "next" | "upcoming";
 
 /**
- * Overview of the day for coaches and administrators: today's
- * appointments, pending requests, clients with low credits,
- * inactive clients and monthly reviews still to be written.
+ * Overview of the day for coaches and administrators: key numbers
+ * on top, then today's appointments as a timeline, pending requests,
+ * clients with low credits, inactive clients and monthly reviews.
  */
 @Component({
     selector: "app-today-overview",
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, Select, Tag, TranslatePipe],
+    imports: [CommonModule, FormsModule, RouterLink, Select, TranslatePipe],
     templateUrl: "./today-overview.component.html",
     styleUrl: "./today-overview.component.scss",
 })
@@ -33,6 +36,9 @@ export class TodayOverviewComponent implements OnInit {
     readonly listLimit = LIST_LIMIT;
 
     readonly inactiveDaysOptions = [7, 14, 30, 60].map(days => ({ label: `${days}`, value: days }));
+
+    // Appointment states are calculated once per load, not on every change detection.
+    appointmentStates = new Map<string, AppointmentState>();
 
     constructor(
         private http: HttpClient,
@@ -57,7 +63,18 @@ export class TodayOverviewComponent implements OnInit {
 
         this.http.get<TodayOverview>(environment.apiUrl + "/dashboard/today", {
             params: new HttpParams().set("inactiveDays", this.inactiveDays),
-        }).subscribe(overview => this.overview = overview);
+        }).subscribe(overview => {
+            this.overview = overview;
+            this.appointmentStates = this.calculateStates(overview.todayAppointments);
+        });
+    }
+
+    get locale(): string {
+        return this.translationService.language() === "hr" ? "hr-HR" : "en-GB";
+    }
+
+    get todayLabel(): string {
+        return new Date().toLocaleDateString(this.locale, { weekday: "long", day: "numeric", month: "long" });
     }
 
     get pendingTotal(): number {
@@ -65,13 +82,15 @@ export class TodayOverviewComponent implements OnInit {
         return pending ? pending.appointments + pending.cancelationRequests + pending.joinRequests : 0;
     }
 
+    get remainingAppointments(): number {
+        return [...this.appointmentStates.values()].filter(x => x !== "past").length;
+    }
+
     get monthName(): string {
         const reviews = this.overview?.monthlyReviews;
-        if (!reviews) return "";
-
-        const locale = this.translationService.language() === "hr" ? "hr-HR" : "en-GB";
-
-        return new Date(reviews.year, reviews.month - 1, 1).toLocaleDateString(locale, { month: "long" });
+        return reviews
+            ? new Date(reviews.year, reviews.month - 1, 1).toLocaleDateString(this.locale, { month: "long" })
+            : "";
     }
 
     // Reviews are written by the last day of the month (before the 1st of the next one).
@@ -87,10 +106,66 @@ export class TodayOverviewComponent implements OnInit {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        return Math.max(Math.round((due.getTime() - today.getTime()) / 86400000), 0);
+        return Math.max(Math.round((due.getTime() - today.getTime()) / DAY_MS), 0);
+    }
+
+    get reviewsWritten(): number {
+        const reviews = this.overview?.monthlyReviews;
+        return reviews ? Math.max(reviews.totalClients - reviews.missingClients.length, 0) : 0;
+    }
+
+    get reviewsPercent(): number {
+        const total = this.overview?.monthlyReviews?.totalClients ?? 0;
+        return total ? Math.round(this.reviewsWritten / total * 100) : 100;
+    }
+
+    // Reviews are urgent in the last week of the month when some are missing.
+    get reviewsUrgent(): boolean {
+        return !!this.overview?.monthlyReviews.missingClients.length && this.reviewDaysLeft <= 7;
+    }
+
+    initials(fullName: string): string {
+        return fullName.split(" ").filter(x => !!x).slice(0, 2).map(x => x[0].toUpperCase()).join("");
+    }
+
+    daysAgo(date: string | null): string {
+        if (!date) return this.translationService.t("today.never");
+
+        const days = Math.floor((Date.now() - new Date(date).getTime()) / DAY_MS);
+
+        return this.translationService.t("today.daysAgo").replace("{count}", String(days));
     }
 
     more(count: number): string {
         return this.translationService.t("today.andMore").replace("{count}", String(count - LIST_LIMIT));
+    }
+
+    scrollTo(id: string): void {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Past appointments are dimmed, the first one that has not started is marked as next.
+    private calculateStates(appointments: TodayAppointment[]): Map<string, AppointmentState> {
+        const now = Date.now();
+        const states = new Map<string, AppointmentState>();
+        let nextFound = false;
+
+        for (const appointment of appointments) {
+            const start = new Date(appointment.startTime).getTime();
+            const end = new Date(appointment.endTime).getTime();
+
+            if (end <= now) {
+                states.set(appointment.id, "past");
+            } else if (start <= now || appointment.status === "InProgress") {
+                states.set(appointment.id, "current");
+            } else if (!nextFound) {
+                states.set(appointment.id, "next");
+                nextFound = true;
+            } else {
+                states.set(appointment.id, "upcoming");
+            }
+        }
+
+        return states;
     }
 }

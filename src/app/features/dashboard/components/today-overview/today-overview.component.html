@@ -1,97 +1,171 @@
-<div *ngIf="overview as o" class="today-overview">
-    <!-- Today's appointments -->
-    <section class="today-card">
-        <header>
-            <span><i class="pi pi-calendar"></i> {{ "today.appointments" | translate }}</span>
-            <span class="today-count">{{ o.todayAppointments.length }}</span>
-        </header>
-        <div *ngFor="let appointment of o.todayAppointments" class="today-row">
-            <span class="font-semibold whitespace-nowrap">
-                {{ appointment.startTime | date: 'HH:mm' }} – {{ appointment.endTime | date: 'HH:mm' }}
+<div *ngIf="overview as o" class="today">
+    <div class="today-head">
+        <div class="today-date">{{ todayLabel }}</div>
+        <div class="today-title">{{ "today.title" | translate }}</div>
+    </div>
+
+    <!-- Key numbers, each tile leads to its card below -->
+    <div class="today-stats">
+        <button type="button" class="stat-tile" (click)="scrollTo('today-appointments')">
+            <span class="stat-icon"><i class="pi pi-calendar"></i></span>
+            <span class="stat-label">{{ "today.appointments" | translate }}</span>
+            <span class="stat-value">{{ o.todayAppointments.length }}</span>
+            <span class="stat-caption">{{ "today.remaining" | translate }}: {{ remainingAppointments }}</span>
+        </button>
+        <button type="button" class="stat-tile" [class.stat-warn]="pendingTotal > 0"
+                (click)="scrollTo('today-requests')">
+            <span class="stat-icon"><i class="pi pi-inbox"></i></span>
+            <span class="stat-label">{{ "today.pendingRequests" | translate }}</span>
+            <span class="stat-value">{{ pendingTotal }}</span>
+            <span class="stat-caption">
+                <i *ngIf="pendingTotal > 0" class="pi pi-exclamation-circle"></i>
+                {{ (pendingTotal > 0 ? "today.waitingForYou" : "today.nothingWaiting") | translate }}
             </span>
-            <span class="today-row-text">{{ appointment.clients.join(', ') }}</span>
-            <p-tag *ngIf="appointment.status === 'InProgress'" severity="info"
-                   [value]="'businessStatuses.InProgress' | translate" />
-        </div>
-        <p *ngIf="!o.todayAppointments.length" class="today-empty">{{ "today.noAppointments" | translate }}</p>
-    </section>
-
-    <!-- Pending requests -->
-    <section class="today-card">
-        <header>
-            <span><i class="pi pi-inbox"></i> {{ "today.pendingRequests" | translate }}</span>
-            <span class="today-count" [class.today-count-warn]="pendingTotal > 0">{{ pendingTotal }}</span>
-        </header>
-        <a routerLink="/admin/appointments/appointment-requests" class="today-row today-link">
-            <span class="today-row-text">{{ "menu.appointmentRequests" | translate }}</span>
-            <span class="font-semibold">{{ o.pendingRequests.appointments }}</span>
-        </a>
-        <a routerLink="/admin/appointments/cancelation-requests" class="today-row today-link">
-            <span class="today-row-text">{{ "menu.cancelationRequests" | translate }}</span>
-            <span class="font-semibold">{{ o.pendingRequests.cancelationRequests }}</span>
-        </a>
-        <a routerLink="/admin/appointments/join-requests" class="today-row today-link">
-            <span class="today-row-text">{{ "menu.joinRequests" | translate }}</span>
-            <span class="font-semibold">{{ o.pendingRequests.joinRequests }}</span>
-        </a>
-    </section>
-
-    <!-- Low credits -->
-    <section class="today-card">
-        <header>
-            <span><i class="pi pi-wallet"></i> {{ "today.lowCredits" | translate }}</span>
-            <span class="today-count" [class.today-count-warn]="o.lowCreditsClients.length > 0">
-                {{ o.lowCreditsClients.length }}</span>
-        </header>
-        <div *ngFor="let client of o.lowCreditsClients | slice: 0 : listLimit" class="today-row">
-            <span class="today-row-text">{{ client.fullName }}</span>
-            <p-tag [severity]="client.credits <= 0 ? 'danger' : 'warn'"
-                   [value]="client.credits + ' ' + ('today.credits' | translate)" />
-        </div>
-        <a *ngIf="o.lowCreditsClients.length > listLimit" routerLink="/admin/clients" class="today-more">
-            {{ more(o.lowCreditsClients.length) }}</a>
-        <p *ngIf="!o.lowCreditsClients.length" class="today-empty">{{ "today.noLowCredits" | translate }}</p>
-    </section>
-
-    <!-- Inactive clients -->
-    <section class="today-card">
-        <header>
-            <span><i class="pi pi-user-minus"></i> {{ "today.inactive" | translate }}</span>
-            <span class="today-count">{{ o.inactiveClients.length }}</span>
-        </header>
-        <div class="flex items-center gap-2 text-sm mb-1">
-            <span>{{ "today.inactiveFor" | translate }}</span>
-            <p-select [options]="inactiveDaysOptions" [(ngModel)]="inactiveDays" optionLabel="label"
-                      optionValue="value" size="small" appendTo="body" (onChange)="load()" />
-            <span>{{ "today.days" | translate }}</span>
-        </div>
-        <div *ngFor="let client of o.inactiveClients | slice: 0 : listLimit" class="today-row">
-            <span class="today-row-text">{{ client.fullName }}</span>
-            <span class="text-sm text-muted-color whitespace-nowrap">
-                {{ client.lastActivityAt ? (client.lastActivityAt | date: 'dd.MM.yyyy.') : ('today.never' | translate) }}
+        </button>
+        <button type="button" class="stat-tile" [class.stat-warn]="o.lowCreditsClients.length > 0"
+                (click)="scrollTo('today-credits')">
+            <span class="stat-icon"><i class="pi pi-wallet"></i></span>
+            <span class="stat-label">{{ "today.lowCredits" | translate }}</span>
+            <span class="stat-value">{{ o.lowCreditsClients.length }}</span>
+            <span class="stat-caption">{{ "today.creditsLimit" | translate }}</span>
+        </button>
+        <button type="button" class="stat-tile" (click)="scrollTo('today-inactive')">
+            <span class="stat-icon"><i class="pi pi-user-minus"></i></span>
+            <span class="stat-label">{{ "today.inactive" | translate }}</span>
+            <span class="stat-value">{{ o.inactiveClients.length }}</span>
+            <span class="stat-caption">{{ "today.inactiveFor" | translate }} {{ o.inactiveDays }} {{ "today.days" | translate }}</span>
+        </button>
+        <button type="button" class="stat-tile" [class.stat-warn]="reviewsUrgent" (click)="scrollTo('today-reviews')">
+            <span class="stat-icon"><i class="pi pi-file-edit"></i></span>
+            <span class="stat-label">{{ "today.monthlyReviews" | translate }}</span>
+            <span class="stat-value">{{ reviewsWritten }}<span class="stat-of">/{{ o.monthlyReviews.totalClients }}</span></span>
+            <span class="stat-caption">
+                <i *ngIf="reviewsUrgent" class="pi pi-exclamation-circle"></i>
+                {{ "today.daysLeft" | translate }}: {{ reviewDaysLeft }}
             </span>
-        </div>
-        <a *ngIf="o.inactiveClients.length > listLimit" routerLink="/admin/clients" class="today-more">
-            {{ more(o.inactiveClients.length) }}</a>
-        <p *ngIf="!o.inactiveClients.length" class="today-empty">{{ "today.noInactive" | translate }}</p>
-    </section>
+        </button>
+    </div>
 
-    <!-- Monthly reviews -->
-    <section class="today-card">
-        <header>
-            <span><i class="pi pi-file-edit"></i> {{ "today.monthlyReviews" | translate }} ({{ monthName }})</span>
-            <span class="today-count" [class.today-count-warn]="o.monthlyReviews.missingClients.length > 0 && reviewDaysLeft <= 7">
-                {{ o.monthlyReviews.missingClients.length }}</span>
-        </header>
-        <p class="text-sm text-muted-color m-0 mb-1">
-            {{ "today.reviewsDue" | translate }} {{ reviewDueDate | date: 'dd.MM.yyyy.' }}
-            ({{ "today.daysLeft" | translate }}: {{ reviewDaysLeft }})
-        </p>
-        <div *ngFor="let client of o.monthlyReviews.missingClients | slice: 0 : listLimit" class="today-row">
-            <span class="today-row-text">{{ client.fullName }}</span>
-        </div>
-        <a *ngIf="o.monthlyReviews.missingClients.length > listLimit" routerLink="/admin/clients" class="today-more">
-            {{ more(o.monthlyReviews.missingClients.length) }}</a>
-        <p *ngIf="!o.monthlyReviews.missingClients.length" class="today-empty">{{ "today.allReviewsDone" | translate }}</p>
-    </section>
+    <div class="today-cards">
+        <!-- Today's appointments as a timeline -->
+        <section id="today-appointments" class="today-card today-card-wide">
+            <header>
+                <span class="card-title"><i class="pi pi-calendar"></i> {{ "today.appointments" | translate }}</span>
+                <a routerLink="/admin/appointments" class="card-link">{{ "today.all" | translate }} <i class="pi pi-arrow-right"></i></a>
+            </header>
+            <ol *ngIf="o.todayAppointments.length; else noAppointments" class="timeline">
+                <li *ngFor="let appointment of o.todayAppointments"
+                    [ngClass]="'timeline-' + appointmentStates.get(appointment.id)">
+                    <span class="timeline-time">
+                        <span class="font-semibold">{{ appointment.startTime | date: 'HH:mm' }}</span>
+                        <span class="text-muted-color">{{ appointment.endTime | date: 'HH:mm' }}</span>
+                    </span>
+                    <span class="timeline-dot"></span>
+                    <span class="timeline-body">
+                        <span class="avatars">
+                            <span *ngFor="let client of appointment.clients | slice: 0 : 3" class="avatar"
+                                  [title]="client">{{ initials(client) }}</span>
+                        </span>
+                        <span class="timeline-clients">{{ appointment.clients.join(', ') }}</span>
+                        <span *ngIf="appointmentStates.get(appointment.id) === 'current'" class="pill pill-current">
+                            {{ "today.now" | translate }}</span>
+                        <span *ngIf="appointmentStates.get(appointment.id) === 'next'" class="pill pill-next">
+                            {{ "today.next" | translate }}</span>
+                    </span>
+                </li>
+            </ol>
+            <ng-template #noAppointments>
+                <div class="empty-state"><i class="pi pi-sun"></i>{{ "today.noAppointments" | translate }}</div>
+            </ng-template>
+        </section>
+
+        <!-- Pending requests -->
+        <section id="today-requests" class="today-card">
+            <header>
+                <span class="card-title"><i class="pi pi-inbox"></i> {{ "today.pendingRequests" | translate }}</span>
+            </header>
+            <a routerLink="/admin/appointments/appointment-requests" class="request-row">
+                <i class="pi pi-calendar-plus"></i>
+                <span class="flex-1">{{ "menu.appointmentRequests" | translate }}</span>
+                <span class="count" [class.count-active]="o.pendingRequests.appointments > 0">{{ o.pendingRequests.appointments }}</span>
+                <i class="pi pi-angle-right text-muted-color"></i>
+            </a>
+            <a routerLink="/admin/appointments/cancelation-requests" class="request-row">
+                <i class="pi pi-calendar-times"></i>
+                <span class="flex-1">{{ "menu.cancelationRequests" | translate }}</span>
+                <span class="count" [class.count-active]="o.pendingRequests.cancelationRequests > 0">{{ o.pendingRequests.cancelationRequests }}</span>
+                <i class="pi pi-angle-right text-muted-color"></i>
+            </a>
+            <a routerLink="/admin/appointments/join-requests" class="request-row">
+                <i class="pi pi-user-plus"></i>
+                <span class="flex-1">{{ "menu.joinRequests" | translate }}</span>
+                <span class="count" [class.count-active]="o.pendingRequests.joinRequests > 0">{{ o.pendingRequests.joinRequests }}</span>
+                <i class="pi pi-angle-right text-muted-color"></i>
+            </a>
+        </section>
+
+        <!-- Low credits -->
+        <section id="today-credits" class="today-card">
+            <header>
+                <span class="card-title"><i class="pi pi-wallet"></i> {{ "today.lowCredits" | translate }}</span>
+            </header>
+            <div *ngFor="let client of o.lowCreditsClients | slice: 0 : listLimit" class="person-row">
+                <span class="avatar">{{ initials(client.fullName) }}</span>
+                <span class="person-name">{{ client.fullName }}</span>
+                <span class="status-badge" [class.status-danger]="client.credits <= 0" [class.status-warn]="client.credits > 0">
+                    <i class="pi" [class.pi-times-circle]="client.credits <= 0" [class.pi-exclamation-triangle]="client.credits > 0"></i>
+                    {{ client.credits }} {{ "today.credits" | translate }}
+                </span>
+            </div>
+            <a *ngIf="o.lowCreditsClients.length > listLimit" routerLink="/admin/clients" class="card-link">
+                {{ more(o.lowCreditsClients.length) }}</a>
+            <div *ngIf="!o.lowCreditsClients.length" class="empty-state"><i class="pi pi-check-circle"></i>{{ "today.noLowCredits" | translate }}</div>
+        </section>
+
+        <!-- Inactive clients -->
+        <section id="today-inactive" class="today-card">
+            <header>
+                <span class="card-title"><i class="pi pi-user-minus"></i> {{ "today.inactive" | translate }}</span>
+                <span class="flex items-center gap-1 text-sm text-muted-color">
+                    &gt;
+                    <p-select [options]="inactiveDaysOptions" [(ngModel)]="inactiveDays" optionLabel="label"
+                              optionValue="value" size="small" appendTo="body" (onChange)="load()" />
+                    {{ "today.days" | translate }}
+                </span>
+            </header>
+            <div *ngFor="let client of o.inactiveClients | slice: 0 : listLimit" class="person-row">
+                <span class="avatar">{{ initials(client.fullName) }}</span>
+                <span class="person-name">{{ client.fullName }}</span>
+                <span class="text-sm text-muted-color whitespace-nowrap"
+                      [title]="client.lastActivityAt ? (client.lastActivityAt | date: 'dd.MM.yyyy.') : ''">
+                    {{ daysAgo(client.lastActivityAt) }}</span>
+            </div>
+            <a *ngIf="o.inactiveClients.length > listLimit" routerLink="/admin/clients" class="card-link">
+                {{ more(o.inactiveClients.length) }}</a>
+            <div *ngIf="!o.inactiveClients.length" class="empty-state"><i class="pi pi-check-circle"></i>{{ "today.noInactive" | translate }}</div>
+        </section>
+
+        <!-- Monthly reviews -->
+        <section id="today-reviews" class="today-card">
+            <header>
+                <span class="card-title"><i class="pi pi-file-edit"></i> {{ "today.monthlyReviews" | translate }}</span>
+                <span class="text-sm text-muted-color">{{ monthName }}</span>
+            </header>
+            <div class="meter-label">
+                <span><span class="font-semibold">{{ reviewsWritten }}</span> / {{ o.monthlyReviews.totalClients }} {{ "today.written" | translate }}</span>
+                <span class="text-muted-color">{{ "today.reviewsDue" | translate }} {{ reviewDueDate | date: 'dd.MM.' }}</span>
+            </div>
+            <div class="meter" [class.meter-warn]="reviewsUrgent" role="progressbar"
+                 [attr.aria-valuenow]="reviewsPercent" aria-valuemin="0" aria-valuemax="100">
+                <span class="meter-fill" [style.width.%]="reviewsPercent"></span>
+            </div>
+            <div *ngFor="let client of o.monthlyReviews.missingClients | slice: 0 : listLimit" class="person-row">
+                <span class="avatar">{{ initials(client.fullName) }}</span>
+                <span class="person-name">{{ client.fullName }}</span>
+            </div>
+            <a *ngIf="o.monthlyReviews.missingClients.length > listLimit" routerLink="/admin/clients" class="card-link">
+                {{ more(o.monthlyReviews.missingClients.length) }}</a>
+            <div *ngIf="!o.monthlyReviews.missingClients.length" class="empty-state"><i class="pi pi-check-circle"></i>{{ "today.allReviewsDone" | translate }}</div>
+        </section>
+    </div>
 </div>

@@ -25,5 +25,5 @@ export interface TodayOverview {
     lowCreditsClients: LowCreditsClient[];
     inactiveDays: number;
     inactiveClients: InactiveClient[];
-    monthlyReviews: { year: number; month: number; dueAt: string; missingClients: OverviewClient[] };
+    monthlyReviews: { year: number; month: number; dueAt: string; totalClients: number; missingClients: OverviewClient[] };
 }
