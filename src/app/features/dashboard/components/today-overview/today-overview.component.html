@@ -1,0 +1,97 @@
+<div *ngIf="overview as o" class="today-overview">
+    <!-- Today's appointments -->
+    <section class="today-card">
+        <header>
+            <span><i class="pi pi-calendar"></i> {{ "today.appointments" | translate }}</span>
+            <span class="today-count">{{ o.todayAppointments.length }}</span>
+        </header>
+        <div *ngFor="let appointment of o.todayAppointments" class="today-row">
+            <span class="font-semibold whitespace-nowrap">
+                {{ appointment.startTime | date: 'HH:mm' }} – {{ appointment.endTime | date: 'HH:mm' }}
+            </span>
+            <span class="today-row-text">{{ appointment.clients.join(', ') }}</span>
+            <p-tag *ngIf="appointment.status === 'InProgress'" severity="info"
+                   [value]="'businessStatuses.InProgress' | translate" />
+        </div>
+        <p *ngIf="!o.todayAppointments.length" class="today-empty">{{ "today.noAppointments" | translate }}</p>
+    </section>
+
+    <!-- Pending requests -->
+    <section class="today-card">
+        <header>
+            <span><i class="pi pi-inbox"></i> {{ "today.pendingRequests" | translate }}</span>
+            <span class="today-count" [class.today-count-warn]="pendingTotal > 0">{{ pendingTotal }}</span>
+        </header>
+        <a routerLink="/admin/appointments/appointment-requests" class="today-row today-link">
+            <span class="today-row-text">{{ "menu.appointmentRequests" | translate }}</span>
+            <span class="font-semibold">{{ o.pendingRequests.appointments }}</span>
+        </a>
+        <a routerLink="/admin/appointments/cancelation-requests" class="today-row today-link">
+            <span class="today-row-text">{{ "menu.cancelationRequests" | translate }}</span>
+            <span class="font-semibold">{{ o.pendingRequests.cancelationRequests }}</span>
+        </a>
+        <a routerLink="/admin/appointments/join-requests" class="today-row today-link">
+            <span class="today-row-text">{{ "menu.joinRequests" | translate }}</span>
+            <span class="font-semibold">{{ o.pendingRequests.joinRequests }}</span>
+        </a>
+    </section>
+
+    <!-- Low credits -->
+    <section class="today-card">
+        <header>
+            <span><i class="pi pi-wallet"></i> {{ "today.lowCredits" | translate }}</span>
+            <span class="today-count" [class.today-count-warn]="o.lowCreditsClients.length > 0">
+                {{ o.lowCreditsClients.length }}</span>
+        </header>
+        <div *ngFor="let client of o.lowCreditsClients | slice: 0 : listLimit" class="today-row">
+            <span class="today-row-text">{{ client.fullName }}</span>
+            <p-tag [severity]="client.credits <= 0 ? 'danger' : 'warn'"
+                   [value]="client.credits + ' ' + ('today.credits' | translate)" />
+        </div>
+        <a *ngIf="o.lowCreditsClients.length > listLimit" routerLink="/admin/clients" class="today-more">
+            {{ more(o.lowCreditsClients.length) }}</a>
+        <p *ngIf="!o.lowCreditsClients.length" class="today-empty">{{ "today.noLowCredits" | translate }}</p>
+    </section>
+
+    <!-- Inactive clients -->
+    <section class="today-card">
+        <header>
+            <span><i class="pi pi-user-minus"></i> {{ "today.inactive" | translate }}</span>
+            <span class="today-count">{{ o.inactiveClients.length }}</span>
+        </header>
+        <div class="flex items-center gap-2 text-sm mb-1">
+            <span>{{ "today.inactiveFor" | translate }}</span>
+            <p-select [options]="inactiveDaysOptions" [(ngModel)]="inactiveDays" optionLabel="label"
+                      optionValue="value" size="small" appendTo="body" (onChange)="load()" />
+            <span>{{ "today.days" | translate }}</span>
+        </div>
+        <div *ngFor="let client of o.inactiveClients | slice: 0 : listLimit" class="today-row">
+            <span class="today-row-text">{{ client.fullName }}</span>
+            <span class="text-sm text-muted-color whitespace-nowrap">
+                {{ client.lastActivityAt ? (client.lastActivityAt | date: 'dd.MM.yyyy.') : ('today.never' | translate) }}
+            </span>
+        </div>
+        <a *ngIf="o.inactiveClients.length > listLimit" routerLink="/admin/clients" class="today-more">
+            {{ more(o.inactiveClients.length) }}</a>
+        <p *ngIf="!o.inactiveClients.length" class="today-empty">{{ "today.noInactive" | translate }}</p>
+    </section>
+
+    <!-- Monthly reviews -->
+    <section class="today-card">
+        <header>
+            <span><i class="pi pi-file-edit"></i> {{ "today.monthlyReviews" | translate }} ({{ monthName }})</span>
+            <span class="today-count" [class.today-count-warn]="o.monthlyReviews.missingClients.length > 0 && reviewDaysLeft <= 7">
+                {{ o.monthlyReviews.missingClients.length }}</span>
+        </header>
+        <p class="text-sm text-muted-color m-0 mb-1">
+            {{ "today.reviewsDue" | translate }} {{ reviewDueDate | date: 'dd.MM.yyyy.' }}
+            ({{ "today.daysLeft" | translate }}: {{ reviewDaysLeft }})
+        </p>
+        <div *ngFor="let client of o.monthlyReviews.missingClients | slice: 0 : listLimit" class="today-row">
+            <span class="today-row-text">{{ client.fullName }}</span>
+        </div>
+        <a *ngIf="o.monthlyReviews.missingClients.length > listLimit" routerLink="/admin/clients" class="today-more">
+            {{ more(o.monthlyReviews.missingClients.length) }}</a>
+        <p *ngIf="!o.monthlyReviews.missingClients.length" class="today-empty">{{ "today.allReviewsDone" | translate }}</p>
+    </section>
+</div>

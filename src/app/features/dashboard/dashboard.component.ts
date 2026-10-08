@@ -1,3 +1,4 @@
+import { TodayOverviewComponent } from "./components/today-overview/today-overview.component";
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DialogService } from "primeng/dynamicdialog";
@@ -40,6 +41,7 @@ import { MonthlyReviewsListComponent } from '../monthly-reviews/components/month
     AppointmentsCalendarComponent,
     ClientGoalCardComponent,
     MonthlyReviewsListComponent,
+    TodayOverviewComponent,
   ],
   providers: [DialogService],
   templateUrl: "./dashboard.component.html",

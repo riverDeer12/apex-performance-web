@@ -1,0 +1,83 @@
+.today-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.today-card {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--content-border-radius, 6px);
+  background: var(--surface-card);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+
+    .pi {
+      margin-right: 0.35rem;
+      color: var(--p-primary-color);
+    }
+  }
+}
+
+.today-count {
+  font-size: 0.8rem;
+  min-width: 1.6rem;
+  text-align: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--surface-ground);
+}
+
+.today-count-warn {
+  background: var(--p-orange-500, orange);
+  color: #fff;
+}
+
+.today-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.today-row-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-link {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 0.15rem 0.25rem;
+  margin: 0 -0.25rem;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+.today-more {
+  font-size: 0.8rem;
+  color: var(--p-primary-color);
+  text-decoration: none;
+}
+
+.today-empty {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  margin: 0;
+}
