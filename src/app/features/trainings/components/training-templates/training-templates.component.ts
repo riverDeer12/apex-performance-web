@@ -21,10 +21,13 @@ import { ClientService } from "../../../clients/services/client.service";
 import { Client } from "../../../clients/models/client";
 import { TrainingTemplate } from "../../models/training-template";
 import { TrainingTemplateService } from "../../services/training-template.service";
+import { AuthenticationService } from "../../../authentication/services/authentication.service";
+import { Roles } from "../../../../constants/roles";
 
 /**
- * Library of training templates shared by coaches.
- * A template is assigned to clients as their planned trainings.
+ * Coach's own training templates (administrators see templates
+ * of all coaches). A template is assigned to clients as their
+ * planned trainings, clients see them only once completed.
  */
 @Component({
     selector: "app-training-templates",
@@ -36,6 +39,9 @@ import { TrainingTemplateService } from "../../services/training-template.servic
 })
 export class TrainingTemplatesComponent implements OnInit {
     templates: TrainingTemplate[] = [];
+
+    // Administrators see templates of all coaches, so the author is shown.
+    isAdministrator = false;
 
     clients: Client[] = [];
 
@@ -53,7 +59,10 @@ export class TrainingTemplatesComponent implements OnInit {
         private messageService: MessageService,
         private helperService: HelperService,
         private translationService: TranslationService,
-    ) {}
+        authenticationService: AuthenticationService,
+    ) {
+        this.isAdministrator = authenticationService.getUserRole() === Roles.Administrator;
+    }
 
     ngOnInit(): void {
         this.loadData();
