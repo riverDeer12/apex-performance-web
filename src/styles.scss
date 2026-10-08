@@ -15,8 +15,20 @@ html, body, .layout-wrapper { min-height: 100dvh; }
 }
 
 
+// Compact toast that fits on phone screens.
 .p-toast{
-    width: 30rem !important;
+    width: 22rem !important;
+    max-width: calc(100vw - 2rem);
+}
+
+.p-toast .p-toast-message-content{
+    padding: 0.6rem 0.75rem;
+    gap: 0.5rem;
+}
+
+.p-toast .p-toast-message-icon{
+    height: 1rem !important;
+    width: 1rem !important;
 }
 
 .p-icon{
@@ -25,11 +37,19 @@ html, body, .layout-wrapper { min-height: 100dvh; }
 }
 
 .p-toast-summary{
-    font-size: 1.2rem !important;
+    font-size: 0.95rem !important;
 }
 
 .p-toast-details{
-    font-size: 1.2rem !important;
+    font-size: 0.85rem !important;
+}
+
+// iOS zooms into inputs with font smaller than 16px
+// on focus and keeps the page zoomed after login.
+@media (max-width: 991px) {
+    input, select, textarea, .p-inputtext, .p-select-label {
+        font-size: 16px !important;
+    }
 }
 
 .field {
