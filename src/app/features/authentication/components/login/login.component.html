@@ -39,7 +39,8 @@
                         <div class="mb-5">
 
                         </div>
-                        <p-button type="submit" [label]="'login.signIn' | translate" styleClass="w-full mb-4"></p-button>
+                        <p-button type="submit" [label]="'login.signIn' | translate" styleClass="w-full mb-4"
+                                  [disabled]="loadingData" [loading]="loadingData"></p-button>
                         <p-button [link]="true" routerLink="/authentication/registration" [label]="'login.createAccount' | translate" styleClass="w-full"></p-button>
                     </div>
                 </form>

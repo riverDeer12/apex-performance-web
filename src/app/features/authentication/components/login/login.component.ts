@@ -104,6 +104,11 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
+    // Ignore repeated submits (double tap, Enter on keyboard)
+    // while login is in progress, a second login would end
+    // the session of the first one.
+    if (this.loadingData) return;
+
     this.loadingData = true;
 
     if (this.form.invalid) {
@@ -143,9 +148,9 @@ export class LoginComponent implements OnInit {
 
         localStorage.setItem("token", this.authResponse.token);
 
+        // loadingData stays true so nothing is submitted
+        // again while navigating away from login page.
         this.router.navigateByUrl("admin/dashboard").then();
-
-        this.loadingData = false;
       },
       (error) => {
         this.messageService.add({
