@@ -19,6 +19,9 @@ export class WorkoutService {
     getWorkoutTypes = () =>
         this.http.get<WorkoutType[]>(environment.apiUrl + "/workout-types");
 
+    deleteWorkoutType = (workoutTypeId: string) =>
+        this.http.delete(environment.apiUrl + "/workout-types/" + workoutTypeId);
+
     createWorkout = (request: WorkoutRequest) =>
         this.http.post<Workout>(environment.apiUrl + "/workouts", request);
 

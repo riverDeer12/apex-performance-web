@@ -298,6 +298,12 @@ export class AppMenu implements OnInit {
             icon: "pi pi-fw pi-bolt",
             routerLink: ["/admin/workouts"],
           },
+          {
+            label: t("menu.workoutTypes"),
+            icon: "pi pi-fw pi-tags",
+            visible: canManageTrainings,
+            routerLink: ["/admin/workouts/types"],
+          },
         ],
       },
     ];

@@ -1,0 +1,41 @@
+<p-table #table [value]="rows" dataKey="id" [loading]="loading" [rows]="20" [paginator]="rows.length > 20"
+         [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll" [globalFilterFields]="['name']"
+         sortField="name" [showCurrentPageReport]="true"
+         [currentPageReportTemplate]="'common.entriesTemplate' | translate">
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <span class="text-sm text-muted-color">{{ "workoutTypes.hint" | translate }}</span>
+            <p-iconfield iconPosition="left">
+                <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                <input pInputText type="text" (input)="table.filterGlobal($any($event.target).value, 'contains')"
+                       [placeholder]="'workoutTypes.search' | translate" />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="name">
+                {{ "common.name" | translate }} <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="workoutsCount" style="width: 12rem">
+                {{ "workoutTypes.workoutsCount" | translate }} <p-sortIcon field="workoutsCount" />
+            </th>
+            <th *ngIf="canDelete" style="width: 5rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-row>
+        <tr>
+            <td class="font-semibold">{{ row.name }}</td>
+            <td>
+                <span [class.text-muted-color]="row.workoutsCount === 0">{{ row.workoutsCount }}</span>
+            </td>
+            <td *ngIf="canDelete">
+                <p-button icon="pi pi-trash" severity="danger" [outlined]="true" (click)="confirmDelete(row)"
+                          [ariaLabel]="'workoutTypes.delete' | translate" />
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr><td [attr.colspan]="canDelete ? 3 : 2">{{ "workoutTypes.noneFound" | translate }}</td></tr>
+    </ng-template>
+</p-table>
