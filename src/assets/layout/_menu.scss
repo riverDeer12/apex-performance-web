@@ -84,6 +84,19 @@
                 margin-right: 0.5rem;
             }
 
+            .layout-menuitem-badge {
+                margin-left: auto;
+                min-width: 1.25rem;
+                padding: 0 0.375rem;
+                border-radius: 1rem;
+                background: var(--primary-color);
+                color: var(--primary-contrast-color);
+                font-size: 0.75rem;
+                font-weight: 600;
+                line-height: 1.25rem;
+                text-align: center;
+            }
+
             .layout-submenu-toggler {
                 font-size: 75%;
                 margin-left: auto;

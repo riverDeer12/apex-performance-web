@@ -1,0 +1,174 @@
+<div class="card chat" [class.chat--open]="selected()">
+    <aside class="chat__list">
+        <div class="chat__list-header">
+            <span class="font-semibold text-lg">{{ "chat.conversations" | translate }}</span>
+            <p-button
+                *ngIf="isCoach"
+                icon="pi pi-plus"
+                [label]="'chat.newChat' | translate"
+                size="small"
+                (onClick)="openNewChat()"
+            />
+        </div>
+
+        <div *ngIf="loadingConversations && !conversations().length" class="chat__empty">
+            <i class="pi pi-spin pi-spinner"></i>
+        </div>
+
+        <div *ngIf="!loadingConversations && !conversations().length" class="chat__empty">
+            <i class="pi pi-comments text-3xl mb-2"></i>
+            <span>{{ (isCoach ? "chat.emptyCoach" : "chat.emptyClient") | translate }}</span>
+        </div>
+
+        <button
+            *ngFor="let conversation of conversations()"
+            type="button"
+            class="chat__item"
+            [class.chat__item--active]="conversation.id === selectedId()"
+            (click)="select(conversation)"
+        >
+            <span class="chat__avatar">{{ initials(otherName(conversation)) }}</span>
+            <span class="chat__item-body">
+                <span class="chat__item-top">
+                    <span class="chat__item-name">{{ otherName(conversation) }}</span>
+                    <span class="chat__item-time">{{ formatListTime(conversation.lastMessageAt) }}</span>
+                </span>
+                <span class="chat__item-bottom">
+                    <span class="chat__item-preview" [class.font-semibold]="conversation.unreadCount">
+                        <i *ngIf="!conversation.isEnabled" class="pi pi-lock text-xs"></i>
+                        {{ preview(conversation) }}
+                    </span>
+                    <span *ngIf="conversation.unreadCount" class="chat__unread">{{ conversation.unreadCount }}</span>
+                </span>
+            </span>
+        </button>
+    </aside>
+
+    <section class="chat__thread">
+        <ng-container *ngIf="selected() as conversation; else noSelection">
+            <header class="chat__thread-header">
+                <p-button
+                    class="chat__back"
+                    icon="pi pi-arrow-left"
+                    [text]="true"
+                    [rounded]="true"
+                    [ariaLabel]="'chat.back' | translate"
+                    (onClick)="closeConversation()"
+                />
+                <span class="chat__avatar">{{ initials(otherName(conversation)) }}</span>
+                <span class="font-semibold flex-1 truncate">{{ otherName(conversation) }}</span>
+                <label *ngIf="isCoach" class="chat__toggle">
+                    <span class="text-sm">{{ "chat.enabled" | translate }}</span>
+                    <p-toggleswitch
+                        [ngModel]="conversation.isEnabled"
+                        (ngModelChange)="toggleEnabled(conversation, $event)"
+                        [pTooltip]="'chat.enabledHint' | translate"
+                        tooltipPosition="left"
+                    />
+                </label>
+            </header>
+
+            <div #messageList class="chat__messages">
+                <div *ngIf="hasOlder" class="text-center mb-3">
+                    <p-button
+                        [label]="'chat.loadOlder' | translate"
+                        [text]="true"
+                        size="small"
+                        [loading]="loadingOlder"
+                        (onClick)="loadOlder()"
+                    />
+                </div>
+
+                <div *ngIf="loadingMessages" class="chat__empty"><i class="pi pi-spin pi-spinner"></i></div>
+
+                <div *ngIf="!loadingMessages && !messages().length" class="chat__empty">
+                    {{ "chat.startConversation" | translate }}
+                </div>
+
+                <ng-container *ngFor="let message of messages(); let i = index">
+                    <div *ngIf="startsDay(i)" class="chat__day">{{ formatDay(message.createdAt) }}</div>
+                    <div class="chat__bubble-row" [class.chat__bubble-row--mine]="isMine(message)">
+                        <div class="chat__bubble" [class.chat__bubble--mine]="isMine(message)">
+                            <span *ngIf="message.content !== null; else unreadable" class="chat__text">{{ message.content }}</span>
+                            <ng-template #unreadable>
+                                <span class="chat__text italic">{{ "chat.unreadable" | translate }}</span>
+                            </ng-template>
+                            <span class="chat__meta">
+                                {{ formatTime(message.createdAt) }}
+                                <i
+                                    *ngIf="isMine(message)"
+                                    class="pi"
+                                    [ngClass]="message.readAt ? 'pi-check-circle' : 'pi-check'"
+                                    [title]="(message.readAt ? 'chat.read' : 'chat.sent') | translate"
+                                ></i>
+                            </span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+
+            <footer class="chat__composer">
+                <ng-container *ngIf="conversation.isEnabled; else disabledChat">
+                    <textarea
+                        pTextarea
+                        rows="1"
+                        [autoResize]="true"
+                        [(ngModel)]="draft"
+                        [maxlength]="maxLength"
+                        [placeholder]="'chat.placeholder' | translate"
+                        (keydown)="onKeydown($event)"
+                        class="chat__input"
+                    ></textarea>
+                    <p-button
+                        icon="pi pi-send"
+                        [rounded]="true"
+                        [ariaLabel]="'chat.send' | translate"
+                        [disabled]="!draft.trim()"
+                        [loading]="sending"
+                        (onClick)="send()"
+                    />
+                </ng-container>
+                <ng-template #disabledChat>
+                    <span class="text-muted-color text-sm"><i class="pi pi-lock mr-1"></i>{{ "chat.disabledInfo" | translate }}</span>
+                </ng-template>
+            </footer>
+        </ng-container>
+
+        <ng-template #noSelection>
+            <div class="chat__empty h-full">
+                <i class="pi pi-comments text-4xl mb-2"></i>
+                <span>{{ "chat.selectConversation" | translate }}</span>
+                <span class="text-xs mt-2"><i class="pi pi-shield mr-1"></i>{{ "chat.encryptedInfo" | translate }}</span>
+            </div>
+        </ng-template>
+    </section>
+</div>
+
+<p-dialog
+    [(visible)]="newChatVisible"
+    [header]="'chat.newChat' | translate"
+    [modal]="true"
+    [style]="{ width: '28rem' }"
+    [breakpoints]="{ '575px': '95vw' }"
+>
+    <div class="flex flex-col gap-2">
+        <label for="chat-client">{{ "chat.chooseClient" | translate }}</label>
+        <p-select
+            inputId="chat-client"
+            [options]="clientOptions"
+            [(ngModel)]="newChatClientId"
+            optionLabel="fullName"
+            optionValue="id"
+            [filter]="true"
+            filterBy="fullName"
+            [placeholder]="'chat.chooseClient' | translate"
+            [emptyMessage]="'chat.noClients' | translate"
+            appendTo="body"
+            class="w-full"
+        />
+    </div>
+    <ng-template #footer>
+        <p-button [label]="'chat.cancel' | translate" [text]="true" (onClick)="newChatVisible = false" />
+        <p-button [label]="'chat.startChat' | translate" icon="pi pi-comments" [disabled]="!newChatClientId" (onClick)="startChat()" />
+    </ng-template>
+</p-dialog>

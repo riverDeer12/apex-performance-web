@@ -41,6 +41,7 @@ import { LayoutService } from '../service/layout.service';
             >
                 <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
+                <span *ngIf="item.badge" class="layout-menuitem-badge">{{ item.badge }}</span>
                 <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
             </a>
 

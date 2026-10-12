@@ -1,4 +1,4 @@
-import { Component, OnInit, effect } from "@angular/core";
+import { Component, OnDestroy, OnInit, effect } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MenuItem } from "primeng/api";
@@ -9,6 +9,7 @@ import { Roles } from "../../constants/roles";
 import { TranslationService } from "../../i18n/translation.service";
 import { UserService } from "../../features/users/services/user.service";
 import { environment } from "../../../environments/environment";
+import { ChatService } from "../../features/chat/services/chat.service";
 
 @Component({
   selector: "app-menu",
@@ -29,22 +30,38 @@ import { environment } from "../../../environments/environment";
     </ul>
   `,
 })
-export class AppMenu implements OnInit {
+export class AppMenu implements OnInit, OnDestroy {
   model: MenuItem[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
     private translationService: TranslationService,
     private userService: UserService,
+    private chatService: ChatService,
   ) {
     effect(() => {
       this.translationService.language();
+      this.chatService.unreadCount();
       this.buildMenu();
     });
   }
 
   ngOnInit() {
+    // Chat is between coaches and their clients, the hub
+    // connection keeps the unread count in the menu fresh.
+    if (this.canChat()) this.chatService.start();
+
     this.buildMenu();
+  }
+
+  // Menu goes away with the admin layout on logout.
+  ngOnDestroy() {
+    this.chatService.stop();
+  }
+
+  private canChat(): boolean {
+    const userRole = this.authenticationService.getUserRole();
+    return userRole === Roles.Coach || userRole === Roles.Client;
   }
 
   /**
@@ -73,6 +90,7 @@ export class AppMenu implements OnInit {
     // Coaches and administrators manage trainings, templates and records.
     const userRole = this.authenticationService.getUserRole();
     const canManageTrainings = userRole === Roles.Administrator || userRole === Roles.Coach;
+    const unreadCount = this.chatService.unreadCount();
 
     this.model = [
       {
@@ -82,6 +100,18 @@ export class AppMenu implements OnInit {
             label: t("menu.dashboard"),
             icon: "pi pi-fw pi-home",
             routerLink: ["/admin/dashboard"],
+          },
+        ],
+      },
+      {
+        label: t("menu.chat"),
+        visible: this.canChat(),
+        items: [
+          {
+            label: t("menu.messages"),
+            icon: "pi pi-fw pi-comments",
+            badge: unreadCount ? (unreadCount > 99 ? "99+" : String(unreadCount)) : undefined,
+            routerLink: ["/admin/chat"],
           },
         ],
       },

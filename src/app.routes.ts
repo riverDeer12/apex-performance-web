@@ -51,6 +51,11 @@ export const appRoutes: Routes = [
           ).then((m) => m.BodyMeasurementsRoutes),
       },
       {
+        path: "chat",
+        loadChildren: () =>
+          import("./app/features/chat/chat.routes").then((m) => m.ChatRoutes),
+      },
+      {
         path: "trainings",
         loadChildren: () =>
           import("./app/features/trainings/trainings.routes").then(
