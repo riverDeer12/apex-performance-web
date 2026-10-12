@@ -1,4 +1,7 @@
-export type Language = "en" | "hr";
+import { it } from "./translations.it";
+import { de } from "./translations.de";
+
+export type Language = "en" | "hr" | "it" | "de";
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
@@ -1433,4 +1436,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "months.november": "Studeni",
     "months.december": "Prosinac",
   },
+  it,
+  de,
 };

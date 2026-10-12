@@ -4,11 +4,12 @@ import {StyleClassModule} from 'primeng/styleclass';
 import {AppConfigurator} from './app.configurator';
 import {LayoutService} from '../service/layout.service';
 import {TranslationService} from '../../i18n/translation.service';
+import {LanguageSwitcherComponent} from './language-switcher/language-switcher.component';
 
 @Component({
     selector: 'app-floating-configurator',
     standalone: true,
-    imports: [ButtonModule, StyleClassModule, AppConfigurator],
+    imports: [ButtonModule, StyleClassModule, AppConfigurator, LanguageSwitcherComponent],
     template: `
         <div class="fixed flex gap-4 top-8 right-8">
             <div class="relative" style="visibility: hidden">
@@ -17,8 +18,7 @@ import {TranslationService} from '../../i18n/translation.service';
                           [hideOnOutsideClick]="true" type="button" rounded />
                 <app-configurator />
             </div>
-            <p-button type="button" (onClick)="toggleLanguage()" [rounded]="true"
-                      [label]="translationService.language().toUpperCase()" severity="secondary" />
+            <app-language-switcher variant="floating" />
             <p-button type="button" (onClick)="toggleDarkMode()" [rounded]="true"
                       [icon]="isDarkTheme() ? 'pi pi-moon' : 'pi pi-sun'" severity="secondary" />
         </div>
@@ -36,7 +36,4 @@ export class AppFloatingConfigurator {
         this.LayoutService.layoutConfig.update((state) => ({...state, darkTheme: !state.darkTheme}));
     }
 
-    toggleLanguage() {
-        this.translationService.toggleLanguage();
-    }
 }

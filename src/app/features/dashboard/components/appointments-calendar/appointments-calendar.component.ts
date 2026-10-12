@@ -152,16 +152,14 @@ export class AppointmentsCalendarComponent implements OnChanges {
   }
 
   formatTime(date: Date): string {
-    const locale = this.translationService.language() === "en" ? "en-US" : "hr-HR";
-    return new Date(date).toLocaleTimeString(locale, {
+    return new Date(date).toLocaleTimeString(this.translationService.locale(), {
       hour: "2-digit",
       minute: "2-digit",
     });
   }
 
   formatDayDate(date: Date): string {
-    const locale = this.translationService.language() === "en" ? "en-US" : "hr-HR";
-    return date.toLocaleDateString(locale, { day: "2-digit", month: "2-digit" });
+    return date.toLocaleDateString(this.translationService.locale(), { day: "2-digit", month: "2-digit" });
   }
 
   private isSameDay(a: Date, b: Date): boolean {

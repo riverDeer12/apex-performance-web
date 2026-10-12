@@ -10,6 +10,7 @@ import { ProfileService } from "../../features/profile/services/profile.service"
 import { ButtonLabel } from "primeng/button";
 import { TranslationService } from "../../i18n/translation.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
+import { LanguageSwitcherComponent } from "./language-switcher/language-switcher.component";
 
 @Component({
   selector: "app-topbar",
@@ -21,6 +22,7 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
     AppConfigurator,
     NgOptimizedImage,
     TranslatePipe,
+    LanguageSwitcherComponent,
   ],
   template: ` <div class="layout-topbar">
     <div class="layout-topbar-logo-container">
@@ -60,13 +62,7 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
           </button>
           <app-configurator />
         </div>
-        <button
-          type="button"
-          class="layout-topbar-action"
-          (click)="toggleLanguage()"
-        >
-          {{ translationService.language().toUpperCase() }}
-        </button>
+        <app-language-switcher variant="topbar" />
         <button
           type="button"
           class="layout-topbar-action"
@@ -136,9 +132,7 @@ export class AppTopbar {
     this.profileService.load();
   }
 
-  toggleLanguage() {
-    this.translationService.toggleLanguage();
-  }
+  
 
   toggleDarkMode() {
 

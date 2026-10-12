@@ -70,7 +70,7 @@ export class TodayOverviewComponent implements OnInit {
     }
 
     get locale(): string {
-        return this.translationService.language() === "hr" ? "hr-HR" : "en-GB";
+        return this.translationService.locale();
     }
 
     get todayLabel(): string {
