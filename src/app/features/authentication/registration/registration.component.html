@@ -63,7 +63,14 @@
                                *ngIf="validationService.hasErrors(form, 'phone', 'required')"
                                id="phone-input">{{ "common.required" | translate }}</small>
 
-                        <p-button type="submit" [label]="'registration.createAccount' | translate" styleClass="w-full mb-4"></p-button>
+                        <!-- Honeypot: invisible to people and screen readers, bots fill it in. -->
+                        <div class="registration-hp" aria-hidden="true">
+                            <label for="website">Website</label>
+                            <input id="website" type="text" formControlName="website" tabindex="-1" autocomplete="off" />
+                        </div>
+
+                        <p-button type="submit" [label]="'registration.createAccount' | translate" styleClass="w-full mb-4"
+                                  [disabled]="loadingData" [loading]="loadingData"></p-button>
                         <p-button [link]="true" (click)="goToLogin()" [label]="'common.backToLogin' | translate" styleClass="w-full"></p-button>
                     </div>
                 </form>

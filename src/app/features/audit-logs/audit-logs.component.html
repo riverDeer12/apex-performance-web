@@ -1,0 +1,96 @@
+<div class="audit-filters">
+    <p-select [options]="data?.users ?? []" [(ngModel)]="userId" optionLabel="name" optionValue="id"
+              [filter]="true" [showClear]="true" [placeholder]="'audit.allUsers' | translate"
+              styleClass="w-full" (onChange)="applyFilters()" />
+    <p-select [options]="entityTypeOptions" [(ngModel)]="entityType" optionLabel="label" optionValue="value"
+              [filter]="true" [showClear]="true" [placeholder]="'audit.allEntities' | translate"
+              styleClass="w-full" (onChange)="applyFilters()" />
+    <p-select [options]="actionOptions" [(ngModel)]="action" optionLabel="label" optionValue="value"
+              [showClear]="true" [placeholder]="'audit.allActions' | translate"
+              styleClass="w-full" (onChange)="applyFilters()" />
+    <p-datepicker [(ngModel)]="dateRange" selectionMode="range" dateFormat="dd.mm.yy" [showIcon]="true"
+                  [showButtonBar]="true" styleClass="w-full" [placeholder]="'audit.dateRange' | translate"
+                  (onSelect)="applyFilters()" (onClearClick)="applyFilters()" />
+    <span class="flex gap-2">
+        <input pInputText type="search" class="flex-1 min-w-0" [(ngModel)]="search" (keyup.enter)="applyFilters()"
+               [placeholder]="'audit.search' | translate" />
+        <p-button icon="pi pi-filter-slash" [outlined]="true" severity="secondary" (click)="clearFilters()"
+                  [ariaLabel]="'common.clear' | translate" />
+    </span>
+</div>
+
+<p-table [value]="data?.items ?? []" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [paginator]="true"
+         [rows]="pageSize" [rowsPerPageOptions]="[25, 50, 100]" [totalRecords]="data?.total ?? 0"
+         [loading]="loading" dataKey="id" [rowHover]="true" responsiveLayout="scroll"
+         [showCurrentPageReport]="true" [currentPageReportTemplate]="'common.entriesTemplate' | translate">
+    <ng-template #header>
+        <tr>
+            <th style="width: 3rem"></th>
+            <th style="width: 10rem">{{ "audit.time" | translate }}</th>
+            <th style="min-width: 10rem">{{ "audit.user" | translate }}</th>
+            <th style="width: 9rem">{{ "audit.actionLabel" | translate }}</th>
+            <th style="min-width: 14rem">{{ "audit.item" | translate }}</th>
+            <th style="min-width: 12rem">{{ "audit.changes" | translate }}</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-log let-expanded="expanded">
+        <tr>
+            <td>
+                <p-button *ngIf="log.changes.length" type="button" [pRowToggler]="log" [text]="true" [rounded]="true"
+                          severity="secondary" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            </td>
+            <td class="whitespace-nowrap">
+                <div>{{ log.timestamp | date: 'dd.MM.yyyy.' }}</div>
+                <div class="text-sm text-muted-color">{{ log.timestamp | date: 'HH:mm:ss' }}</div>
+            </td>
+            <td>
+                <span *ngIf="log.userName; else system" class="audit-user">
+                    <span class="audit-avatar">{{ log.userName.charAt(0) }}</span>{{ log.userName }}
+                </span>
+                <ng-template #system><span class="text-muted-color"><i class="pi pi-cog"></i> {{ "audit.system" | translate }}</span></ng-template>
+            </td>
+            <td>
+                <span class="audit-action" [ngClass]="'audit-action-' + log.action">
+                    {{ "audit.action." + log.action | translate }}</span>
+            </td>
+            <td>
+                <div class="text-sm text-muted-color">{{ entityLabel(log.entityType) }}</div>
+                <a class="audit-entity" (click)="filterByEntity(log)" [title]="'audit.showHistory' | translate">
+                    {{ log.entityName || ('#' + log.entityId.slice(0, 8)) }}</a>
+            </td>
+            <td class="text-sm">
+                <ng-container *ngIf="log.changes.length; else noChanges">
+                    <span *ngFor="let change of changePreview(log); let last = last">
+                        {{ propertyLabel(change.property) }}<span *ngIf="!last || log.changes.length > 3">, </span></span>
+                    <span *ngIf="log.changes.length > 3" class="text-muted-color">+{{ log.changes.length - 3 }}</span>
+                </ng-container>
+                <ng-template #noChanges><span class="text-muted-color">—</span></ng-template>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #expandedrow let-log>
+        <tr>
+            <td colspan="6" class="audit-expanded">
+                <table class="audit-changes">
+                    <thead>
+                    <tr>
+                        <th>{{ "audit.field" | translate }}</th>
+                        <th *ngIf="log.action !== 'Created'">{{ "audit.oldValue" | translate }}</th>
+                        <th>{{ (log.action === 'Created' ? "audit.value" : "audit.newValue") | translate }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let change of log.changes">
+                        <td class="font-semibold">{{ propertyLabel(change.property) }}</td>
+                        <td *ngIf="log.action !== 'Created'" class="audit-old">{{ formatValue(change.oldValue) }}</td>
+                        <td class="audit-new">{{ formatValue(change.newValue) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr><td colspan="6">{{ "audit.noneFound" | translate }}</td></tr>
+    </ng-template>
+</p-table>

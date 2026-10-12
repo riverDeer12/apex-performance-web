@@ -51,6 +51,9 @@ export class RegistrationComponent {
   }
 
   submit() {
+    // Repeated submits (double click, Enter) while the request is in progress are ignored.
+    if (this.loadingData) return;
+
     this.loadingData = true;
 
     if (this.form.invalid) {
@@ -79,7 +82,9 @@ export class RegistrationComponent {
       firstName: ["", [Validators.required]],
       lastName: ["", [Validators.required]],
       email: ["", [Validators.required, Validators.email]],
-      phone: ["", [Validators.required]],
+      phone: ["", [Validators.required, Validators.maxLength(30)]],
+      // Hidden from people, bots that fill every field get caught (honeypot).
+      website: [""],
     });
   }
 

@@ -275,6 +275,12 @@ export class AppMenu implements OnInit {
             command: () => this.openJobsDashboard(),
           },
           {
+            label: t("menu.auditLog"),
+            visible: this.authenticationService.validateUserRole(),
+            icon: "pi pi-fw pi-history",
+            routerLink: ["/admin/users/audit-log"],
+          },
+          {
             label: t("menu.logs"),
             visible: this.authenticationService.validateUserRole(),
             icon: "pi pi-fw pi-file",

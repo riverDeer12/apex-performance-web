@@ -1,0 +1,108 @@
+:host {
+  --audit-created: var(--p-green-600, #16a34a);
+  --audit-deleted: var(--p-red-500, #ef4444);
+  --audit-restored: var(--p-orange-500, #f97316);
+}
+
+.audit-filters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 1rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.audit-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.audit-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--p-primary-color) 12%, transparent);
+  color: var(--p-primary-color);
+}
+
+.audit-action {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--p-primary-color) 12%, transparent);
+  color: var(--p-primary-color);
+}
+
+.audit-action-Created {
+  background: color-mix(in srgb, var(--audit-created) 14%, transparent);
+  color: var(--audit-created);
+}
+
+.audit-action-Deleted {
+  background: color-mix(in srgb, var(--audit-deleted) 14%, transparent);
+  color: var(--audit-deleted);
+}
+
+.audit-action-Restored {
+  background: color-mix(in srgb, var(--audit-restored) 14%, transparent);
+  color: var(--audit-restored);
+}
+
+.audit-entity {
+  cursor: pointer;
+  font-weight: 600;
+  color: inherit;
+
+  &:hover {
+    color: var(--p-primary-color);
+    text-decoration: underline;
+  }
+}
+
+.audit-expanded {
+  background: var(--surface-ground);
+}
+
+.audit-changes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+    padding: 0.3rem 0.5rem;
+  }
+
+  td {
+    padding: 0.35rem 0.5rem;
+    border-top: 1px solid var(--surface-border);
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+}
+
+.audit-old {
+  color: var(--text-color-secondary);
+  text-decoration: line-through;
+}
+
+.audit-new {
+  font-weight: 500;
+}

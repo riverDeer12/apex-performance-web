@@ -15,6 +15,7 @@ export const ERROR_CODE_MESSAGES: Record<string, string> = {
     '1302': 'This email already exists.',
     '1400': 'An error occurred while saving.',
     '1401': 'An error occurred while sending the email.',
+    '1500': 'Too many attempts. Please wait a few minutes and try again.',
 };
 
 /**

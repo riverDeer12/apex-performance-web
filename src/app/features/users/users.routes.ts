@@ -5,6 +5,7 @@ import { Permissions } from "../../constants/permissions";
 import { LogsComponent } from "./components/logs/logs.component";
 import { DeviceTokensComponent } from "../device-tokens/device-tokens.component";
 import { UserSessionsComponent } from "../user-sessions/user-sessions.component";
+import { AuditLogsComponent } from "../audit-logs/audit-logs.component";
 
 export const UsersRoutes: Routes = [
   {
@@ -32,6 +33,12 @@ export const UsersRoutes: Routes = [
       title: "menu.userRoles", section: "menu.users",
       permissions: [Permissions.CanGetRoles]
     }
+  },
+  {
+    // Super admin only, the API returns the history only to super admins.
+    path: "audit-log",
+    component: AuditLogsComponent,
+    data: { title: "menu.auditLog", section: "menu.users" },
   },
   {
     path: "logs",
