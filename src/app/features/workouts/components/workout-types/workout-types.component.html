@@ -1,4 +1,4 @@
-<p-table #table [value]="rows" dataKey="id" [loading]="loading" [rows]="20" [paginator]="rows.length > 20"
+<p-table #table [value]="rows" dataKey="id" [loading]="loading" [rows]="10" [paginator]="rows.length > 10"
          [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll" [globalFilterFields]="['name']"
          sortField="name" [showCurrentPageReport]="true"
          [currentPageReportTemplate]="'common.entriesTemplate' | translate">
