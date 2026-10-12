@@ -6,6 +6,7 @@ import { Button } from "primeng/button";
 import { InputText } from "primeng/inputtext";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
+import { Dialog } from "primeng/dialog";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
@@ -23,12 +24,13 @@ interface WorkoutTypeRow {
 
 /**
  * All workout types in the system with the number of workouts that use
- * them. Deleting a type removes it from all of its workouts.
+ * them. Administrators rename types, deleting a type removes it from
+ * all of its workouts.
  */
 @Component({
     selector: "app-workout-types",
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, Button, InputText, IconField, InputIcon, TranslatePipe],
+    imports: [CommonModule, FormsModule, TableModule, Button, InputText, IconField, InputIcon, Dialog, TranslatePipe],
     templateUrl: "./workout-types.component.html",
 })
 export class WorkoutTypesComponent implements OnInit {
@@ -36,8 +38,14 @@ export class WorkoutTypesComponent implements OnInit {
 
     loading = false;
 
-    // Types are shared by all coaches, so only administrators delete them.
+    // Types are shared by all coaches, so only administrators change them.
     canDelete = false;
+
+    editVisible = false;
+    editRow: WorkoutTypeRow | null = null;
+    editNameHr = "";
+    editNameEn = "";
+    saving = false;
 
     private loaded: { id: string; name: any; workoutsCount?: number }[] = [];
 
@@ -59,6 +67,45 @@ export class WorkoutTypesComponent implements OnInit {
 
     ngOnInit(): void {
         this.load();
+    }
+
+    openEdit(row: WorkoutTypeRow): void {
+        const type = this.loaded.find(x => x.id === row.id);
+
+        this.editRow = row;
+        this.editNameHr = getTranslation(type?.name, "hr");
+        this.editNameEn = this.exactTranslation(type?.name, "EN");
+        this.editVisible = true;
+    }
+
+    saveEdit(): void {
+        if (!this.editRow || !this.editNameHr.trim() || this.saving) return;
+
+        this.saving = true;
+
+        this.workoutService.updateWorkoutType(this.editRow.id, {
+            nameHr: this.editNameHr.trim(),
+            nameEn: this.editNameEn.trim() || null,
+        }).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: "success",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("workoutTypes.updatedDetail"),
+                });
+                this.saving = false;
+                this.editVisible = false;
+                this.load();
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: "error",
+                    summary: this.translationService.t("common.error"),
+                    detail: getErrorMessage(error),
+                });
+                this.saving = false;
+            },
+        });
     }
 
     confirmDelete(row: WorkoutTypeRow): void {
@@ -114,6 +161,15 @@ export class WorkoutTypesComponent implements OnInit {
             },
             error: () => this.loading = false,
         });
+    }
+
+    // Only the translation in that language, without falling back to another one.
+    private exactTranslation(name: any, code: string): string {
+        const translations: Record<string, string> = typeof name === "string"
+            ? (() => { try { return JSON.parse(name) ?? {}; } catch { return {}; } })()
+            : name?.translations ?? {};
+
+        return Object.entries(translations).find(([key]) => key.toUpperCase() === code)?.[1] ?? "";
     }
 
     private toRows(): WorkoutTypeRow[] {
