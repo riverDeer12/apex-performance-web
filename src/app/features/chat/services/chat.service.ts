@@ -75,6 +75,8 @@ export class ChatService {
         this.connection = new HubConnectionBuilder()
             .withUrl(environment.apiUrl + "/hubs/chat", {
                 accessTokenFactory: () => localStorage.getItem("token") ?? "",
+                // API allows any origin without cookies, the token is enough.
+                withCredentials: false,
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Warning)
