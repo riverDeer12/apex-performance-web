@@ -1,10 +1,15 @@
 import { Injectable, signal } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
 import { Subject } from "rxjs";
 import { jwtDecode } from "jwt-decode";
 import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 import { environment } from "../../../../environments/environment";
 import { ChatConversation, ChatMessage, MessagesReadEvent } from "../models/chat";
+import { SKIP_LOADER } from "../../../interceptors/default.interceptor";
+
+// Chat has its own loading indicators and updates in the background,
+// the full page loading overlay would flash on every incoming message.
+const background = () => ({ context: new HttpContext().set(SKIP_LOADER, true) });
 
 /**
  * Chat between a coach and a client. Messages are sent and loaded through
@@ -24,11 +29,11 @@ export class ChatService {
     constructor(private http: HttpClient) {}
 
     getConversations = () =>
-        this.http.get<ChatConversation[]>(environment.apiUrl + "/chat/conversations");
+        this.http.get<ChatConversation[]>(environment.apiUrl + "/chat/conversations", background());
 
     // Coaches turn the chat with a client on or off.
     setConversation = (clientId: string, isEnabled: boolean) =>
-        this.http.post<ChatConversation>(environment.apiUrl + "/chat/conversations", { clientId, isEnabled });
+        this.http.post<ChatConversation>(environment.apiUrl + "/chat/conversations", { clientId, isEnabled }, background());
 
     // Newest messages before the given time, returned oldest first.
     getMessages = (conversationId: string, before?: string, take = 50) => {
@@ -36,18 +41,18 @@ export class ChatService {
         if (before) params = params.set("before", before);
 
         return this.http.get<ChatMessage[]>(
-            environment.apiUrl + "/chat/conversations/" + conversationId + "/messages", { params });
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/messages", { params, ...background() });
     };
 
     sendMessage = (conversationId: string, content: string) =>
         this.http.post<ChatMessage>(
-            environment.apiUrl + "/chat/conversations/" + conversationId + "/messages", { content });
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/messages", { content }, background());
 
     markRead = (conversationId: string) =>
-        this.http.post(environment.apiUrl + "/chat/conversations/" + conversationId + "/read", {});
+        this.http.post(environment.apiUrl + "/chat/conversations/" + conversationId + "/read", {}, background());
 
     refreshUnreadCount(): void {
-        this.http.get<{ count: number }>(environment.apiUrl + "/chat/unread-count").subscribe({
+        this.http.get<{ count: number }>(environment.apiUrl + "/chat/unread-count", background()).subscribe({
             next: (response) => this.unreadCount.set(response.count),
             error: () => {},
         });

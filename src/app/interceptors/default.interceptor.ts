@@ -1,4 +1,4 @@
-import {HttpInterceptorFn} from '@angular/common/http';
+import {HttpContextToken, HttpInterceptorFn} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {LoaderService, LoadingOverlayRef} from '../shared/services/loader.service';
 import {AuthenticationService} from "../features/authentication/services/authentication.service";
@@ -7,13 +7,19 @@ import { catchError, finalize, throwError } from "rxjs";
 
 const MIN_OVERLAY_MS = 500;
 
+/**
+ * Requests made in the background (chat updates, unread counts)
+ * set this so the loading overlay doesn't cover the page.
+ */
+export const SKIP_LOADER = new HttpContextToken<boolean>(() => false);
+
 export const DefaultInterceptor: HttpInterceptorFn = (request, next) => {
     const authService = inject(AuthenticationService);
     const router = inject(Router);
     const loadingService = inject(LoaderService);
 
     // Open overlay and start timer
-    const loadingRef = loadingService.open();
+    const loadingRef = request.context.get(SKIP_LOADER) ? null : loadingService.open();
     const start = performance.now();
 
     // Add auth header if logged in
