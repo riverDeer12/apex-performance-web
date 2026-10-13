@@ -4,7 +4,7 @@ import { Subject } from "rxjs";
 import { jwtDecode } from "jwt-decode";
 import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 import { environment } from "../../../../environments/environment";
-import { ChatConversation, ChatMessage, MessagesReadEvent } from "../models/chat";
+import { ChatContact, ChatConversation, ChatMessage, MessagesReadEvent } from "../models/chat";
 import { SKIP_LOADER } from "../../../interceptors/default.interceptor";
 
 // Chat has its own loading indicators and updates in the background,
@@ -30,6 +30,14 @@ export class ChatService {
 
     getConversations = () =>
         this.http.get<ChatConversation[]>(environment.apiUrl + "/chat/conversations", background());
+
+    // Clients of a coach, coaches of a client.
+    getContacts = () =>
+        this.http.get<ChatContact[]>(environment.apiUrl + "/chat/contacts", background());
+
+    // Clients open the chat with one of their coaches.
+    startConversation = (coachId: string) =>
+        this.http.post<ChatConversation>(environment.apiUrl + "/chat/conversations/start", { coachId }, background());
 
     // Coaches turn the chat with a client on or off.
     setConversation = (clientId: string, isEnabled: boolean) =>

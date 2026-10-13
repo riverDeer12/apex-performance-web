@@ -3,7 +3,6 @@
         <div class="chat__list-header">
             <span class="font-semibold text-lg">{{ "chat.conversations" | translate }}</span>
             <p-button
-                *ngIf="isCoach"
                 icon="pi pi-plus"
                 [label]="'chat.newChat' | translate"
                 size="small"
@@ -129,7 +128,7 @@
                     />
                 </ng-container>
                 <ng-template #disabledChat>
-                    <span class="text-muted-color text-sm"><i class="pi pi-lock mr-1"></i>{{ "chat.disabledInfo" | translate }}</span>
+                    <span class="text-muted-color text-sm"><i class="pi pi-lock mr-1"></i>{{ (isCoach ? "chat.disabledInfo" : "chat.disabledInfoClient") | translate }}</span>
                 </ng-template>
             </footer>
         </ng-container>
@@ -152,23 +151,23 @@
     [breakpoints]="{ '575px': '95vw' }"
 >
     <div class="flex flex-col gap-2">
-        <label for="chat-client">{{ "chat.chooseClient" | translate }}</label>
+        <label for="chat-contact">{{ (isCoach ? "chat.chooseClient" : "chat.chooseCoach") | translate }}</label>
         <p-select
-            inputId="chat-client"
-            [options]="clientOptions"
-            [(ngModel)]="newChatClientId"
+            inputId="chat-contact"
+            [options]="contactOptions"
+            [(ngModel)]="newChatContactId"
             optionLabel="fullName"
             optionValue="id"
             [filter]="true"
             filterBy="fullName"
-            [placeholder]="'chat.chooseClient' | translate"
-            [emptyMessage]="'chat.noClients' | translate"
+            [placeholder]="(isCoach ? 'chat.chooseClient' : 'chat.chooseCoach') | translate"
+            [emptyMessage]="(isCoach ? 'chat.noClients' : 'chat.noCoaches') | translate"
             appendTo="body"
             class="w-full"
         />
     </div>
     <ng-template #footer>
         <p-button [label]="'chat.cancel' | translate" [text]="true" (onClick)="newChatVisible = false" />
-        <p-button [label]="'chat.startChat' | translate" icon="pi pi-comments" [disabled]="!newChatClientId" (onClick)="startChat()" />
+        <p-button [label]="'chat.startChat' | translate" icon="pi pi-comments" [disabled]="!newChatContactId" (onClick)="startChat()" />
     </ng-template>
 </p-dialog>

@@ -31,3 +31,14 @@ export interface MessagesReadEvent {
     readerUserId: string;
     readAt: string;
 }
+
+// Coach or client the logged user can chat with.
+export interface ChatContact {
+    id: string;
+    userId: string;
+    fullName: string;
+    // Null when they haven't started a chat yet.
+    conversationId: string | null;
+    // False when the coach disabled the chat.
+    isEnabled: boolean;
+}

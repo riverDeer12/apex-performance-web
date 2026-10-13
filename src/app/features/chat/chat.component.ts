@@ -13,7 +13,6 @@ import { MessageService } from "primeng/api";
 import { TranslatePipe } from "../../i18n/translate.pipe";
 import { TranslationService } from "../../i18n/translation.service";
 import { AuthenticationService } from "../authentication/services/authentication.service";
-import { ClientService } from "../clients/services/client.service";
 import { Roles } from "../../constants/roles";
 import { getErrorMessage } from "../../constants/error-codes";
 import { ChatService } from "./services/chat.service";
@@ -22,7 +21,7 @@ import { ChatConversation, ChatMessage, MessagesReadEvent } from "./models/chat"
 const PAGE_SIZE = 50;
 const MAX_LENGTH = 4000;
 
-interface ClientOption {
+interface ContactOption {
     id: string;
     fullName: string;
 }
@@ -60,14 +59,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     currentUserId = "";
 
     newChatVisible = false;
-    clientOptions: ClientOption[] = [];
-    newChatClientId: string | null = null;
+    contactOptions: ContactOption[] = [];
+    newChatContactId: string | null = null;
 
     private subscriptions = new Subscription();
 
     constructor(
         private chatService: ChatService,
-        private clientService: ClientService,
         private authenticationService: AuthenticationService,
         private translationService: TranslationService,
         private messageService: MessageService,
@@ -215,6 +213,8 @@ export class ChatComponent implements OnInit, OnDestroy {
             error: (err) => {
                 this.sending = false;
                 this.showError(err);
+                // Coach disabled the chat meanwhile, shows it read only.
+                if (err?.status === 400) this.loadConversations();
             },
         });
     }
@@ -245,33 +245,41 @@ export class ChatComponent implements OnInit, OnDestroy {
         });
     }
 
+    // Coaches pick one of their clients, clients one of their coaches.
     openNewChat(): void {
-        this.newChatClientId = null;
+        this.newChatContactId = null;
+        this.contactOptions = [];
         this.newChatVisible = true;
 
-        this.clientService.getClients().subscribe({
-            next: (clients) => {
-                const enabled = new Set(this.conversations().filter((x) => x.isEnabled).map((x) => x.client.id));
+        this.chatService.getContacts().subscribe({
+            next: (contacts) => {
+                const listed = new Set(this.conversations().map((x) => x.id));
 
-                this.clientOptions = clients
-                    .filter((client) => !client.isDeleted && !enabled.has(client.id))
-                    .map((client) => ({ id: client.id, fullName: `${client.firstName} ${client.lastName}` }))
-                    .sort((a, b) => a.fullName.localeCompare(b.fullName, this.translationService.locale()));
+                // People already in the list are left out, except chats a coach
+                // disabled, the coach can turn them back on from here.
+                this.contactOptions = contacts
+                    .filter((contact) => !contact.conversationId || !listed.has(contact.conversationId) ||
+                        (this.isCoach && !contact.isEnabled))
+                    .map((contact) => ({ id: contact.id, fullName: contact.fullName }));
             },
             error: (err) => this.showError(err),
         });
     }
 
     startChat(): void {
-        if (!this.newChatClientId) return;
+        if (!this.newChatContactId) return;
 
-        this.chatService.setConversation(this.newChatClientId, true).subscribe({
+        const request = this.isCoach
+            ? this.chatService.setConversation(this.newChatContactId, true)
+            : this.chatService.startConversation(this.newChatContactId);
+
+        request.subscribe({
             next: (conversation) => {
                 this.newChatVisible = false;
 
                 const existing = this.conversations().find((x) => x.id === conversation.id);
                 if (existing) {
-                    this.updateConversation(conversation.id, { isEnabled: true });
+                    this.updateConversation(conversation.id, { isEnabled: conversation.isEnabled });
                 } else {
                     this.conversations.set([conversation, ...this.conversations()]);
                 }
