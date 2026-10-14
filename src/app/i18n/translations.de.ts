@@ -22,6 +22,7 @@ export const de: Record<string, string> = {
     "common.email": "E-Mail",
     "common.phoneNumber": "Telefonnummer",
     "common.save": "Speichern",
+    "common.notifyClient": "Benachrichtigung an den Kunden senden",
     "common.saving": "Wird gespeichert...",
     "common.coaches": "Trainer",
     "common.description": "Beschreibung",

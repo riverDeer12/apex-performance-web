@@ -366,6 +366,8 @@ export class TrainingFormComponent implements OnInit {
                 date: [isUpdate && source ? new Date(source.date) : new Date(), [Validators.required]],
                 note: [source?.note ?? "", [Validators.maxLength(2000)]],
                 isCompleted: [isUpdate ? source?.isCompleted ?? false : false],
+                // A new training notifies the client by default, a change doesn't.
+                notifyClient: [!isUpdate],
                 exercises: this.formBuilder.array<FormGroup>([]),
             });
 
@@ -392,6 +394,7 @@ export class TrainingFormComponent implements OnInit {
             date: value.date ? (value.date as Date).toISOString() : "",
             note: text(value.note),
             isCompleted: !!value.isCompleted,
+            notifyClient: !!value.notifyClient,
             exercises: (value.exercises ?? []).map((x: any) => ({
                 workout: x.workout,
                 note: text(x.note),

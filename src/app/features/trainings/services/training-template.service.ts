@@ -21,7 +21,7 @@ export class TrainingTemplateService {
     deleteTemplate = (templateId: string) =>
         this.http.delete(environment.apiUrl + "/training-templates/" + templateId);
 
-    assignTemplate = (templateId: string, clients: string[], date: string) =>
+    assignTemplate = (templateId: string, clients: string[], date: string, notifyClient = true) =>
         this.http.post<{ trainingIds: string[] }>(
-            environment.apiUrl + "/training-templates/" + templateId + "/assign", { clients, date });
+            environment.apiUrl + "/training-templates/" + templateId + "/assign", { clients, date, notifyClient });
 }

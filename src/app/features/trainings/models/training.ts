@@ -55,5 +55,7 @@ export interface TrainingRequest {
     date: string;
     note: string | null;
     isCompleted: boolean;
+    // Push notification to the client.
+    notifyClient?: boolean;
     exercises: TrainingExerciseRequest[];
 }

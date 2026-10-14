@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MessageService } from "primeng/api";
 import { Button } from "primeng/button";
+import { Checkbox } from "primeng/checkbox";
 import { DatePicker } from "primeng/datepicker";
 import { Textarea } from "primeng/textarea";
 import { ActionType } from "../../../../enums/action-type";
@@ -23,7 +24,7 @@ import { ClientGoalService } from "../../services/client-goal.service";
 @Component({
     selector: "app-client-goal-form",
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, Button, DatePicker, Textarea, TranslatePipe],
+    imports: [CommonModule, ReactiveFormsModule, Button, Checkbox, DatePicker, Textarea, TranslatePipe],
     templateUrl: "./client-goal-form.component.html",
 })
 export class ClientGoalFormComponent implements OnInit {
@@ -57,6 +58,7 @@ export class ClientGoalFormComponent implements OnInit {
             focus: ["", [Validators.maxLength(1000)]],
             nextAssessment: ["", [Validators.maxLength(500)]],
             nextAssessmentDate: [null as Date | null],
+            notifyClient: [true],
         });
 
         this.loadGoal();
@@ -108,6 +110,7 @@ export class ClientGoalFormComponent implements OnInit {
             focus: this.emptyToNull(value.focus),
             nextAssessment: this.emptyToNull(value.nextAssessment),
             nextAssessmentDate: this.toUtcDate(value.nextAssessmentDate),
+            notifyClient: value.notifyClient,
         };
 
         this.clientGoalService.updateClientGoal(this.client.id, request).subscribe({

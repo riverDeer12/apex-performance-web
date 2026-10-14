@@ -18,4 +18,6 @@ export interface ClientGoalRequest {
     focus: string | null;
     nextAssessment: string | null;
     nextAssessmentDate: string | null;
+    // Push notification to the client, sent unless false.
+    notifyClient?: boolean;
 }

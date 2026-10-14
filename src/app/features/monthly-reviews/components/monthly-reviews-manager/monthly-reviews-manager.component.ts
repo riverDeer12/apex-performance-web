@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { Button } from "primeng/button";
+import { Checkbox } from "primeng/checkbox";
 import { DynamicDialogConfig } from "primeng/dynamicdialog";
 import { Select } from "primeng/select";
 import { Textarea } from "primeng/textarea";
@@ -21,7 +22,7 @@ import { MonthlyReviewService } from "../../services/monthly-review.service";
 @Component({
     selector: "app-monthly-reviews-manager",
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, Button, Select, Textarea, TranslatePipe],
+    imports: [CommonModule, ReactiveFormsModule, Button, Checkbox, Select, Textarea, TranslatePipe],
     templateUrl: "./monthly-reviews-manager.component.html",
 })
 export class MonthlyReviewsManagerComponent implements OnInit {
@@ -75,6 +76,7 @@ export class MonthlyReviewsManagerComponent implements OnInit {
             year: [now.getFullYear(), [Validators.required]],
             month: [now.getMonth() + 1, [Validators.required]],
             content: ["", [Validators.required, Validators.maxLength(4000)]],
+            notifyClient: [true],
         });
 
         this.form.controls["year"].valueChanges.subscribe(() => this.fillContent());
@@ -113,6 +115,7 @@ export class MonthlyReviewsManagerComponent implements OnInit {
             year: value.year,
             month: value.month,
             content: (value.content as string).trim(),
+            notifyClient: value.notifyClient,
         };
 
         this.monthlyReviewService.saveMonthlyReview(request).subscribe({
@@ -204,5 +207,7 @@ export class MonthlyReviewsManagerComponent implements OnInit {
     private fillContent(): void {
         this.form.controls["content"].setValue(this.selectedReview?.content ?? "");
         this.form.controls["content"].markAsUntouched();
+        // A new review notifies the client by default, a correction doesn't.
+        this.form.controls["notifyClient"].setValue(!this.selectedReview);
     }
 }

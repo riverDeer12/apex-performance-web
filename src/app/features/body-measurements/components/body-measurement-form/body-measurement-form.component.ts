@@ -17,6 +17,7 @@ import { InputText } from "primeng/inputtext";
 import { Button } from "primeng/button";
 import { CommonModule } from "@angular/common";
 import { Select } from "primeng/select";
+import { Checkbox } from "primeng/checkbox";
 import { ClientService } from "../../../clients/services/client.service";
 import { Client } from "../../../clients/models/client";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
@@ -26,7 +27,7 @@ import { TranslatePipe } from "../../../../i18n/translate.pipe";
 
 @Component({
   selector: "app-body-measurement-form",
-  imports: [CommonModule, InputText, ReactiveFormsModule, Button, Select, TranslatePipe],
+  imports: [CommonModule, InputText, ReactiveFormsModule, Button, Select, Checkbox, TranslatePipe],
   templateUrl: "./body-measurement-form.component.html",
   styleUrl: "./body-measurement-form.component.scss",
 })
@@ -151,6 +152,8 @@ export class BodyMeasurementFormComponent implements OnInit {
       calves: ["", [Validators.required, Validators.min(0)]],
       glutes: ["", [Validators.min(0)]],
       client: ["", [Validators.required]],
+      // Only new measurements notify the client.
+      notifyClient: [true],
     });
   }
 

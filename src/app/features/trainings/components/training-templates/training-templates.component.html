@@ -77,6 +77,10 @@
             <p-datepicker [(ngModel)]="assignDate" dateFormat="dd.mm.yy" appendTo="body" styleClass="w-full"
                           inputId="assignDate" [showIcon]="true" />
         </div>
+        <div class="flex items-center gap-2">
+            <p-checkbox inputId="assignNotifyClient" [(ngModel)]="assignNotifyClient" [binary]="true" />
+            <label for="assignNotifyClient">{{ "common.notifyClient" | translate }}</label>
+        </div>
         <p class="text-sm text-muted-color m-0">{{ "trainingTemplates.assignHint" | translate }}</p>
         <div>
             <p-button (click)="assign()" icon="pi pi-send" [label]="'trainingTemplates.assign' | translate"

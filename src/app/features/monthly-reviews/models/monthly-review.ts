@@ -14,6 +14,8 @@ export interface MonthlyReviewRequest {
     year: number;
     month: number;
     content: string;
+    // Push notification to the client; without it only a new review notifies.
+    notifyClient?: boolean;
 }
 
 /**

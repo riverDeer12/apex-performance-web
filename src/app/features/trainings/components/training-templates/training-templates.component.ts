@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { TableModule } from "primeng/table";
 import { Button } from "primeng/button";
+import { Checkbox } from "primeng/checkbox";
 import { Dialog } from "primeng/dialog";
 import { MultiSelect } from "primeng/multiselect";
 import { DatePicker } from "primeng/datepicker";
@@ -32,7 +33,7 @@ import { Roles } from "../../../../constants/roles";
 @Component({
     selector: "app-training-templates",
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, Button, Dialog, MultiSelect, DatePicker, Tooltip,
+    imports: [CommonModule, FormsModule, TableModule, Button, Checkbox, Dialog, MultiSelect, DatePicker, Tooltip,
         TranslatePipe],
     providers: [DialogService],
     templateUrl: "./training-templates.component.html",
@@ -49,6 +50,7 @@ export class TrainingTemplatesComponent implements OnInit {
     assignTemplate: TrainingTemplate | null = null;
     assignClients: string[] = [];
     assignDate: Date = new Date();
+    assignNotifyClient = true;
     assigning = false;
 
     constructor(
@@ -94,6 +96,7 @@ export class TrainingTemplatesComponent implements OnInit {
         this.assignTemplate = template;
         this.assignClients = [];
         this.assignDate = new Date();
+        this.assignNotifyClient = true;
         this.assignVisible = true;
     }
 
@@ -103,7 +106,8 @@ export class TrainingTemplatesComponent implements OnInit {
         this.assigning = true;
 
         this.trainingTemplateService
-            .assignTemplate(this.assignTemplate.id, this.assignClients, this.assignDate.toISOString())
+            .assignTemplate(this.assignTemplate.id, this.assignClients, this.assignDate.toISOString(),
+                this.assignNotifyClient)
             .subscribe({
                 next: (response) => {
                     this.messageService.add({

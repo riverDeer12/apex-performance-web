@@ -41,6 +41,11 @@
     <small *ngIf="updatedAt" class="block mt-3 text-muted-color">
         {{ "clientGoals.lastUpdated" | translate }} {{ updatedAt | date: 'dd.MM.yyyy. HH:mm' }}</small>
 
+    <div class="flex items-center gap-2 mt-3" *ngIf="form.contains('notifyClient')">
+        <p-checkbox inputId="notifyClient" formControlName="notifyClient" [binary]="true" />
+        <label for="notifyClient">{{ "common.notifyClient" | translate }}</label>
+    </div>
+
     <div class="my-3">
         <p-button type="submit" [disabled]="loadingData || loadingGoal"
                   [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"

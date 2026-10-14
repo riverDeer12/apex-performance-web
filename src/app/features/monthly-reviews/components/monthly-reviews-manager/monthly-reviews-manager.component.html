@@ -28,6 +28,10 @@
                 </div>
             </div>
         </div>
+        <div class="flex items-center gap-2 " *ngIf="form.contains('notifyClient')">
+            <p-checkbox inputId="notifyClient" formControlName="notifyClient" [binary]="true" />
+            <label for="notifyClient">{{ "common.notifyClient" | translate }}</label>
+        </div>
         <div>
             <p-button type="submit" [disabled]="loadingData"
                       [icon]="loadingData ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
