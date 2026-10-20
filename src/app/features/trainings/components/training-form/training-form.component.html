@@ -1,11 +1,15 @@
 <form [formGroup]="form" (submit)="submit()">
     <div class="grid grid-cols-12 gap-4">
-        <div *ngIf="!isTemplate && templates.length" class="col-span-12 flex flex-col gap-2">
+        <div *ngIf="canUseTemplates" class="col-span-12 flex flex-col gap-2">
             <label for="template">{{ "trainingTemplates.fromTemplate" | translate }}</label>
             <p-select [filter]="true" [options]="templates" appendTo="body" styleClass="w-full"
                       optionLabel="name" optionValue="id" inputId="template" [showClear]="true"
+                      [formControl]="templateControl"
                       [placeholder]="'trainingTemplates.selectTemplate' | translate"
+                      [emptyMessage]="'trainingTemplates.noTemplatesYet' | translate"
                       (onChange)="applyTemplate($event.value)" />
+            <small *ngIf="templatesLoaded && !templates.length" class="text-muted-color">
+                {{ "trainingTemplates.noTemplatesHint" | translate }}</small>
         </div>
         <div *ngIf="!isTemplate" class="col-span-12 md:col-span-6 flex flex-col gap-2">
             <label for="client">{{ "trainings.client" | translate }}</label>

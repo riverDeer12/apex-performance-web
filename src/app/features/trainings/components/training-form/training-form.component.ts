@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import {
     FormArray,
     FormBuilder,
+    FormControl,
     FormGroup,
     ReactiveFormsModule,
     Validators,
@@ -15,7 +16,7 @@ import { DatePicker } from "primeng/datepicker";
 import { Checkbox } from "primeng/checkbox";
 import { Textarea } from "primeng/textarea";
 import { Tooltip } from "primeng/tooltip";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { ActionType } from "../../../../enums/action-type";
 import { RedirectType } from "../../../../enums/redirect-type";
 import { ValidationService } from "../../../../shared/services/validation.service";
@@ -70,6 +71,9 @@ export class TrainingFormComponent implements OnInit {
 
     // Templates a new training can be filled from.
     templates: TrainingTemplate[] = [];
+    templatesLoaded = false;
+    // Not part of the training, only picks the template to fill it from.
+    templateControl = new FormControl<string | null>(null);
 
     // Trainings visible to the user, used to show what the
     // client did in the same exercise last time.
@@ -84,8 +88,14 @@ export class TrainingFormComponent implements OnInit {
         private clientService: ClientService,
         private workoutService: WorkoutService,
         private messageService: MessageService,
+        private confirmationService: ConfirmationService,
         private translationService: TranslationService,
     ) {}
+
+    // Only a new training is filled from a template, an edited one already has its exercises.
+    get canUseTemplates(): boolean {
+        return !this.isTemplate && this.type == ActionType.Create;
+    }
 
     get exercises(): FormArray<FormGroup> {
         return this.form.get("exercises") as FormArray<FormGroup>;
@@ -101,7 +111,10 @@ export class TrainingFormComponent implements OnInit {
         this.trainingService.getTrainings().subscribe(trainings => this.trainings = trainings);
 
         if (this.type == ActionType.Create)
-            this.trainingTemplateService.getTemplates().subscribe(templates => this.templates = templates);
+            this.trainingTemplateService.getTemplates().subscribe(templates => {
+                this.templates = templates;
+                this.templatesLoaded = true;
+            });
     }
 
     /**
@@ -111,6 +124,24 @@ export class TrainingFormComponent implements OnInit {
         const template = this.templates.find(x => x.id === templateId);
         if (!template) return;
 
+        // Exercises the coach already added would be replaced, so ask first.
+        if (this.exercises.length) {
+            this.confirmationService.confirm({
+                header: this.translationService.t("trainingTemplates.replaceHeader"),
+                message: this.translationService.t("trainingTemplates.replaceMessage"),
+                icon: "pi pi-exclamation-triangle",
+                acceptLabel: this.translationService.t("common.yes"),
+                rejectLabel: this.translationService.t("common.no"),
+                accept: () => this.fillFromTemplate(template),
+                reject: () => this.templateControl.setValue(null, { emitEvent: false }),
+            });
+            return;
+        }
+
+        this.fillFromTemplate(template);
+    }
+
+    private fillFromTemplate(template: TrainingTemplate): void {
         this.form.patchValue({ name: template.name, note: template.note ?? "" });
 
         this.exercises.clear();
