@@ -34,7 +34,11 @@
                 </span>
                 <span class="chat__item-bottom">
                     <span class="chat__item-preview" [class.font-semibold]="conversation.unreadCount">
-                        <i *ngIf="!conversation.isEnabled" class="pi pi-lock text-xs"></i>
+                        <i
+                            *ngIf="!conversation.isEnabled"
+                            class="pi text-xs"
+                            [ngClass]="conversation.isBlockedByClient ? 'pi-ban' : 'pi-lock'"
+                        ></i>
                         {{ preview(conversation) }}
                     </span>
                     <span *ngIf="conversation.unreadCount" class="chat__unread">{{ conversation.unreadCount }}</span>
@@ -57,14 +61,25 @@
                 <span class="chat__avatar">{{ initials(otherName(conversation)) }}</span>
                 <span class="font-semibold flex-1 truncate">{{ otherName(conversation) }}</span>
                 <label *ngIf="isCoach" class="chat__toggle">
-                    <span class="text-sm">{{ "chat.enabled" | translate }}</span>
+                    <span class="text-sm chat__toggle-label">{{ "chat.enabled" | translate }}</span>
+                    <!-- The client blocked it, only they can turn it back on. -->
                     <p-toggleswitch
                         [ngModel]="conversation.isEnabled"
                         (ngModelChange)="toggleEnabled(conversation, $event)"
-                        [pTooltip]="'chat.enabledHint' | translate"
+                        [disabled]="conversation.isBlockedByClient"
+                        [ariaLabel]="'chat.enabled' | translate"
+                        [pTooltip]="(conversation.isBlockedByClient ? 'chat.blockedHint' : 'chat.enabledHint') | translate"
                         tooltipPosition="left"
                     />
                 </label>
+                <p-button
+                    icon="pi pi-ellipsis-v"
+                    [text]="true"
+                    [rounded]="true"
+                    severity="secondary"
+                    [ariaLabel]="'chat.options' | translate"
+                    (onClick)="openMenu($event, conversation)"
+                />
             </header>
 
             <div #messageList class="chat__messages">
@@ -87,11 +102,64 @@
                 <ng-container *ngFor="let message of messages(); let i = index">
                     <div *ngIf="startsDay(i)" class="chat__day">{{ formatDay(message.createdAt) }}</div>
                     <div class="chat__bubble-row" [class.chat__bubble-row--mine]="isMine(message)">
-                        <div class="chat__bubble" [class.chat__bubble--mine]="isMine(message)">
-                            <span *ngIf="message.content !== null; else unreadable" class="chat__text">{{ message.content }}</span>
-                            <ng-template #unreadable>
-                                <span class="chat__text italic">{{ "chat.unreadable" | translate }}</span>
-                            </ng-template>
+                        <div
+                            class="chat__bubble"
+                            [class.chat__bubble--mine]="isMine(message)"
+                            [class.chat__bubble--image]="message.type === 'image'"
+                        >
+                            <ng-container [ngSwitch]="message.type">
+                                <ng-container *ngSwitchCase="'image'">
+                                    <button
+                                        type="button"
+                                        class="chat__image"
+                                        [style.width.px]="imageWidth(message)"
+                                        [style.aspect-ratio]="imageRatio(message)"
+                                        [attr.aria-label]="'chat.image' | translate"
+                                        (click)="imageUrl(message) === null ? reloadImage(message) : openImage(message)"
+                                    >
+                                        <img *ngIf="imageUrl(message) as url" [src]="url" [alt]="'chat.image' | translate" />
+                                        <i *ngIf="imageUrl(message) === undefined" class="pi pi-spin pi-spinner"></i>
+                                        <span *ngIf="imageUrl(message) === null" class="text-sm">
+                                            <i class="pi pi-image mr-1"></i>{{ "chat.imageLoadFailed" | translate }}
+                                        </span>
+                                    </button>
+                                    <span *ngIf="message.content" class="chat__text chat__caption">{{ message.content }}</span>
+                                </ng-container>
+
+                                <ng-container *ngSwitchCase="'workout'">
+                                    <!-- Opens the video when the workout has one. -->
+                                    <a
+                                        *ngIf="message.workout as workout; else deletedWorkout"
+                                        class="chat__workout"
+                                        [attr.href]="workout.videoUrl || null"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <span class="chat__workout-name">
+                                            <i class="pi pi-bolt"></i>{{ workoutName(workout) }}
+                                        </span>
+                                        <span *ngIf="workoutTypes(workout) as types" class="chat__workout-types">{{ types }}</span>
+                                        <span *ngIf="workout.muscles?.length || workout.secondaryMuscles?.length" class="chat__muscles">
+                                            <span *ngFor="let code of workout.muscles" class="chat__muscle">{{ muscleName(code) }}</span>
+                                            <span *ngFor="let code of workout.secondaryMuscles" class="chat__muscle chat__muscle--secondary">{{ muscleName(code) }}</span>
+                                        </span>
+                                        <span *ngIf="workout.videoUrl" class="chat__workout-video">
+                                            <i class="pi pi-play-circle mr-1"></i>{{ "chat.watchVideo" | translate }}
+                                        </span>
+                                    </a>
+                                    <ng-template #deletedWorkout>
+                                        <span class="chat__text italic"><i class="pi pi-bolt mr-1"></i>{{ "chat.workoutDeleted" | translate }}</span>
+                                    </ng-template>
+                                    <span *ngIf="message.content" class="chat__text chat__caption">{{ message.content }}</span>
+                                </ng-container>
+
+                                <ng-container *ngSwitchDefault>
+                                    <span *ngIf="message.content !== null; else unreadable" class="chat__text">{{ message.content }}</span>
+                                    <ng-template #unreadable>
+                                        <span class="chat__text italic">{{ "chat.unreadable" | translate }}</span>
+                                    </ng-template>
+                                </ng-container>
+                            </ng-container>
                             <span class="chat__meta">
                                 {{ formatTime(message.createdAt) }}
                                 <i
@@ -108,6 +176,33 @@
 
             <footer class="chat__composer">
                 <ng-container *ngIf="conversation.isEnabled; else disabledChat">
+                    <input
+                        #imageInput
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        class="hidden"
+                        (change)="onImageSelected($event)"
+                    />
+                    <p-button
+                        icon="pi pi-image"
+                        [rounded]="true"
+                        [text]="true"
+                        [ariaLabel]="'chat.attachImage' | translate"
+                        [pTooltip]="'chat.attachImage' | translate"
+                        tooltipPosition="top"
+                        [loading]="sendingImage"
+                        (onClick)="chooseImage()"
+                    />
+                    <p-button
+                        *ngIf="isCoach"
+                        icon="pi pi-bolt"
+                        [rounded]="true"
+                        [text]="true"
+                        [ariaLabel]="'chat.shareWorkout' | translate"
+                        [pTooltip]="'chat.shareWorkout' | translate"
+                        tooltipPosition="top"
+                        (onClick)="openShareWorkout()"
+                    />
                     <textarea
                         pTextarea
                         rows="1"
@@ -122,13 +217,26 @@
                         icon="pi pi-send"
                         [rounded]="true"
                         [ariaLabel]="'chat.send' | translate"
-                        [disabled]="!draft.trim()"
+                        [disabled]="!draft.trim() || sendingImage"
                         [loading]="sending"
                         (onClick)="send()"
                     />
                 </ng-container>
                 <ng-template #disabledChat>
-                    <span class="text-muted-color text-sm"><i class="pi pi-lock mr-1"></i>{{ (isCoach ? "chat.disabledInfo" : "chat.disabledInfoClient") | translate }}</span>
+                    <ng-container *ngIf="conversation.isBlockedByClient; else disabledByCoach">
+                        <span class="text-muted-color text-sm flex-1"><i class="pi pi-ban mr-1"></i>{{ (isCoach ? "chat.blockedInfoCoach" : "chat.blockedInfoClient") | translate }}</span>
+                        <p-button
+                            *ngIf="!isCoach"
+                            icon="pi pi-unlock"
+                            [label]="'chat.unblock' | translate"
+                            size="small"
+                            [outlined]="true"
+                            (onClick)="setBlocked(conversation, false)"
+                        />
+                    </ng-container>
+                    <ng-template #disabledByCoach>
+                        <span class="text-muted-color text-sm"><i class="pi pi-lock mr-1"></i>{{ (isCoach ? "chat.disabledInfo" : "chat.disabledInfoClient") | translate }}</span>
+                    </ng-template>
                 </ng-template>
             </footer>
         </ng-container>
@@ -169,5 +277,98 @@
     <ng-template #footer>
         <p-button [label]="'chat.cancel' | translate" [text]="true" (onClick)="newChatVisible = false" />
         <p-button [label]="'chat.startChat' | translate" icon="pi pi-comments" [disabled]="!newChatContactId" (onClick)="startChat()" />
+    </ng-template>
+</p-dialog>
+
+<p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+
+<p-dialog
+    [visible]="!!previewUrl"
+    (visibleChange)="!$event && (previewUrl = null)"
+    [modal]="true"
+    [header]="'chat.image' | translate"
+    [dismissableMask]="true"
+    [style]="{ width: 'auto', maxWidth: '95vw' }"
+    [contentStyle]="{ padding: '0 .5rem .5rem' }"
+>
+    <img *ngIf="previewUrl" [src]="previewUrl" [alt]="'chat.image' | translate" class="chat__preview" />
+</p-dialog>
+
+<p-dialog
+    [(visible)]="workoutVisible"
+    [header]="'chat.shareWorkout' | translate"
+    [modal]="true"
+    [style]="{ width: '28rem' }"
+    [breakpoints]="{ '575px': '95vw' }"
+>
+    <div class="flex flex-col gap-2">
+        <label for="chat-workout">{{ "chat.chooseWorkout" | translate }}</label>
+        <p-select
+            inputId="chat-workout"
+            [options]="workoutOptions"
+            [(ngModel)]="workoutId"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [loading]="loadingWorkouts"
+            [placeholder]="'chat.chooseWorkout' | translate"
+            [emptyMessage]="'chat.noWorkouts' | translate"
+            appendTo="body"
+            class="w-full"
+        />
+        <label for="chat-workout-note" class="mt-2">{{ "chat.workoutNote" | translate }}</label>
+        <textarea
+            id="chat-workout-note"
+            pTextarea
+            rows="3"
+            [autoResize]="true"
+            [(ngModel)]="workoutNote"
+            [maxlength]="maxLength"
+            class="w-full"
+        ></textarea>
+    </div>
+    <ng-template #footer>
+        <p-button [label]="'chat.cancel' | translate" [text]="true" (onClick)="workoutVisible = false" />
+        <p-button
+            [label]="'chat.send' | translate"
+            icon="pi pi-send"
+            [disabled]="!workoutId"
+            [loading]="sendingWorkout"
+            (onClick)="shareWorkout()"
+        />
+    </ng-template>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="reportVisible"
+    [header]="'chat.report' | translate"
+    [modal]="true"
+    [style]="{ width: '28rem' }"
+    [breakpoints]="{ '575px': '95vw' }"
+>
+    <div class="flex flex-col gap-2">
+        <p class="chat__notice"><i class="pi pi-info-circle mr-1"></i>{{ "chat.reportNotice" | translate }}</p>
+        <label for="chat-report-reason">{{ "chat.reportReason" | translate }}</label>
+        <textarea
+            id="chat-report-reason"
+            pTextarea
+            rows="4"
+            [autoResize]="true"
+            [(ngModel)]="reportReason"
+            [maxlength]="maxReasonLength"
+            class="w-full"
+        ></textarea>
+        <small class="text-muted-color text-right">{{ reportReason.length }} / {{ maxReasonLength }}</small>
+    </div>
+    <ng-template #footer>
+        <p-button [label]="'chat.cancel' | translate" [text]="true" (onClick)="reportVisible = false" />
+        <p-button
+            [label]="'chat.reportSend' | translate"
+            icon="pi pi-flag"
+            severity="danger"
+            [loading]="reporting"
+            (onClick)="sendReport()"
+        />
     </ng-template>
 </p-dialog>

@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
-import { Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import { jwtDecode } from "jwt-decode";
 import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 import { environment } from "../../../../environments/environment";
@@ -24,7 +24,11 @@ export class ChatService {
     readonly messagesRead$ = new Subject<MessagesReadEvent>();
     readonly conversationUpdated$ = new Subject<string>();
 
+    // Object URLs of loaded pictures by attachment id, null when loading failed.
+    readonly attachmentUrls = signal<Record<string, string | null>>({});
+
     private connection?: HubConnection;
+    private attachmentRequests = new Map<string, Subscription>();
 
     constructor(private http: HttpClient) {}
 
@@ -52,9 +56,54 @@ export class ChatService {
             environment.apiUrl + "/chat/conversations/" + conversationId + "/messages", { params, ...background() });
     };
 
-    sendMessage = (conversationId: string, content: string) =>
+    // With workoutId (coaches only) the message shares that workout, content is an optional note.
+    sendMessage = (conversationId: string, content: string, workoutId?: string) =>
         this.http.post<ChatMessage>(
-            environment.apiUrl + "/chat/conversations/" + conversationId + "/messages", { content }, background());
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/messages",
+            workoutId ? { content, workoutId } : { content }, background());
+
+    // One picture with an optional caption, the size lets the apps lay it out before loading.
+    sendImage = (conversationId: string, file: Blob, fileName: string, content: string,
+                 width: number | null, height: number | null) => {
+        const form = new FormData();
+        form.append("file", file, fileName);
+        if (content) form.append("content", content);
+        if (width) form.append("width", String(width));
+        if (height) form.append("height", String(height));
+
+        return this.http.post<ChatMessage>(
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/images", form, background());
+    };
+
+    // Clients block or unblock the chat with their coach.
+    setBlocked = (conversationId: string, isBlocked: boolean) =>
+        this.http.post<ChatConversation>(
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/block", { isBlocked }, background());
+
+    // The administrator gets the reason and the last messages by email.
+    report = (conversationId: string, reason: string) =>
+        this.http.post(
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/report",
+            { reason: reason || null }, background());
+
+    /**
+     * Loads a picture once into attachmentUrls. It needs the auth header,
+     * so it's fetched as a blob through HttpClient instead of an img src.
+     */
+    loadAttachment(conversationId: string, attachmentId: string): void {
+        if (attachmentId in this.attachmentUrls() || this.attachmentRequests.has(attachmentId)) return;
+
+        const request = this.http.get(
+            environment.apiUrl + "/chat/conversations/" + conversationId + "/attachments/" + attachmentId,
+            { responseType: "blob", ...background() },
+        ).subscribe({
+            next: (blob) => this.setAttachmentUrl(attachmentId, URL.createObjectURL(blob)),
+            error: () => this.setAttachmentUrl(attachmentId, null),
+        });
+
+        // Synchronous errors already finished the request.
+        if (!request.closed) this.attachmentRequests.set(attachmentId, request);
+    }
 
     markRead = (conversationId: string) =>
         this.http.post(environment.apiUrl + "/chat/conversations/" + conversationId + "/read", {}, background());
@@ -124,5 +173,16 @@ export class ChatService {
 
         this.connection = undefined;
         this.unreadCount.set(0);
+
+        // Pictures of this user aren't kept after logout.
+        this.attachmentRequests.forEach((request) => request.unsubscribe());
+        this.attachmentRequests.clear();
+        Object.values(this.attachmentUrls()).forEach((url) => url && URL.revokeObjectURL(url));
+        this.attachmentUrls.set({});
+    }
+
+    private setAttachmentUrl(attachmentId: string, url: string | null): void {
+        this.attachmentRequests.delete(attachmentId);
+        this.attachmentUrls.set({ ...this.attachmentUrls(), [attachmentId]: url });
     }
 }
