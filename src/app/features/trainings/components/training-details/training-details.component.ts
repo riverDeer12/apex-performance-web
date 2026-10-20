@@ -6,7 +6,7 @@ import { Tag } from "primeng/tag";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { Training, TrainingExercise, TrainingExerciseSet } from "../../models/training";
+import { NumberedSet, numberSets, Training, TrainingExercise } from "../../models/training";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { Roles } from "../../../../constants/roles";
 
@@ -25,6 +25,9 @@ export class TrainingDetailsComponent {
 
     exercises: TrainingExercise[];
 
+    // Sets of each exercise with their numbers (drops are not numbered).
+    setRows: NumberedSet[][];
+
     // Clients only receive completed trainings, completion status is shown to staff only.
     isClient: boolean;
 
@@ -33,6 +36,7 @@ export class TrainingDetailsComponent {
         this.isClient = authenticationService.getUserRole() === Roles.Client;
         this.training = config.data.training;
         this.exercises = [...(this.training.exercises ?? [])].sort((a, b) => a.order - b.order);
+        this.setRows = this.exercises.map(x => numberSets(x.sets));
     }
 
     /**
@@ -54,10 +58,6 @@ export class TrainingDetailsComponent {
     isSuperset(index: number): boolean {
         return (index > 0 && !!this.exercises[index].isSupersetWithPrevious) ||
             (index + 1 < this.exercises.length && !!this.exercises[index + 1].isSupersetWithPrevious);
-    }
-
-    sortedSets(exercise: TrainingExercise): TrainingExerciseSet[] {
-        return [...(exercise.sets ?? [])].sort((a, b) => a.order - b.order);
     }
 
     workoutName(exercise: TrainingExercise): string {

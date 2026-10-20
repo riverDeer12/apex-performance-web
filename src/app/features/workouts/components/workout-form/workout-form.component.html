@@ -66,6 +66,23 @@
                            display="chip"
                            id="workoutTypes"/>
         </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="muscles">{{ "workouts.primaryMuscles" | translate }}</label>
+            <p-multiselect appendTo="body" styleClass="w-full" [options]="muscleOptions"
+                           formControlName="muscles" optionLabel="label" optionValue="value"
+                           display="chip" [showToggleAll]="false" inputId="muscles"
+                           (onChange)="onMusclesChange('muscles')"/>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label for="secondaryMuscles">{{ "workouts.secondaryMuscles" | translate }}</label>
+            <p-multiselect appendTo="body" styleClass="w-full" [options]="muscleOptions"
+                           formControlName="secondaryMuscles" optionLabel="label" optionValue="value"
+                           display="chip" [showToggleAll]="false" inputId="secondaryMuscles"
+                           (onChange)="onMusclesChange('secondaryMuscles')"/>
+            <small>{{ "workouts.musclesHint" | translate }}</small>
+        </div>
     </div>
 
     <div class="my-3">

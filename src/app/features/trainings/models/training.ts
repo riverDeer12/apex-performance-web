@@ -3,6 +3,9 @@ export class TrainingExerciseSet {
     order!: number;
     reps?: string | null;
     weight?: number | null;
+    // Done right after the previous set without rest, with less weight (drop set).
+    // Never true on the first set of an exercise.
+    isDropSet?: boolean;
 }
 
 export class TrainingExercise {
@@ -40,6 +43,8 @@ export class Training {
 export interface TrainingExerciseSetRequest {
     reps: string | null;
     weight: number | null;
+    // API ignores it on the first set.
+    isDropSet: boolean;
 }
 
 export interface TrainingExerciseRequest {
@@ -58,4 +63,27 @@ export interface TrainingRequest {
     // Push notification to the client.
     notifyClient?: boolean;
     exercises: TrainingExerciseRequest[];
+}
+
+export interface NumberedSet {
+    set: TrainingExerciseSet;
+    // Number of the set, null for its drops (they belong to the set above them).
+    number: number | null;
+}
+
+/**
+ * Sets in order with their numbers. Drops are not counted as separate
+ * sets, they are shown indented under the set they belong to.
+ */
+export function numberSets(sets: TrainingExerciseSet[] | null | undefined): NumberedSet[] {
+    let number = 0;
+
+    return [...(sets ?? [])]
+        .sort((a, b) => a.order - b.order)
+        .map((set, index) => {
+            const isDrop = index > 0 && !!set.isDropSet;
+            if (!isDrop) number++;
+
+            return { set, number: isDrop ? null : number };
+        });
 }

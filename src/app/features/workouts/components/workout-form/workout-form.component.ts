@@ -12,7 +12,7 @@ import {HelperService} from "../../../../shared/services/helper.service";
 import {getErrorMessage} from "../../../../constants/error-codes";
 import {TranslationService} from "../../../../i18n/translation.service";
 import {TranslatePipe} from "../../../../i18n/translate.pipe";
-import {Workout, WorkoutRequest} from "../../models/workout";
+import {MUSCLES, Workout, WorkoutRequest} from "../../models/workout";
 import {WorkoutType} from "../../models/workout-type";
 import {getTranslation, LocalizedProperty} from "../../models/localized-property";
 import {WorkoutService} from "../../services/workout.service";
@@ -47,6 +47,8 @@ export class WorkoutFormComponent implements OnInit {
 
     workoutTypes: { id: string; displayName: string }[] = [];
 
+    muscleOptions: { value: string; label: string }[] = [];
+
     constructor(
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
@@ -60,6 +62,24 @@ export class WorkoutFormComponent implements OnInit {
     ngOnInit(): void {
         this.initForm();
         this.loadWorkoutTypes();
+
+        const language = this.translationService.language();
+        this.muscleOptions = MUSCLES
+            .map(x => ({value: x, label: this.translationService.t("muscles." + x)}))
+            .sort((a, b) => a.label.localeCompare(b.label, language));
+    }
+
+    /**
+     * A muscle is either primary or secondary, so choosing
+     * it in one list removes it from the other one.
+     */
+    onMusclesChange(changed: "muscles" | "secondaryMuscles"): void {
+        const other = changed === "muscles" ? "secondaryMuscles" : "muscles";
+        const selected: string[] = this.form.get(changed)?.value ?? [];
+        const otherValue: string[] = this.form.get(other)?.value ?? [];
+
+        if (otherValue.some(x => selected.includes(x)))
+            this.form.get(other)?.setValue(otherValue.filter(x => !selected.includes(x)));
     }
 
     private loadWorkoutTypes(): void {
@@ -109,6 +129,8 @@ export class WorkoutFormComponent implements OnInit {
             videoUrl: [workout?.videoUrl ?? "", [Validators.pattern(YOUTUBE_URL_PATTERN)]],
             thumbnailUrl: [workout?.thumbnailUrl ?? ""],
             workoutTypes: [workout?.workoutTypes?.map(x => x.id) ?? []],
+            muscles: [workout?.muscles ?? []],
+            secondaryMuscles: [workout?.secondaryMuscles ?? []],
         });
     }
 
@@ -144,6 +166,12 @@ export class WorkoutFormComponent implements OnInit {
         const value = this.form.value;
         const existing = this.type == ActionType.Create ? undefined : this.workout;
 
+        const muscles: string[] = value.muscles ?? [];
+        const secondaryMuscles: string[] = value.secondaryMuscles ?? [];
+        // A new workout without chosen muscles gets them guessed from
+        // its name on API, a change always sends them so they can be cleared.
+        const sendMuscles = !!existing || muscles.length > 0 || secondaryMuscles.length > 0;
+
         return {
             name: this.buildLocalizedProperty(existing?.name, value.nameHr, value.nameEn),
             description: this.buildLocalizedProperty(existing?.description, value.descriptionHr, value.descriptionEn),
@@ -152,6 +180,7 @@ export class WorkoutFormComponent implements OnInit {
             // from YouTube video on API.
             thumbnailUrl: value.thumbnailUrl?.trim() ?? "",
             workoutTypes: value.workoutTypes ?? [],
+            ...(sendMuscles ? {muscles, secondaryMuscles} : {}),
         };
     }
 
