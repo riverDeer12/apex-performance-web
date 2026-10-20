@@ -1,0 +1,61 @@
+<button
+    type="button"
+    class="layout-topbar-action notifications-bell"
+    [attr.aria-label]="'notifications.title' | translate"
+    (click)="toggle($event)"
+>
+    <i class="pi pi-bell"></i>
+    @if (unreadCount() > 0) {
+        <span class="notifications-bell__badge">{{ badge() }}</span>
+    }
+</button>
+
+<p-popover #panel styleClass="notifications-popover" (onShow)="onShow()">
+    <div class="notifications">
+        <div class="notifications__header">
+            <strong>{{ "notifications.title" | translate }}</strong>
+            <div class="notifications__actions">
+                <button type="button" class="notifications__action" [disabled]="unreadCount() === 0" (click)="markAllRead()">
+                    {{ "notifications.markAllRead" | translate }}
+                </button>
+                <button type="button" class="notifications__action" [disabled]="!hasRead()" (click)="clearRead()">
+                    {{ "notifications.clearRead" | translate }}
+                </button>
+            </div>
+        </div>
+
+        <div class="notifications__list">
+            @if (loading() && notifications().length === 0) {
+                <div class="notifications__state">
+                    <i class="pi pi-spin pi-spinner"></i>
+                </div>
+            } @else if (loadError()) {
+                <div class="notifications__state">{{ "notifications.loadError" | translate }}</div>
+            } @else {
+                @for (notification of notifications(); track notification.id) {
+                    <button
+                        type="button"
+                        class="notifications__item"
+                        [class.notifications__item--unread]="!notification.readAt"
+                        (click)="open(notification)"
+                    >
+                        <span class="notifications__dot"></span>
+                        <span class="notifications__content">
+                            <span class="notifications__title">{{ notification.title }}</span>
+                            <span class="notifications__body">{{ notification.body }}</span>
+                            <span class="notifications__time" [title]="formatFullTime(notification.createdAt)">
+                                {{ formatTime(notification.createdAt) }}
+                            </span>
+                        </span>
+                    </button>
+                } @empty {
+                    <div class="notifications__state">
+                        <i class="pi pi-bell"></i>
+                        <strong>{{ "notifications.empty" | translate }}</strong>
+                        <span>{{ "notifications.emptyHint" | translate }}</span>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</p-popover>

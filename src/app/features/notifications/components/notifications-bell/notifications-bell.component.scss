@@ -1,0 +1,158 @@
+:host {
+    display: inline-flex;
+}
+
+.notifications-bell {
+    position: relative;
+    width: 2.5rem;
+}
+
+.notifications-bell__badge {
+    position: absolute;
+    top: 0;
+    right: -0.25rem;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.3rem;
+    border-radius: 0.625rem;
+    background: var(--p-red-500, #ef4444);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    text-align: center;
+    // The topbar hides spans inside its actions (they are labels of the mobile menu).
+    display: block !important;
+}
+
+// The panel is appended to the body, outside this component. On phones PrimeNG
+// pins it to the left edge, keep a gutter instead; the arrow would point past the bell.
+@media (max-width: 575px) {
+    ::ng-deep .notifications-popover {
+        left: 1rem !important;
+
+        &::before,
+        &::after {
+            display: none;
+        }
+    }
+}
+
+// Fits phones: never wider than the screen minus a small gutter.
+.notifications {
+    width: min(24rem, calc(100vw - 3rem));
+    margin: -0.25rem;
+}
+
+.notifications__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0 0.25rem 0.75rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.notifications__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.notifications__action {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary-color);
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:disabled {
+        color: var(--text-color-secondary);
+        opacity: 0.6;
+        cursor: default;
+    }
+
+    &:not(:disabled):hover {
+        text-decoration: underline;
+    }
+}
+
+.notifications__list {
+    max-height: min(26rem, 60vh);
+    overflow-y: auto;
+}
+
+.notifications__item {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 0.25rem;
+    border: 0;
+    border-bottom: 1px solid var(--surface-border);
+    background: none;
+    color: var(--text-color);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    &:hover {
+        background: var(--surface-hover);
+    }
+}
+
+.notifications__dot {
+    flex-shrink: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.4rem;
+    border-radius: 50%;
+}
+
+.notifications__item--unread {
+    .notifications__dot {
+        background: var(--primary-color);
+    }
+
+    .notifications__title {
+        font-weight: 700;
+    }
+}
+
+.notifications__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.notifications__body {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+}
+
+.notifications__time {
+    color: var(--text-color-secondary);
+    font-size: 0.75rem;
+}
+
+.notifications__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    color: var(--text-color-secondary);
+    text-align: center;
+
+    i {
+        font-size: 1.5rem;
+    }
+}

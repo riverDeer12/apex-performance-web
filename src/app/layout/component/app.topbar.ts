@@ -11,6 +11,7 @@ import { ButtonLabel } from "primeng/button";
 import { TranslationService } from "../../i18n/translation.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
 import { LanguageSwitcherComponent } from "./language-switcher/language-switcher.component";
+import { NotificationsBellComponent } from "../../features/notifications/components/notifications-bell/notifications-bell.component";
 
 @Component({
   selector: "app-topbar",
@@ -23,6 +24,7 @@ import { LanguageSwitcherComponent } from "./language-switcher/language-switcher
     NgOptimizedImage,
     TranslatePipe,
     LanguageSwitcherComponent,
+    NotificationsBellComponent,
   ],
   template: ` <div class="layout-topbar">
     <div class="layout-topbar-logo-container">
@@ -77,6 +79,8 @@ import { LanguageSwitcherComponent } from "./language-switcher/language-switcher
             }"
           ></i>
         </button>
+        <!-- Outside the collapsible menu, so phones see the badge too. -->
+        <app-notifications-bell />
       </div>
 
       <button
