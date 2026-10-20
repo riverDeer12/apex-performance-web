@@ -25,8 +25,11 @@
                         {{ "trainings.superset" | translate }}</span>
                 </td>
                 <td>
-                    <div *ngFor="let set of sortedSets(exercise); let s = index">
-                        {{ s + 1 }}. {{ set.reps || '-' }}<span *ngIf="set.weight != null"> × {{ set.weight }} kg</span>
+                    <!-- Drops are indented under their set and not numbered. -->
+                    <div *ngFor="let row of setRows[i]" [ngClass]="{ 'pl-5 text-muted-color': row.number === null }">
+                        <ng-container *ngIf="row.number !== null">{{ row.number }}.</ng-container>
+                        <ng-container *ngIf="row.number === null">↳ {{ "trainings.drop" | translate }}</ng-container>
+                        {{ row.set.reps || '-' }}<span *ngIf="row.set.weight != null"> × {{ row.set.weight }} kg</span>
                     </div>
                     <span *ngIf="!exercise.sets?.length">-</span>
                 </td>

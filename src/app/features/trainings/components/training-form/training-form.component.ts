@@ -14,6 +14,7 @@ import { Select } from "primeng/select";
 import { DatePicker } from "primeng/datepicker";
 import { Checkbox } from "primeng/checkbox";
 import { Textarea } from "primeng/textarea";
+import { Tooltip } from "primeng/tooltip";
 import { MessageService } from "primeng/api";
 import { ActionType } from "../../../../enums/action-type";
 import { RedirectType } from "../../../../enums/redirect-type";
@@ -27,7 +28,14 @@ import { Client } from "../../../clients/models/client";
 import { WorkoutService } from "../../../workouts/services/workout.service";
 import { Workout } from "../../../workouts/models/workout";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { Training, TrainingExercise, TrainingExerciseSet, TrainingRequest } from "../../models/training";
+import {
+    numberSets,
+    NumberedSet,
+    Training,
+    TrainingExercise,
+    TrainingExerciseSet,
+    TrainingRequest,
+} from "../../models/training";
 import { TrainingService } from "../../services/training.service";
 import { TrainingTemplate, TrainingTemplateRequest } from "../../models/training-template";
 import { TrainingTemplateService } from "../../services/training-template.service";
@@ -36,7 +44,7 @@ import { TrainingTemplateService } from "../../services/training-template.servic
     selector: "app-training-form",
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, Button, InputText, Select, DatePicker, Checkbox, Textarea,
-        TranslatePipe],
+        Tooltip, TranslatePipe],
     templateUrl: "./training-form.component.html",
     styleUrl: "./training-form.component.scss",
 })
@@ -122,7 +130,7 @@ export class TrainingFormComponent implements OnInit {
      */
     addSupersetExercise(exerciseIndex: number): void {
         const [, last] = this.supersetRange(exerciseIndex);
-        const setCount = this.setsOf(exerciseIndex).length;
+        const setCount = this.setCount(exerciseIndex);
 
         this.insertExercise(last + 1, undefined, true);
         this.setSetCount(last + 1, setCount);
@@ -189,22 +197,59 @@ export class TrainingFormComponent implements OnInit {
     }
 
     /**
-     * Add set to exercise. Without values the last set is
+     * Add set to exercise. Without values the last set (not a drop) is
      * copied, as sets usually repeat or change only a little.
      */
     addSet(exerciseIndex: number, set?: TrainingExerciseSet): void {
         const sets = this.setsOf(exerciseIndex);
-        const previous = sets.length ? sets.at(sets.length - 1).value : null;
+        const previous = [...sets.controls].reverse().find(x => !x.value.isDropSet)?.value ?? null;
 
-        sets.push(this.formBuilder.group({
-            reps: [set ? set.reps ?? "" : previous?.reps ?? "", [Validators.maxLength(50)]],
-            weight: [set ? set.weight ?? null : previous?.weight ?? null, [Validators.min(0), Validators.max(9999)]],
-        }));
+        sets.push(this.createSet(set ?? { reps: previous?.reps, weight: previous?.weight }, sets.length > 0));
     }
 
     /**
-     * Show as many set rows as chosen. New sets copy the
-     * last one, extra sets are removed from the end.
+     * Add a drop to the set: it goes after the set's last drop
+     * and starts with its values, the coach lowers the weight.
+     */
+    addDropSet(exerciseIndex: number, setIndex: number): void {
+        const sets = this.setsOf(exerciseIndex);
+        const end = this.setGroupEnd(exerciseIndex, setIndex);
+        const previous = sets.at(end - 1).value;
+
+        sets.insert(end, this.createSet({ reps: previous.reps, weight: previous.weight, isDropSet: true }, true));
+    }
+
+    isDropSet(exerciseIndex: number, setIndex: number): boolean {
+        return setIndex > 0 && !!this.setsOf(exerciseIndex).at(setIndex).value.isDropSet;
+    }
+
+    // Number of the set shown in the form, drops are not counted.
+    setNumber(exerciseIndex: number, setIndex: number): number {
+        let number = 0;
+
+        for (let s = 0; s <= setIndex; s++)
+            if (!this.isDropSet(exerciseIndex, s)) number++;
+
+        return number;
+    }
+
+    // Number of sets without drops.
+    setCount(exerciseIndex: number): number {
+        return this.setsOf(exerciseIndex).controls.filter((_, s) => !this.isDropSet(exerciseIndex, s)).length;
+    }
+
+    numberSets(sets: TrainingExerciseSet[]): NumberedSet[] {
+        return numberSets(sets);
+    }
+
+    // Rows are rebuilt on every check, index keeps the same elements.
+    trackByIndex(index: number): number {
+        return index;
+    }
+
+    /**
+     * Show as many sets as chosen (drops are not counted). New sets
+     * copy the last one, extra sets are removed from the end with their drops.
      */
     setSetCount(exerciseIndex: number, value: string | number): void {
         if (value === "" || value === null) return;
@@ -214,10 +259,8 @@ export class TrainingFormComponent implements OnInit {
 
         // Exercises of a superset are done together, so they have the same number of sets.
         for (let i = first; i <= last; i++) {
-            const sets = this.setsOf(i);
-
-            while (sets.length < count) this.addSet(i);
-            while (sets.length > count) sets.removeAt(sets.length - 1);
+            while (this.setCount(i) < count) this.addSet(i);
+            while (this.setCount(i) > count) this.removeSet(i, this.lastSetIndex(i));
         }
     }
 
@@ -263,8 +306,42 @@ export class TrainingFormComponent implements OnInit {
         previous.sets.forEach(set => this.addSet(exerciseIndex, set));
     }
 
+    /**
+     * Remove a set with its drops (they can't be done without it), or a single drop.
+     */
     removeSet(exerciseIndex: number, setIndex: number): void {
-        this.setsOf(exerciseIndex).removeAt(setIndex);
+        const sets = this.setsOf(exerciseIndex);
+        const end = this.isDropSet(exerciseIndex, setIndex) ? setIndex + 1 : this.setGroupEnd(exerciseIndex, setIndex);
+
+        for (let s = end - 1; s >= setIndex; s--) sets.removeAt(s);
+    }
+
+    // Index after the last drop of the set.
+    private setGroupEnd(exerciseIndex: number, setIndex: number): number {
+        const sets = this.setsOf(exerciseIndex);
+        let end = setIndex + 1;
+
+        while (end < sets.length && this.isDropSet(exerciseIndex, end)) end++;
+
+        return end;
+    }
+
+    // Index of the last set that is not a drop.
+    private lastSetIndex(exerciseIndex: number): number {
+        let index = this.setsOf(exerciseIndex).length - 1;
+
+        while (index > 0 && this.isDropSet(exerciseIndex, index)) index--;
+
+        return index;
+    }
+
+    private createSet(set: Partial<TrainingExerciseSet>, canBeDrop: boolean): FormGroup {
+        return this.formBuilder.group({
+            reps: [set.reps ?? "", [Validators.maxLength(50)]],
+            weight: [set.weight ?? null, [Validators.min(0), Validators.max(9999)]],
+            // The first set of an exercise can't be a drop.
+            isDropSet: [canBeDrop && !!set.isDropSet],
+        });
     }
 
     removeExercise(index: number): void {
@@ -399,9 +476,14 @@ export class TrainingFormComponent implements OnInit {
                 workout: x.workout,
                 note: text(x.note),
                 isSupersetWithPrevious: !!x.isSupersetWithPrevious,
-                // Sets without repetitions and weight are not saved.
+                // Sets without repetitions and weight are not saved. When a set is left out, its
+                // drops join the set before it (or the first one stays, API ignores the flag on it).
                 sets: (x.sets ?? [])
-                    .map((set: any) => ({ reps: text(set.reps), weight: number(set.weight) }))
+                    .map((set: any) => ({
+                        reps: text(set.reps),
+                        weight: number(set.weight),
+                        isDropSet: !!set.isDropSet,
+                    }))
                     .filter((set: { reps: string | null; weight: number | null }) =>
                         set.reps !== null || set.weight !== null),
             })),

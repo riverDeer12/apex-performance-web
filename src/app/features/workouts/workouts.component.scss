@@ -11,6 +11,32 @@
   overflow: hidden;
 }
 
+.workout-muscles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.375rem;
+}
+
+.muscle {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  padding: 0 0.4rem;
+  border-radius: 1rem;
+  white-space: nowrap;
+}
+
+.muscle-primary {
+  color: var(--p-primary-contrast-color);
+  background: var(--p-primary-color);
+}
+
+// Helping muscles, same color but lighter.
+.muscle-secondary {
+  color: var(--p-primary-color);
+  border: 1px solid color-mix(in srgb, var(--p-primary-color) 45%, transparent);
+}
+
 .import-template-link {
   margin-left: 0.5rem;
 }

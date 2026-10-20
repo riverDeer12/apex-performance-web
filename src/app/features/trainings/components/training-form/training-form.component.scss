@@ -15,3 +15,33 @@
   letter-spacing: 0.04em;
   color: var(--p-primary-color);
 }
+
+// Drops belong to the set above them, so they are indented under it.
+.drop-set,
+.drop-row {
+  padding-left: 1.25rem;
+}
+
+.drop-label {
+  color: var(--p-primary-color);
+  font-weight: 600;
+}
+
+:host ::ng-deep .drop-button {
+  padding-inline: 0.4rem;
+}
+
+// On phones a set row (with an indented drop) fits on one line.
+@media (max-width: 575px) {
+  .training-set input {
+    width: 4.25rem;
+  }
+
+  .training-set > span:first-child {
+    width: 3.75rem;
+  }
+
+  .drop-set {
+    padding-left: 0.75rem;
+  }
+}

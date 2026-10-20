@@ -20,6 +20,8 @@ const MUSCLE_GROUP_KEYWORDS: Record<MuscleGroup, string[]> = {
 export interface SetData {
     reps: number | null;
     weight: number | null;
+    // Drops count for reps and weights, but not as separate sets.
+    isDropSet: boolean;
 }
 
 export interface ExerciseData {
@@ -59,9 +61,10 @@ export function toWorkoutPoints(trainings: Training[], clientId: string | null, 
         .map(training => {
             const exercises: ExerciseData[] = (training.exercises ?? []).map(exercise => ({
                 workoutId: exercise.workoutId,
-                sets: (exercise.sets ?? []).map(set => ({
+                sets: (exercise.sets ?? []).map((set, index) => ({
                     reps: parseReps(set.reps),
                     weight: set.weight != null ? Number(set.weight) : null,
+                    isDropSet: index > 0 && !!set.isDropSet,
                 })),
             }));
 
@@ -189,7 +192,7 @@ export function setsPerMuscleGroup(points: WorkoutPoint[],
 
     for (const exercise of points.flatMap(x => x.exercises)) {
         const group = muscleGroupByWorkout.get(exercise.workoutId) ?? "other";
-        groups[group] += exercise.sets.length;
+        groups[group] += exercise.sets.filter(x => !x.isDropSet).length;
     }
 
     return { groups, total: Object.values(groups).reduce((sum, x) => sum + x, 0) };

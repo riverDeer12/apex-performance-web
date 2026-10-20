@@ -24,7 +24,7 @@
     [rowHover]="true"
     [showGridlines]="true"
     [paginator]="true"
-    [globalFilterFields]="['displayName', 'displayDescription', 'displayWorkoutTypes']"
+    [globalFilterFields]="['displayName', 'displayDescription', 'displayWorkoutTypes', 'displayMuscles']"
     responsiveLayout="scroll"
     showCurrentPageReport="true"
     [currentPageReportTemplate]="'common.entriesTemplate' | translate"
@@ -70,7 +70,17 @@
                 <img *ngIf="workout.thumbnailUrl" class="workout-thumbnail"
                      [src]="workout.thumbnailUrl" [alt]="workout.displayName" loading="lazy" />
             </td>
-            <td>{{ workout.displayName }}</td>
+            <td>
+                {{ workout.displayName }}
+                <!-- Primary muscles stand out, secondary ones are muted. -->
+                <div *ngIf="workout.displayMuscleList.length || workout.displaySecondaryMuscleList.length"
+                     class="workout-muscles">
+                    <span *ngFor="let muscle of workout.displayMuscleList" class="muscle muscle-primary"
+                          [title]="'workouts.primaryMuscles' | translate">{{ muscle }}</span>
+                    <span *ngFor="let muscle of workout.displaySecondaryMuscleList" class="muscle muscle-secondary"
+                          [title]="'workouts.secondaryMuscles' | translate">{{ muscle }}</span>
+                </div>
+            </td>
             <td>
                 <span class="workout-description" [title]="workout.displayDescription">
                     {{ workout.displayDescription }}

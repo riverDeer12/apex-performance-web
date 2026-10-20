@@ -59,7 +59,7 @@
                 <div class="col-span-4 md:col-span-2 flex flex-col gap-1">
                     <label class="text-sm" [for]="'setCount' + i">{{ "trainings.setCount" | translate }}</label>
                     <input pInputText type="number" min="0" max="50" class="w-full" [id]="'setCount' + i"
-                           [value]="setsOf(i).length" (change)="setSetCount(i, $any($event.target).value)" />
+                           [value]="setCount(i)" (change)="setSetCount(i, $any($event.target).value)" />
                 </div>
                 <div class="col-span-8 md:col-span-3 flex flex-col gap-1">
                     <label class="text-sm">{{ "trainings.note" | translate }}</label>
@@ -87,8 +87,9 @@
             <div class="grid grid-cols-12 gap-3">
             <div formArrayName="sets" class="col-span-12 md:col-span-7 flex flex-col gap-2 md:pl-4">
                 <div *ngFor="let set of setsOf(i).controls; let s = index" [formGroupName]="s"
-                     class="training-set flex flex-wrap items-center gap-2">
-                    <span class="text-sm w-20">{{ "trainings.set" | translate }} {{ s + 1 }}</span>
+                     class="training-set flex flex-wrap items-center gap-2" [class.drop-set]="isDropSet(i, s)">
+                    <span *ngIf="!isDropSet(i, s)" class="text-sm w-20">{{ "trainings.set" | translate }} {{ setNumber(i, s) }}</span>
+                    <span *ngIf="isDropSet(i, s)" class="drop-label text-sm w-20">↳ {{ "trainings.drop" | translate }}</span>
                     <input pInputText formControlName="reps" class="w-28"
                            [placeholder]="'trainings.reps' | translate" [attr.aria-label]="'trainings.reps' | translate" />
                     <span class="text-muted-color">×</span>
@@ -97,6 +98,11 @@
                     <span class="text-sm text-muted-color">kg</span>
                     <p-button type="button" icon="pi pi-times" severity="danger" [text]="true" size="small"
                               [attr.aria-label]="'trainings.removeSet' | translate" (click)="removeSet(i, s)" />
+                    <p-button *ngIf="!isDropSet(i, s)" type="button" icon="pi pi-plus" severity="secondary"
+                              [text]="true" size="small" styleClass="drop-button"
+                              [label]="'trainings.addDropSet' | translate"
+                              [pTooltip]="'trainings.dropSetHint' | translate" tooltipPosition="top"
+                              (click)="addDropSet(i, s)" />
                 </div>
                 <div>
                     <p-button type="button" icon="pi pi-plus" severity="secondary" [text]="true" size="small"
@@ -109,8 +115,11 @@
                 <div class="font-semibold mb-1">
                     {{ "trainings.lastTime" | translate }} ({{ previous.date | date: 'dd.MM.yyyy.' }})
                 </div>
-                <div *ngFor="let set of previous.sets; let s = index" class="text-muted-color">
-                    {{ s + 1 }}. {{ set.reps || '-' }}<span *ngIf="set.weight != null"> × {{ set.weight }} kg</span>
+                <div *ngFor="let row of numberSets(previous.sets); trackBy: trackByIndex" class="text-muted-color"
+                     [class.drop-row]="row.number === null">
+                    <ng-container *ngIf="row.number !== null">{{ row.number }}.</ng-container>
+                    <ng-container *ngIf="row.number === null">↳ {{ "trainings.drop" | translate }}</ng-container>
+                    {{ row.set.reps || '-' }}<span *ngIf="row.set.weight != null"> × {{ row.set.weight }} kg</span>
                 </div>
                 <p-button type="button" icon="pi pi-copy" severity="secondary" [text]="true" size="small"
                           class="mt-1 block" [label]="'trainings.usePreviousSets' | translate"

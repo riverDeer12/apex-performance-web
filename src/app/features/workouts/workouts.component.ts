@@ -105,6 +105,11 @@ export class WorkoutsComponent implements OnInit {
             workout.displayWorkoutTypeList = (workout.workoutTypes ?? [])
                 .map(x => getTranslation(x.name, language));
             workout.displayWorkoutTypes = workout.displayWorkoutTypeList.join(", ");
+            workout.displayMuscleList = (workout.muscles ?? []).map(x => this.translationService.t("muscles." + x));
+            workout.displaySecondaryMuscleList = (workout.secondaryMuscles ?? [])
+                .map(x => this.translationService.t("muscles." + x));
+            // Searchable by muscle names too.
+            workout.displayMuscles = [...workout.displayMuscleList, ...workout.displaySecondaryMuscleList].join(", ");
         });
 
         // New array reference so table re-renders.
