@@ -390,7 +390,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.workoutOptions.length || this.loadingWorkouts) return;
 
         this.loadingWorkouts = true;
-        this.workoutService.getWorkouts().subscribe({
+        this.workoutService.getWorkouts(false).subscribe({
             next: (workouts) => {
                 this.loadingWorkouts = false;
                 this.workoutOptions = workouts

@@ -1,9 +1,10 @@
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpContext} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {Workout, WorkoutRequest} from "../models/workout";
 import {WorkoutType} from "../models/workout-type";
 import {ImportWorkoutsResponse} from "../models/import-workouts-response";
+import {SKIP_LOADER} from "../../../interceptors/default.interceptor";
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +14,10 @@ export class WorkoutService {
     constructor(private http: HttpClient) {
     }
 
-    getWorkouts = () =>
-        this.http.get<Workout[]>(environment.apiUrl + "/workouts");
+    // Without the loading overlay where the page shows its own (the chat workout picker).
+    getWorkouts = (showLoader = true) =>
+        this.http.get<Workout[]>(environment.apiUrl + "/workouts",
+            {context: new HttpContext().set(SKIP_LOADER, !showLoader)});
 
     getWorkoutTypes = () =>
         this.http.get<WorkoutType[]>(environment.apiUrl + "/workout-types");
