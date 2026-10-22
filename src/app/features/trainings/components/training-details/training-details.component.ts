@@ -6,7 +6,7 @@ import { Tag } from "primeng/tag";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { NumberedSet, numberSets, Training, TrainingExercise } from "../../models/training";
+import { describeSet, NumberedSet, numberSets, Training, TrainingExercise } from "../../models/training";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { Roles } from "../../../../constants/roles";
 
@@ -21,6 +21,8 @@ import { Roles } from "../../../../constants/roles";
     templateUrl: "./training-details.component.html",
 })
 export class TrainingDetailsComponent {
+    readonly describeSet = describeSet;
+
     training: Training;
 
     exercises: TrainingExercise[];

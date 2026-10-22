@@ -36,6 +36,10 @@ import {
     TrainingExercise,
     TrainingExerciseSet,
     TrainingRequest,
+    DURATION_PATTERN,
+    describeSet,
+    formatDuration,
+    parseDuration,
 } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
 import { TrainingTemplate, TrainingTemplateRequest } from "../../models/training-template";
@@ -68,6 +72,8 @@ export class TrainingFormComponent implements OnInit {
     clients: Client[] = [];
 
     workoutOptions: { label: string; value: string }[] = [];
+    // Workouts done for a time (e.g. plank), their sets get a duration instead of repetitions.
+    timedWorkoutIds = new Set<string>();
 
     // Templates a new training can be filled from.
     templates: TrainingTemplate[] = [];
@@ -235,7 +241,11 @@ export class TrainingFormComponent implements OnInit {
         const sets = this.setsOf(exerciseIndex);
         const previous = [...sets.controls].reverse().find(x => !x.value.isDropSet)?.value ?? null;
 
-        sets.push(this.createSet(set ?? { reps: previous?.reps, weight: previous?.weight }, sets.length > 0));
+        sets.push(this.createSet(set ?? {
+            reps: previous?.reps,
+            weight: previous?.weight,
+            durationSeconds: parseDuration(previous?.duration),
+        }, sets.length > 0));
     }
 
     /**
@@ -247,8 +257,26 @@ export class TrainingFormComponent implements OnInit {
         const end = this.setGroupEnd(exerciseIndex, setIndex);
         const previous = sets.at(end - 1).value;
 
-        sets.insert(end, this.createSet({ reps: previous.reps, weight: previous.weight, isDropSet: true }, true));
+        sets.insert(end, this.createSet({
+            reps: previous.reps,
+            weight: previous.weight,
+            durationSeconds: parseDuration(previous.duration),
+            isDropSet: true,
+        }, true));
     }
+
+    /**
+     * Sets of the exercise record a duration: the workout is done for a time,
+     * or a set already has one (also when the workout was changed since).
+     */
+    isTimed(exerciseIndex: number): boolean {
+        const exercise = this.exercises.at(exerciseIndex);
+
+        return this.timedWorkoutIds.has(exercise.get("workout")?.value) ||
+            this.setsOf(exerciseIndex).controls.some(x => !!x.value.duration);
+    }
+
+    readonly describeSet = describeSet;
 
     isDropSet(exerciseIndex: number, setIndex: number): boolean {
         return setIndex > 0 && !!this.setsOf(exerciseIndex).at(setIndex).value.isDropSet;
@@ -370,6 +398,8 @@ export class TrainingFormComponent implements OnInit {
         return this.formBuilder.group({
             reps: [set.reps ?? "", [Validators.maxLength(50)]],
             weight: [set.weight ?? null, [Validators.min(0), Validators.max(9999)]],
+            // Typed as min:s, sent as seconds.
+            duration: [formatDuration(set.durationSeconds), [Validators.pattern(DURATION_PATTERN)]],
             // The first set of an exercise can't be a drop.
             isDropSet: [canBeDrop && !!set.isDropSet],
         });
@@ -507,16 +537,17 @@ export class TrainingFormComponent implements OnInit {
                 workout: x.workout,
                 note: text(x.note),
                 isSupersetWithPrevious: !!x.isSupersetWithPrevious,
-                // Sets without repetitions and weight are not saved. When a set is left out, its
+                // Sets without repetitions, weight and duration are not saved. When a set is left out, its
                 // drops join the set before it (or the first one stays, API ignores the flag on it).
                 sets: (x.sets ?? [])
                     .map((set: any) => ({
                         reps: text(set.reps),
                         weight: number(set.weight),
                         isDropSet: !!set.isDropSet,
+                        durationSeconds: parseDuration(set.duration),
                     }))
-                    .filter((set: { reps: string | null; weight: number | null }) =>
-                        set.reps !== null || set.weight !== null),
+                    .filter((set: { reps: string | null; weight: number | null; durationSeconds: number | null }) =>
+                        set.reps !== null || set.weight !== null || set.durationSeconds !== null),
             })),
         };
     }
@@ -536,6 +567,7 @@ export class TrainingFormComponent implements OnInit {
             this.workoutOptions = response
                 .map(x => ({ label: getTranslation(x.name, language), value: x.id }))
                 .sort((a, b) => a.label.localeCompare(b.label, language));
+            this.timedWorkoutIds = new Set(response.filter(x => x.isTimed).map(x => x.id));
         });
     }
 }

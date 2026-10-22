@@ -83,6 +83,14 @@
                            (onChange)="onMusclesChange('secondaryMuscles')"/>
             <small>{{ "workouts.musclesHint" | translate }}</small>
         </div>
+
+        <div class="field col-12 flex items-start gap-2">
+            <p-checkbox inputId="isTimed" formControlName="isTimed" [binary]="true"/>
+            <label for="isTimed" class="flex flex-col">
+                <span>{{ "workouts.isTimed" | translate }}</span>
+                <small class="text-muted-color">{{ "workouts.isTimedHint" | translate }}</small>
+            </label>
+        </div>
     </div>
 
     <div class="my-3">
