@@ -1,0 +1,23 @@
+
+// Whether the client accepted the current cooperation rules.
+.rules-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 1rem;
+    background: var(--p-orange-100);
+    color: var(--p-orange-700);
+    font-size: 0.75rem;
+    white-space: nowrap;
+
+    .pi {
+        font-size: 0.7rem;
+    }
+}
+
+.rules-tag--ok {
+    background: var(--p-green-100);
+    color: var(--p-green-700);
+}

@@ -21,6 +21,8 @@ import {FormsModule} from "@angular/forms";
 import {Select} from "primeng/select";
 import {Tooltip} from "primeng/tooltip";
 import {ClientPlans} from "../../constants/client-plans";
+import {RulesService} from "../rules/services/rules.service";
+import {RulesAcceptance} from "../rules/models/rules";
 import {MonthlyReviewsManagerComponent} from "../monthly-reviews/components/monthly-reviews-manager/monthly-reviews-manager.component";
 
 @Component({
@@ -48,6 +50,9 @@ export class ClientsComponent {
 
     @Input() clients!: Client[];
 
+    // Cooperation rules each client accepted, by client id.
+    rulesAcceptances = new Map<string, RulesAcceptance>();
+
     @ViewChild(`filter`) filter!: ElementRef;
 
     // Plan shown in the table, all plans when empty.
@@ -68,6 +73,7 @@ export class ClientsComponent {
         private authenticationService: AuthenticationService,
         private confirmationService: ConfirmationService,
         private translationService: TranslationService,
+        private rulesService: RulesService,
     ) {
         this.userRole = this.authenticationService.getUserRole();
     }
@@ -84,6 +90,28 @@ export class ClientsComponent {
                 .filter((x: Client) => !x.isDeleted)
                 .map((x: Client) => Object.assign(new Client(), x));
         });
+
+        this.rulesService.getAcceptances().subscribe({
+            next: (acceptances) => this.rulesAcceptances = new Map(acceptances.map(x => [x.clientId, x])),
+            error: () => {},
+        });
+    }
+
+    // Tooltip of the rules tag: who accepted and when.
+    rulesTooltip(acceptance: RulesAcceptance): string {
+        if (!acceptance.version || !acceptance.acceptedAt)
+            return this.translationService.t("rules.notAcceptedByClient");
+
+        const date = new Date(acceptance.acceptedAt).toLocaleString(this.translationService.locale(),
+            {day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit"});
+        let text = `${this.translationService.t("rules.version")} ${acceptance.version} · ${date}`;
+
+        if (acceptance.guardianName)
+            text += ` · ${this.translationService.t("rules.guardian")}: ${acceptance.guardianName}`;
+        if (acceptance.independentTravelApproved)
+            text += ` · ${this.translationService.t("rules.independentTravelShort")}`;
+
+        return text;
     }
 
     onGlobalFilter(table: Table, event: Event) {

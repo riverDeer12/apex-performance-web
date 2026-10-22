@@ -24,6 +24,11 @@ import {
     resizePicture
 } from "./services/profile.service";
 
+import {RulesService} from "../rules/services/rules.service";
+import {Rules} from "../rules/models/rules";
+import {AuthenticationService} from "../authentication/services/authentication.service";
+import {Roles} from "../../constants/roles";
+
 @Component({
     selector: "app-profile",
     imports: [
@@ -52,8 +57,13 @@ export class ProfileComponent implements OnInit {
     readonly hasPersonalData = computed(() => !!this.profile()?.profileType);
     readonly hasPhone = computed(() => ["Client", "Coach"].includes(this.profile()?.profileType ?? ""));
 
+    // Cooperation rules of a client, with the accepted version.
+    rules: Rules | null = null;
+
     constructor(
         public profileService: ProfileService,
+        private rulesService: RulesService,
+        private authenticationService: AuthenticationService,
         public validationService: ValidationService,
         private formBuilder: FormBuilder,
         private messageService: MessageService,
@@ -75,6 +85,9 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit(): void {
         this.profileService.load();
+
+        if (this.authenticationService.getUserRole() === Roles.Client)
+            this.rulesService.getRules().subscribe({ next: (rules) => this.rules = rules, error: () => {} });
     }
 
     private fillForm(profile: Profile): void {
