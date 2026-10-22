@@ -1,0 +1,42 @@
+<p-dialog [visible]="visible" [modal]="true" [closable]="false" [closeOnEscape]="false" [draggable]="false"
+          [header]="'rules.title' | translate" [style]="{ width: '34rem' }" [breakpoints]="{ '575px': '95vw' }">
+    <ng-container *ngIf="rules">
+        <p class="mt-0">{{ "rules.intro" | translate }}</p>
+
+        <a [href]="rules.documentUrl" target="_blank" rel="noopener"
+           class="flex items-center gap-2 p-3 mb-4 border border-surface rounded-border no-underline">
+            <i class="pi pi-file-pdf text-2xl text-primary"></i>
+            <span class="flex flex-col">
+                <span class="font-semibold text-color">{{ "rules.documentName" | translate }}</span>
+                <span class="text-sm text-muted-color">{{ "rules.version" | translate }} {{ rules.version }} · {{ "rules.open" | translate }}</span>
+            </span>
+        </a>
+
+        <div class="flex items-start gap-2 mb-4">
+            <p-checkbox inputId="rulesAccepted" [(ngModel)]="accepted" [binary]="true" />
+            <label for="rulesAccepted" class="font-semibold">{{ "rules.statement" | translate }} {{ rules.version }}.</label>
+        </div>
+
+        <div class="flex items-start gap-2 mb-2">
+            <p-checkbox inputId="rulesByGuardian" [(ngModel)]="byGuardian" [binary]="true" />
+            <label for="rulesByGuardian">{{ "rules.byGuardian" | translate }}</label>
+        </div>
+
+        <div *ngIf="byGuardian" class="flex flex-col gap-3 ml-7 mb-2">
+            <div class="flex flex-col gap-2">
+                <label for="guardianName" class="text-sm">{{ "rules.guardianName" | translate }}</label>
+                <input pInputText id="guardianName" [(ngModel)]="guardianName" maxlength="200" class="w-full" />
+            </div>
+            <div class="flex items-start gap-2">
+                <p-checkbox inputId="independentTravel" [(ngModel)]="independentTravelApproved" [binary]="true" />
+                <label for="independentTravel" class="text-sm">{{ "rules.independentTravel" | translate }}</label>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-template #footer>
+        <p-button [label]="'rules.logOut' | translate" [text]="true" severity="secondary" (onClick)="logOut()" />
+        <p-button [label]="'rules.accept' | translate" icon="pi pi-check" [disabled]="!canAccept"
+                  [loading]="saving" (onClick)="accept()" />
+    </ng-template>
+</p-dialog>

@@ -3,6 +3,7 @@ import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {Button} from "primeng/button";
+import {Checkbox} from "primeng/checkbox";
 import {MultiSelect} from "primeng/multiselect";
 import {MessageService} from "primeng/api";
 import {ActionType} from "../../../../enums/action-type";
@@ -30,7 +31,7 @@ const DUPLICATE_ERROR_CODE = "1300";
 
 @Component({
     selector: "app-workout-form",
-    imports: [CommonModule, InputText, ReactiveFormsModule, Button, MultiSelect, TranslatePipe],
+    imports: [CommonModule, InputText, ReactiveFormsModule, Button, Checkbox, MultiSelect, TranslatePipe],
     templateUrl: "./workout-form.component.html",
     styleUrl: "./workout-form.component.scss",
 })
@@ -131,6 +132,7 @@ export class WorkoutFormComponent implements OnInit {
             workoutTypes: [workout?.workoutTypes?.map(x => x.id) ?? []],
             muscles: [workout?.muscles ?? []],
             secondaryMuscles: [workout?.secondaryMuscles ?? []],
+            isTimed: [workout?.isTimed ?? false],
         });
     }
 
@@ -181,6 +183,7 @@ export class WorkoutFormComponent implements OnInit {
             thumbnailUrl: value.thumbnailUrl?.trim() ?? "",
             workoutTypes: value.workoutTypes ?? [],
             ...(sendMuscles ? {muscles, secondaryMuscles} : {}),
+            isTimed: !!value.isTimed,
         };
     }
 

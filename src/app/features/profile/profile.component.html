@@ -21,6 +21,16 @@
             </div>
             <small class="text-center">{{ "profile.pictureHint" | translate }}</small>
         </div>
+
+        <div *ngIf="rules?.isRequired" class="card mb-0 mt-6">
+            <div class="font-semibold text-xl mb-3">{{ "rules.title" | translate }}</div>
+            <a [href]="rules!.documentUrl" target="_blank" rel="noopener" class="flex items-center gap-2 mb-2">
+                <i class="pi pi-file-pdf text-primary"></i>{{ "rules.documentName" | translate }} ({{ "rules.version" | translate }} {{ rules!.version }})
+            </a>
+            <small *ngIf="rules!.isAccepted; else notAccepted" class="text-muted-color">
+                <i class="pi pi-check-circle text-green-500 mr-1"></i>{{ "rules.acceptedOn" | translate }} {{ rules!.acceptedAt | date: "dd.MM.yyyy. HH:mm" }}</small>
+            <ng-template #notAccepted><small class="text-muted-color">{{ "rules.notAccepted" | translate }}</small></ng-template>
+        </div>
     </div>
 
     <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">

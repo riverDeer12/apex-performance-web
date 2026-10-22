@@ -29,7 +29,7 @@
                     <div *ngFor="let row of setRows[i]" [ngClass]="{ 'pl-5 text-muted-color': row.number === null }">
                         <ng-container *ngIf="row.number !== null">{{ row.number }}.</ng-container>
                         <ng-container *ngIf="row.number === null">↳ {{ "trainings.drop" | translate }}</ng-container>
-                        {{ row.set.reps || '-' }}<span *ngIf="row.set.weight != null"> × {{ row.set.weight }} kg</span>
+                        {{ describeSet(row.set) }}
                     </div>
                     <span *ngIf="!exercise.sets?.length">-</span>
                 </td>

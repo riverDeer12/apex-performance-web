@@ -18,6 +18,8 @@ export class Workout {
     // help; a muscle is never in both. Guessed from the name by API until set.
     muscles!: string[];
     secondaryMuscles!: string[];
+    // Done for a time (e.g. plank): sets record a duration instead of repetitions.
+    isTimed!: boolean;
 
     // Values translated to currently selected
     // language, used for table display and filtering.
@@ -39,4 +41,6 @@ export class WorkoutRequest {
     // Left out, API keeps them (or guesses them from the name for a new workout).
     muscles?: string[];
     secondaryMuscles?: string[];
+    // Left out, API keeps the current value.
+    isTimed?: boolean;
 }

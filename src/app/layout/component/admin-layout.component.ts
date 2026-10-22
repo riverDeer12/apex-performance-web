@@ -7,11 +7,12 @@ import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { AppPageHeader } from './app.page-header';
 import { LayoutService } from '../service/layout.service';
+import { RulesAcceptanceDialogComponent } from '../../features/rules/components/rules-acceptance-dialog/rules-acceptance-dialog.component';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, AppPageHeader],
+    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, AppPageHeader, RulesAcceptanceDialogComponent],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
         <app-topbar></app-topbar>
         <app-sidebar></app-sidebar>
@@ -23,6 +24,7 @@ import { LayoutService } from '../service/layout.service';
             <app-footer></app-footer>
         </div>
         <div class="layout-mask animate-fadein"></div>
+        <app-rules-acceptance-dialog></app-rules-acceptance-dialog>
     </div> `
 })
 export class AdminLayout {

@@ -6,6 +6,8 @@ export class TrainingExerciseSet {
     // Done right after the previous set without rest, with less weight (drop set).
     // Never true on the first set of an exercise.
     isDropSet?: boolean;
+    // How long the set lasted, for exercises done for a time (e.g. plank).
+    durationSeconds?: number | null;
 }
 
 export class TrainingExercise {
@@ -45,6 +47,7 @@ export interface TrainingExerciseSetRequest {
     weight: number | null;
     // API ignores it on the first set.
     isDropSet: boolean;
+    durationSeconds: number | null;
 }
 
 export interface TrainingExerciseRequest {
@@ -86,4 +89,45 @@ export function numberSets(sets: TrainingExerciseSet[] | null | undefined): Numb
 
             return { set, number: isDrop ? null : number };
         });
+}
+
+// "90", "1:30" (min:s) or "1:02:30" (h:min:s).
+export const DURATION_PATTERN = /^\s*\d{1,5}(:[0-5]?\d){0,2}\s*$/;
+
+/**
+ * Seconds from a duration typed as seconds, min:s or h:min:s, null when empty or not valid.
+ */
+export function parseDuration(text: string | null | undefined): number | null {
+    if (!text?.trim() || !DURATION_PATTERN.test(text)) return null;
+
+    const seconds = text.trim().split(":").map(Number).reduce((total, part) => total * 60 + part, 0);
+    return seconds > 0 ? seconds : null;
+}
+
+/**
+ * Duration as min:s (or h:min:s from an hour on), e.g. 90 -> "1:30".
+ */
+export function formatDuration(seconds: number | null | undefined): string {
+    if (!seconds) return "";
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const rest = String(seconds % 60).padStart(2, "0");
+
+    return hours ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
+}
+
+/**
+ * One set as shown in lists: "10 × 80 kg", or "1:30" / "1:30 · 10 kg" for a set done for a time.
+ */
+export function describeSet(set: TrainingExerciseSet): string {
+    const weight = set.weight != null ? `${set.weight} kg` : "";
+
+    if (set.durationSeconds) {
+        const duration = formatDuration(set.durationSeconds);
+        const reps = set.reps ? ` · ${set.reps}` : "";
+        return duration + reps + (weight ? ` · ${weight}` : "");
+    }
+
+    return (set.reps || "-") + (weight ? ` × ${weight}` : "");
 }

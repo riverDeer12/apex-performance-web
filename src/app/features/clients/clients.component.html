@@ -71,6 +71,13 @@
             </td>
             <td>
                 {{ ("clientPlans." + client.plan) | translate }}
+                <ng-container *ngIf="rulesAcceptances.get(client.id) as rules">
+                    <span *ngIf="rules.isRequired" class="rules-tag" [class.rules-tag--ok]="rules.isCurrent"
+                          [pTooltip]="rulesTooltip(rules)" tooltipPosition="top">
+                        <i class="pi" [ngClass]="rules.isCurrent ? 'pi-check' : 'pi-exclamation-triangle'"></i>
+                        {{ (rules.isCurrent ? "rules.tagAccepted" : "rules.tagMissing") | translate }}
+                    </span>
+                </ng-container>
             </td>
             <td>
                 {{ client.credits }}
