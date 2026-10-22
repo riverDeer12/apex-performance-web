@@ -178,10 +178,11 @@ export const it: Record<string, string> = {
     "personalRecords.hint": "I record vengono calcolati automaticamente dagli allenamenti completati.",
     "personalRecords.maxWeight": "Peso massimo",
     "personalRecords.oneRepMax": "1RM stimato",
+    "personalRecords.longestDuration": "Durata più lunga",
     "personalRecords.lastRecord": "Ultimo record",
     "personalRecords.new": "Nuovo",
     "personalRecords.history": "Storico record",
-    "personalRecords.noneFound": "Ancora nessun record. Compaiono quando gli allenamenti con i carichi vengono segnati come completati.",
+    "personalRecords.noneFound": "Ancora nessun record. Compaiono quando gli allenamenti con carichi o durate vengono segnati come completati.",
 
     "trainingProgress.period.4w": "4 settimane",
     "trainingProgress.period.3m": "3 mesi",

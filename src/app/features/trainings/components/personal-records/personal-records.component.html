@@ -19,6 +19,7 @@
             </th>
             <th style="min-width: 11rem">{{ "personalRecords.maxWeight" | translate }}</th>
             <th style="min-width: 11rem">{{ "personalRecords.oneRepMax" | translate }}</th>
+            <th style="min-width: 11rem">{{ "personalRecords.longestDuration" | translate }}</th>
             <th pSortableColumn="lastAchievedAt" style="min-width: 10rem">
                 {{ "personalRecords.lastRecord" | translate }}
                 <p-sortIcon field="lastAchievedAt" />
@@ -48,6 +49,13 @@
                 </ng-container>
             </td>
             <td>
+                <ng-container *ngIf="exercise.longestDuration as record; else empty">
+                    <span class="font-semibold">{{ formatDuration(record.value) }}</span>
+                    <span *ngIf="record.weight" class="text-sm text-muted-color"> · {{ record.weight | number: '1.0-2' }} kg</span>
+                    <div class="text-sm text-muted-color">{{ record.achievedAt | date: 'dd.MM.yyyy.' }}</div>
+                </ng-container>
+            </td>
+            <td>
                 {{ exercise.lastAchievedAt | date: 'dd.MM.yyyy.' }}
                 <p-tag *ngIf="exercise.isRecent" severity="success" class="ml-2"
                        [value]="'personalRecords.new' | translate" />
@@ -56,20 +64,26 @@
     </ng-template>
     <ng-template #expandedrow let-exercise>
         <tr>
-            <td colspan="5">
+            <td colspan="6">
                 <div class="text-sm font-semibold mb-2">{{ "personalRecords.history" | translate }}</div>
                 <div *ngFor="let record of exercise.history" class="text-sm flex flex-wrap gap-x-3 py-1">
                     <span class="w-24">{{ record.achievedAt | date: 'dd.MM.yyyy.' }}</span>
                     <span class="w-40 text-muted-color">{{ typeLabel(record) }}</span>
-                    <span class="font-semibold">{{ record.value | number: '1.0-1' }} kg</span>
-                    <span class="text-muted-color">({{ record.weight | number: '1.0-2' }} kg × {{ (record.reps ?? 1) | number: '1.0-1' }})</span>
+                    <ng-container *ngIf="record.type === 'LongestDuration'; else weightRecord">
+                        <span class="font-semibold">{{ formatDuration(record.value) }}</span>
+                        <span *ngIf="record.weight" class="text-muted-color">· {{ record.weight | number: '1.0-2' }} kg</span>
+                    </ng-container>
+                    <ng-template #weightRecord>
+                        <span class="font-semibold">{{ record.value | number: '1.0-1' }} kg</span>
+                        <span class="text-muted-color">({{ record.weight | number: '1.0-2' }} kg × {{ (record.reps ?? 1) | number: '1.0-1' }})</span>
+                    </ng-template>
                 </div>
             </td>
         </tr>
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="5">{{ "personalRecords.noneFound" | translate }}</td>
+            <td colspan="6">{{ "personalRecords.noneFound" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

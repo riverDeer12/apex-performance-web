@@ -14,12 +14,15 @@ import { ClientService } from "../../../clients/services/client.service";
 import { Client } from "../../../clients/models/client";
 import { PersonalRecord } from "../../models/personal-record";
 import { PersonalRecordService } from "../../services/personal-record.service";
+import { formatDuration } from "../../models/training";
 
 export interface ExerciseRecords {
     workoutId: string;
     name: string;
     maxWeight: PersonalRecord | null;
     oneRepMax: PersonalRecord | null;
+    // Workouts done for a time (e.g. plank).
+    longestDuration: PersonalRecord | null;
     lastAchievedAt: string;
     isRecent: boolean;
     // All records of the exercise, newest first.
@@ -91,10 +94,14 @@ export class PersonalRecordsComponent implements OnInit {
         });
     }
 
+    readonly formatDuration = formatDuration;
+
     typeLabel(record: PersonalRecord): string {
         return this.translationService.t(record.type === "MaxWeight"
             ? "personalRecords.maxWeight"
-            : "personalRecords.oneRepMax");
+            : record.type === "LongestDuration"
+                ? "personalRecords.longestDuration"
+                : "personalRecords.oneRepMax");
     }
 
     private groupByExercise(records: PersonalRecord[]): ExerciseRecords[] {
@@ -113,6 +120,7 @@ export class PersonalRecordsComponent implements OnInit {
                 // History is newest first, so the first record of a type is the current one.
                 maxWeight: history.find(x => x.type === "MaxWeight") ?? null,
                 oneRepMax: history.find(x => x.type === "EstimatedOneRepMax") ?? null,
+                longestDuration: history.find(x => x.type === "LongestDuration") ?? null,
                 lastAchievedAt: history[0].achievedAt,
                 isRecent: new Date(history[0].achievedAt).getTime() >= recentFrom,
                 history,

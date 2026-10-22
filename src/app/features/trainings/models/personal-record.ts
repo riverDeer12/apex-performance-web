@@ -1,4 +1,5 @@
-export type PersonalRecordType = "MaxWeight" | "EstimatedOneRepMax";
+// LongestDuration: value is seconds, for workouts done for a time (e.g. plank).
+export type PersonalRecordType = "MaxWeight" | "EstimatedOneRepMax" | "LongestDuration";
 
 export class PersonalRecord {
     id!: string;

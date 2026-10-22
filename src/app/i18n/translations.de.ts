@@ -178,10 +178,11 @@ export const de: Record<string, string> = {
     "personalRecords.hint": "Rekorde werden automatisch aus abgeschlossenen Trainings berechnet.",
     "personalRecords.maxWeight": "Maximalgewicht",
     "personalRecords.oneRepMax": "Geschätztes 1RM",
+    "personalRecords.longestDuration": "Längste Dauer",
     "personalRecords.lastRecord": "Letzter Rekord",
     "personalRecords.new": "Neu",
     "personalRecords.history": "Rekordverlauf",
-    "personalRecords.noneFound": "Noch keine Rekorde. Sie erscheinen, sobald Trainings mit Gewichten als abgeschlossen markiert werden.",
+    "personalRecords.noneFound": "Noch keine Rekorde. Sie erscheinen, sobald Trainings mit Gewichten oder Dauer als abgeschlossen markiert werden.",
 
     "trainingProgress.period.4w": "4 Wochen",
     "trainingProgress.period.3m": "3 Monate",
