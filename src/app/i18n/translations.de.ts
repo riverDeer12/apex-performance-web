@@ -512,6 +512,8 @@ export const de: Record<string, string> = {
     "workoutTypes.delete": "Übungsart löschen",
     "workoutTypes.edit": "Übungsart bearbeiten",
     "workoutTypes.updatedDetail": "Die Übungsart wurde umbenannt.",
+    "workoutTypes.new": "Neuer Typ",
+    "workoutTypes.createdDetail": "Übungsart hinzugefügt.",
     "workoutTypes.renameHint": "Der neue Name wird bei allen Übungen mit dieser Art angezeigt.",
     "workoutTypes.confirmDelete": "Möchtest du diese Übungsart wirklich löschen?",
     "workoutTypes.confirmDeleteUsed": "Diese Art wird von {count} Übungen verwendet. Sie wird bei allen entfernt, die Übungen bleiben erhalten. Möchtest du sie wirklich löschen?",

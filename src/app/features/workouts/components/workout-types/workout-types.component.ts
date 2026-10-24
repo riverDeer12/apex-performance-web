@@ -1,4 +1,5 @@
 import { Component, OnInit, effect } from "@angular/core";
+import { Observable } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { TableModule } from "primeng/table";
@@ -42,6 +43,7 @@ export class WorkoutTypesComponent implements OnInit {
     canDelete = false;
 
     editVisible = false;
+    // Type being renamed, null when a new type is added.
     editRow: WorkoutTypeRow | null = null;
     editNameHr = "";
     editNameEn = "";
@@ -69,6 +71,13 @@ export class WorkoutTypesComponent implements OnInit {
         this.load();
     }
 
+    openCreate(): void {
+        this.editRow = null;
+        this.editNameHr = "";
+        this.editNameEn = "";
+        this.editVisible = true;
+    }
+
     openEdit(row: WorkoutTypeRow): void {
         const type = this.loaded.find(x => x.id === row.id);
 
@@ -79,19 +88,22 @@ export class WorkoutTypesComponent implements OnInit {
     }
 
     saveEdit(): void {
-        if (!this.editRow || !this.editNameHr.trim() || this.saving) return;
+        if (!this.editNameHr.trim() || this.saving) return;
 
         this.saving = true;
 
-        this.workoutService.updateWorkoutType(this.editRow.id, {
-            nameHr: this.editNameHr.trim(),
-            nameEn: this.editNameEn.trim() || null,
-        }).subscribe({
+        const request = { nameHr: this.editNameHr.trim(), nameEn: this.editNameEn.trim() || null };
+        const isNew = !this.editRow;
+        const save$: Observable<unknown> = this.editRow
+            ? this.workoutService.updateWorkoutType(this.editRow.id, request)
+            : this.workoutService.createWorkoutType(request);
+
+        save$.subscribe({
             next: () => {
                 this.messageService.add({
                     severity: "success",
                     summary: this.translationService.t("common.success"),
-                    detail: this.translationService.t("workoutTypes.updatedDetail"),
+                    detail: this.translationService.t(isNew ? "workoutTypes.createdDetail" : "workoutTypes.updatedDetail"),
                 });
                 this.saving = false;
                 this.editVisible = false;

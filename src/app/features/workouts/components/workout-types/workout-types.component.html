@@ -4,7 +4,11 @@
          [currentPageReportTemplate]="'common.entriesTemplate' | translate">
     <ng-template #caption>
         <div class="flex justify-between items-center flex-wrap gap-2">
-            <span class="text-sm text-muted-color">{{ "workoutTypes.hint" | translate }}</span>
+            <div class="flex items-center gap-3 flex-wrap">
+                <p-button *ngIf="canDelete" icon="pi pi-plus" iconPos="right" [label]="'workoutTypes.new' | translate"
+                          (click)="openCreate()" />
+                <span class="text-sm text-muted-color">{{ "workoutTypes.hint" | translate }}</span>
+            </div>
             <p-iconfield iconPosition="left">
                 <p-inputicon><i class="pi pi-search"></i></p-inputicon>
                 <input pInputText type="text" (input)="table.filterGlobal($any($event.target).value, 'contains')"
@@ -45,7 +49,7 @@
 </p-table>
 
 <p-dialog [(visible)]="editVisible" [modal]="true" [dismissableMask]="true" [style]="{ width: '30rem' }"
-          [breakpoints]="{ '640px': '95vw' }" [header]="'workoutTypes.edit' | translate">
+          [breakpoints]="{ '640px': '95vw' }" [header]="(editRow ? 'workoutTypes.edit' : 'workoutTypes.new') | translate">
     <form class="flex flex-col gap-4" (ngSubmit)="saveEdit()">
         <div class="flex flex-col gap-2">
             <label for="typeNameHr">{{ "workouts.nameHr" | translate }}</label>
