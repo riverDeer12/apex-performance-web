@@ -13,6 +13,7 @@ export const ERROR_CODE_MESSAGES: Record<string, string> = {
     '1300': 'This item already exists.',
     '1301': 'This username already exists.',
     '1302': 'This email already exists.',
+    '1303': 'Not enough in stock.',
     '1400': 'An error occurred while saving.',
     '1401': 'An error occurred while sending the email.',
     '1500': 'Too many attempts. Please wait a few minutes and try again.',

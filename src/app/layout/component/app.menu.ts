@@ -90,6 +90,7 @@ export class AppMenu implements OnInit, OnDestroy {
     // Coaches and administrators manage trainings, templates and records.
     const userRole = this.authenticationService.getUserRole();
     const canManageTrainings = userRole === Roles.Administrator || userRole === Roles.Coach;
+    const isAdministrator = userRole === Roles.Administrator;
     const unreadCount = this.chatService.unreadCount();
 
     this.model = [
@@ -333,6 +334,23 @@ export class AppMenu implements OnInit, OnDestroy {
             icon: "pi pi-fw pi-tags",
             visible: canManageTrainings,
             routerLink: ["/admin/workouts/types"],
+          },
+        ],
+      },
+      {
+        // Webshop on shop.apex-performance.fit, run by the administrators.
+        label: t("menu.shop"),
+        visible: isAdministrator,
+        items: [
+          {
+            label: t("menu.shopOrders"),
+            icon: "pi pi-fw pi-shopping-cart",
+            routerLink: ["/admin/shop/orders"],
+          },
+          {
+            label: t("menu.shopProducts"),
+            icon: "pi pi-fw pi-box",
+            routerLink: ["/admin/shop/products"],
           },
         ],
       },

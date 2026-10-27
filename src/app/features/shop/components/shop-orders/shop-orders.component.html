@@ -1,0 +1,105 @@
+<p-table [value]="visibleOrders" dataKey="id" [loading]="loading" [rows]="20" [paginator]="visibleOrders.length > 20"
+         [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll" [showCurrentPageReport]="true"
+         [currentPageReportTemplate]="'common.entriesTemplate' | translate">
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+                <p-checkbox inputId="showUnpaid" [(ngModel)]="showUnpaid" [binary]="true" />
+                <label for="showUnpaid">{{ "shop.showUnpaid" | translate }}</label>
+            </div>
+            <p-button icon="pi pi-refresh" severity="secondary" [outlined]="true" (click)="load()"
+                      [ariaLabel]="'shop.refresh' | translate" />
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th style="width: 11rem">{{ "shop.orderNumber" | translate }}</th>
+            <th style="width: 10rem">{{ "shop.date" | translate }}</th>
+            <th>{{ "shop.customer" | translate }}</th>
+            <th style="width: 7rem">{{ "shop.items" | translate }}</th>
+            <th style="width: 8rem">{{ "shop.total" | translate }}</th>
+            <th style="width: 10rem">{{ "shop.status" | translate }}</th>
+            <th style="width: 10rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-order>
+        <tr class="cursor-pointer" (click)="openDetails(order)">
+            <td class="font-semibold">
+                {{ order.number }}
+                <i *ngIf="order.hasStockIssue" class="pi pi-exclamation-triangle text-orange-500 ml-1"
+                   [title]="'shop.stockIssue' | translate"></i>
+            </td>
+            <td>{{ (order.paidAt ?? order.createdAt) | date: "dd.MM.yyyy. HH:mm" }}</td>
+            <td>{{ order.customerName ?? "–" }}<div class="text-xs text-muted-color">{{ order.customerEmail }}</div></td>
+            <td>{{ itemCount(order) }}</td>
+            <td>{{ formatPrice(order.total) }}</td>
+            <td><p-tag [value]="'shop.status' + order.status | translate" [severity]="severity(order.status)" /></td>
+            <td (click)="$event.stopPropagation()">
+                <p-button *ngIf="order.status === 'Paid'" icon="pi pi-send" size="small"
+                          [label]="'shop.markShipped' | translate" [disabled]="updating"
+                          (click)="setStatus(order, 'Shipped')" />
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr><td colspan="7">{{ "shop.noOrders" | translate }}</td></tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="detailsVisible" [modal]="true" [dismissableMask]="true" [style]="{ width: '40rem' }"
+          [breakpoints]="{ '640px': '95vw' }" [header]="('shop.order' | translate) + ' ' + (selected?.number ?? '')">
+    <div *ngIf="selected as order" class="flex flex-col gap-4">
+        <div class="flex items-center gap-2 flex-wrap">
+            <p-tag [value]="'shop.status' + order.status | translate" [severity]="severity(order.status)" />
+            <span *ngIf="order.hasStockIssue" class="text-orange-500 text-sm">
+                <i class="pi pi-exclamation-triangle"></i> {{ "shop.stockIssue" | translate }}</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div>
+                <div class="text-muted-color">{{ "shop.customer" | translate }}</div>
+                <div class="font-semibold">{{ order.customerName ?? "–" }}</div>
+                <div>{{ order.customerEmail }}</div>
+                <div>{{ order.customerPhone }}</div>
+            </div>
+            <div>
+                <div class="text-muted-color">{{ "shop.locker" | translate }}</div>
+                <div class="font-semibold">{{ order.boxNowLockerAddress }}</div>
+                <div>{{ order.boxNowLockerPostalCode }} · ID {{ order.boxNowLockerId }}</div>
+                <div *ngIf="order.boxNowParcelId">{{ "shop.parcel" | translate }}: {{ order.boxNowParcelId }}</div>
+            </div>
+            <div>
+                <div class="text-muted-color">{{ "shop.date" | translate }}</div>
+                <div>{{ "shop.created" | translate }}: {{ order.createdAt | date: "dd.MM.yyyy. HH:mm" }}</div>
+                <div *ngIf="order.paidAt">{{ "shop.paid" | translate }}: {{ order.paidAt | date: "dd.MM.yyyy. HH:mm" }}</div>
+                <div *ngIf="order.shippedAt">{{ "shop.shipped" | translate }}: {{ order.shippedAt | date: "dd.MM.yyyy. HH:mm" }}</div>
+            </div>
+        </div>
+
+        <table class="w-full text-sm">
+            <tr *ngFor="let item of order.items" class="border-b border-surface">
+                <td class="py-2">{{ item.productName }}
+                    <div *ngIf="item.variantName" class="text-xs text-muted-color">{{ item.variantName }}</div></td>
+                <td class="py-2 text-center">{{ item.quantity }} ×</td>
+                <td class="py-2 text-right">{{ formatPrice(item.unitPrice * item.quantity) }}</td>
+            </tr>
+            <tr><td colspan="2" class="pt-2 text-muted-color">{{ "shop.subtotal" | translate }}</td>
+                <td class="pt-2 text-right">{{ formatPrice(order.subtotal) }}</td></tr>
+            <tr><td colspan="2" class="text-muted-color">{{ "shop.shipping" | translate }}</td>
+                <td class="text-right">{{ formatPrice(order.shippingPrice) }}</td></tr>
+            <tr class="font-semibold"><td colspan="2">{{ "shop.total" | translate }}</td>
+                <td class="text-right">{{ formatPrice(order.total) }}</td></tr>
+        </table>
+
+        <div class="flex gap-2 flex-wrap" *ngIf="order.status === 'Paid' || order.status === 'Shipped'">
+            <p-button *ngIf="order.status === 'Paid'" icon="pi pi-send" [label]="'shop.markShipped' | translate"
+                      [disabled]="updating" (click)="setStatus(order, 'Shipped')" />
+            <p-button *ngIf="order.status === 'Shipped'" icon="pi pi-undo" severity="secondary" [outlined]="true"
+                      [label]="'shop.markNotShipped' | translate" [disabled]="updating" (click)="setStatus(order, 'Paid')" />
+            <p-button icon="pi pi-times" severity="danger" [outlined]="true" [label]="'shop.cancelOrder' | translate"
+                      [disabled]="updating" (click)="setStatus(order, 'Cancelled')" />
+        </div>
+        <small *ngIf="order.status === 'Paid' || order.status === 'Shipped'" class="text-muted-color">
+            {{ "shop.refundHint" | translate }}</small>
+    </div>
+</p-dialog>

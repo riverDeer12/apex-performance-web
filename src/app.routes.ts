@@ -85,6 +85,13 @@ export const appRoutes: Routes = [
         data: { title: "topbar.profile", section: "topbar.profile" },
       },
       {
+        path: "shop",
+        loadChildren: () =>
+          import("./app/features/shop/shop.routes").then(
+            (m) => m.ShopRoutes,
+          ),
+      },
+      {
         path: "time-slots",
         loadChildren: () =>
           import("./app/features/time-slots/time-slots.routes").then(

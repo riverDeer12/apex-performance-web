@@ -1,0 +1,168 @@
+<p-table #table [value]="products" dataKey="id" [loading]="loading" [rows]="20" [paginator]="products.length > 20"
+         [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll"
+         [globalFilterFields]="['name', 'category']" [showCurrentPageReport]="true"
+         [currentPageReportTemplate]="'common.entriesTemplate' | translate">
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <p-button icon="pi pi-plus" iconPos="right" [label]="'shop.newProduct' | translate" (click)="openCreate()" />
+            <p-iconfield iconPosition="left">
+                <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                <input pInputText type="text" (input)="table.filterGlobal($any($event.target).value, 'contains')"
+                       [placeholder]="'shop.searchProducts' | translate" />
+            </p-iconfield>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th style="width: 5rem"></th>
+            <th pSortableColumn="name">{{ "common.name" | translate }} <p-sortIcon field="name" /></th>
+            <th pSortableColumn="category">{{ "shop.category" | translate }} <p-sortIcon field="category" /></th>
+            <th pSortableColumn="price" style="width: 9rem">{{ "shop.price" | translate }} <p-sortIcon field="price" /></th>
+            <th style="width: 14rem">{{ "shop.stock" | translate }}</th>
+            <th style="width: 8rem">{{ "shop.visibility" | translate }}</th>
+            <th style="width: 8rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-product>
+        <tr>
+            <td>
+                <img *ngIf="product.imageIds.length; else noImage" [src]="shopService.imageUrl(product.imageIds[0])"
+                     alt="" class="w-12 h-12 object-cover rounded" />
+                <ng-template #noImage>
+                    <div class="w-12 h-12 rounded bg-surface-100 dark:bg-surface-800 flex items-center justify-center">
+                        <i class="pi pi-image text-muted-color"></i></div>
+                </ng-template>
+            </td>
+            <td class="font-semibold">{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ formatPrice(product.price) }}</td>
+            <td>
+                <span class="font-semibold" [class.text-red-500]="totalStock(product) === 0">{{ totalStock(product) }}</span>
+                <div class="text-xs text-muted-color" *ngIf="product.variants.length > 1 || variantName(product.variants[0])">
+                    <span *ngFor="let variant of product.variants; let last = last">
+                        {{ variantName(variant) }}: {{ variant.stock }}{{ last ? "" : ", " }}</span>
+                </div>
+            </td>
+            <td>
+                <p-tag [value]="(product.isActive ? 'shop.active' : 'shop.hidden') | translate"
+                       [severity]="product.isActive ? 'success' : 'secondary'" />
+            </td>
+            <td>
+                <div class="flex gap-2">
+                    <p-button icon="pi pi-pencil" severity="secondary" [outlined]="true" (click)="openEdit(product)"
+                              [ariaLabel]="'shop.editProduct' | translate" />
+                    <p-button icon="pi pi-trash" severity="danger" [outlined]="true" (click)="confirmDelete(product)"
+                              [ariaLabel]="'shop.delete' | translate" />
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr><td colspan="7">{{ "shop.noProducts" | translate }}</td></tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '50rem' }" [breakpoints]="{ '960px': '95vw' }"
+          [header]="(editing ? 'shop.editProduct' : 'shop.newProduct') | translate">
+    <form class="flex flex-col gap-4" (ngSubmit)="save()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="productName">{{ "common.name" | translate }}</label>
+                <input pInputText id="productName" name="name" [(ngModel)]="form.name" maxlength="200" required />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="productCategory">{{ "shop.category" | translate }}</label>
+                <input pInputText id="productCategory" name="category" [(ngModel)]="form.category" maxlength="100"
+                       list="shopCategories" [placeholder]="'shop.categoryPlaceholder' | translate" required />
+                <datalist id="shopCategories">
+                    <option *ngFor="let category of categories" [value]="category"></option>
+                </datalist>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="productPrice">{{ "shop.price" | translate }}</label>
+                <p-inputnumber inputId="productPrice" name="price" [(ngModel)]="form.price" mode="currency"
+                               currency="EUR" locale="hr-HR" [min]="0" [maxFractionDigits]="2" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="productSlug">{{ "shop.slug" | translate }}</label>
+                <input pInputText id="productSlug" name="slug" [(ngModel)]="form.slug" maxlength="200"
+                       [placeholder]="'shop.slugPlaceholder' | translate" />
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="productDescription">{{ "shop.description" | translate }}</label>
+            <textarea pTextarea id="productDescription" name="description" [(ngModel)]="form.description" rows="5"
+                      maxlength="4000" [placeholder]="'shop.descriptionPlaceholder' | translate"></textarea>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+                <span class="font-semibold">{{ "shop.variants" | translate }}</span>
+                <p-button type="button" icon="pi pi-plus" [text]="true" [label]="'shop.addVariant' | translate"
+                          (click)="addVariant()" />
+            </div>
+            <small class="text-muted-color">{{ "shop.variantsHint" | translate }}</small>
+            <div *ngFor="let variant of form.variants; let i = index" class="grid grid-cols-12 gap-2 items-center">
+                <input pInputText class="col-span-4" [name]="'size' + i" [(ngModel)]="variant.size" maxlength="50"
+                       [placeholder]="'shop.size' | translate" />
+                <input pInputText class="col-span-4" [name]="'color' + i" [(ngModel)]="variant.color" maxlength="50"
+                       [placeholder]="'shop.color' | translate" />
+                <p-inputnumber class="col-span-3" [name]="'stock' + i" [(ngModel)]="variant.stock" [min]="0"
+                               [showButtons]="true" [inputStyle]="{ width: '100%' }"
+                               [ariaLabel]="'shop.stock' | translate" />
+                <p-button type="button" class="col-span-1" icon="pi pi-times" severity="danger" [text]="true"
+                          [disabled]="form.variants.length === 1" (click)="removeVariant(i)"
+                          [ariaLabel]="'shop.delete' | translate" />
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <span class="font-semibold">{{ "shop.images" | translate }}</span>
+            <small *ngIf="!editing" class="text-muted-color">{{ "shop.imagesAfterSave" | translate }}</small>
+            <ng-container *ngIf="editing">
+                <small class="text-muted-color">{{ "shop.imagesHint" | translate }}</small>
+                <div class="flex flex-wrap gap-3">
+                    <div *ngFor="let imageId of editing.imageIds; let i = index; let last = last"
+                         class="flex flex-col items-center gap-1">
+                        <img [src]="shopService.imageUrl(imageId)" alt="" class="w-24 h-24 object-cover rounded border"
+                             [class.border-primary]="i === 0" [class.border-2]="i === 0" />
+                        <div class="flex">
+                            <p-button type="button" icon="pi pi-arrow-left" [text]="true" size="small" [disabled]="i === 0"
+                                      (click)="moveImage(i, -1)" />
+                            <p-button type="button" icon="pi pi-trash" [text]="true" size="small" severity="danger"
+                                      (click)="deleteImage(imageId)" [ariaLabel]="'shop.delete' | translate" />
+                            <p-button type="button" icon="pi pi-arrow-right" [text]="true" size="small" [disabled]="last"
+                                      (click)="moveImage(i, 1)" />
+                        </div>
+                    </div>
+                    <label class="w-24 h-24 rounded border border-dashed flex flex-col items-center justify-center
+                                  cursor-pointer text-muted-color text-sm gap-1">
+                        <i class="pi" [class.pi-upload]="!uploading" [class.pi-spin]="uploading"
+                           [class.pi-spinner]="uploading"></i>
+                        {{ "shop.addImages" | translate }}
+                        <input type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden"
+                               (change)="onFilesSelected($event)" [disabled]="uploading" />
+                    </label>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-6">
+            <div class="flex items-center gap-2">
+                <p-checkbox inputId="productActive" name="isActive" [(ngModel)]="form.isActive" [binary]="true" />
+                <label for="productActive">{{ "shop.showInShop" | translate }}</label>
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="productSortOrder">{{ "shop.sortOrder" | translate }}</label>
+                <p-inputnumber inputId="productSortOrder" name="sortOrder" [(ngModel)]="form.sortOrder"
+                               [inputStyle]="{ width: '5rem' }" />
+            </div>
+        </div>
+
+        <div>
+            <p-button type="submit" icon="pi pi-save" [label]="'common.save' | translate"
+                      [disabled]="!formValid || saving" [loading]="saving" />
+        </div>
+    </form>
+</p-dialog>
