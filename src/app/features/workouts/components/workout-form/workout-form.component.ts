@@ -5,6 +5,7 @@ import {InputText} from "primeng/inputtext";
 import {Button} from "primeng/button";
 import {Checkbox} from "primeng/checkbox";
 import {MultiSelect} from "primeng/multiselect";
+import {Select} from "primeng/select";
 import {MessageService} from "primeng/api";
 import {ActionType} from "../../../../enums/action-type";
 import {RedirectType} from "../../../../enums/redirect-type";
@@ -31,7 +32,7 @@ const DUPLICATE_ERROR_CODE = "1300";
 
 @Component({
     selector: "app-workout-form",
-    imports: [CommonModule, InputText, ReactiveFormsModule, Button, Checkbox, MultiSelect, TranslatePipe],
+    imports: [CommonModule, InputText, ReactiveFormsModule, Button, Checkbox, MultiSelect, Select, TranslatePipe],
     templateUrl: "./workout-form.component.html",
     styleUrl: "./workout-form.component.scss",
 })
@@ -118,6 +119,13 @@ export class WorkoutFormComponent implements OnInit {
             : this.updateWorkout();
     }
 
+    get paceOptions() {
+        return ["", "PerKm", "Per500m", "Kmh"].map(value => ({
+            value,
+            label: this.translationService.t("workouts.pace" + (value || "None")),
+        }));
+    }
+
     private initForm() {
         const workout = this.type == ActionType.Create ? null : this.workout;
 
@@ -133,6 +141,13 @@ export class WorkoutFormComponent implements OnInit {
             muscles: [workout?.muscles ?? []],
             secondaryMuscles: [workout?.secondaryMuscles ?? []],
             isTimed: [workout?.isTimed ?? false],
+            // "" for workouts not done over a distance.
+            paceType: [workout?.paceType ?? ""],
+        });
+
+        // Pace comes from distance and duration, so these sets record a duration too.
+        this.form.get("paceType")!.valueChanges.subscribe(paceType => {
+            if (paceType) this.form.get("isTimed")!.setValue(true);
         });
     }
 
@@ -183,7 +198,8 @@ export class WorkoutFormComponent implements OnInit {
             thumbnailUrl: value.thumbnailUrl?.trim() ?? "",
             workoutTypes: value.workoutTypes ?? [],
             ...(sendMuscles ? {muscles, secondaryMuscles} : {}),
-            isTimed: !!value.isTimed,
+            isTimed: !!value.isTimed || !!value.paceType,
+            paceType: value.paceType ?? "",
         };
     }
 

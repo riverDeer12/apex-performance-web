@@ -14,7 +14,7 @@ import { ClientService } from "../../../clients/services/client.service";
 import { Client } from "../../../clients/models/client";
 import { PersonalRecord } from "../../models/personal-record";
 import { PersonalRecordService } from "../../services/personal-record.service";
-import { formatDuration } from "../../models/training";
+import { formatDistance, formatDuration, formatSpeed } from "../../models/training";
 
 export interface ExerciseRecords {
     workoutId: string;
@@ -23,6 +23,9 @@ export interface ExerciseRecords {
     oneRepMax: PersonalRecord | null;
     // Workouts done for a time (e.g. plank).
     longestDuration: PersonalRecord | null;
+    // Workouts done over a distance (e.g. rowing).
+    longestDistance: PersonalRecord | null;
+    fastestPace: PersonalRecord | null;
     lastAchievedAt: string;
     isRecent: boolean;
     // All records of the exercise, newest first.
@@ -95,13 +98,18 @@ export class PersonalRecordsComponent implements OnInit {
     }
 
     readonly formatDuration = formatDuration;
+    readonly formatDistance = formatDistance;
+    readonly formatSpeed = formatSpeed;
 
     typeLabel(record: PersonalRecord): string {
-        return this.translationService.t(record.type === "MaxWeight"
-            ? "personalRecords.maxWeight"
-            : record.type === "LongestDuration"
-                ? "personalRecords.longestDuration"
-                : "personalRecords.oneRepMax");
+        const keys: Record<string, string> = {
+            MaxWeight: "personalRecords.maxWeight",
+            LongestDuration: "personalRecords.longestDuration",
+            LongestDistance: "personalRecords.longestDistance",
+            FastestPace: "personalRecords.fastestPace",
+        };
+
+        return this.translationService.t(keys[record.type] ?? "personalRecords.oneRepMax");
     }
 
     private groupByExercise(records: PersonalRecord[]): ExerciseRecords[] {
@@ -121,6 +129,8 @@ export class PersonalRecordsComponent implements OnInit {
                 maxWeight: history.find(x => x.type === "MaxWeight") ?? null,
                 oneRepMax: history.find(x => x.type === "EstimatedOneRepMax") ?? null,
                 longestDuration: history.find(x => x.type === "LongestDuration") ?? null,
+                longestDistance: history.find(x => x.type === "LongestDistance") ?? null,
+                fastestPace: history.find(x => x.type === "FastestPace") ?? null,
                 lastAchievedAt: history[0].achievedAt,
                 isRecent: new Date(history[0].achievedAt).getTime() >= recentFrom,
                 history,

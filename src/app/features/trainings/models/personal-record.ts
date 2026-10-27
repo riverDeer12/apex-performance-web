@@ -1,5 +1,9 @@
+import { PaceType } from "./training";
+
 // LongestDuration: value is seconds, for workouts done for a time (e.g. plank).
-export type PersonalRecordType = "MaxWeight" | "EstimatedOneRepMax" | "LongestDuration";
+// LongestDistance: metres; FastestPace: average speed in metres per minute,
+// shown as the workout's pace (workouts with a pace type, e.g. rowing).
+export type PersonalRecordType = "MaxWeight" | "EstimatedOneRepMax" | "LongestDuration" | "LongestDistance" | "FastestPace";
 
 export class PersonalRecord {
     id!: string;
@@ -13,4 +17,5 @@ export class PersonalRecord {
     weight!: number;
     reps?: number | null;
     achievedAt!: string;
+    paceType?: PaceType | null;
 }

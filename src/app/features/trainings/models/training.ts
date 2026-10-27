@@ -1,3 +1,7 @@
+// How the pace of a workout done over a distance is shown: min/km (walking, running),
+// min/500 m (rowing and ski ergometers) or km/h (cycling, air bike).
+export type PaceType = "PerKm" | "Per500m" | "Kmh";
+
 export class TrainingExerciseSet {
     id!: string;
     order!: number;
@@ -8,6 +12,8 @@ export class TrainingExerciseSet {
     isDropSet?: boolean;
     // How long the set lasted, for exercises done for a time (e.g. plank).
     durationSeconds?: number | null;
+    // Distance covered, for workouts with a pace type (e.g. rowing 2000 m).
+    distanceMeters?: number | null;
 }
 
 export class TrainingExercise {
@@ -20,6 +26,8 @@ export class TrainingExercise {
     sets!: TrainingExerciseSet[];
     // Done right after the previous exercise without rest (superset).
     isSupersetWithPrevious?: boolean;
+    // Pace type of the workout, sets with a distance show this pace.
+    paceType?: PaceType | null;
 }
 
 export class TrainingClient {
@@ -48,6 +56,7 @@ export interface TrainingExerciseSetRequest {
     // API ignores it on the first set.
     isDropSet: boolean;
     durationSeconds: number | null;
+    distanceMeters: number | null;
 }
 
 export interface TrainingExerciseRequest {
@@ -118,10 +127,54 @@ export function formatDuration(seconds: number | null | undefined): string {
 }
 
 /**
- * One set as shown in lists: "10 × 80 kg", or "1:30" / "1:30 · 10 kg" for a set done for a time.
+ * Distance as metres below a kilometre, otherwise kilometres: "800 m", "2 km", "5,25 km".
  */
-export function describeSet(set: TrainingExerciseSet): string {
+export function formatDistance(meters: number | null | undefined): string {
+    if (!meters) return "";
+
+    return meters < 1000
+        ? `${meters} m`
+        : `${(meters / 1000).toLocaleString("hr-HR", { maximumFractionDigits: 2 })} km`;
+}
+
+/**
+ * Pace of a set from its distance and duration: "5:30 /km", "1:52 /500 m" or "24,5 km/h".
+ */
+export function formatPace(paceType: PaceType | null | undefined, meters: number | null | undefined,
+                           seconds: number | null | undefined): string {
+    if (!meters || !seconds) return "";
+
+    return formatSpeed(paceType, meters * 60 / seconds);
+}
+
+/**
+ * Pace from a speed in metres per minute, as the fastest pace record is kept.
+ */
+export function formatSpeed(paceType: PaceType | null | undefined, metersPerMinute: number): string {
+    if (!metersPerMinute) return "";
+
+    if (paceType === "Kmh")
+        return `${(metersPerMinute * 60 / 1000).toLocaleString("hr-HR", { maximumFractionDigits: 1 })} km/h`;
+
+    const per = paceType === "Per500m" ? 500 : 1000;
+    const seconds = Math.round(per / metersPerMinute * 60);
+
+    return `${formatDuration(seconds)} /${paceType === "Per500m" ? "500 m" : "km"}`;
+}
+
+/**
+ * One set as shown in lists: "10 × 80 kg", "1:30" / "1:30 · 10 kg" for a set done for a time,
+ * or "2 km · 7:30 · 1:52 /500 m" for a set over a distance.
+ */
+export function describeSet(set: TrainingExerciseSet, paceType?: PaceType | null): string {
     const weight = set.weight != null ? `${set.weight} kg` : "";
+
+    if (set.distanceMeters) {
+        return [formatDistance(set.distanceMeters), formatDuration(set.durationSeconds),
+            formatPace(paceType, set.distanceMeters, set.durationSeconds), set.reps ?? "", weight]
+            .filter(Boolean)
+            .join(" · ");
+    }
 
     if (set.durationSeconds) {
         const duration = formatDuration(set.durationSeconds);

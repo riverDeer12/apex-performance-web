@@ -107,9 +107,18 @@
                                [pTooltip]="'trainings.durationHint' | translate" tooltipPosition="top" />
                         <span class="text-muted-color">·</span>
                     </ng-template>
-                    <input pInputText type="number" min="0" step="0.5" formControlName="weight" class="w-28"
-                           [placeholder]="'kg'" [attr.aria-label]="'trainings.weight' | translate" />
-                    <span class="text-sm text-muted-color">kg</span>
+                    <ng-container *ngIf="paceTypeOf(i); else weightInput">
+                        <input pInputText type="number" min="1" step="1" formControlName="distance" class="w-28"
+                               inputmode="numeric" [placeholder]="'trainings.distancePlaceholder' | translate"
+                               [attr.aria-label]="'trainings.distance' | translate" />
+                        <span class="text-sm text-muted-color">m</span>
+                        <span *ngIf="setPace(i, s) as pace" class="text-sm font-semibold text-primary w-28">{{ pace }}</span>
+                    </ng-container>
+                    <ng-template #weightInput>
+                        <input pInputText type="number" min="0" step="0.5" formControlName="weight" class="w-28"
+                               [placeholder]="'kg'" [attr.aria-label]="'trainings.weight' | translate" />
+                        <span class="text-sm text-muted-color">kg</span>
+                    </ng-template>
                     <p-button type="button" icon="pi pi-times" severity="danger" [text]="true" size="small"
                               [attr.aria-label]="'trainings.removeSet' | translate" (click)="removeSet(i, s)" />
                     <p-button *ngIf="!isDropSet(i, s)" type="button" icon="pi pi-plus" severity="secondary"
@@ -133,7 +142,7 @@
                      [class.drop-row]="row.number === null">
                     <ng-container *ngIf="row.number !== null">{{ row.number }}.</ng-container>
                     <ng-container *ngIf="row.number === null">↳ {{ "trainings.drop" | translate }}</ng-container>
-                    {{ describeSet(row.set) }}
+                    {{ describeSet(row.set, paceTypeOf(i)) }}
                 </div>
                 <p-button type="button" icon="pi pi-copy" severity="secondary" [text]="true" size="small"
                           class="mt-1 block" [label]="'trainings.usePreviousSets' | translate"

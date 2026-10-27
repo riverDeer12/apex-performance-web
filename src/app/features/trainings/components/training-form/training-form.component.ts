@@ -38,7 +38,10 @@ import {
     TrainingRequest,
     DURATION_PATTERN,
     describeSet,
+    TrainingExerciseSetRequest,
     formatDuration,
+    formatPace,
+    PaceType,
     parseDuration,
 } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
@@ -74,6 +77,8 @@ export class TrainingFormComponent implements OnInit {
     workoutOptions: { label: string; value: string }[] = [];
     // Workouts done for a time (e.g. plank), their sets get a duration instead of repetitions.
     timedWorkoutIds = new Set<string>();
+    // Workouts done over a distance and how their pace is shown.
+    paceTypes = new Map<string, PaceType>();
 
     // Templates a new training can be filled from.
     templates: TrainingTemplate[] = [];
@@ -245,6 +250,7 @@ export class TrainingFormComponent implements OnInit {
             reps: previous?.reps,
             weight: previous?.weight,
             durationSeconds: parseDuration(previous?.duration),
+            distanceMeters: distance(previous?.distance),
         }, sets.length > 0));
     }
 
@@ -261,6 +267,7 @@ export class TrainingFormComponent implements OnInit {
             reps: previous.reps,
             weight: previous.weight,
             durationSeconds: parseDuration(previous.duration),
+            distanceMeters: distance(previous.distance),
             isDropSet: true,
         }, true));
     }
@@ -274,6 +281,24 @@ export class TrainingFormComponent implements OnInit {
 
         return this.timedWorkoutIds.has(exercise.get("workout")?.value) ||
             this.setsOf(exerciseIndex).controls.some(x => !!x.value.duration);
+    }
+
+    /**
+     * Pace type of the exercise's workout: its sets record a distance and show a pace.
+     * Sets that already have a distance keep it shown (also when the workout was changed since).
+     */
+    paceTypeOf(exerciseIndex: number): PaceType | null {
+        const exercise = this.exercises.at(exerciseIndex);
+
+        return this.paceTypes.get(exercise.get("workout")?.value) ??
+            (this.setsOf(exerciseIndex).controls.some(x => !!x.value.distance) ? "PerKm" : null);
+    }
+
+    // Pace of a set as it is typed, e.g. "1:52 /500 m".
+    setPace(exerciseIndex: number, setIndex: number): string {
+        const set = this.setsOf(exerciseIndex).at(setIndex).value;
+
+        return formatPace(this.paceTypeOf(exerciseIndex), distance(set.distance), parseDuration(set.duration));
     }
 
     readonly describeSet = describeSet;
@@ -400,6 +425,8 @@ export class TrainingFormComponent implements OnInit {
             weight: [set.weight ?? null, [Validators.min(0), Validators.max(9999)]],
             // Typed as min:s, sent as seconds.
             duration: [formatDuration(set.durationSeconds), [Validators.pattern(DURATION_PATTERN)]],
+            // Metres, for workouts done over a distance.
+            distance: [set.distanceMeters ?? null, [Validators.min(1), Validators.max(500000)]],
             // The first set of an exercise can't be a drop.
             isDropSet: [canBeDrop && !!set.isDropSet],
         });
@@ -545,9 +572,11 @@ export class TrainingFormComponent implements OnInit {
                         weight: number(set.weight),
                         isDropSet: !!set.isDropSet,
                         durationSeconds: parseDuration(set.duration),
+                        distanceMeters: distance(set.distance),
                     }))
-                    .filter((set: { reps: string | null; weight: number | null; durationSeconds: number | null }) =>
-                        set.reps !== null || set.weight !== null || set.durationSeconds !== null),
+                    .filter((set: TrainingExerciseSetRequest) =>
+                        set.reps !== null || set.weight !== null || set.durationSeconds !== null ||
+                        set.distanceMeters !== null),
             })),
         };
     }
@@ -568,6 +597,13 @@ export class TrainingFormComponent implements OnInit {
                 .map(x => ({ label: getTranslation(x.name, language), value: x.id }))
                 .sort((a, b) => a.label.localeCompare(b.label, language));
             this.timedWorkoutIds = new Set(response.filter(x => x.isTimed).map(x => x.id));
+            this.paceTypes = new Map(response.filter(x => !!x.paceType).map(x => [x.id, x.paceType!]));
         });
     }
+}
+
+// Metres from the distance field, null when empty or not valid.
+function distance(value: unknown): number | null {
+    const meters = Math.round(Number(value));
+    return value !== null && value !== "" && meters > 0 ? meters : null;
 }

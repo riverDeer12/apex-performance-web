@@ -1,3 +1,4 @@
+import { PaceType } from "../../trainings/models/training";
 import {LocalizedProperty} from "./localized-property";
 import {WorkoutType} from "./workout-type";
 
@@ -20,6 +21,9 @@ export class Workout {
     secondaryMuscles!: string[];
     // Done for a time (e.g. plank): sets record a duration instead of repetitions.
     isTimed!: boolean;
+    // Done over a distance (rowing, walking, cycling): sets record the distance too
+    // and show the pace this way. Null for other workouts.
+    paceType?: PaceType | null;
 
     // Values translated to currently selected
     // language, used for table display and filtering.
@@ -43,4 +47,6 @@ export class WorkoutRequest {
     secondaryMuscles?: string[];
     // Left out, API keeps the current value.
     isTimed?: boolean;
+    // "" records no distance; left out, API keeps the current value.
+    paceType?: PaceType | "";
 }
