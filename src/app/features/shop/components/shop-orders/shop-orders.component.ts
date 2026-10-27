@@ -43,6 +43,7 @@ export class ShopOrdersComponent implements OnInit {
         Paid: "warn",
         Shipped: "success",
         Cancelled: "danger",
+        Refunded: "danger",
     };
 
     constructor(
@@ -61,6 +62,10 @@ export class ShopOrdersComponent implements OnInit {
     }
 
     severity = (status: ShopOrderStatus) => this.severities[status];
+
+    // Dispute still open at the bank, the shop has to answer in Stripe.
+    disputeOpen = (order: ShopOrder) =>
+        !!order.disputeStatus && !["won", "lost", "warning_closed"].includes(order.disputeStatus);
 
     itemCount = (order: ShopOrder) => order.items.reduce((sum, x) => sum + x.quantity, 0);
 

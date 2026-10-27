@@ -31,7 +31,7 @@ export interface SaveShopProductRequest {
     variants: ShopVariant[];
 }
 
-export type ShopOrderStatus = "Pending" | "Paid" | "Shipped" | "Cancelled";
+export type ShopOrderStatus = "Pending" | "Paid" | "Shipped" | "Cancelled" | "Refunded";
 
 export interface ShopOrderItem {
     productName: string;
@@ -62,6 +62,12 @@ export interface ShopOrder {
     createdAt: string;
     paidAt: string | null;
     shippedAt: string | null;
+    // From Stripe webhooks.
+    refundedAmount: number;
+    refundedAt: string | null;
+    disputeStatus: string | null;
+    disputedAt: string | null;
+    hasFraudWarning: boolean;
     items: ShopOrderItem[];
 }
 
