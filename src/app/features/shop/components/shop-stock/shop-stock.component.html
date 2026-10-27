@@ -1,0 +1,143 @@
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+    <div class="card mb-0 p-4">
+        <div class="text-muted-color text-sm">{{ "shop.totalPieces" | translate }}</div>
+        <div class="text-2xl font-semibold">{{ totalPieces }}</div>
+    </div>
+    <div class="card mb-0 p-4">
+        <div class="text-muted-color text-sm">{{ "shop.totalValue" | translate }}</div>
+        <div class="text-2xl font-semibold">{{ formatPrice(totalValue) }}</div>
+    </div>
+    <div class="card mb-0 p-4">
+        <div class="text-muted-color text-sm">{{ "shop.lowStockCount" | translate }}</div>
+        <div class="text-2xl font-semibold" [class.text-orange-500]="lowCount > 0">{{ lowCount }}</div>
+    </div>
+</div>
+
+<p-table #table [value]="visibleRows" dataKey="variantId" [loading]="loading" [rows]="25"
+         [paginator]="visibleRows.length > 25" [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll"
+         [globalFilterFields]="['productName', 'category', 'size', 'color']" sortField="productName"
+         [showCurrentPageReport]="true" [currentPageReportTemplate]="'common.entriesTemplate' | translate">
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+                <p-checkbox inputId="onlyLow" [(ngModel)]="onlyLow" [binary]="true" />
+                <label for="onlyLow">{{ "shop.onlyLowStock" | translate }}</label>
+            </div>
+            <div class="flex items-center gap-2">
+                <p-iconfield iconPosition="left">
+                    <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                    <input pInputText type="text" (input)="table.filterGlobal($any($event.target).value, 'contains')"
+                           [placeholder]="'shop.searchProducts' | translate" />
+                </p-iconfield>
+                <p-button icon="pi pi-refresh" severity="secondary" [outlined]="true" (click)="load()"
+                          [ariaLabel]="'shop.refresh' | translate" />
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th style="width: 4.5rem"></th>
+            <th pSortableColumn="productName">{{ "shop.product" | translate }} <p-sortIcon field="productName" /></th>
+            <th style="width: 10rem">{{ "shop.variant" | translate }}</th>
+            <th pSortableColumn="stock" style="width: 8rem">{{ "shop.stock" | translate }} <p-sortIcon field="stock" /></th>
+            <th pSortableColumn="soldLast30Days" style="width: 9rem">{{ "shop.sold30" | translate }}
+                <p-sortIcon field="soldLast30Days" /></th>
+            <th style="width: 9rem">{{ "shop.value" | translate }}</th>
+            <th style="width: 14rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-row>
+        <tr>
+            <td>
+                <img *ngIf="row.imageId; else noImage" [src]="shopService.imageUrl(row.imageId)" alt=""
+                     class="w-10 h-10 object-cover rounded" />
+                <ng-template #noImage>
+                    <div class="w-10 h-10 rounded bg-surface-100 dark:bg-surface-800"></div>
+                </ng-template>
+            </td>
+            <td>
+                <span class="font-semibold">{{ row.productName }}</span>
+                <span *ngIf="!row.productIsActive" class="text-xs text-muted-color"> · {{ "shop.hidden" | translate }}</span>
+                <div class="text-xs text-muted-color">{{ row.category }}</div>
+            </td>
+            <td>{{ variantName(row) || "–" }}</td>
+            <td>
+                <span class="text-lg font-semibold" [class.text-red-500]="row.stock === 0"
+                      [class.text-orange-500]="row.stock > 0 && row.stock <= lowStock">{{ row.stock }}</span>
+            </td>
+            <td>{{ row.soldLast30Days }}</td>
+            <td>{{ formatPrice(row.stock * row.price) }}</td>
+            <td>
+                <div class="flex gap-2">
+                    <p-button icon="pi pi-plus" size="small" [label]="'shop.reasonReceipt' | translate"
+                              (click)="openAdjust(row, 'Receipt')" />
+                    <p-button icon="pi pi-pencil" size="small" severity="secondary" [outlined]="true"
+                              (click)="openAdjust(row, 'Correction')" [ariaLabel]="'shop.adjustStock' | translate" />
+                    <p-button icon="pi pi-history" size="small" severity="secondary" [outlined]="true"
+                              (click)="openHistory(row)" [ariaLabel]="'shop.history' | translate" />
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr><td colspan="7">{{ "shop.noStock" | translate }}</td></tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="adjustVisible" [modal]="true" [dismissableMask]="true" [style]="{ width: '28rem' }"
+          [breakpoints]="{ '640px': '95vw' }" [header]="'shop.adjustStock' | translate">
+    <form *ngIf="adjusting" class="flex flex-col gap-4" (ngSubmit)="saveAdjust()">
+        <div>
+            <div class="font-semibold">{{ adjusting.productName }}</div>
+            <div class="text-sm text-muted-color">{{ variantName(adjusting) }} · {{ "shop.currentStock" | translate }}:
+                {{ adjusting.stock }}</div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="stockReason">{{ "shop.stockReason" | translate }}</label>
+            <p-select inputId="stockReason" name="reason" [(ngModel)]="reason" [options]="reasons" optionLabel="label"
+                      optionValue="value" appendTo="body" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="stockQuantity">{{ (reason === "Correction" ? "shop.countedStock" : "shop.pieces") | translate }}</label>
+            <p-inputnumber inputId="stockQuantity" name="quantity" [(ngModel)]="quantity" [min]="0" [showButtons]="true" />
+            <small *ngIf="newStock !== null" [class.p-error]="newStock < 0" class="text-muted-color">
+                {{ "shop.newStock" | translate }}: {{ newStock }}</small>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="stockNote">{{ "shop.stockNote" | translate }}</label>
+            <input pInputText id="stockNote" name="note" [(ngModel)]="note" maxlength="300"
+                   [placeholder]="'shop.stockNotePlaceholder' | translate" />
+        </div>
+        <div>
+            <p-button type="submit" icon="pi pi-save" [label]="'common.save' | translate"
+                      [disabled]="!adjustValid || saving" [loading]="saving" />
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog [(visible)]="historyVisible" [modal]="true" [dismissableMask]="true" [style]="{ width: '44rem' }"
+          [breakpoints]="{ '768px': '95vw' }"
+          [header]="('shop.history' | translate) + ': ' + (history?.productName ?? '') + (history && variantName(history) ? ' · ' + variantName(history) : '')">
+    <p *ngIf="historyLoading" class="text-muted-color">…</p>
+    <p *ngIf="!historyLoading && movements.length === 0" class="text-muted-color">{{ "shop.noHistory" | translate }}</p>
+    <table *ngIf="movements.length" class="w-full text-sm">
+        <tr class="text-left text-muted-color">
+            <th class="py-1">{{ "shop.date" | translate }}</th>
+            <th class="py-1">{{ "shop.stockReason" | translate }}</th>
+            <th class="py-1 text-right">{{ "shop.change" | translate }}</th>
+            <th class="py-1 text-right">{{ "shop.stock" | translate }}</th>
+            <th class="py-1 pl-3">{{ "shop.stockNote" | translate }}</th>
+        </tr>
+        <tr *ngFor="let movement of movements" class="border-t border-surface">
+            <td class="py-2 whitespace-nowrap">{{ movement.createdAt | date: "dd.MM.yyyy. HH:mm" }}</td>
+            <td class="py-2">{{ "shop.reason" + movement.reason | translate }}</td>
+            <td class="py-2 text-right font-semibold" [class.text-green-600]="movement.change > 0"
+                [class.text-red-500]="movement.change < 0">{{ movement.change > 0 ? "+" : "" }}{{ movement.change }}</td>
+            <td class="py-2 text-right">{{ movement.stockAfter }}</td>
+            <td class="py-2 pl-3">
+                {{ movement.orderNumber ?? movement.note ?? "" }}
+                <div *ngIf="movement.createdByName" class="text-xs text-muted-color">{{ movement.createdByName }}</div>
+            </td>
+        </tr>
+    </table>
+</p-dialog>

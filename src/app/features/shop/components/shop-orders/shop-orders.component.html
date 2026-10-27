@@ -81,10 +81,15 @@
                 <td class="py-2">{{ item.productName }}
                     <div *ngIf="item.variantName" class="text-xs text-muted-color">{{ item.variantName }}</div></td>
                 <td class="py-2 text-center">{{ item.quantity }} ×</td>
-                <td class="py-2 text-right">{{ formatPrice(item.unitPrice * item.quantity) }}</td>
+                <td class="py-2 text-right">{{ formatPrice((item.unitPrice - item.unitDiscount) * item.quantity) }}
+                    <div *ngIf="item.unitDiscount > 0" class="text-xs text-muted-color line-through">
+                        {{ formatPrice(item.unitPrice * item.quantity) }}</div></td>
             </tr>
             <tr><td colspan="2" class="pt-2 text-muted-color">{{ "shop.subtotal" | translate }}</td>
                 <td class="pt-2 text-right">{{ formatPrice(order.subtotal) }}</td></tr>
+            <tr *ngIf="order.discount > 0"><td colspan="2" class="text-muted-color">{{ "shop.promoCode" | translate }}
+                <span class="font-mono">{{ order.promoCode }}</span></td>
+                <td class="text-right">−{{ formatPrice(order.discount) }}</td></tr>
             <tr><td colspan="2" class="text-muted-color">{{ "shop.shipping" | translate }}</td>
                 <td class="text-right">{{ formatPrice(order.shippingPrice) }}</td></tr>
             <tr class="font-semibold"><td colspan="2">{{ "shop.total" | translate }}</td>

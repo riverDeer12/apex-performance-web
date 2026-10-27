@@ -1,7 +1,10 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { SaveShopProductRequest, ShopOrder, ShopOrderStatus, ShopProduct } from "../models/shop";
+import {
+    SaveShopProductRequest, SaveShopPromoCodeRequest, ShopOrder, ShopOrderStatus, ShopProduct, ShopPromoCode,
+    ShopStockMovement, ShopStockReason, ShopStockRow,
+} from "../models/shop";
 
 /**
  * Administration of the webshop (shop.apex-performance.fit): products
@@ -40,6 +43,25 @@ export class ShopService {
 
     setOrderStatus = (id: string, status: ShopOrderStatus) =>
         this.http.put<ShopOrder>(this.url + "/orders/" + id + "/status", { status });
+
+    getPromoCodes = () => this.http.get<ShopPromoCode[]>(this.url + "/promo-codes");
+
+    createPromoCode = (request: SaveShopPromoCodeRequest) =>
+        this.http.post<ShopPromoCode>(this.url + "/promo-codes", request);
+
+    updatePromoCode = (id: string, request: SaveShopPromoCodeRequest) =>
+        this.http.put<ShopPromoCode>(this.url + "/promo-codes/" + id, request);
+
+    deletePromoCode = (id: string) => this.http.delete(this.url + "/promo-codes/" + id);
+
+    getStock = () => this.http.get<ShopStockRow[]>(this.url + "/stock");
+
+    // Receipt adds the quantity, WriteOff takes it, Correction sets the counted stock.
+    adjustStock = (variantId: string, reason: ShopStockReason, quantity: number, note: string | null) =>
+        this.http.post<ShopStockRow>(this.url + "/stock/" + variantId, { reason, quantity, note });
+
+    getStockMovements = (variantId: string) =>
+        this.http.get<ShopStockMovement[]>(this.url + "/stock/" + variantId + "/movements");
 
     // Public address of a picture, the shop loads it the same way.
     imageUrl = (imageId: string) => environment.apiUrl + "/shop/images/" + imageId;

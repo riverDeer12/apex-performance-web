@@ -1,0 +1,117 @@
+<p-table [value]="promoCodes" dataKey="id" [loading]="loading" [rows]="20" [paginator]="promoCodes.length > 20"
+         [rowHover]="true" [showGridlines]="true" responsiveLayout="scroll">
+    <ng-template #caption>
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <p-button icon="pi pi-plus" iconPos="right" [label]="'shop.newPromo' | translate" (click)="openCreate()" />
+            <span class="text-sm text-muted-color">{{ "shop.promoHint" | translate }}</span>
+        </div>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th style="width: 10rem">{{ "shop.promoCode" | translate }}</th>
+            <th style="width: 8rem">{{ "shop.discount" | translate }}</th>
+            <th>{{ "shop.promoProducts" | translate }}</th>
+            <th style="width: 13rem">{{ "shop.validity" | translate }}</th>
+            <th style="width: 9rem">{{ "shop.uses" | translate }}</th>
+            <th style="width: 9rem">{{ "shop.status" | translate }}</th>
+            <th style="width: 8rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-promo>
+        <tr>
+            <td class="font-semibold font-mono">{{ promo.code }}
+                <div *ngIf="promo.note" class="text-xs text-muted-color font-normal font-sans">{{ promo.note }}</div></td>
+            <td>{{ discountLabel(promo) }}</td>
+            <td class="text-sm">{{ productNames(promo) }}</td>
+            <td class="text-sm">
+                <span *ngIf="!promo.validFrom && !promo.validUntil" class="text-muted-color">{{ "shop.noLimit" | translate }}</span>
+                <span *ngIf="promo.validFrom">{{ "shop.from" | translate }} {{ promo.validFrom | date: "dd.MM.yyyy." }} </span>
+                <span *ngIf="promo.validUntil">{{ "shop.until" | translate }} {{ promo.validUntil | date: "dd.MM.yyyy." }}</span>
+            </td>
+            <td>
+                {{ promo.uses }}{{ promo.maxUses !== null ? " / " + promo.maxUses : "" }}
+                <div *ngIf="promo.totalDiscount > 0" class="text-xs text-muted-color">−{{ formatPrice(promo.totalDiscount) }}</div>
+            </td>
+            <td><p-tag [value]="state(promo).key | translate" [severity]="state(promo).severity" /></td>
+            <td>
+                <div class="flex gap-2">
+                    <p-button icon="pi pi-pencil" severity="secondary" [outlined]="true" (click)="openEdit(promo)"
+                              [ariaLabel]="'shop.editPromo' | translate" />
+                    <p-button icon="pi pi-trash" severity="danger" [outlined]="true" (click)="confirmDelete(promo)"
+                              [ariaLabel]="'shop.delete' | translate" />
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+        <tr><td colspan="7">{{ "shop.noPromoCodes" | translate }}</td></tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '40rem' }" [breakpoints]="{ '768px': '95vw' }"
+          [header]="(editing ? 'shop.editPromo' : 'shop.newPromo') | translate">
+    <form class="flex flex-col gap-4" (ngSubmit)="save()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="promoCode">{{ "shop.promoCode" | translate }}</label>
+                <input pInputText id="promoCode" name="code" [(ngModel)]="form.code" maxlength="40" class="uppercase"
+                       placeholder="APEX10" />
+                <small class="text-muted-color">{{ "shop.promoCodeHint" | translate }}</small>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="promoNote">{{ "shop.promoNote" | translate }}</label>
+                <input pInputText id="promoNote" name="note" [(ngModel)]="form.note" maxlength="500" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="promoType">{{ "shop.discountType" | translate }}</label>
+                <p-select inputId="promoType" name="discountType" [(ngModel)]="form.discountType" [options]="discountTypes"
+                          optionLabel="label" optionValue="value" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="promoValue">{{ "shop.discount" | translate }}</label>
+                <p-inputnumber *ngIf="form.discountType === 'Percent'" inputId="promoValue" name="discountValuePercent"
+                               [(ngModel)]="form.discountValue" suffix=" %" [min]="1" [max]="100" />
+                <p-inputnumber *ngIf="form.discountType === 'Amount'" inputId="promoValue" name="discountValueAmount"
+                               [(ngModel)]="form.discountValue" mode="currency" currency="EUR" locale="hr-HR" [min]="0" />
+                <small class="text-muted-color">{{ "shop.discountPerPiece" | translate }}</small>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="promoProducts">{{ "shop.promoProducts" | translate }}</label>
+            <p-multiselect inputId="promoProducts" name="productIds" [(ngModel)]="form.productIds" [options]="products"
+                           optionLabel="name" optionValue="id" [filter]="true" display="chip"
+                           [placeholder]="'shop.allProducts' | translate" />
+            <small class="text-muted-color">{{ "shop.promoProductsHint" | translate }}</small>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="promoFrom">{{ "shop.validFrom" | translate }}</label>
+                <p-datepicker inputId="promoFrom" name="validFrom" [(ngModel)]="form.validFrom" dateFormat="dd.mm.yy."
+                              [showTime]="true" hourFormat="24" [showClear]="true" appendTo="body" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="promoUntil">{{ "shop.validUntil" | translate }}</label>
+                <p-datepicker inputId="promoUntil" name="validUntil" [(ngModel)]="form.validUntil" dateFormat="dd.mm.yy."
+                              [showTime]="true" hourFormat="24" [showClear]="true" appendTo="body" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="promoMaxUses">{{ "shop.maxUses" | translate }}</label>
+                <p-inputnumber inputId="promoMaxUses" name="maxUses" [(ngModel)]="form.maxUses" [min]="1"
+                               styleClass="w-full" [inputStyle]="{ width: '100%' }"
+                               [placeholder]="'shop.noLimit' | translate" />
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <p-checkbox inputId="promoActive" name="isActive" [(ngModel)]="form.isActive" [binary]="true" />
+            <label for="promoActive">{{ "shop.promoIsActive" | translate }}</label>
+        </div>
+
+        <div>
+            <p-button type="submit" icon="pi pi-save" [label]="'common.save' | translate"
+                      [disabled]="!formValid || saving" [loading]="saving" />
+        </div>
+    </form>
+</p-dialog>

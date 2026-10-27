@@ -352,6 +352,16 @@ export class AppMenu implements OnInit, OnDestroy {
             icon: "pi pi-fw pi-box",
             routerLink: ["/admin/shop/products"],
           },
+          {
+            label: t("menu.shopStock"),
+            icon: "pi pi-fw pi-warehouse",
+            routerLink: ["/admin/shop/stock"],
+          },
+          {
+            label: t("menu.shopPromoCodes"),
+            icon: "pi pi-fw pi-ticket",
+            routerLink: ["/admin/shop/promo-codes"],
+          },
         ],
       },
     ];

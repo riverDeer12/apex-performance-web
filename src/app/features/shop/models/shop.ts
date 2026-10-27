@@ -37,6 +37,8 @@ export interface ShopOrderItem {
     productName: string;
     variantName: string | null;
     unitPrice: number;
+    // Promo code discount per piece.
+    unitDiscount: number;
     quantity: number;
 }
 
@@ -48,6 +50,8 @@ export interface ShopOrder {
     customerEmail: string | null;
     customerPhone: string | null;
     subtotal: number;
+    promoCode: string | null;
+    discount: number;
     shippingPrice: number;
     total: number;
     boxNowLockerId: string;
@@ -59,4 +63,62 @@ export interface ShopOrder {
     paidAt: string | null;
     shippedAt: string | null;
     items: ShopOrderItem[];
+}
+
+export type ShopDiscountType = "Percent" | "Amount";
+
+export interface ShopPromoCode {
+    id: string;
+    code: string;
+    discountType: ShopDiscountType;
+    discountValue: number;
+    validFrom: string | null;
+    validUntil: string | null;
+    maxUses: number | null;
+    isActive: boolean;
+    note: string | null;
+    // Empty when the code is for all products.
+    productIds: string[];
+    uses: number;
+    totalDiscount: number;
+}
+
+export interface SaveShopPromoCodeRequest {
+    code: string;
+    discountType: ShopDiscountType;
+    discountValue: number;
+    validFrom: string | null;
+    validUntil: string | null;
+    maxUses: number | null;
+    isActive: boolean;
+    note: string | null;
+    productIds: string[];
+}
+
+export type ShopStockReason = "Initial" | "Receipt" | "Correction" | "WriteOff" | "Sale" | "Return";
+
+export interface ShopStockRow {
+    variantId: string;
+    productId: string;
+    productName: string;
+    category: string;
+    size: string | null;
+    color: string | null;
+    stock: number;
+    price: number;
+    productIsActive: boolean;
+    imageId: string | null;
+    soldLast30Days: number;
+    lastMovementAt: string | null;
+}
+
+export interface ShopStockMovement {
+    id: string;
+    change: number;
+    stockAfter: number;
+    reason: ShopStockReason;
+    note: string | null;
+    orderNumber: string | null;
+    createdByName: string | null;
+    createdAt: string;
 }
