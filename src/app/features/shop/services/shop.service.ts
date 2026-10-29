@@ -63,11 +63,6 @@ export class ShopService {
     getStockMovements = (variantId: string) =>
         this.http.get<ShopStockMovement[]>(this.url + "/stock/" + variantId + "/movements");
 
-    // Invented products to try the shop with a full catalog, refused on production.
-    createDemoProducts = () => this.http.post<{ count: number }>(this.url + "/demo-products", {});
-
-    deleteDemoProducts = () => this.http.delete<{ count: number }>(this.url + "/demo-products");
-
     getSettings = () => this.http.get<ShopAdminSettings>(this.url + "/settings");
 
     saveSettings = (request: Pick<ShopAdminSettings, "shippingPrice" | "freeShippingFrom" | "clientDiscountPercent" | "notificationEmail">) =>

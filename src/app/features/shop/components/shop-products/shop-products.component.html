@@ -4,15 +4,7 @@
          [currentPageReportTemplate]="'common.entriesTemplate' | translate">
     <ng-template #caption>
         <div class="flex justify-between items-center flex-wrap gap-2">
-            <div class="flex items-center gap-2 flex-wrap">
-                <p-button icon="pi pi-plus" iconPos="right" [label]="'shop.newProduct' | translate" (click)="openCreate()" />
-                <ng-container *ngIf="canUseDemo">
-                    <p-button icon="pi pi-th-large" severity="secondary" [outlined]="true" [disabled]="demoBusy"
-                              [label]="'shop.addDemo' | translate" (click)="addDemoProducts()" />
-                    <p-button icon="pi pi-trash" severity="danger" [text]="true" [disabled]="demoBusy"
-                              [label]="'shop.removeDemo' | translate" (click)="removeDemoProducts()" />
-                </ng-container>
-            </div>
+            <p-button icon="pi pi-plus" iconPos="right" [label]="'shop.newProduct' | translate" (click)="openCreate()" />
             <p-iconfield iconPosition="left">
                 <p-inputicon><i class="pi pi-search"></i></p-inputicon>
                 <input pInputText type="text" (input)="table.filterGlobal($any($event.target).value, 'contains')"
