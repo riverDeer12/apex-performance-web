@@ -3,6 +3,8 @@ import { ShopProductsComponent } from "./components/shop-products/shop-products.
 import { ShopOrdersComponent } from "./components/shop-orders/shop-orders.component";
 import { ShopPromoCodesComponent } from "./components/shop-promo-codes/shop-promo-codes.component";
 import { ShopStockComponent } from "./components/shop-stock/shop-stock.component";
+import { ShopSettingsComponent } from "./components/shop-settings/shop-settings.component";
+import { ShopStatsComponent } from "./components/shop-stats/shop-stats.component";
 
 export const ShopRoutes: Routes = [
     { path: "", pathMatch: "full", redirectTo: "products" },
@@ -25,5 +27,15 @@ export const ShopRoutes: Routes = [
         path: "promo-codes",
         component: ShopPromoCodesComponent,
         data: { title: "menu.shopPromoCodes", section: "menu.shop" },
+    },
+    {
+        path: "stats",
+        component: ShopStatsComponent,
+        data: { title: "menu.shopStats", section: "menu.shop" },
+    },
+    {
+        path: "settings",
+        component: ShopSettingsComponent,
+        data: { title: "menu.shopSettings", section: "menu.shop" },
     },
 ];

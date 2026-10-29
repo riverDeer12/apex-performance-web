@@ -111,8 +111,12 @@
             </tr>
             <tr><td colspan="2" class="pt-2 text-muted-color">{{ "shop.subtotal" | translate }}</td>
                 <td class="pt-2 text-right">{{ formatPrice(order.subtotal) }}</td></tr>
-            <tr *ngIf="order.discount > 0"><td colspan="2" class="text-muted-color">{{ "shop.promoCode" | translate }}
-                <span class="font-mono">{{ order.promoCode }}</span></td>
+            <tr *ngIf="order.discount > 0"><td colspan="2" class="text-muted-color">
+                <ng-container *ngIf="order.promoCode">{{ "shop.promoCode" | translate }}
+                    <span class="font-mono">{{ order.promoCode }}</span></ng-container>
+                <ng-container *ngIf="order.promoCode && order.clientDiscountPercent"> + </ng-container>
+                <ng-container *ngIf="order.clientDiscountPercent">{{ "shop.clientDiscount" | translate }}
+                    {{ order.clientDiscountPercent }} %</ng-container></td>
                 <td class="text-right">−{{ formatPrice(order.discount) }}</td></tr>
             <tr><td colspan="2" class="text-muted-color">{{ "shop.shipping" | translate }}</td>
                 <td class="text-right">{{ formatPrice(order.shippingPrice) }}</td></tr>

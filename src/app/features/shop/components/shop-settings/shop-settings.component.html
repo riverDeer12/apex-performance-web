@@ -1,0 +1,38 @@
+<div class="card max-w-2xl" *ngIf="settings">
+    <form class="flex flex-col gap-5" (ngSubmit)="save()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="shippingPrice">{{ "shop.shippingPrice" | translate }}</label>
+                <p-inputnumber inputId="shippingPrice" name="shippingPrice" [(ngModel)]="shippingPrice" mode="currency"
+                               currency="EUR" locale="hr-HR" [min]="0"
+                               [placeholder]="formatPrice(settings.defaultShippingPrice)" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="freeShippingFrom">{{ "shop.freeShippingFrom" | translate }}</label>
+                <p-inputnumber inputId="freeShippingFrom" name="freeShippingFrom" [(ngModel)]="freeShippingFrom"
+                               mode="currency" currency="EUR" locale="hr-HR" [min]="0"
+                               [placeholder]="formatPrice(settings.defaultFreeShippingFrom)" />
+            </div>
+        </div>
+        <small class="text-muted-color -mt-3">{{ "shop.defaultsHint" | translate }}</small>
+
+        <div class="flex flex-col gap-2">
+            <label for="clientDiscount">{{ "shop.clientDiscount" | translate }}</label>
+            <p-inputnumber inputId="clientDiscount" name="clientDiscount" [(ngModel)]="clientDiscountPercent"
+                           suffix=" %" [min]="0" [max]="90" styleClass="md:w-60" />
+            <small class="text-muted-color">{{ "shop.clientDiscountHint" | translate }}</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="notificationEmail">{{ "shop.notificationEmail" | translate }}</label>
+            <input pInputText id="notificationEmail" name="notificationEmail" type="email" [(ngModel)]="notificationEmail"
+                   maxlength="200" [placeholder]="settings.defaultNotificationEmail" />
+            <small class="text-muted-color">{{ "shop.notificationEmailHint" | translate }}</small>
+        </div>
+
+        <div>
+            <p-button type="submit" icon="pi pi-save" [label]="'common.save' | translate"
+                      [disabled]="!valid || saving" [loading]="saving" />
+        </div>
+    </form>
+</div>

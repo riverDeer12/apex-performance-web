@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
 import {
-    SaveShopProductRequest, SaveShopPromoCodeRequest, ShopOrder, ShopOrderStatus, ShopProduct, ShopPromoCode,
+    SaveShopProductRequest, SaveShopPromoCodeRequest, ShopAdminSettings, ShopStats, ShopOrder, ShopOrderStatus, ShopProduct, ShopPromoCode,
     ShopStockMovement, ShopStockReason, ShopStockRow,
 } from "../models/shop";
 
@@ -62,6 +62,13 @@ export class ShopService {
 
     getStockMovements = (variantId: string) =>
         this.http.get<ShopStockMovement[]>(this.url + "/stock/" + variantId + "/movements");
+
+    getSettings = () => this.http.get<ShopAdminSettings>(this.url + "/settings");
+
+    saveSettings = (request: Pick<ShopAdminSettings, "shippingPrice" | "freeShippingFrom" | "clientDiscountPercent" | "notificationEmail">) =>
+        this.http.put<ShopAdminSettings>(this.url + "/settings", request);
+
+    getStats = (days: number) => this.http.get<ShopStats>(this.url + "/stats", { params: { days } });
 
     // Public address of a picture, the shop loads it the same way.
     imageUrl = (imageId: string) => environment.apiUrl + "/shop/images/" + imageId;

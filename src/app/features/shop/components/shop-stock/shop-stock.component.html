@@ -65,7 +65,9 @@
                 <span class="text-lg font-semibold" [class.text-red-500]="row.stock === 0"
                       [class.text-orange-500]="row.stock > 0 && row.stock <= lowStock">{{ row.stock }}</span>
             </td>
-            <td>{{ row.soldLast30Days }}</td>
+            <td>{{ row.soldLast30Days }}
+                <div *ngIf="row.waitingAlerts > 0" class="text-xs text-primary">
+                    <i class="pi pi-bell text-xs"></i> {{ row.waitingAlerts }} {{ "shop.waiting" | translate }}</div></td>
             <td>{{ formatPrice(row.stock * row.price) }}</td>
             <td>
                 <div class="flex gap-2">

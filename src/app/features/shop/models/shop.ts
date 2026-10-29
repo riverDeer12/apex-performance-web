@@ -69,6 +69,8 @@ export interface ShopOrder {
     disputedAt: string | null;
     hasFraudWarning: boolean;
     items: ShopOrderItem[];
+    // Client discount used on some products, null when none.
+    clientDiscountPercent: number | null;
 }
 
 export type ShopDiscountType = "Percent" | "Amount";
@@ -116,6 +118,8 @@ export interface ShopStockRow {
     imageId: string | null;
     soldLast30Days: number;
     lastMovementAt: string | null;
+    // Customers waiting for an email when it is back in stock.
+    waitingAlerts: number;
 }
 
 export interface ShopStockMovement {
@@ -127,4 +131,34 @@ export interface ShopStockMovement {
     orderNumber: string | null;
     createdByName: string | null;
     createdAt: string;
+}
+
+export interface ShopAdminSettings {
+    // Empty uses the default from the server settings.
+    shippingPrice: number | null;
+    freeShippingFrom: number | null;
+    clientDiscountPercent: number;
+    notificationEmail: string | null;
+    defaultShippingPrice: number;
+    defaultFreeShippingFrom: number;
+    defaultNotificationEmail: string;
+}
+
+export interface ShopStatsDay {
+    date: string;
+    visits: number;
+    productViews: number;
+    orders: number;
+    revenue: number;
+}
+
+export interface ShopStats {
+    days: number;
+    visits: number;
+    productViews: number;
+    cartViews: number;
+    orders: number;
+    revenue: number;
+    perDay: ShopStatsDay[];
+    products: { slug: string; name: string; views: number; soldPieces: number }[];
 }
