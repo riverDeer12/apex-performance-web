@@ -57,8 +57,11 @@ export class ShopOrdersComponent implements OnInit {
         this.load();
     }
 
-    get visibleOrders(): ShopOrder[] {
-        return this.showUnpaid ? this.orders : this.orders.filter((x) => x.status !== "Pending");
+    // Kept as a field: PrimeNG redraws the table whenever it gets a new array.
+    visibleOrders: ShopOrder[] = [];
+
+    updateVisibleOrders(): void {
+        this.visibleOrders = this.showUnpaid ? this.orders : this.orders.filter((x) => x.status !== "Pending");
     }
 
     severity = (status: ShopOrderStatus) => this.severities[status];
@@ -81,6 +84,7 @@ export class ShopOrdersComponent implements OnInit {
             this.shopService.setOrderStatus(order.id, status).subscribe({
                 next: (updated) => {
                     this.orders = this.orders.map((x) => (x.id === updated.id ? updated : x));
+                    this.updateVisibleOrders();
                     if (this.selected?.id === updated.id) this.selected = updated;
                     this.updating = false;
                     this.messageService.add({
@@ -123,6 +127,7 @@ export class ShopOrdersComponent implements OnInit {
         this.shopService.getOrders().subscribe({
             next: (orders) => {
                 this.orders = orders;
+                this.updateVisibleOrders();
                 this.loading = false;
             },
             error: () => (this.loading = false),

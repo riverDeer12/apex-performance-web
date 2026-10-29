@@ -61,14 +61,15 @@ export class ShopPromoCodesComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private translationService: TranslationService,
-    ) {}
-
-    get discountTypes() {
-        return [
-            { label: this.translationService.t("shop.discountPercent"), value: "Percent" },
-            { label: this.translationService.t("shop.discountAmount"), value: "Amount" },
+    ) {
+        this.discountTypes = [
+            { label: translationService.t("shop.discountPercent"), value: "Percent" },
+            { label: translationService.t("shop.discountAmount"), value: "Amount" },
         ];
     }
+
+    // Made once: PrimeNG redraws its options whenever it gets a new array.
+    readonly discountTypes: { label: string; value: string }[];
 
     get formValid(): boolean {
         const value = this.form.discountValue ?? 0;

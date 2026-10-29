@@ -4,7 +4,7 @@
     <ng-template #caption>
         <div class="flex justify-between items-center flex-wrap gap-2">
             <div class="flex items-center gap-2">
-                <p-checkbox inputId="showUnpaid" [(ngModel)]="showUnpaid" [binary]="true" />
+                <p-checkbox inputId="showUnpaid" [(ngModel)]="showUnpaid" [binary]="true" (onChange)="updateVisibleOrders()" />
                 <label for="showUnpaid">{{ "shop.showUnpaid" | translate }}</label>
             </div>
             <p-button icon="pi pi-refresh" severity="secondary" [outlined]="true" (click)="load()"

@@ -119,8 +119,11 @@ export class WorkoutFormComponent implements OnInit {
             : this.updateWorkout();
     }
 
+    // Made once: PrimeNG redraws its options whenever it gets a new array.
+    private paceOptionsCache?: { value: string; label: string }[];
+
     get paceOptions() {
-        return ["", "PerKm", "Per500m", "Kmh"].map(value => ({
+        return this.paceOptionsCache ??= ["", "PerKm", "Per500m", "Kmh"].map(value => ({
             value,
             label: this.translationService.t("workouts.pace" + (value || "None")),
         }));

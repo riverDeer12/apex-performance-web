@@ -57,10 +57,19 @@ export class ShopStockComponent implements OnInit {
         public shopService: ShopService,
         private messageService: MessageService,
         private translationService: TranslationService,
-    ) {}
+    ) {
+        this.reasons = ["Receipt", "WriteOff", "Correction"].map((value) => ({
+            value,
+            label: translationService.t("shop.reason" + value),
+        }));
+    }
 
-    get visibleRows(): ShopStockRow[] {
-        return this.onlyLow ? this.rows.filter((x) => x.stock <= LowStock) : this.rows;
+    // Made once: PrimeNG redraws its options and rows whenever it gets a new array.
+    readonly reasons: { value: string; label: string }[];
+    visibleRows: ShopStockRow[] = [];
+
+    updateVisibleRows(): void {
+        this.visibleRows = this.onlyLow ? this.rows.filter((x) => x.stock <= LowStock) : this.rows;
     }
 
     get totalPieces(): number {
@@ -76,12 +85,6 @@ export class ShopStockComponent implements OnInit {
         return this.rows.filter((x) => x.stock <= LowStock).length;
     }
 
-    get reasons() {
-        return ["Receipt", "WriteOff", "Correction"].map((value) => ({
-            value,
-            label: this.translationService.t("shop.reason" + value),
-        }));
-    }
 
     // Stock after the change, shown before saving.
     get newStock(): number | null {
@@ -122,6 +125,7 @@ export class ShopStockComponent implements OnInit {
             .subscribe({
                 next: (row) => {
                     this.rows = this.rows.map((x) => (x.variantId === row.variantId ? row : x));
+                    this.updateVisibleRows();
                     this.saving = false;
                     this.adjustVisible = false;
                     this.messageService.add({
@@ -162,6 +166,7 @@ export class ShopStockComponent implements OnInit {
         this.shopService.getStock().subscribe({
             next: (rows) => {
                 this.rows = rows;
+                this.updateVisibleRows();
                 this.loading = false;
             },
             error: () => (this.loading = false),

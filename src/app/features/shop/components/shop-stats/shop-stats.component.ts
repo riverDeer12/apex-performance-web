@@ -25,14 +25,16 @@ export class ShopStatsComponent implements OnInit {
 
     formatPrice = formatPrice;
 
-    constructor(private shopService: ShopService, private translationService: TranslationService) {}
-
-    get periods() {
-        return [7, 30, 90].map((value) => ({
+    constructor(private shopService: ShopService, translationService: TranslationService) {
+        this.periods = [7, 30, 90].map((value) => ({
             value,
-            label: value + " " + this.translationService.t("shop.daysShort"),
+            label: value + " " + translationService.t("shop.daysShort"),
         }));
     }
+
+
+    // Made once: a new array on every change detection makes the select button render without end.
+    readonly periods: { value: number; label: string }[];
 
     // Tallest bar of the chart, so the others are drawn relative to it.
     get maxVisits(): number {
