@@ -18,6 +18,7 @@ import { TranslationService } from "../../../../i18n/translation.service";
 import { getErrorMessage } from "../../../../constants/error-codes";
 import { ShopService } from "../../services/shop.service";
 import { formatPrice } from "../../utils/format-price";
+import { environment } from "../../../../../environments/environment";
 import { SaveShopProductRequest, ShopProduct, ShopVariant } from "../../models/shop";
 
 interface ProductForm {
@@ -67,6 +68,10 @@ export class ShopProductsComponent implements OnInit {
     }
 
     formatPrice = formatPrice;
+
+    // Demo catalog can be added on test only.
+    readonly canUseDemo = !environment.production;
+    demoBusy = false;
 
     totalStock = (product: ShopProduct) => product.variants.reduce((sum, x) => sum + x.stock, 0);
 
@@ -195,6 +200,44 @@ export class ShopProductsComponent implements OnInit {
                     },
                     error: (error) => this.error(error),
                 });
+            },
+        });
+    }
+
+    addDemoProducts(): void {
+        this.demoBusy = true;
+        this.shopService.createDemoProducts().subscribe({
+            next: (response) => {
+                this.demoBusy = false;
+                this.messageService.add({
+                    severity: "success",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("shop.demoAdded").replace("{count}", String(response.count)),
+                });
+                this.load();
+            },
+            error: (error) => {
+                this.demoBusy = false;
+                this.error(error);
+            },
+        });
+    }
+
+    removeDemoProducts(): void {
+        this.demoBusy = true;
+        this.shopService.deleteDemoProducts().subscribe({
+            next: (response) => {
+                this.demoBusy = false;
+                this.messageService.add({
+                    severity: "success",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("shop.demoRemoved").replace("{count}", String(response.count)),
+                });
+                this.load();
+            },
+            error: (error) => {
+                this.demoBusy = false;
+                this.error(error);
             },
         });
     }
