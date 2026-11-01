@@ -3,7 +3,7 @@
     <ng-container *ngIf="rules">
         <p class="mt-0">{{ "rules.intro" | translate }}</p>
 
-        <a [href]="rules.documentUrl" target="_blank" rel="noopener"
+        <a [href]="documentUrl(rules)" target="_blank" rel="noopener"
            class="flex items-center gap-2 p-3 mb-4 border border-surface rounded-border no-underline">
             <i class="pi pi-file-pdf text-2xl text-primary"></i>
             <span class="flex flex-col">

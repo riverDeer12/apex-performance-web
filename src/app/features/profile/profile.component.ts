@@ -25,7 +25,7 @@ import {
 } from "./services/profile.service";
 
 import {RulesService} from "../rules/services/rules.service";
-import {Rules} from "../rules/models/rules";
+import {Rules, rulesDocumentUrl} from "../rules/models/rules";
 import {AuthenticationService} from "../authentication/services/authentication.service";
 import {Roles} from "../../constants/roles";
 
@@ -229,5 +229,10 @@ export class ProfileComponent implements OnInit {
             summary: this.translationService.t("profile.pictureErrorSummary"),
             detail: this.translationService.t(key),
         });
+    }
+
+    // The rules PDF in the language of the app.
+    documentUrl(rules: Rules): string {
+        return rulesDocumentUrl(rules, this.translationService.language());
     }
 }

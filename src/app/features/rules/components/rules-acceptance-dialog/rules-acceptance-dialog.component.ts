@@ -12,7 +12,7 @@ import { AuthenticationService } from "../../../authentication/services/authenti
 import { Roles } from "../../../../constants/roles";
 import { getErrorMessage } from "../../../../constants/error-codes";
 import { RulesService } from "../../services/rules.service";
-import { Rules } from "../../models/rules";
+import { Rules, rulesDocumentUrl } from "../../models/rules";
 
 /**
  * Asks a client with individual trainings to accept the current cooperation
@@ -95,5 +95,10 @@ export class RulesAcceptanceDialogComponent implements OnInit {
     logOut(): void {
         this.visible = false;
         this.authenticationService.logOut("/authentication/login");
+    }
+
+    // The rules PDF in the language of the app.
+    documentUrl(rules: Rules): string {
+        return rulesDocumentUrl(rules, this.translationService.language());
     }
 }
