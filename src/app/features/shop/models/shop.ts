@@ -18,6 +18,10 @@ export interface ShopProduct {
     // First one is the main picture.
     imageIds: string[];
     variants: ShopVariant[];
+    // Words customers filter and search by in the shop.
+    keywords: string[];
+    // Products picked to go with this one, in the shown order.
+    relatedProductIds: string[];
 }
 
 export interface SaveShopProductRequest {
@@ -29,6 +33,8 @@ export interface SaveShopProductRequest {
     isActive: boolean;
     sortOrder: number;
     variants: ShopVariant[];
+    keywords: string[];
+    relatedProductIds: string[];
 }
 
 export type ShopOrderStatus = "Pending" | "Paid" | "Shipped" | "Cancelled" | "Refunded";

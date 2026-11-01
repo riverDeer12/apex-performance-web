@@ -97,6 +97,24 @@
         </div>
 
         <div class="flex flex-col gap-2">
+            <label for="productKeywords">{{ "shop.keywords" | translate }}</label>
+            <input pInputText id="productKeywords" name="keywords" [(ngModel)]="form.keywords" maxlength="600"
+                   [placeholder]="'shop.keywordsPlaceholder' | translate" />
+            <small class="text-muted-color">{{ "shop.keywordsHint" | translate }}
+                <ng-container *ngIf="keywords.length">{{ "shop.keywordsUsed" | translate }} {{ keywords.join(", ") }}</ng-container>
+            </small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="productRelated">{{ "shop.related" | translate }}</label>
+            <p-multiselect inputId="productRelated" name="related" [(ngModel)]="form.relatedProductIds"
+                           [options]="relatedOptions" optionLabel="label" optionValue="id" [filter]="true"
+                           display="chip" [selectionLimit]="12" appendTo="body"
+                           [placeholder]="'shop.relatedPlaceholder' | translate" class="w-full" />
+            <small class="text-muted-color">{{ "shop.relatedHint" | translate }}</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
             <div class="flex items-center justify-between">
                 <span class="font-semibold">{{ "shop.variants" | translate }}</span>
                 <p-button type="button" icon="pi pi-plus" [text]="true" [label]="'shop.addVariant' | translate"

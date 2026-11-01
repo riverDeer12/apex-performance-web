@@ -11,6 +11,7 @@ import { Tag } from "primeng/tag";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { Dialog } from "primeng/dialog";
+import { MultiSelect } from "primeng/multiselect";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { Observable } from "rxjs";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
@@ -29,6 +30,14 @@ interface ProductForm {
     isActive: boolean;
     sortOrder: number;
     variants: ShopVariant[];
+    // Comma separated, e.g. "trening, pamuk, ljeto".
+    keywords: string;
+    relatedProductIds: string[];
+}
+
+interface RelatedOption {
+    id: string;
+    label: string;
 }
 
 /**
@@ -40,18 +49,22 @@ interface ProductForm {
     selector: "app-shop-products",
     standalone: true,
     imports: [CommonModule, FormsModule, TableModule, Button, InputText, InputNumber, Textarea, Checkbox, Tag,
-        IconField, InputIcon, Dialog, TranslatePipe],
+        IconField, InputIcon, Dialog, MultiSelect, TranslatePipe],
     templateUrl: "./shop-products.component.html",
 })
 export class ShopProductsComponent implements OnInit {
     products: ShopProduct[] = [];
     categories: string[] = [];
+    // Keywords already used, offered while typing.
+    keywords: string[] = [];
     loading = false;
 
     dialogVisible = false;
     // Product being edited, null while a new one is not saved yet.
     editing: ShopProduct | null = null;
     form: ProductForm = this.emptyForm();
+    // Other products to pick from for "goes with", made when the form opens.
+    relatedOptions: RelatedOption[] = [];
     saving = false;
     uploading = false;
 
@@ -81,6 +94,7 @@ export class ShopProductsComponent implements OnInit {
     openCreate(): void {
         this.editing = null;
         this.form = this.emptyForm();
+        this.relatedOptions = this.optionsFor(null);
         this.dialogVisible = true;
     }
 
@@ -95,7 +109,10 @@ export class ShopProductsComponent implements OnInit {
             isActive: product.isActive,
             sortOrder: product.sortOrder,
             variants: product.variants.map((x) => ({ ...x })),
+            keywords: (product.keywords ?? []).join(", "),
+            relatedProductIds: (product.relatedProductIds ?? []).filter((id) => this.products.some((x) => x.id === id)),
         };
+        this.relatedOptions = this.optionsFor(product.id);
         this.dialogVisible = true;
     }
 
@@ -126,6 +143,8 @@ export class ShopProductsComponent implements OnInit {
                 color: x.color?.trim() || null,
                 stock: x.stock ?? 0,
             })),
+            keywords: this.parseKeywords(this.form.keywords),
+            relatedProductIds: this.form.relatedProductIds,
         };
 
         const isNew = !this.editing;
@@ -220,6 +239,7 @@ export class ShopProductsComponent implements OnInit {
             next: (products) => {
                 this.products = products;
                 this.categories = [...new Set(products.map((x) => x.category))].sort((a, b) => a.localeCompare(b));
+                this.keywords = [...new Set(products.flatMap((x) => x.keywords ?? []))].sort((a, b) => a.localeCompare(b));
                 this.loading = false;
             },
             error: () => (this.loading = false),
@@ -236,7 +256,19 @@ export class ShopProductsComponent implements OnInit {
             isActive: false,
             sortOrder: 0,
             variants: [{ id: null, size: null, color: null, stock: 0 }],
+            keywords: "",
+            relatedProductIds: [],
         };
+    }
+
+    private parseKeywords(text: string): string[] {
+        return [...new Set(text.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean))];
+    }
+
+    private optionsFor(productId: string | null): RelatedOption[] {
+        return this.products
+            .filter((x) => x.id !== productId)
+            .map((x) => ({ id: x.id, label: `${x.name} · ${x.category}` }));
     }
 
     private success(key: string): void {
