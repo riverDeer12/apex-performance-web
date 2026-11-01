@@ -1,0 +1,26 @@
+:root{--blue:#0034C4;--ink:#12151c;--muted:#5b6475;--line:#d9dfec;--tint:#eef2fc}
+@page{size:A4;margin:18mm 20mm 20mm}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;font-family:'Lato',Arial,Helvetica,sans-serif;font-size:9.6pt;line-height:1.58;color:var(--ink)}
+.head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:9pt;border-bottom:1.6pt solid var(--blue);margin-bottom:16pt}
+.head svg{margin-top:2pt}
+.running{text-align:right;font-size:7.4pt;line-height:1.5;color:var(--muted)}
+h1,h2,.sub,.stats b,.confirm .label{font-family:'Michroma','Arial Black',Arial,sans-serif;font-weight:400}
+h1{font-size:19pt;line-height:1.25;letter-spacing:.01em;margin:0 0 2pt}
+.sub{margin:0 0 12pt;font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.provider{margin:0 0 12pt;padding:7pt 10pt;background:var(--tint);border-left:3pt solid var(--blue);border-radius:0 4pt 4pt 0;font-size:8.4pt;line-height:1.6}
+.provider strong{color:var(--blue)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6pt;margin:0 0 14pt}
+.stats div{border:.8pt solid var(--line);border-radius:4pt;padding:7pt 7pt 6pt}
+.stats b{display:block;font-size:11pt;color:var(--blue);margin-bottom:3pt;white-space:nowrap}
+.stats span{display:block;font-size:6.9pt;line-height:1.45;color:var(--muted)}
+h2{font-size:10.4pt;letter-spacing:.02em;margin:14pt 0 5pt;break-after:avoid}
+h2 span{color:var(--blue)}
+p{margin:0 0 6pt;text-align:justify;hyphens:auto;orphans:3;widows:3}
+strong{font-weight:700}
+.confirm{margin-top:14pt;border:1pt solid var(--blue);border-radius:5pt;padding:8pt 10pt;break-inside:avoid}
+.confirm .label{margin:0 0 4pt;font-size:7.6pt;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);text-align:left}
+.confirm .quote{margin:0 0 5pt;font-weight:700;text-align:left}
+.confirm .note{margin:0;font-size:7.6pt;color:var(--muted);text-align:left}
+.translation-note{margin-top:12pt;font-size:7.6pt;color:var(--muted);text-align:left}
