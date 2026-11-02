@@ -48,6 +48,24 @@ export class Training {
     exercises!: TrainingExercise[];
     createdAt!: string;
     updatedAt!: string;
+    // When the training really started and ended, marked by the coach in the apps.
+    startedAt?: string | null;
+    endedAt?: string | null;
+    // Client's heart rate between start and end, from Apple Health on the client's iPhone.
+    heartRate?: TrainingHeartRate | null;
+}
+
+// Beats per minute.
+export interface TrainingHeartRate {
+    min: number;
+    max: number;
+    average: number;
+}
+
+// Whole minutes between the start and the end of a training, null while it is not ended.
+export function trainingMinutes(training: Pick<Training, "startedAt" | "endedAt">): number | null {
+    if (!training.startedAt || !training.endedAt) return null;
+    return Math.round((new Date(training.endedAt).getTime() - new Date(training.startedAt).getTime()) / 60000);
 }
 
 export interface TrainingExerciseSetRequest {

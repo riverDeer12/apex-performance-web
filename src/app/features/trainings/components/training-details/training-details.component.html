@@ -7,6 +7,28 @@
     </div>
     <p *ngIf="training.note" class="m-0 whitespace-pre-line">{{ training.note }}</p>
 
+    <!-- Start and end marked by the coach, heart rate from Apple Health on the client's iPhone. -->
+    <div *ngIf="training.startedAt || training.heartRate" class="flex flex-wrap gap-3">
+        <div *ngIf="training.startedAt" class="stat-box">
+            <span class="stat-label"><i class="pi pi-clock"></i> {{ "trainings.time" | translate }}</span>
+            <span class="stat-value">{{ training.startedAt | date: 'HH:mm' }} – {{ training.endedAt ? (training.endedAt | date: 'HH:mm') : '…' }}</span>
+            <span class="stat-note">{{ minutes !== null ? (minutes + ' min') : ("trainings.inProgress" | translate) }}</span>
+        </div>
+        <div *ngIf="training.heartRate as heartRate" class="stat-box heart">
+            <span class="stat-label"><i class="pi pi-heart-fill"></i> {{ "trainings.heartRate" | translate }}</span>
+            <div class="flex gap-5">
+                <div class="flex flex-col"><span class="stat-value">{{ heartRate.min }}</span><span class="stat-note">{{ "trainings.heartRateMin" | translate }}</span></div>
+                <div class="flex flex-col"><span class="stat-value">{{ heartRate.average }}</span><span class="stat-note">{{ "trainings.heartRateAverage" | translate }}</span></div>
+                <div class="flex flex-col"><span class="stat-value">{{ heartRate.max }}</span><span class="stat-note">{{ "trainings.heartRateMax" | translate }}</span></div>
+            </div>
+            <span class="stat-note">bpm · Apple Health</span>
+        </div>
+        <div *ngIf="training.endedAt && !training.heartRate" class="stat-box">
+            <span class="stat-label"><i class="pi pi-heart"></i> {{ "trainings.heartRate" | translate }}</span>
+            <span class="stat-note">{{ "trainings.heartRateMissing" | translate }}</span>
+        </div>
+    </div>
+
     <p-table [value]="exercises" [tableStyle]="{ 'min-width': '36rem' }" [showGridlines]="true">
         <ng-template #header>
             <tr>

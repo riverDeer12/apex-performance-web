@@ -42,6 +42,7 @@
                 </div>
             </th>
             <th style="width: 8rem">{{ "trainings.exercises" | translate }}</th>
+            <th style="width: 9rem">{{ "trainings.heartRate" | translate }}</th>
             <th *ngIf="!isClient" pSortableColumn="isCompleted" style="width: 10rem">
                 {{ "trainings.completed" | translate }}
                 <p-sortIcon field="isCompleted" />
@@ -55,6 +56,15 @@
             <td *ngIf="!isClient">{{ training.client.fullName }}</td>
             <td>{{ training.name }}</td>
             <td>{{ training.exercises.length }}</td>
+            <td>
+                <!-- Average with the range in the tooltip, from Apple Health on the client's iPhone. -->
+                <span *ngIf="training.heartRate as heartRate" class="whitespace-nowrap"
+                      [pTooltip]="('trainings.heartRateMin' | translate) + ' ' + heartRate.min + ' · ' + ('trainings.heartRateMax' | translate) + ' ' + heartRate.max + ' bpm'"
+                      tooltipPosition="top">
+                    <i class="pi pi-heart-fill text-sm" style="color: #e5484d"></i> {{ heartRate.average }} bpm
+                </span>
+                <span *ngIf="!training.heartRate" class="text-muted-color">–</span>
+            </td>
             <td *ngIf="!isClient">
                 <p-checkbox *ngIf="canManageTrainings; else completionTag" [binary]="true"
                             [(ngModel)]="training.isCompleted"
@@ -84,7 +94,7 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="6">{{ "trainings.noneFound" | translate }}</td>
+            <td colspan="7">{{ "trainings.noneFound" | translate }}</td>
         </tr>
     </ng-template>
 </p-table>

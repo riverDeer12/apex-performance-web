@@ -6,7 +6,7 @@ import { Tag } from "primeng/tag";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { describeSet, NumberedSet, numberSets, Training, TrainingExercise } from "../../models/training";
+import { describeSet, NumberedSet, numberSets, Training, TrainingExercise, trainingMinutes } from "../../models/training";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { Roles } from "../../../../constants/roles";
 
@@ -19,6 +19,14 @@ import { Roles } from "../../../../constants/roles";
     standalone: true,
     imports: [CommonModule, TableModule, Tag, TranslatePipe],
     templateUrl: "./training-details.component.html",
+    styles: [`
+        .stat-box { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.75rem 1rem;
+            border: 1px solid var(--surface-border); border-radius: var(--content-border-radius); min-width: 11rem; }
+        .stat-label { font-size: 0.8rem; font-weight: 600; color: var(--text-color-secondary); }
+        .stat-value { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-color); }
+        .stat-note { font-size: 0.8rem; color: var(--text-color-secondary); }
+        .heart .stat-label i { color: #e5484d; }
+    `],
 })
 export class TrainingDetailsComponent {
     readonly describeSet = describeSet;
@@ -33,12 +41,16 @@ export class TrainingDetailsComponent {
     // Clients only receive completed trainings, completion status is shown to staff only.
     isClient: boolean;
 
+    // Length of the training, null while it is not ended.
+    minutes: number | null;
+
     constructor(config: DynamicDialogConfig, private translationService: TranslationService,
                 authenticationService: AuthenticationService) {
         this.isClient = authenticationService.getUserRole() === Roles.Client;
         this.training = config.data.training;
         this.exercises = [...(this.training.exercises ?? [])].sort((a, b) => a.order - b.order);
         this.setRows = this.exercises.map(x => numberSets(x.sets));
+        this.minutes = trainingMinutes(this.training);
     }
 
     /**

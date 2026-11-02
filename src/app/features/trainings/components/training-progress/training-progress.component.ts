@@ -12,7 +12,7 @@ import { Roles } from "../../../../constants/roles";
 import { WorkoutService } from "../../../workouts/services/workout.service";
 import { Workout } from "../../../workouts/models/workout";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { Training } from "../../models/training";
+import { Training, trainingMinutes } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
 import {
     maxWeightPerWorkout,
@@ -152,6 +152,68 @@ export class TrainingProgressComponent implements OnInit {
     });
 
     readonly muscleDistribution = computed(() => setsPerMuscleGroup(this.points(), this.muscleGroups()));
+
+    // Colors of the heart rate legend, the same as on the chart.
+    readonly seriesColor = computed(() => this.colors().series);
+    readonly bandColor = computed(() => this.colors().series + "26");
+
+    // Trainings of the client with heart rate from Apple Health, oldest first.
+    readonly heartRates = computed(() => {
+        const clientId = this.selectedClientId();
+        const from = this.fromDate();
+
+        return this.trainings()
+            .filter(x => x.heartRate && x.client?.id === clientId)
+            .map(x => ({ date: new Date(x.startedAt ?? x.date), name: x.name, minutes: trainingMinutes(x), ...x.heartRate! }))
+            .filter(x => x.date >= from)
+            .sort((a, b) => a.date.getTime() - b.date.getTime());
+    });
+
+    readonly heartRateSummary = computed(() => {
+        const list = this.heartRates();
+        if (list.length === 0) return null;
+
+        return {
+            count: list.length,
+            average: Math.round(list.reduce((sum, x) => sum + x.average, 0) / list.length),
+            highest: Math.max(...list.map(x => x.max)),
+            latest: list[list.length - 1],
+        };
+    });
+
+    // Average per training as the line, lowest to highest as the band around it.
+    readonly heartRateChart = computed(() => {
+        this.translationService.language();
+        const list = this.heartRates();
+        const color = this.colors().series;
+        const label = (key: string) => this.translationService.t("trainings." + key);
+        const band = { borderColor: "transparent", pointRadius: 0, pointHoverRadius: 0, tension: 0.25 };
+
+        return {
+            labels: list.map(x => this.formatDate(x.date)),
+            datasets: [
+                { ...band, label: label("heartRateMax"), data: list.map(x => x.max), backgroundColor: color + "26", fill: "+1" },
+                { ...band, label: label("heartRateMin"), data: list.map(x => x.min), backgroundColor: "transparent", fill: false },
+                {
+                    ...this.lineChart(list.map(x => ({ date: x.date, value: x.average }))).datasets[0],
+                    label: label("heartRateAverage"),
+                    fill: false,
+                },
+            ],
+        };
+    });
+
+    readonly heartRateOptions = computed(() => {
+        const options: any = this.axisOptions(value => `${this.round(value)} bpm`);
+        // Highest, average, lowest, in the order they are on the chart.
+        options.plugins.tooltip.itemSort = (a: any, b: any) => b.parsed.y - a.parsed.y;
+        options.plugins.tooltip.callbacks.label = (item: any) => `${item.dataset.label}: ${item.parsed.y} bpm`;
+        options.plugins.tooltip.callbacks.title = (items: any[]) => {
+            const point = this.heartRates()[items[0]?.dataIndex];
+            return point ? `${this.formatDate(point.date)} · ${point.name}${point.minutes ? ` · ${point.minutes} min` : ""}` : "";
+        };
+        return options;
+    });
 
     readonly muscleLegend = computed(() => {
         this.translationService.language();

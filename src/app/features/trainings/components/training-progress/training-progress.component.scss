@@ -48,3 +48,33 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
+
+.heart-icon {
+  color: #e5484d;
+  font-size: 0.95rem;
+}
+
+.heart-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-color-secondary);
+  }
+}
+
+// Legend of the heart rate chart: the average line and the lowest-highest band.
+.legend-line {
+  width: 1rem;
+  height: 2px;
+}
+
+.legend-band {
+  width: 1rem;
+  height: 0.6rem;
+  border-radius: 2px;
+}

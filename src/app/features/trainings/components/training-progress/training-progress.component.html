@@ -7,6 +7,42 @@
                     [ngModel]="period()" (ngModelChange)="period.set($event)" />
 </div>
 
+<!-- Heart rate from Apple Health on the client's iPhone, saved after a training ends. -->
+<div *ngIf="heartRateSummary() as summary" class="card mb-4">
+    <div class="flex flex-wrap items-start justify-between gap-2 mb-1">
+        <div class="font-semibold text-lg"><i class="pi pi-heart-fill heart-icon"></i> {{ "trainingProgress.heartRate" | translate }}</div>
+        <div class="progress-hint">Apple Health</div>
+    </div>
+    <div class="progress-hint mb-3">{{ "trainingProgress.heartRateHint" | translate }}</div>
+    <div class="grid grid-cols-12 gap-4 items-center">
+        <div class="col-span-12 md:col-span-3 flex md:flex-col flex-wrap gap-4">
+            <div>
+                <div class="progress-hint">{{ "trainingProgress.heartRateAverage" | translate }}</div>
+                <div class="heart-value">{{ summary.average }} <span>bpm</span></div>
+            </div>
+            <div>
+                <div class="progress-hint">{{ "trainingProgress.heartRateHighest" | translate }}</div>
+                <div class="heart-value">{{ summary.highest }} <span>bpm</span></div>
+            </div>
+            <div>
+                <div class="progress-hint">{{ "trainingProgress.heartRateLatest" | translate }} · {{ summary.latest.date | date: 'dd.MM.' }}</div>
+                <div class="heart-value">{{ summary.latest.average }} <span>bpm</span></div>
+                <div class="progress-hint">{{ summary.latest.min }}–{{ summary.latest.max }} bpm</div>
+            </div>
+            <div class="progress-hint">{{ "trainingProgress.heartRateCount" | translate }} {{ summary.count }}</div>
+        </div>
+        <div class="col-span-12 md:col-span-9">
+            <div class="progress-chart" *ngIf="heartRates().length > 1; else notEnough">
+                <p-chart type="line" [data]="heartRateChart()" [options]="heartRateOptions()" height="100%" />
+            </div>
+            <div class="flex flex-wrap gap-4 mt-2 progress-hint" *ngIf="heartRates().length > 1">
+                <span class="flex items-center gap-2"><span class="legend-line" [style.background]="seriesColor()"></span>{{ "trainings.heartRateAverage" | translate }}</span>
+                <span class="flex items-center gap-2"><span class="legend-band" [style.background]="bandColor()"></span>{{ "trainingProgress.heartRateRange" | translate }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div *ngIf="loaded() && points().length === 0" class="card progress-hint">
     {{ "trainingProgress.noCompletedTrainings" | translate }}
 </div>
