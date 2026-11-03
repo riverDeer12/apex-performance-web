@@ -76,7 +76,6 @@ export class TrainingFormComponent implements OnInit {
 
     workoutOptions: { label: string; value: string }[] = [];
     // Workouts done for a time (e.g. plank), their sets get a duration instead of repetitions.
-    timedWorkoutIds = new Set<string>();
     // Workouts done over a distance and how their pace is shown.
     paceTypes = new Map<string, PaceType>();
 
@@ -270,17 +269,6 @@ export class TrainingFormComponent implements OnInit {
             distanceMeters: distance(previous.distance),
             isDropSet: true,
         }, true));
-    }
-
-    /**
-     * Sets of the exercise record a duration: the workout is done for a time,
-     * or a set already has one (also when the workout was changed since).
-     */
-    isTimed(exerciseIndex: number): boolean {
-        const exercise = this.exercises.at(exerciseIndex);
-
-        return this.timedWorkoutIds.has(exercise.get("workout")?.value) ||
-            this.setsOf(exerciseIndex).controls.some(x => !!x.value.duration);
     }
 
     /**
@@ -596,7 +584,6 @@ export class TrainingFormComponent implements OnInit {
             this.workoutOptions = response
                 .map(x => ({ label: getTranslation(x.name, language), value: x.id }))
                 .sort((a, b) => a.label.localeCompare(b.label, language));
-            this.timedWorkoutIds = new Set(response.filter(x => x.isTimed).map(x => x.id));
             this.paceTypes = new Map(response.filter(x => !!x.paceType).map(x => [x.id, x.paceType!]));
         });
     }

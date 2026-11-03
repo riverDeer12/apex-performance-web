@@ -94,7 +94,9 @@
                      class="training-set flex flex-wrap items-center gap-2" [class.drop-set]="isDropSet(i, s)">
                     <span *ngIf="!isDropSet(i, s)" class="text-sm w-20">{{ "trainings.set" | translate }} {{ setNumber(i, s) }}</span>
                     <span *ngIf="isDropSet(i, s)" class="drop-label text-sm w-20">↳ {{ "trainings.drop" | translate }}</span>
-                    <ng-container *ngIf="!isTimed(i); else durationInput">
+                    <!-- Every set: repetitions, weight and a duration, none required; sets over a
+                         distance: duration and distance. -->
+                    <ng-container *ngIf="!paceTypeOf(i); else durationFirst">
                         <input pInputText formControlName="reps" class="w-28"
                                [placeholder]="'trainings.reps' | translate" [attr.aria-label]="'trainings.reps' | translate" />
                         <span class="text-muted-color">×</span>
@@ -105,6 +107,9 @@
                                [placeholder]="'trainings.durationPlaceholder' | translate"
                                [attr.aria-label]="'trainings.duration' | translate"
                                [pTooltip]="'trainings.durationHint' | translate" tooltipPosition="top" />
+                    </ng-template>
+                    <ng-template #durationFirst>
+                        <ng-container *ngTemplateOutlet="durationInput; context: { $implicit: set }"></ng-container>
                         <span class="text-muted-color">·</span>
                     </ng-template>
                     <ng-container *ngIf="paceTypeOf(i); else weightInput">
@@ -118,6 +123,8 @@
                         <input pInputText type="number" min="0" step="0.5" formControlName="weight" class="w-28"
                                [placeholder]="'kg'" [attr.aria-label]="'trainings.weight' | translate" />
                         <span class="text-sm text-muted-color">kg</span>
+                        <span class="text-muted-color">·</span>
+                        <ng-container *ngTemplateOutlet="durationInput"></ng-container>
                     </ng-template>
                     <p-button type="button" icon="pi pi-times" severity="danger" [text]="true" size="small"
                               [attr.aria-label]="'trainings.removeSet' | translate" (click)="removeSet(i, s)" />

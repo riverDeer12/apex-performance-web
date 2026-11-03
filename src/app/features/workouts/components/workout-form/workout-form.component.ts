@@ -3,7 +3,6 @@ import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {Button} from "primeng/button";
-import {Checkbox} from "primeng/checkbox";
 import {MultiSelect} from "primeng/multiselect";
 import {Select} from "primeng/select";
 import {MessageService} from "primeng/api";
@@ -32,7 +31,7 @@ const DUPLICATE_ERROR_CODE = "1300";
 
 @Component({
     selector: "app-workout-form",
-    imports: [CommonModule, InputText, ReactiveFormsModule, Button, Checkbox, MultiSelect, Select, TranslatePipe],
+    imports: [CommonModule, InputText, ReactiveFormsModule, Button, MultiSelect, Select, TranslatePipe],
     templateUrl: "./workout-form.component.html",
     styleUrl: "./workout-form.component.scss",
 })
@@ -148,10 +147,6 @@ export class WorkoutFormComponent implements OnInit {
             paceType: [workout?.paceType ?? ""],
         });
 
-        // Pace comes from distance and duration, so these sets record a duration too.
-        this.form.get("paceType")!.valueChanges.subscribe(paceType => {
-            if (paceType) this.form.get("isTimed")!.setValue(true);
-        });
     }
 
     /**

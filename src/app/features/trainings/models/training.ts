@@ -181,8 +181,9 @@ export function formatSpeed(paceType: PaceType | null | undefined, metersPerMinu
 }
 
 /**
- * One set as shown in lists: "10 × 80 kg", "1:30" / "1:30 · 10 kg" for a set done for a time,
- * or "2 km · 7:30 · 1:52 /500 m" for a set over a distance.
+ * One set as shown in lists: "10 × 80 kg", "10 × 80 kg · 0:45" with a duration,
+ * "1:30" / "1:30 · 10 kg" for a set held for a time, or "2 km · 7:30 · 1:52 /500 m" for a set
+ * over a distance.
  */
 export function describeSet(set: TrainingExerciseSet, paceType?: PaceType | null): string {
     const weight = set.weight != null ? `${set.weight} kg` : "";
@@ -194,11 +195,11 @@ export function describeSet(set: TrainingExerciseSet, paceType?: PaceType | null
             .join(" · ");
     }
 
-    if (set.durationSeconds) {
-        const duration = formatDuration(set.durationSeconds);
-        const reps = set.reps ? ` · ${set.reps}` : "";
-        return duration + reps + (weight ? ` · ${weight}` : "");
+    const duration = set.durationSeconds ? formatDuration(set.durationSeconds) : "";
+
+    if (!set.reps && duration) {
+        return duration + (weight ? ` · ${weight}` : "");
     }
 
-    return (set.reps || "-") + (weight ? ` × ${weight}` : "");
+    return (set.reps || "-") + (weight ? ` × ${weight}` : "") + (duration ? ` · ${duration}` : "");
 }
