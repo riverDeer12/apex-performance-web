@@ -167,6 +167,28 @@ export function workoutsPerWeek(points: WorkoutPoint[], from: Date, to: Date): {
     return weeks;
 }
 
+// Muscle group of each muscle code (MUSCLES in the workout model).
+const GROUP_OF_MUSCLE: Record<string, MuscleGroup> = {
+    chest: "chest",
+    shoulders: "shoulders",
+    biceps: "arms", triceps: "arms", forearms: "arms",
+    abs: "core", obliques: "core",
+    traps: "back", upper_back: "back", lats: "back", lower_back: "back",
+    glutes: "legs", quads: "legs", hamstrings: "legs", adductors: "legs", calves: "legs",
+};
+
+/**
+ * Muscle group of a workout from its first primary muscle; workouts
+ * without muscles fall back to the names of their types.
+ */
+export function muscleGroupOfWorkout(muscles: string[] | null | undefined, typeNames: string[]): MuscleGroup | null {
+    for (const muscle of muscles ?? []) {
+        const group = GROUP_OF_MUSCLE[muscle];
+        if (group) return group;
+    }
+    return muscleGroupOf(typeNames);
+}
+
 export function muscleGroupOf(typeNames: string[]): MuscleGroup | null {
     const names = typeNames.map(x => x.trim().toLowerCase());
 

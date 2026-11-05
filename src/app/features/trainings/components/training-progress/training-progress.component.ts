@@ -16,7 +16,7 @@ import { Training, trainingMinutes } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
 import {
     maxWeightPerWorkout,
-    muscleGroupOf,
+    muscleGroupOfWorkout,
     MUSCLE_GROUPS,
     MuscleGroup,
     percentChange,
@@ -108,7 +108,7 @@ export class TrainingProgressComponent implements OnInit {
     });
 
     private readonly muscleGroups = computed(() => new Map<string, MuscleGroup | null>(
-        this.workouts().map(workout => [workout.id, muscleGroupOf((workout.workoutTypes ?? [])
+        this.workouts().map(workout => [workout.id, muscleGroupOfWorkout(workout.muscles, (workout.workoutTypes ?? [])
             .flatMap(type => [getTranslation(type.name, "en"), getTranslation(type.name, "hr")]))])));
 
     // Exercises with weight, most often done first.
