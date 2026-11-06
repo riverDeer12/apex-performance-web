@@ -166,5 +166,32 @@ export interface ShopStats {
     orders: number;
     revenue: number;
     perDay: ShopStatsDay[];
-    products: { slug: string; name: string; views: number; soldPieces: number }[];
+    products: ShopStatsProduct[];
+    // Sold out sizes and colors people are waiting for now.
+    waitingList?: ShopStatsWaiting[] | null;
+}
+
+export interface ShopStatsProduct {
+    slug: string;
+    name: string;
+    views: number;
+    soldPieces: number;
+    // Put in the cart and marked with the heart in the period, by anyone.
+    addedToCart?: number;
+    favoriteAdds?: number;
+    // Members who have it in their saved favorites now.
+    savedFavorites?: number;
+    // People waiting for a sold out size or color now.
+    waiting?: number;
+}
+
+export interface ShopStatsWaiting {
+    productName: string;
+    slug: string;
+    size: string | null;
+    color: string | null;
+    waiting: number;
+    since: string;
+    // Above 0 while people still wait: their email was not sent (it goes out when stock goes from 0 up).
+    stock: number;
 }

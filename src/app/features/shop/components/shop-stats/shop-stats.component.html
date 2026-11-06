@@ -5,7 +5,7 @@
 </div>
 
 <ng-container *ngIf="stats">
-    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+    <div class="grid grid-cols-2 lg:grid-cols-7 gap-4 mb-4">
         <div class="card mb-0 p-4">
             <div class="text-muted-color text-sm">{{ "shop.visits" | translate }}</div>
             <div class="text-2xl font-semibold">{{ stats.visits }}</div>
@@ -17,6 +17,14 @@
         <div class="card mb-0 p-4">
             <div class="text-muted-color text-sm">{{ "shop.cartViews" | translate }}</div>
             <div class="text-2xl font-semibold">{{ stats.cartViews }}</div>
+        </div>
+        <div class="card mb-0 p-4">
+            <div class="text-muted-color text-sm">{{ "shop.addedToCart" | translate }}</div>
+            <div class="text-2xl font-semibold">{{ totalAddedToCart }}</div>
+        </div>
+        <div class="card mb-0 p-4">
+            <div class="text-muted-color text-sm">{{ "shop.waitingList" | translate }}</div>
+            <div class="text-2xl font-semibold">{{ totalWaiting }}</div>
         </div>
         <div class="card mb-0 p-4">
             <div class="text-muted-color text-sm">{{ "shop.paidOrders" | translate }}</div>
@@ -50,19 +58,61 @@
     </div>
 
     <div class="card">
-        <div class="font-semibold mb-3">{{ "shop.productsStats" | translate }}</div>
-        <p *ngIf="stats.products.length === 0" class="text-muted-color m-0">{{ "shop.noStats" | translate }}</p>
-        <table *ngIf="stats.products.length" class="w-full text-sm">
-            <tr class="text-left text-muted-color">
-                <th class="py-1">{{ "shop.product" | translate }}</th>
-                <th class="py-1 text-right">{{ "shop.views" | translate }}</th>
-                <th class="py-1 text-right">{{ "shop.soldPieces" | translate }}</th>
-            </tr>
-            <tr *ngFor="let product of stats.products" class="border-t border-surface">
-                <td class="py-2">{{ product.name }}</td>
-                <td class="py-2 text-right">{{ product.views }}</td>
-                <td class="py-2 text-right font-semibold">{{ product.soldPieces }}</td>
-            </tr>
-        </table>
+        <div class="font-semibold mb-1">{{ "shop.productsStats" | translate }}</div>
+        <p class="text-xs text-muted-color mt-0 mb-3">{{ "shop.productsStatsHint" | translate }}</p>
+        <p *ngIf="products.length === 0" class="text-muted-color m-0">{{ "shop.noStats" | translate }}</p>
+        <div *ngIf="products.length" class="overflow-x-auto">
+            <table class="w-full text-sm" style="min-width: 46rem">
+                <tr class="text-left text-muted-color">
+                    <th class="py-1">{{ "shop.product" | translate }}</th>
+                    <th *ngFor="let column of columns" class="py-1 text-right">
+                        <button type="button" class="cursor-pointer bg-transparent border-0 p-0 text-inherit font-semibold"
+                                [class.text-primary]="sortBy === column" (click)="sort(column)"
+                                [attr.aria-pressed]="sortBy === column">
+                            {{ "shop.stats." + column | translate }}<span *ngIf="sortBy === column"> ↓</span>
+                        </button>
+                    </th>
+                </tr>
+                <tr *ngFor="let product of products" class="border-t border-surface">
+                    <td class="py-2">{{ product.name }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'views'">{{ product.views }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'addedToCart'">{{ product.addedToCart ?? 0 }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'favoriteAdds'">{{ product.favoriteAdds ?? 0 }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'savedFavorites'">{{ product.savedFavorites ?? 0 }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'waiting'"
+                        [class.text-orange-500]="(product.waiting ?? 0) > 0">{{ product.waiting ?? 0 }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'soldPieces'">{{ product.soldPieces }}</td>
+                    <td class="py-2 text-right" [class.font-semibold]="sortBy === 'conversion'">
+                        {{ conversionOf(product) === null ? '–' : (conversionOf(product)! | number: '1.0-1') + ' %' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="font-semibold mb-1">{{ "shop.waitingList" | translate }}</div>
+        <p class="text-xs text-muted-color mt-0 mb-3">{{ "shop.waitingListHint" | translate }}</p>
+        <p *ngIf="!stats.waitingList?.length" class="text-muted-color m-0">{{ "shop.waitingListEmpty" | translate }}</p>
+        <div *ngIf="stats.waitingList?.length" class="overflow-x-auto">
+            <table class="w-full text-sm" style="min-width: 34rem">
+                <tr class="text-left text-muted-color">
+                    <th class="py-1">{{ "shop.product" | translate }}</th>
+                    <th class="py-1">{{ "shop.variant" | translate }}</th>
+                    <th class="py-1 text-right">{{ "shop.waitingPeople" | translate }}</th>
+                    <th class="py-1 text-right">{{ "shop.waitingSince" | translate }}</th>
+                    <th class="py-1 text-right">{{ "shop.stock" | translate }}</th>
+                </tr>
+                <tr *ngFor="let item of stats.waitingList" class="border-t border-surface">
+                    <td class="py-2">{{ item.productName }}</td>
+                    <td class="py-2">{{ variantName(item) }}</td>
+                    <td class="py-2 text-right font-semibold">{{ item.waiting }}</td>
+                    <td class="py-2 text-right">{{ item.since | date: "dd.MM.yyyy." }}</td>
+                    <td class="py-2 text-right">
+                        <span *ngIf="item.stock > 0" class="text-orange-500 font-semibold">{{ item.stock }} · {{ "shop.backInStock" | translate }}</span>
+                        <span *ngIf="item.stock <= 0" class="text-muted-color">0</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </ng-container>

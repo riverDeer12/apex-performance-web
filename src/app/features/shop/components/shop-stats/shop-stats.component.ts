@@ -5,7 +5,9 @@ import { SelectButton } from "primeng/selectbutton";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { ShopService } from "../../services/shop.service";
-import { ShopStats } from "../../models/shop";
+import { ShopStats, ShopStatsProduct } from "../../models/shop";
+
+export type ProductSort = "views" | "addedToCart" | "favoriteAdds" | "savedFavorites" | "waiting" | "soldPieces" | "conversion";
 import { formatPrice } from "../../utils/format-price";
 
 /**
@@ -21,6 +23,14 @@ import { formatPrice } from "../../utils/format-price";
 export class ShopStatsComponent implements OnInit {
     stats: ShopStats | null = null;
     days = 30;
+
+    // Table of products, sorted by the chosen column (kept as a field, not a getter).
+    sortBy: ProductSort = "views";
+    products: ShopStatsProduct[] = [];
+    totalWaiting = 0;
+    totalAddedToCart = 0;
+
+    readonly columns: ProductSort[] = ["views", "addedToCart", "favoriteAdds", "savedFavorites", "waiting", "soldPieces", "conversion"];
     loading = false;
 
     formatPrice = formatPrice;
@@ -46,6 +56,29 @@ export class ShopStatsComponent implements OnInit {
         return this.stats && this.stats.productViews > 0 ? (this.stats.orders / this.stats.productViews) * 100 : 0;
     }
 
+    // Pieces sold per 100 views of the product's page.
+    conversionOf(product: ShopStatsProduct): number | null {
+        return product.views > 0 ? (product.soldPieces / product.views) * 100 : null;
+    }
+
+    valueOf(product: ShopStatsProduct, column: ProductSort): number {
+        return column === "conversion" ? (this.conversionOf(product) ?? -1) : (product[column] ?? 0);
+    }
+
+    sort(column: ProductSort): void {
+        this.sortBy = column;
+        this.sortProducts();
+    }
+
+    variantName(item: { size: string | null; color: string | null }): string {
+        return [item.size, item.color].filter(Boolean).join(" / ") || "–";
+    }
+
+    private sortProducts(): void {
+        this.products = [...(this.stats?.products ?? [])]
+            .sort((a, b) => this.valueOf(b, this.sortBy) - this.valueOf(a, this.sortBy) || b.views - a.views);
+    }
+
     ngOnInit(): void {
         this.load();
     }
@@ -56,6 +89,9 @@ export class ShopStatsComponent implements OnInit {
         this.shopService.getStats(this.days).subscribe({
             next: (stats) => {
                 this.stats = stats;
+                this.totalWaiting = (stats.waitingList ?? []).reduce((sum, x) => sum + x.waiting, 0);
+                this.totalAddedToCart = stats.products.reduce((sum, x) => sum + (x.addedToCart ?? 0), 0);
+                this.sortProducts();
                 this.loading = false;
             },
             error: () => (this.loading = false),
