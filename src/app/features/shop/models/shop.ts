@@ -22,7 +22,14 @@ export interface ShopProduct {
     keywords: string[];
     // Products picked to go with this one, in the shown order.
     relatedProductIds: string[];
+    // ShopGender, null for products for everyone (accessories).
+    gender?: ShopGender | null;
 }
+
+export type ShopGender = "women" | "men" | "unisex";
+
+// Groups of keywords, saved as "group: value" (e.g. "materijal: pamuk"); the shop filters by each group.
+export const KEYWORD_GROUPS = ["materijal", "kolekcija", "aktivnost", "sezona"] as const;
 
 export interface SaveShopProductRequest {
     name: string;
@@ -35,6 +42,7 @@ export interface SaveShopProductRequest {
     variants: ShopVariant[];
     keywords: string[];
     relatedProductIds: string[];
+    gender: ShopGender | null;
 }
 
 export type ShopOrderStatus = "Pending" | "Paid" | "Shipped" | "Cancelled" | "Refunded";

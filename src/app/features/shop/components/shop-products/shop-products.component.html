@@ -97,12 +97,24 @@
         </div>
 
         <div class="flex flex-col gap-2">
-            <label for="productKeywords">{{ "shop.keywords" | translate }}</label>
-            <input pInputText id="productKeywords" name="keywords" [(ngModel)]="form.keywords" maxlength="600"
-                   [placeholder]="'shop.keywordsPlaceholder' | translate" />
-            <small class="text-muted-color">{{ "shop.keywordsHint" | translate }}
-                <ng-container *ngIf="keywords.length">{{ "shop.keywordsUsed" | translate }} {{ keywords.join(", ") }}</ng-container>
-            </small>
+            <label for="productGender">{{ "shop.gender" | translate }}</label>
+            <p-select inputId="productGender" name="gender" [(ngModel)]="form.gender" [options]="genderOptions"
+                      optionLabel="label" optionValue="value" class="w-full md:w-80" appendTo="body" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <span class="font-semibold">{{ "shop.keywords" | translate }}</span>
+            <small class="text-muted-color">{{ "shop.keywordsHint" | translate }}</small>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div *ngFor="let group of keywordGroups" class="flex flex-col gap-1">
+                    <label [for]="'keywords-' + group" class="text-sm">{{ "shop.kw." + group | translate }}</label>
+                    <input pInputText [id]="'keywords-' + group" [name]="'keywords-' + group"
+                           [(ngModel)]="form.keywords[group]" maxlength="300"
+                           [placeholder]="'shop.kwPlaceholder.' + group | translate" />
+                    <small *ngIf="usedKeywords[group]?.length" class="text-muted-color text-xs">
+                        {{ "shop.keywordsUsed" | translate }} {{ usedKeywords[group].join(", ") }}</small>
+                </div>
+            </div>
         </div>
 
         <div class="flex flex-col gap-2">

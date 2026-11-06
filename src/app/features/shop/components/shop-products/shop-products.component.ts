@@ -12,6 +12,7 @@ import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { Dialog } from "primeng/dialog";
 import { MultiSelect } from "primeng/multiselect";
+import { Select } from "primeng/select";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { Observable } from "rxjs";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
@@ -19,7 +20,10 @@ import { TranslationService } from "../../../../i18n/translation.service";
 import { getErrorMessage } from "../../../../constants/error-codes";
 import { ShopService } from "../../services/shop.service";
 import { formatPrice } from "../../utils/format-price";
-import { SaveShopProductRequest, ShopProduct, ShopVariant } from "../../models/shop";
+import { KEYWORD_GROUPS, SaveShopProductRequest, ShopGender, ShopProduct, ShopVariant } from "../../models/shop";
+
+// Keywords without a group are kept under "other".
+const OTHER = "other";
 
 interface ProductForm {
     name: string;
@@ -30,8 +34,9 @@ interface ProductForm {
     isActive: boolean;
     sortOrder: number;
     variants: ShopVariant[];
-    // Comma separated, e.g. "trening, pamuk, ljeto".
-    keywords: string;
+    // Comma separated per group, e.g. { materijal: "pamuk, elastin", other: "trening" }.
+    keywords: Record<string, string>;
+    gender: ShopGender | null;
     relatedProductIds: string[];
 }
 
@@ -49,14 +54,17 @@ interface RelatedOption {
     selector: "app-shop-products",
     standalone: true,
     imports: [CommonModule, FormsModule, TableModule, Button, InputText, InputNumber, Textarea, Checkbox, Tag,
-        IconField, InputIcon, Dialog, MultiSelect, TranslatePipe],
+        IconField, InputIcon, Dialog, MultiSelect, Select, TranslatePipe],
     templateUrl: "./shop-products.component.html",
 })
 export class ShopProductsComponent implements OnInit {
     products: ShopProduct[] = [];
     categories: string[] = [];
-    // Keywords already used, offered while typing.
-    keywords: string[] = [];
+    // Keywords already used per group, shown as a hint.
+    usedKeywords: Record<string, string[]> = {};
+    readonly keywordGroups: string[] = [...KEYWORD_GROUPS, OTHER];
+    // Made once: a new array on every change detection makes the select render without end.
+    genderOptions: { value: ShopGender | null; label: string }[] = [];
     loading = false;
 
     dialogVisible = false;
@@ -73,7 +81,14 @@ export class ShopProductsComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private translationService: TranslationService,
-    ) {}
+    ) {
+        this.genderOptions = [
+            { value: null, label: translationService.t("shop.gender.none") },
+            { value: "women", label: translationService.t("shop.gender.women") },
+            { value: "men", label: translationService.t("shop.gender.men") },
+            { value: "unisex", label: translationService.t("shop.gender.unisex") },
+        ];
+    }
 
     ngOnInit(): void {
         this.load();
@@ -109,7 +124,8 @@ export class ShopProductsComponent implements OnInit {
             isActive: product.isActive,
             sortOrder: product.sortOrder,
             variants: product.variants.map((x) => ({ ...x })),
-            keywords: (product.keywords ?? []).join(", "),
+            keywords: this.groupKeywords(product.keywords ?? []),
+            gender: product.gender ?? null,
             relatedProductIds: (product.relatedProductIds ?? []).filter((id) => this.products.some((x) => x.id === id)),
         };
         this.relatedOptions = this.optionsFor(product.id);
@@ -143,7 +159,8 @@ export class ShopProductsComponent implements OnInit {
                 color: x.color?.trim() || null,
                 stock: x.stock ?? 0,
             })),
-            keywords: this.parseKeywords(this.form.keywords),
+            keywords: this.joinKeywords(this.form.keywords),
+            gender: this.form.gender,
             relatedProductIds: this.form.relatedProductIds,
         };
 
@@ -239,7 +256,9 @@ export class ShopProductsComponent implements OnInit {
             next: (products) => {
                 this.products = products;
                 this.categories = [...new Set(products.map((x) => x.category))].sort((a, b) => a.localeCompare(b));
-                this.keywords = [...new Set(products.flatMap((x) => x.keywords ?? []))].sort((a, b) => a.localeCompare(b));
+                const used = Object.entries(this.groupKeywords([...new Set(products.flatMap((x) => x.keywords ?? []))]));
+                this.usedKeywords = Object.fromEntries(used.map(([group, text]) =>
+                    [group, text ? text.split(", ").sort((a, b) => a.localeCompare(b)) : []]));
                 this.loading = false;
             },
             error: () => (this.loading = false),
@@ -256,13 +275,30 @@ export class ShopProductsComponent implements OnInit {
             isActive: false,
             sortOrder: 0,
             variants: [{ id: null, size: null, color: null, stock: 0 }],
-            keywords: "",
+            keywords: {},
+            gender: null,
             relatedProductIds: [],
         };
     }
 
-    private parseKeywords(text: string): string[] {
-        return [...new Set(text.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean))];
+    // "materijal: pamuk" goes under its group, keywords without a known group under "other".
+    private groupKeywords(keywords: string[]): Record<string, string> {
+        const groups: Record<string, string[]> = {};
+        for (const keyword of keywords) {
+            const match = /^([^:]+):\s*(.+)$/.exec(keyword);
+            const group = match && (KEYWORD_GROUPS as readonly string[]).includes(match[1].trim()) ? match[1].trim() : OTHER;
+            (groups[group] ??= []).push(group === OTHER ? keyword : match![2].trim());
+        }
+        return Object.fromEntries(Object.entries(groups).map(([group, values]) => [group, values.join(", ")]));
+    }
+
+    private joinKeywords(groups: Record<string, string>): string[] {
+        const keywords = Object.entries(groups).flatMap(([group, text]) => (text ?? "")
+            .split(",")
+            .map((x) => x.trim().toLowerCase())
+            .filter(Boolean)
+            .map((value) => (group === OTHER ? value : `${group}: ${value}`)));
+        return [...new Set(keywords)];
     }
 
     private optionsFor(productId: string | null): RelatedOption[] {
