@@ -16,6 +16,7 @@ import { DatePicker } from "primeng/datepicker";
 import { Checkbox } from "primeng/checkbox";
 import { Textarea } from "primeng/textarea";
 import { Tooltip } from "primeng/tooltip";
+import { Dialog } from "primeng/dialog";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { ActionType } from "../../../../enums/action-type";
 import { RedirectType } from "../../../../enums/redirect-type";
@@ -29,6 +30,8 @@ import { Client } from "../../../clients/models/client";
 import { WorkoutService } from "../../../workouts/services/workout.service";
 import { Workout } from "../../../workouts/models/workout";
 import { getTranslation } from "../../../workouts/models/localized-property";
+import { AuthenticationService } from "../../../authentication/services/authentication.service";
+import { Roles } from "../../../../constants/roles";
 import {
     numberSets,
     NumberedSet,
@@ -52,7 +55,7 @@ import { TrainingTemplateService } from "../../services/training-template.servic
     selector: "app-training-form",
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, Button, InputText, Select, DatePicker, Checkbox, Textarea,
-        Tooltip, TranslatePipe],
+        Tooltip, Dialog, TranslatePipe],
     templateUrl: "./training-form.component.html",
     styleUrl: "./training-form.component.scss",
 })
@@ -79,6 +82,16 @@ export class TrainingFormComponent implements OnInit {
     // Workouts done over a distance and how their pace is shown.
     paceTypes = new Map<string, PaceType>();
 
+    // Coaches who can't find an exercise add it here with just a name; it is
+    // picked for the exercise right away and edited later in Workouts.
+    canCreateWorkouts = false;
+    newWorkoutVisible = false;
+    newWorkoutSaving = false;
+    newWorkoutName = new FormControl("", { nonNullable: true,
+        validators: [Validators.required, Validators.maxLength(MAX_WORKOUT_NAME_LENGTH)] });
+    // Exercise the new workout is picked for.
+    private newWorkoutExercise: FormGroup | null = null;
+
     // Templates a new training can be filled from.
     templates: TrainingTemplate[] = [];
     templatesLoaded = false;
@@ -100,7 +113,72 @@ export class TrainingFormComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private translationService: TranslationService,
-    ) {}
+        authenticationService: AuthenticationService,
+    ) {
+        // Same users as the Workouts page's add button.
+        this.canCreateWorkouts =
+            authenticationService.validateUserRole(Roles.Administrator) ||
+            authenticationService.validateUserRole(Roles.Coach);
+    }
+
+    /** "Add new exercise", with the searched name when there is one. */
+    addWorkoutLabel(searchText: string | null | undefined): string {
+        const name = (searchText ?? "").trim();
+        return name
+            ? this.translationService.t("trainings.addNewExerciseNamed").replace("{name}", name)
+            : this.translationService.t("trainings.addNewExercise");
+    }
+
+    /** Opens the short form of a new workout for the exercise, named as searched. */
+    openNewWorkout(exerciseIndex: number, searchText: string | null | undefined): void {
+        this.newWorkoutExercise = this.exercises.at(exerciseIndex) ?? null;
+        this.newWorkoutName.reset((searchText ?? "").trim().slice(0, MAX_WORKOUT_NAME_LENGTH));
+        this.newWorkoutVisible = true;
+    }
+
+    /**
+     * Creates the workout and picks it for the exercise. The API needs a
+     * description, so the name stands in for it until the workout is edited.
+     */
+    createNewWorkout(): void {
+        const name = this.newWorkoutName.value.trim();
+        if (!name || this.newWorkoutName.invalid || this.newWorkoutSaving) return;
+
+        this.newWorkoutSaving = true;
+        this.workoutService.createWorkout({
+            name: { translations: { HR: name } },
+            description: { translations: { HR: name } },
+            thumbnailUrl: "",
+            videoUrl: "",
+            workoutTypes: [],
+        }).subscribe({
+            next: (workout: Workout) => {
+                const language = this.translationService.language();
+                this.workoutOptions = [...this.workoutOptions, { label: getTranslation(workout.name, language), value: workout.id }]
+                    .sort((a, b) => a.label.localeCompare(b.label, language));
+                this.newWorkoutExercise?.get("workout")?.setValue(workout.id);
+                this.newWorkoutExercise?.get("workout")?.markAsDirty();
+
+                this.messageService.add({
+                    severity: "success",
+                    summary: this.translationService.t("common.success"),
+                    detail: this.translationService.t("trainings.exerciseAddedDetail"),
+                });
+                this.newWorkoutSaving = false;
+                this.newWorkoutVisible = false;
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: "error",
+                    summary: this.translationService.t("common.error"),
+                    detail: error?.error?.errors?.generalErrors?.[0] === DUPLICATE_WORKOUT_ERROR_CODE
+                        ? this.translationService.t("workouts.duplicate")
+                        : getErrorMessage(error),
+                });
+                this.newWorkoutSaving = false;
+            },
+        });
+    }
 
     // Only a new training is filled from a template, an edited one already has its exercises.
     get canUseTemplates(): boolean {
@@ -588,6 +666,11 @@ export class TrainingFormComponent implements OnInit {
         });
     }
 }
+
+// Same limit as the workout form and the API.
+const MAX_WORKOUT_NAME_LENGTH = 60;
+// ErrorCodes.AlreadyExists on the API.
+const DUPLICATE_WORKOUT_ERROR_CODE = "1300";
 
 // Metres from the distance field, null when empty or not valid.
 function distance(value: unknown): number | null {

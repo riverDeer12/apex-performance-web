@@ -54,9 +54,21 @@
                         <span>{{ exerciseLabel(i) }} {{ "trainings.exercise" | translate }}</span>
                         <span *ngIf="isSuperset(i)" class="superset-tag">{{ "trainings.superset" | translate }}</span>
                     </label>
-                    <p-select [filter]="true" [options]="workoutOptions" optionLabel="label" optionValue="value"
+                    <p-select #workoutSelect [filter]="true" [options]="workoutOptions" optionLabel="label" optionValue="value"
                               appendTo="body" styleClass="w-full" formControlName="workout"
-                              [placeholder]="'trainings.selectExercise' | translate" />
+                              [placeholder]="'trainings.selectExercise' | translate">
+                        <ng-template #emptyfilter>
+                            <span>{{ "trainings.noExerciseFound" | translate }}</span>
+                        </ng-template>
+                        <ng-template #footer>
+                            <!-- At the end of the list, and right below "not found" when the search finds nothing. -->
+                            <div *ngIf="canCreateWorkouts" class="p-2 border-t border-surface">
+                                <p-button [label]="addWorkoutLabel(workoutSelect.filterValue)" icon="pi pi-plus"
+                                          [text]="true" size="small" styleClass="w-full justify-start"
+                                          (onClick)="workoutSelect.hide(); openNewWorkout(i, workoutSelect.filterValue)" />
+                            </div>
+                        </ng-template>
+                    </p-select>
                     <small class="p-error" *ngIf="exerciseHasError(i, 'workout', 'required')">
                         {{ "common.required" | translate }}</small>
                 </div>
@@ -176,3 +188,19 @@
                   [label]="loadingData ? ('common.saving' | translate) : ('common.save' | translate)" />
     </div>
 </form>
+
+<p-dialog [(visible)]="newWorkoutVisible" [header]="'trainings.newExercise' | translate" [modal]="true"
+          appendTo="body" [style]="{ width: '28rem' }" [breakpoints]="{ '575px': '95vw' }">
+    <div class="flex flex-col gap-2">
+        <label for="new-workout-name">{{ "workouts.nameHr" | translate }}</label>
+        <input pInputText id="new-workout-name" class="w-full" [formControl]="newWorkoutName" maxlength="60"
+               autofocus (keydown.enter)="createNewWorkout()" />
+        <small class="text-muted-color">{{ "trainings.newExerciseHint" | translate }}</small>
+    </div>
+    <ng-template #footer>
+        <p-button [label]="'trainings.cancel' | translate" [text]="true" (onClick)="newWorkoutVisible = false" />
+        <p-button [label]="'trainings.addToTraining' | translate" icon="pi pi-plus"
+                  [disabled]="newWorkoutName.invalid || !newWorkoutName.value.trim()" [loading]="newWorkoutSaving"
+                  (onClick)="createNewWorkout()" />
+    </ng-template>
+</p-dialog>
