@@ -6,7 +6,7 @@ import { Tag } from "primeng/tag";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { describeSet, NumberedSet, numberSets, Training, TrainingExercise, trainingMinutes } from "../../models/training";
+import { describeSet, heartRateSourceName, NumberedSet, numberSets, Training, TrainingExercise, trainingMinutes } from "../../models/training";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { Roles } from "../../../../constants/roles";
 
@@ -43,6 +43,9 @@ export class TrainingDetailsComponent {
 
     // Length of the training, null while it is not ended.
     minutes: number | null;
+
+    // "Apple Health" or "Health Connect" next to the heart rate.
+    readonly sourceName = heartRateSourceName;
 
     constructor(config: DynamicDialogConfig, private translationService: TranslationService,
                 authenticationService: AuthenticationService) {

@@ -12,7 +12,7 @@ import { Roles } from "../../../../constants/roles";
 import { WorkoutService } from "../../../workouts/services/workout.service";
 import { Workout } from "../../../workouts/models/workout";
 import { getTranslation } from "../../../workouts/models/localized-property";
-import { Training, trainingMinutes } from "../../models/training";
+import { heartRateSourceNames, Training, trainingMinutes } from "../../models/training";
 import { TrainingService } from "../../services/training.service";
 import {
     maxWeightPerWorkout,
@@ -157,7 +157,7 @@ export class TrainingProgressComponent implements OnInit {
     readonly seriesColor = computed(() => this.colors().series);
     readonly bandColor = computed(() => this.colors().series + "26");
 
-    // Trainings of the client with heart rate from Apple Health, oldest first.
+    // Trainings of the client with heart rate from their phone (Apple Health or Health Connect), oldest first.
     readonly heartRates = computed(() => {
         const clientId = this.selectedClientId();
         const from = this.fromDate();
@@ -178,6 +178,7 @@ export class TrainingProgressComponent implements OnInit {
             average: Math.round(list.reduce((sum, x) => sum + x.average, 0) / list.length),
             highest: Math.max(...list.map(x => x.max)),
             latest: list[list.length - 1],
+            sources: heartRateSourceNames(list),
         };
     });
 
