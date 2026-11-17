@@ -24,6 +24,9 @@ export class Workout {
     // Done over a distance (rowing, walking, cycling): sets record the distance too
     // and show the pace this way. Null for other workouts.
     paceType?: PaceType | null;
+    // Marked with the star by the logged in user (everyone has their own).
+    // Left out by an API without favorites: then no stars are shown.
+    isFavorite?: boolean;
 
     // Values translated to currently selected
     // language, used for table display and filtering.

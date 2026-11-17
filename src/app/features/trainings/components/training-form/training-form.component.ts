@@ -77,7 +77,10 @@ export class TrainingFormComponent implements OnInit {
 
     clients: Client[] = [];
 
-    workoutOptions: { label: string; value: string }[] = [];
+    workoutOptions: WorkoutOption[] = [];
+    // The user's favorites first, then the other workouts; empty without favorites
+    // (or with an API without them), then the select shows the plain list.
+    workoutGroups: { label: string; isFavorites: boolean; items: WorkoutOption[] }[] = [];
     // Workouts done for a time (e.g. plank), their sets get a duration instead of repetitions.
     // Workouts done over a distance and how their pace is shown.
     paceTypes = new Map<string, PaceType>();
@@ -156,6 +159,7 @@ export class TrainingFormComponent implements OnInit {
                 const language = this.translationService.language();
                 this.workoutOptions = [...this.workoutOptions, { label: getTranslation(workout.name, language), value: workout.id }]
                     .sort((a, b) => a.label.localeCompare(b.label, language));
+                this.updateWorkoutGroups();
                 this.newWorkoutExercise?.get("workout")?.setValue(workout.id);
                 this.newWorkoutExercise?.get("workout")?.markAsDirty();
 
@@ -655,17 +659,32 @@ export class TrainingFormComponent implements OnInit {
         });
     }
 
+    /** Favorites in their own group at the top, so the coach finds them fast. */
+    private updateWorkoutGroups(): void {
+        const favorites = this.workoutOptions.filter(x => x.isFavorite);
+        this.workoutGroups = favorites.length === 0 ? [] : [
+            { label: this.translationService.t("workouts.favorites"), isFavorites: true, items: favorites },
+            {
+                label: this.translationService.t("trainings.otherExercises"), isFavorites: false,
+                items: this.workoutOptions.filter(x => !x.isFavorite),
+            },
+        ];
+    }
+
     private loadWorkouts(): void {
         const language = this.translationService.language();
 
         this.workoutService.getWorkouts().subscribe((response: Workout[]) => {
             this.workoutOptions = response
-                .map(x => ({ label: getTranslation(x.name, language), value: x.id }))
+                .map(x => ({ label: getTranslation(x.name, language), value: x.id, isFavorite: !!x.isFavorite }))
                 .sort((a, b) => a.label.localeCompare(b.label, language));
+            this.updateWorkoutGroups();
             this.paceTypes = new Map(response.filter(x => !!x.paceType).map(x => [x.id, x.paceType!]));
         });
     }
 }
+
+type WorkoutOption = { label: string; value: string; isFavorite?: boolean };
 
 // Same limit as the workout form and the API.
 const MAX_WORKOUT_NAME_LENGTH = 60;

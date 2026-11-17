@@ -16,7 +16,7 @@
 
 <p-table
     #workoutsTable
-    [value]="workouts"
+    [value]="displayedWorkouts"
     dataKey="id"
     sortField="displayName"
     [sortOrder]="1"
@@ -31,8 +31,16 @@
 >
     <ng-template #caption>
         <div class="flex justify-between items-center flex-column sm:flex-row">
-            <button pButton [label]="'common.clear' | translate" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
-                    (click)="clear(workoutsTable)"></button>
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+                <button pButton [label]="'common.clear' | translate" class="p-button-outlined" icon="pi pi-filter-slash"
+                        (click)="clear(workoutsTable)"></button>
+                <!-- Only the user's favorites, e.g. "Favorites · 4". -->
+                <p-button *ngIf="supportsFavorites" type="button" data-testid="favorites-filter"
+                          [label]="('workouts.favorites' | translate) + ' · ' + favoritesCount"
+                          [icon]="onlyFavorites ? 'pi pi-star-fill' : 'pi pi-star'"
+                          [outlined]="!onlyFavorites" [attr.aria-pressed]="onlyFavorites"
+                          (onClick)="toggleOnlyFavorites()" />
+            </div>
             <p-iconfield iconPosition="left" class="ml-auto">
                 <p-inputicon>
                     <i class="pi pi-search"></i>
@@ -71,6 +79,14 @@
                      [src]="workout.thumbnailUrl" [alt]="workout.displayName" loading="lazy" />
             </td>
             <td>
+                <button *ngIf="supportsFavorites" type="button" class="favorite-star"
+                        [class.is-favorite]="workout.isFavorite"
+                        [attr.aria-pressed]="!!workout.isFavorite"
+                        [attr.aria-label]="(workout.isFavorite ? 'workouts.removeFromFavorites' : 'workouts.addToFavorites') | translate"
+                        [title]="(workout.isFavorite ? 'workouts.removeFromFavorites' : 'workouts.addToFavorites') | translate"
+                        (click)="toggleFavorite(workout)">
+                    <i class="pi" [ngClass]="workout.isFavorite ? 'pi-star-fill' : 'pi-star'"></i>
+                </button>
                 {{ workout.displayName }}
                 <!-- Primary muscles stand out, secondary ones are muted. -->
                 <div *ngIf="workout.displayMuscleList.length || workout.displaySecondaryMuscleList.length"
@@ -109,7 +125,7 @@
     </ng-template>
     <ng-template #emptymessage>
         <tr>
-            <td colspan="6">{{ "workouts.noneFound" | translate }}</td>
+            <td colspan="6">{{ (onlyFavorites && !favoritesCount ? "workouts.noFavorites" : "workouts.noneFound") | translate }}</td>
         </tr>
     </ng-template>
     <ng-template #loadingbody>

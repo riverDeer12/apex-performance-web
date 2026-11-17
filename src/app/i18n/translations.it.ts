@@ -452,6 +452,11 @@ export const it: Record<string, string> = {
     "workouts.video": "Video",
     "workouts.watch": "Guarda",
     "workouts.noneFound": "Nessun esercizio trovato.",
+    "workouts.favorites": "Preferiti",
+    "workouts.addToFavorites": "Aggiungi ai preferiti",
+    "workouts.removeFromFavorites": "Rimuovi dai preferiti",
+    "workouts.noFavorites": "Nessun preferito. Clicca sulla stella accanto a un esercizio per trovarlo più in fretta.",
+    "trainings.otherExercises": "Altri esercizi",
     "menu.workoutTypes": "Tipi di esercizio",
     // Workout muscles (codes from API).
     "muscles.chest": "Petto",

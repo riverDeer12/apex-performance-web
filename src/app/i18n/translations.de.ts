@@ -452,6 +452,11 @@ export const de: Record<string, string> = {
     "workouts.video": "Video",
     "workouts.watch": "Ansehen",
     "workouts.noneFound": "Keine Übungen gefunden.",
+    "workouts.favorites": "Favoriten",
+    "workouts.addToFavorites": "Zu Favoriten hinzufügen",
+    "workouts.removeFromFavorites": "Aus Favoriten entfernen",
+    "workouts.noFavorites": "Noch keine Favoriten. Klicke auf den Stern neben einer Übung, um sie schneller zu finden.",
+    "trainings.otherExercises": "Weitere Übungen",
     "menu.workoutTypes": "Übungsarten",
     // Workout muscles (codes from API).
     "muscles.chest": "Brust",

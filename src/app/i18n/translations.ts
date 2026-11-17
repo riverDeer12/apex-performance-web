@@ -440,6 +440,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "workouts.video": "Video",
     "workouts.watch": "Watch",
     "workouts.noneFound": "No workouts found.",
+    "workouts.favorites": "Favorites",
+    "workouts.addToFavorites": "Add to favorites",
+    "workouts.removeFromFavorites": "Remove from favorites",
+    "workouts.noFavorites": "No favorites yet. Click the star next to a workout to find it faster.",
+    "trainings.otherExercises": "Other exercises",
     "menu.workoutTypes": "Workout Types",
     // Workout muscles (codes from API).
     "muscles.chest": "Chest",
@@ -1514,6 +1519,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "workouts.video": "Video",
     "workouts.watch": "Pogledaj",
     "workouts.noneFound": "Nema pronađenih vježbi.",
+    "workouts.favorites": "Favoriti",
+    "workouts.addToFavorites": "Dodaj u favorite",
+    "workouts.removeFromFavorites": "Ukloni iz favorita",
+    "workouts.noFavorites": "Još nemate favorita. Kliknite zvjezdicu pokraj vježbe da je brže pronađete.",
+    "trainings.otherExercises": "Ostale vježbe",
     "menu.workoutTypes": "Vrste vježbi",
     // Workout muscles (codes from API).
     "muscles.chest": "Prsa",

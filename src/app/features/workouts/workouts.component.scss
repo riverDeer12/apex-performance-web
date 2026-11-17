@@ -37,6 +37,26 @@
   border: 1px solid color-mix(in srgb, var(--p-primary-color) 45%, transparent);
 }
 
+.favorite-star {
+  background: none;
+  border: 0;
+  padding: 0.25rem;
+  margin-right: 0.25rem;
+  cursor: pointer;
+  color: var(--p-text-muted-color);
+  border-radius: 0.25rem;
+  vertical-align: middle;
+
+  &:hover,
+  &:focus-visible {
+    color: #eab308;
+  }
+
+  &.is-favorite {
+    color: #eab308;
+  }
+}
+
 .import-template-link {
   margin-left: 0.5rem;
 }

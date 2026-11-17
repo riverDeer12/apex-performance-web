@@ -44,6 +44,14 @@ export class WorkoutService {
         return this.http.post<ImportWorkoutsResponse>(environment.apiUrl + "/workouts/import", formData);
     };
 
+    // Marks the workout as a favorite of the logged in user, or removes it.
+    setFavorite = (workoutId: string, isFavorite: boolean) =>
+        isFavorite
+            ? this.http.put(environment.apiUrl + "/workouts/" + workoutId + "/favorite", null,
+                {context: new HttpContext().set(SKIP_LOADER, true)})
+            : this.http.delete(environment.apiUrl + "/workouts/" + workoutId + "/favorite",
+                {context: new HttpContext().set(SKIP_LOADER, true)});
+
     deleteWorkout = (workoutId: string) =>
         this.http.delete(environment.apiUrl + "/workouts/" + workoutId);
 }

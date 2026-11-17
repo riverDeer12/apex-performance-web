@@ -42,6 +42,11 @@ import {Roles} from "../../constants/roles";
 export class WorkoutsComponent implements OnInit {
     workouts!: Workout[];
 
+    // Rows of the table: all workouts, or only the favorites.
+    displayedWorkouts: Workout[] = [];
+
+    onlyFavorites = false;
+
     @ViewChild(`filter`) filter!: ElementRef;
 
     @ViewChild(`importFileInput`) importFileInput!: ElementRef<HTMLInputElement>;
@@ -114,6 +119,46 @@ export class WorkoutsComponent implements OnInit {
 
         // New array reference so table re-renders.
         this.workouts = [...this.workouts];
+        this.updateDisplayedWorkouts();
+    }
+
+    /** An API without favorites leaves isFavorite out: no stars, no filter. */
+    get supportsFavorites(): boolean {
+        return (this.workouts ?? []).some(x => typeof x.isFavorite === "boolean");
+    }
+
+    get favoritesCount(): number {
+        return (this.workouts ?? []).filter(x => x.isFavorite).length;
+    }
+
+    toggleOnlyFavorites(): void {
+        this.onlyFavorites = !this.onlyFavorites;
+        this.updateDisplayedWorkouts();
+    }
+
+    /** Shows the star at once and puts it back when the API fails. */
+    toggleFavorite(workout: Workout): void {
+        const isFavorite = !workout.isFavorite;
+        workout.isFavorite = isFavorite;
+        this.updateDisplayedWorkouts();
+
+        this.workoutService.setFavorite(workout.id, isFavorite).subscribe({
+            error: (error) => {
+                workout.isFavorite = !isFavorite;
+                this.updateDisplayedWorkouts();
+
+                this.messageService.add({
+                    severity: "error",
+                    summary: this.translationService.t("common.error"),
+                    detail: getErrorMessage(error),
+                });
+            },
+        });
+    }
+
+    private updateDisplayedWorkouts(): void {
+        const workouts = this.workouts ?? [];
+        this.displayedWorkouts = this.onlyFavorites ? workouts.filter(x => x.isFavorite) : [...workouts];
     }
 
     onGlobalFilter(table: Table, event: Event) {

@@ -54,9 +54,18 @@
                         <span>{{ exerciseLabel(i) }} {{ "trainings.exercise" | translate }}</span>
                         <span *ngIf="isSuperset(i)" class="superset-tag">{{ "trainings.superset" | translate }}</span>
                     </label>
-                    <p-select #workoutSelect [filter]="true" [options]="workoutOptions" optionLabel="label" optionValue="value"
+                    <p-select #workoutSelect [filter]="true"
+                              [options]="workoutGroups.length ? workoutGroups : workoutOptions"
+                              [group]="workoutGroups.length > 0" optionGroupLabel="label" optionGroupChildren="items"
+                              optionLabel="label" optionValue="value"
                               appendTo="body" styleClass="w-full" formControlName="workout"
                               [placeholder]="'trainings.selectExercise' | translate">
+                        <ng-template #group let-group>
+                            <div class="flex items-center gap-2">
+                                <i *ngIf="group.isFavorites" class="pi pi-star-fill" style="color: #eab308"></i>
+                                <span>{{ group.label }}</span>
+                            </div>
+                        </ng-template>
                         <ng-template #emptyfilter>
                             <span>{{ "trainings.noExerciseFound" | translate }}</span>
                         </ng-template>
