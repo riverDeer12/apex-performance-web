@@ -7,11 +7,11 @@
                     [ngModel]="period()" (ngModelChange)="period.set($event)" />
 </div>
 
-<!-- Heart rate from Apple Health on the client's iPhone, saved after a training ends. -->
+<!-- Heart rate from the client's phone (Apple Health or Health Connect), saved after a training ends. -->
 <div *ngIf="heartRateSummary() as summary" class="card mb-4">
     <div class="flex flex-wrap items-start justify-between gap-2 mb-1">
         <div class="font-semibold text-lg"><i class="pi pi-heart-fill heart-icon"></i> {{ "trainingProgress.heartRate" | translate }}</div>
-        <div class="progress-hint">Apple Health</div>
+        <div class="progress-hint">{{ summary.sources }}</div>
     </div>
     <div class="progress-hint mb-3">{{ "trainingProgress.heartRateHint" | translate }}</div>
     <div class="grid grid-cols-12 gap-4 items-center">

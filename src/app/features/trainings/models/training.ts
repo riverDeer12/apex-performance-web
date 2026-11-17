@@ -53,7 +53,8 @@ export class Training {
     // When the training really started and ended, marked by the coach in the apps.
     startedAt?: string | null;
     endedAt?: string | null;
-    // Client's heart rate between start and end, from Apple Health on the client's iPhone.
+    // Client's heart rate between start and end, from the client's phone:
+    // Apple Health on an iPhone, Health Connect on Android.
     heartRate?: TrainingHeartRate | null;
 }
 
@@ -62,6 +63,23 @@ export interface TrainingHeartRate {
     min: number;
     max: number;
     average: number;
+    // Where the client's phone read it: "apple_health" or "health_connect".
+    source?: string | null;
+}
+
+// "Apple Health" or "Health Connect" (Mi Fitness, Google Fit, Fitbit, Samsung Health...), null if unknown.
+export function heartRateSourceName(source?: string | null): string | null {
+    switch (source) {
+        case "apple_health": return "Apple Health";
+        case "health_connect": return "Health Connect";
+        default: return null;
+    }
+}
+
+// The sources of the heart rates, e.g. "Apple Health · Health Connect".
+export function heartRateSourceNames(heartRates: (TrainingHeartRate | null | undefined)[]): string {
+    const names = heartRates.map(x => heartRateSourceName(x?.source)).filter((x): x is string => x !== null);
+    return [...new Set(names)].join(" · ");
 }
 
 // Whole minutes between the start and the end of a training, null while it is not ended.
