@@ -10,6 +10,7 @@ import { AuthenticationService } from "../../authentication/services/authenticat
 import { Roles } from "../../../constants/roles";
 import { TranslationService } from "../../../i18n/translation.service";
 import { TranslatePipe } from "../../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../../shared/components/user-avatar/user-avatar.component";
 
 /**
  * Appointments created by clients
@@ -18,7 +19,7 @@ import { TranslatePipe } from "../../../i18n/translate.pipe";
 @Component({
   selector: "app-pending-appointments",
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonDirective, TranslatePipe],
+  imports: [UserAvatarComponent, CommonModule, TableModule, ButtonDirective, TranslatePipe],
   templateUrl: "./pending-appointments.component.html",
 })
 export class PendingAppointmentsComponent implements OnInit {

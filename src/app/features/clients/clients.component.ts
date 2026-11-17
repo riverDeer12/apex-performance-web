@@ -24,10 +24,12 @@ import {ClientPlans} from "../../constants/client-plans";
 import {RulesService} from "../rules/services/rules.service";
 import {RulesAcceptance} from "../rules/models/rules";
 import {MonthlyReviewsManagerComponent} from "../monthly-reviews/components/monthly-reviews-manager/monthly-reviews-manager.component";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: "app-clients",
     imports: [
+        UserAvatarComponent,
         CommonModule,
         Button,
         DatePipe,

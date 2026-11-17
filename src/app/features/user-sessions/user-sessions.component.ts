@@ -15,10 +15,12 @@ import {Tooltip} from "primeng/tooltip";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {AuthenticationService} from "../authentication/services/authentication.service";
 import {Roles} from "../../constants/roles";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: "app-user-sessions",
     imports: [
+        UserAvatarComponent,
         CommonModule,
         Button,
         ButtonDirective,

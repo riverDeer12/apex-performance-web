@@ -9,6 +9,8 @@ export class User {
     updatedAt!: Date;
     isDeleted!: boolean;
     roles!: Role[];
+    // Profile picture link, null without a picture.
+    pictureUrl?: string | null;
 
     get status(): string {
         return this.isDeleted ? 'Inactive' : 'Active';

@@ -67,7 +67,7 @@
     <ng-template #body let-client>
         <tr [style]="{ 'background-color': client.credits <= 0 ? '#f8d7dacc' : '' }">
             <td>
-                {{ client.fullName }}
+                <span class="flex items-center gap-2"><app-user-avatar [name]="client.fullName" [pictureUrl]="client.pictureUrl" size="2rem"/>{{ client.fullName }}</span>
             </td>
             <td>
                 {{ ("clientPlans." + client.plan) | translate }}

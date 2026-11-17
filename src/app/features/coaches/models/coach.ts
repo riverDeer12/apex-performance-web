@@ -14,6 +14,8 @@ export class Coach {
     isDeleted!: boolean;
 
     fullName!: string;
+    // Profile picture link, null without a picture.
+    pictureUrl?: string | null;
 
     get status(): string {
         return this.isDeleted ? 'Inactive' : 'Active';

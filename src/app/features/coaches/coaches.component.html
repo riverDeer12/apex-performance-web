@@ -58,7 +58,7 @@
     <ng-template #body let-coach>
         <tr>
             <td>
-                {{ coach.fullName }}
+                <span class="flex items-center gap-2"><app-user-avatar [name]="coach.fullName" [pictureUrl]="coach.pictureUrl" size="2rem"/>{{ coach.fullName }}</span>
             </td>
             <td>
                 {{ coach.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}

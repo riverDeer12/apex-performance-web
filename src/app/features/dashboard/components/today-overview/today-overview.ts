@@ -4,11 +4,15 @@ export interface TodayAppointment {
     endTime: string;
     status: string;
     clients: string[];
+    // Picture links of the clients, same order (null without a picture).
+    clientPictureUrls?: (string | null)[] | null;
 }
 
 export interface OverviewClient {
     id: string;
     fullName: string;
+    // Profile picture link, null without a picture.
+    pictureUrl?: string | null;
 }
 
 export interface LowCreditsClient extends OverviewClient {

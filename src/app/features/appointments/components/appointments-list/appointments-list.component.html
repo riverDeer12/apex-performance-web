@@ -17,14 +17,16 @@
                 </td>
                 <td *ngIf="userRole != userRoles.Client">
                     <span *ngFor="let client of appointment.clients">
-                        <p>
+                        <p class="flex items-center gap-2">
+                            <app-user-avatar [name]="client.firstName + ' ' + client.lastName" [pictureUrl]="client.pictureUrl" size="1.75rem"/>
                             <span>{{ client.firstName }} {{ client.lastName }}</span>
                         </p>
                     </span>
                 </td>
                 <td *ngIf="userRole != userRoles.Coach">
                     <span *ngFor="let coach of appointment.coaches">
-                        <p>
+                        <p class="flex items-center gap-2">
+                            <app-user-avatar [name]="coach.firstName + ' ' + coach.lastName" [pictureUrl]="coach.pictureUrl" size="1.75rem"/>
                             <span>{{ coach.firstName }} {{ coach.lastName }}</span>
                         </p>
                     </span>

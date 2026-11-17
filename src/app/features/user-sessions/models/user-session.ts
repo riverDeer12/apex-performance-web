@@ -9,6 +9,8 @@ export class UserLastSession {
     lastUserAgent?: string | null;
     loginsCount!: number;
     activeSessionId?: string | null;
+    // Profile picture link, null without a picture.
+    pictureUrl?: string | null;
 
     // Values prepared for table display and filtering.
     displayRoles!: string;

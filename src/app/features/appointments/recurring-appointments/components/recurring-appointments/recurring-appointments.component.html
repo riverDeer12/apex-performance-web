@@ -23,7 +23,7 @@
                 </div>
                 <div class="recurring-calendar-clients">{{ clientNames(appointment) }}</div>
                 <div class="recurring-calendar-meta">
-                    <span *ngIf="showCoach && appointment.coach"><i class="pi pi-user"></i> {{ appointment.coach.firstName }} {{ appointment.coach.lastName }}</span>
+                    <span *ngIf="showCoach && appointment.coach" class="inline-flex items-center gap-1"><app-user-avatar [name]="appointment.coach.firstName + ' ' + appointment.coach.lastName" [pictureUrl]="appointment.coach.pictureUrl" size="1.25rem"/> {{ appointment.coach.firstName }} {{ appointment.coach.lastName }}</span>
                     <span *ngIf="appointment.type">{{ appointment.type.name }}</span>
                 </div>
             </div>

@@ -23,7 +23,10 @@
     <ng-template #body let-appointmentRequest>
         <tr>
             <td>
-                {{ appointmentRequest.sender.firstName }} {{ appointmentRequest.sender.lastName }}
+                <span class="flex items-center gap-2">
+                    <app-user-avatar [name]="appointmentRequest.sender.firstName + ' ' + appointmentRequest.sender.lastName" [pictureUrl]="appointmentRequest.sender.pictureUrl" size="2rem"/>
+                    {{ appointmentRequest.sender.firstName }} {{ appointmentRequest.sender.lastName }}
+                </span>
             </td>
             <td>
                 {{ ('requestTypes.' + appointmentRequest.type.name) | translate }}

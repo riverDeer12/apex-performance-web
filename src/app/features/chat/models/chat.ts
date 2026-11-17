@@ -5,6 +5,8 @@ export interface ChatParticipant {
     id: string;
     userId: string;
     fullName: string;
+    // Profile picture link ("users/{id}/picture?v=..."), null without a picture.
+    pictureUrl?: string | null;
 }
 
 export type ChatMessageType = "text" | "image" | "workout";
@@ -65,6 +67,7 @@ export interface ChatContact {
     id: string;
     userId: string;
     fullName: string;
+    pictureUrl?: string | null;
     // Null when they haven't started a chat yet.
     conversationId: string | null;
     // False when the coach disabled the chat or the client blocked it.

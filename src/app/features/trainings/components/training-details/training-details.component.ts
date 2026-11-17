@@ -9,6 +9,7 @@ import { getTranslation } from "../../../workouts/models/localized-property";
 import { describeSet, NumberedSet, numberSets, Training, TrainingExercise, trainingMinutes } from "../../models/training";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { Roles } from "../../../../constants/roles";
+import { UserAvatarComponent } from "../../../../shared/components/user-avatar/user-avatar.component";
 
 /**
  * Read only view of a training with its exercises,
@@ -17,7 +18,7 @@ import { Roles } from "../../../../constants/roles";
 @Component({
     selector: "app-training-details",
     standalone: true,
-    imports: [CommonModule, TableModule, Tag, TranslatePipe],
+    imports: [UserAvatarComponent, CommonModule, TableModule, Tag, TranslatePipe],
     templateUrl: "./training-details.component.html",
     styles: [`
         .stat-box { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.75rem 1rem;

@@ -14,11 +14,12 @@ import { AuthenticationService } from "../authentication/services/authentication
 import { Permissions } from "../../constants/permissions";
 import { TranslationService } from "../../i18n/translation.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
   selector: "app-appointments",
   standalone: true,
-  imports: [CommonModule, Button, DatePipe, TableModule, TranslatePipe],
+  imports: [UserAvatarComponent, CommonModule, Button, DatePipe, TableModule, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./appointments.component.html",
   styleUrl: "./appointments.component.scss",

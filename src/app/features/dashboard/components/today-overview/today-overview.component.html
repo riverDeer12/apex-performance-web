@@ -63,8 +63,9 @@
                     <span class="timeline-dot"></span>
                     <span class="timeline-body">
                         <span class="avatars">
-                            <span *ngFor="let client of appointment.clients | slice: 0 : 3" class="avatar"
-                                  [title]="client">{{ initials(client) }}</span>
+                            <app-user-avatar *ngFor="let client of appointment.clients | slice: 0 : 3; let i = index"
+                                             class="avatar-stacked" [name]="client"
+                                             [pictureUrl]="appointment.clientPictureUrls?.[i]" size="1.9rem"/>
                         </span>
                         <span class="timeline-clients">{{ appointment.clients.join(', ') }}</span>
                         <span *ngIf="appointmentStates.get(appointment.id) === 'current'" class="pill pill-current">
@@ -110,7 +111,7 @@
                 <span class="card-title"><i class="pi pi-wallet"></i> {{ "today.lowCredits" | translate }}</span>
             </header>
             <div *ngFor="let client of o.lowCreditsClients | slice: 0 : listLimit" class="person-row">
-                <span class="avatar">{{ initials(client.fullName) }}</span>
+                <app-user-avatar [name]="client.fullName" [pictureUrl]="client.pictureUrl" size="1.9rem"/>
                 <span class="person-name">{{ client.fullName }}</span>
                 <span class="status-badge" [class.status-danger]="client.credits <= 0" [class.status-warn]="client.credits > 0">
                     <i class="pi" [class.pi-times-circle]="client.credits <= 0" [class.pi-exclamation-triangle]="client.credits > 0"></i>
@@ -134,7 +135,7 @@
                 </span>
             </header>
             <div *ngFor="let client of o.inactiveClients | slice: 0 : listLimit" class="person-row">
-                <span class="avatar">{{ initials(client.fullName) }}</span>
+                <app-user-avatar [name]="client.fullName" [pictureUrl]="client.pictureUrl" size="1.9rem"/>
                 <span class="person-name">{{ client.fullName }}</span>
                 <span class="text-sm text-muted-color whitespace-nowrap"
                       [title]="client.lastActivityAt ? (client.lastActivityAt | date: 'dd.MM.yyyy.') : ''">
@@ -160,7 +161,7 @@
                 <span class="meter-fill" [style.width.%]="reviewsPercent"></span>
             </div>
             <div *ngFor="let client of o.monthlyReviews.missingClients | slice: 0 : listLimit" class="person-row">
-                <span class="avatar">{{ initials(client.fullName) }}</span>
+                <app-user-avatar [name]="client.fullName" [pictureUrl]="client.pictureUrl" size="1.9rem"/>
                 <span class="person-name">{{ client.fullName }}</span>
             </div>
             <a *ngIf="o.monthlyReviews.missingClients.length > listLimit" routerLink="/admin/clients" class="card-link">

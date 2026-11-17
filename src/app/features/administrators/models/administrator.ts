@@ -8,6 +8,8 @@ export class Administrator {
     updatedAt!: Date;
     user!: User;
     isDeleted!: boolean;
+    // Profile picture link, null without a picture.
+    pictureUrl?: string | null;
 
     get fullName(): string {
         return `${this.firstName} ${this.lastName}`;
