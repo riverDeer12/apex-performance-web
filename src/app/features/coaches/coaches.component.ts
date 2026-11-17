@@ -16,10 +16,12 @@ import {InputIcon} from "primeng/inputicon";
 import {InputText} from "primeng/inputtext";
 import {TranslationService} from "../../i18n/translation.service";
 import {TranslatePipe} from "../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: 'app-coaches',
     imports: [
+        UserAvatarComponent,
         Button,
         ButtonDirective,
         DatePipe,

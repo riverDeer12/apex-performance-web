@@ -15,6 +15,8 @@ export class Client {
   coaches!: Coach[];
   isDeleted!: boolean;
   fullName!: string;
+  // Profile picture link, null without a picture.
+  pictureUrl?: string | null;
   lastCreditsIncrease!: Date;
 
   get status(): string {

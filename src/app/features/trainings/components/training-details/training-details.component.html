@@ -1,7 +1,9 @@
 <div class="flex flex-col gap-3">
     <div class="flex flex-wrap gap-x-6 gap-y-2 items-center">
         <span><strong>{{ "trainings.date" | translate }}:</strong> {{ training.date | date: 'dd.MM.yyyy.' }}</span>
-        <span><strong>{{ "trainings.client" | translate }}:</strong> {{ training.client.fullName }}</span>
+        <span class="inline-flex items-center gap-2"><strong>{{ "trainings.client" | translate }}:</strong>
+            <app-user-avatar [name]="training.client.fullName" [pictureUrl]="training.client.pictureUrl" size="1.75rem"/>
+            {{ training.client.fullName }}</span>
         <p-tag *ngIf="!isClient" [severity]="training.isCompleted ? 'success' : 'secondary'"
                [value]="(training.isCompleted ? 'trainings.completed' : 'trainings.notCompleted') | translate" />
     </div>

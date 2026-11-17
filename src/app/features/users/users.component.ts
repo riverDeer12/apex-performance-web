@@ -16,10 +16,12 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {HelperService} from "../../shared/services/helper.service";
 import {TranslationService} from "../../i18n/translation.service";
 import {TranslatePipe} from "../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: 'app-users',
     imports: [
+        UserAvatarComponent,
         ButtonDirective,
         IconField,
         InputIcon,

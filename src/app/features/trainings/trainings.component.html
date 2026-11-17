@@ -53,7 +53,7 @@
     <ng-template #body let-training>
         <tr>
             <td>{{ training.date | date: 'dd.MM.yyyy.' }}</td>
-            <td *ngIf="!isClient">{{ training.client.fullName }}</td>
+            <td *ngIf="!isClient"><span class="flex items-center gap-2"><app-user-avatar [name]="training.client.fullName" [pictureUrl]="training.client.pictureUrl" size="2rem"/>{{ training.client.fullName }}</span></td>
             <td>{{ training.name }}</td>
             <td>{{ training.exercises.length }}</td>
             <td>

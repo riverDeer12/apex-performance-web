@@ -20,6 +20,7 @@ import { ChatService } from "./services/chat.service";
 import { ChatConversation, ChatMessage, ChatWorkout, MessagesReadEvent } from "./models/chat";
 import { WorkoutService } from "../workouts/services/workout.service";
 import { getTranslation } from "../workouts/models/localized-property";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 const PAGE_SIZE = 50;
 const MAX_LENGTH = 4000;
@@ -46,6 +47,7 @@ interface WorkoutOption {
 interface ContactOption {
     id: string;
     fullName: string;
+    pictureUrl?: string | null;
 }
 
 /**
@@ -55,7 +57,8 @@ interface ContactOption {
 @Component({
     selector: "app-chat",
     standalone: true,
-    imports: [CommonModule, FormsModule, Button, Dialog, Menu, Select, Textarea, ToggleSwitch, Tooltip, TranslatePipe],
+    imports: [CommonModule, FormsModule, Button, Dialog, Menu, Select, Textarea, ToggleSwitch, Tooltip, TranslatePipe,
+        UserAvatarComponent],
     templateUrl: "./chat.component.html",
     styleUrl: "./chat.component.scss",
 })
@@ -137,6 +140,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     // Name of the other side of the conversation.
     otherName(conversation: ChatConversation): string {
         return this.isCoach ? conversation.client.fullName : conversation.coach.fullName;
+    }
+
+    // Picture link of the other side, null without a picture.
+    otherPicture(conversation: ChatConversation): string | null {
+        return (this.isCoach ? conversation.client.pictureUrl : conversation.coach.pictureUrl) ?? null;
     }
 
     initials(name: string): string {
@@ -554,7 +562,7 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.contactOptions = contacts
                     .filter((contact) => !contact.conversationId || !listed.has(contact.conversationId) ||
                         (this.isCoach && !contact.isEnabled && !contact.isBlockedByClient))
-                    .map((contact) => ({ id: contact.id, fullName: contact.fullName }));
+                    .map((contact) => ({ id: contact.id, fullName: contact.fullName, pictureUrl: contact.pictureUrl }));
             },
             error: (err) => this.showError(err),
         });

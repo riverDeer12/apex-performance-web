@@ -71,7 +71,7 @@
     <ng-template #body let-userSession>
         <tr>
             <td>{{ userSession.username }}</td>
-            <td>{{ userSession.fullName || '-' }}</td>
+            <td><span class="flex items-center gap-2"><app-user-avatar [name]="userSession.fullName || userSession.username" [pictureUrl]="userSession.pictureUrl" size="2rem"/>{{ userSession.fullName || '-' }}</span></td>
             <td>{{ userSession.displayRoles || '-' }}</td>
             <td>
                 <span *ngIf="userSession.lastLoginAt; else neverLoggedIn">

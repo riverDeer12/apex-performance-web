@@ -26,7 +26,7 @@
             [class.chat__item--active]="conversation.id === selectedId()"
             (click)="select(conversation)"
         >
-            <span class="chat__avatar">{{ initials(otherName(conversation)) }}</span>
+            <app-user-avatar [name]="otherName(conversation)" [pictureUrl]="otherPicture(conversation)" size="2.5rem"/>
             <span class="chat__item-body">
                 <span class="chat__item-top">
                     <span class="chat__item-name">{{ otherName(conversation) }}</span>
@@ -58,7 +58,7 @@
                     [ariaLabel]="'chat.back' | translate"
                     (onClick)="closeConversation()"
                 />
-                <span class="chat__avatar">{{ initials(otherName(conversation)) }}</span>
+                <app-user-avatar [name]="otherName(conversation)" [pictureUrl]="otherPicture(conversation)" size="2.5rem"/>
                 <span class="font-semibold flex-1 truncate">{{ otherName(conversation) }}</span>
                 <label *ngIf="isCoach" class="chat__toggle">
                     <span class="text-sm chat__toggle-label">{{ "chat.enabled" | translate }}</span>
@@ -272,7 +272,14 @@
             [emptyMessage]="(isCoach ? 'chat.noClients' : 'chat.noCoaches') | translate"
             appendTo="body"
             class="w-full"
-        />
+        >
+            <ng-template #item let-contact>
+                <span class="flex items-center gap-2">
+                    <app-user-avatar [name]="contact.fullName" [pictureUrl]="contact.pictureUrl" size="1.75rem"/>
+                    {{ contact.fullName }}
+                </span>
+            </ng-template>
+        </p-select>
     </div>
     <ng-template #footer>
         <p-button [label]="'chat.cancel' | translate" [text]="true" (onClick)="newChatVisible = false" />

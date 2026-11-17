@@ -73,7 +73,10 @@
                 {{ ('requestTypes.' + appointmentRequest.type.name) | translate }}
             </td>
             <td *ngIf="isAdmin">
-                {{ appointmentRequest.sender?.firstName }} {{ appointmentRequest.sender?.lastName }}
+                <span *ngIf="appointmentRequest.sender as sender" class="flex items-center gap-2">
+                    <app-user-avatar [name]="sender.firstName + ' ' + sender.lastName" [pictureUrl]="sender.pictureUrl" size="2rem"/>
+                    {{ sender.firstName }} {{ sender.lastName }}
+                </span>
             </td>
             <td>
                 {{ appointmentRequest.createdAt | date : 'dd.MM.yyyy. HH:mm' }}

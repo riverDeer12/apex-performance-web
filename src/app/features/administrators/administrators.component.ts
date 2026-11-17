@@ -16,10 +16,11 @@ import {DatePipe} from "@angular/common";
 import {HelperService} from "../../shared/services/helper.service";
 import {TranslationService} from "../../i18n/translation.service";
 import {TranslatePipe} from "../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: 'app-administrators',
-    imports: [ButtonDirective, IconField, InputIcon, InputText, TableModule, Button, DatePipe, TranslatePipe],
+    imports: [UserAvatarComponent, ButtonDirective, IconField, InputIcon, InputText, TableModule, Button, DatePipe, TranslatePipe],
     standalone: true,
     providers: [DialogService],
     templateUrl: './administrators.component.html',

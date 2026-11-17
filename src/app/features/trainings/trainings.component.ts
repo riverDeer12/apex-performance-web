@@ -21,11 +21,12 @@ import { TranslatePipe } from "../../i18n/translate.pipe";
 import { Training } from "./models/training";
 import { TrainingService } from "./services/training.service";
 import { TrainingDetailsComponent } from "./components/training-details/training-details.component";
+import { UserAvatarComponent } from "../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: "app-trainings",
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, Button, Checkbox, Tag, Select, Tooltip, TranslatePipe],
+    imports: [UserAvatarComponent, CommonModule, FormsModule, TableModule, Button, Checkbox, Tag, Select, Tooltip, TranslatePipe],
     providers: [DialogService],
     templateUrl: "./trainings.component.html",
 })

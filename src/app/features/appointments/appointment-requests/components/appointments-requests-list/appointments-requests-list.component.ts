@@ -10,10 +10,11 @@ import { AuthenticationService } from "../../../../authentication/services/authe
 import { Roles } from "../../../../../constants/roles";
 import { TranslationService } from "../../../../../i18n/translation.service";
 import { TranslatePipe } from "../../../../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../../../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
   selector: "app-appointments-requests-list",
-  imports: [CommonModule, Button, DatePipe, TableModule, TranslatePipe],
+  imports: [UserAvatarComponent, CommonModule, Button, DatePipe, TableModule, TranslatePipe],
   templateUrl: "./appointments-requests-list.component.html",
   styleUrl: "./appointments-requests-list.component.scss",
 })

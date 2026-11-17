@@ -58,7 +58,7 @@
     <ng-template #body let-administrator>
         <tr>
             <td>
-                {{ administrator.fullName }}
+                <span class="flex items-center gap-2"><app-user-avatar [name]="administrator.fullName" [pictureUrl]="administrator.pictureUrl" size="2rem"/>{{ administrator.fullName }}</span>
             </td>
             <td>
                 {{ administrator.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}

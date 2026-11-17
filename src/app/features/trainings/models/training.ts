@@ -35,6 +35,8 @@ export class TrainingClient {
     firstName!: string;
     lastName!: string;
     fullName!: string;
+    // Profile picture link, null without a picture.
+    pictureUrl?: string | null;
 }
 
 export class Training {

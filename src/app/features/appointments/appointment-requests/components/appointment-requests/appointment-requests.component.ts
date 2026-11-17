@@ -15,10 +15,12 @@ import {TranslatePipe} from '../../../../../i18n/translate.pipe';
 import {ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../../../authentication/services/authentication.service';
 import {Roles} from '../../../../../constants/roles';
+import { UserAvatarComponent } from "../../../../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
     selector: 'app-appointment-requests',
     imports: [
+        UserAvatarComponent,
         CommonModule,
         Button,
         TableModule,

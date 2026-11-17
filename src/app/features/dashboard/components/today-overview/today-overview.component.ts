@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { UserAvatarComponent } from "../../../../shared/components/user-avatar/user-avatar.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { HttpClient, HttpParams } from "@angular/common/http";
@@ -24,7 +25,7 @@ type AppointmentState = "past" | "current" | "next" | "upcoming";
 @Component({
     selector: "app-today-overview",
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, Select, TranslatePipe],
+    imports: [CommonModule, FormsModule, RouterLink, Select, TranslatePipe, UserAvatarComponent],
     templateUrl: "./today-overview.component.html",
     styleUrl: "./today-overview.component.scss",
 })

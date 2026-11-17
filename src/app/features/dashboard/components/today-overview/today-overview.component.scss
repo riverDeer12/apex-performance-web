@@ -320,8 +320,14 @@
 .avatars {
   display: inline-flex;
 
-  .avatar + .avatar {
+  .avatar + .avatar,
+  .avatar-stacked + .avatar-stacked {
     margin-left: -0.4rem;
+  }
+
+  // Ring so overlapping pictures stay apart.
+  .avatar-stacked {
+    --user-avatar-ring: 0 0 0 2px var(--surface-card);
   }
 }
 

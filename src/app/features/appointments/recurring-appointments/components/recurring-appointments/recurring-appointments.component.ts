@@ -20,6 +20,7 @@ import { TranslationService } from "../../../../../i18n/translation.service";
 import { TranslatePipe } from "../../../../../i18n/translate.pipe";
 import { FormsModule } from "@angular/forms";
 import { SelectButton } from "primeng/selectbutton";
+import { UserAvatarComponent } from "../../../../../shared/components/user-avatar/user-avatar.component";
 
 export interface RecurringCalendarDay {
   key: string;
@@ -28,7 +29,7 @@ export interface RecurringCalendarDay {
 
 @Component({
   selector: "app-recurring-appointments",
-  imports: [CommonModule, FormsModule, Button, NgIf, TableModule, SelectButton, TranslatePipe],
+  imports: [UserAvatarComponent, CommonModule, FormsModule, Button, NgIf, TableModule, SelectButton, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./recurring-appointments.component.html",
   styleUrl: "./recurring-appointments.component.scss",

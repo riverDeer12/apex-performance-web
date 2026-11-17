@@ -58,7 +58,8 @@
             </td>
             <td style="font-size: 0.85rem">
                 <span *ngFor="let client of appointment.clients">
-                    <p>
+                    <p class="flex items-center gap-2">
+                        <app-user-avatar [name]="client.firstName + ' ' + client.lastName" [pictureUrl]="client.pictureUrl" size="1.75rem"/>
                         <span>{{ client.firstName }} {{ client.lastName }}</span>
                     </p>
                 </span>

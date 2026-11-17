@@ -33,10 +33,10 @@
                 {{ appointment.startTime | date : 'HH:mm' }} - {{ appointment.endTime | date : 'HH:mm' }}
             </td>
             <td *ngIf="userRole != userRoles.Client">
-                <p *ngFor="let client of appointment.clients" class="m-0">{{ client.firstName }} {{ client.lastName }}</p>
+                <p *ngFor="let client of appointment.clients" class="m-0 flex items-center gap-2"><app-user-avatar [name]="client.firstName + ' ' + client.lastName" [pictureUrl]="client.pictureUrl" size="1.75rem"/>{{ client.firstName }} {{ client.lastName }}</p>
             </td>
             <td *ngIf="userRole != userRoles.Coach">
-                <p *ngFor="let coach of appointment.coaches" class="m-0">{{ coach.firstName }} {{ coach.lastName }}</p>
+                <p *ngFor="let coach of appointment.coaches" class="m-0 flex items-center gap-2"><app-user-avatar [name]="coach.firstName + ' ' + coach.lastName" [pictureUrl]="coach.pictureUrl" size="1.75rem"/>{{ coach.firstName }} {{ coach.lastName }}</p>
             </td>
             <td>{{ appointment.type.name }}</td>
             <td>

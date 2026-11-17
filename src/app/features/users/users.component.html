@@ -64,7 +64,7 @@
     <ng-template #body let-user>
         <tr>
             <td>
-                {{ user.username }}
+                <span class="flex items-center gap-2"><app-user-avatar [name]="user.username" [pictureUrl]="user.pictureUrl" size="2rem"/>{{ user.username }}</span>
             </td>
             <td>
                 {{ user.createdAt | date : 'dd.MM.yyyy. HH:mm:ss'}}

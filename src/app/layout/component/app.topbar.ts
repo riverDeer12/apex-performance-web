@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MenuItem } from "primeng/api";
 import { RouterModule } from "@angular/router";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
@@ -7,6 +7,7 @@ import { AppConfigurator } from "./app.configurator";
 import { LayoutService } from "../service/layout.service";
 import { AuthenticationService } from "../../features/authentication/services/authentication.service";
 import { ProfileService } from "../../features/profile/services/profile.service";
+import { UserPictureService } from "../../shared/components/user-avatar/user-picture.service";
 import { ButtonLabel } from "primeng/button";
 import { TranslationService } from "../../i18n/translation.service";
 import { TranslatePipe } from "../../i18n/translate.pipe";
@@ -148,8 +149,11 @@ export class AppTopbar {
     }));
   }
 
+  private readonly userPictures = inject(UserPictureService);
+
   logOut(): void {
     this.profileService.clear();
+    this.userPictures.clear();
     this.authenticationService.logOut("/authentication/login");
   }
 }

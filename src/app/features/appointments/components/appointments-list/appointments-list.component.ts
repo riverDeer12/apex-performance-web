@@ -16,10 +16,11 @@ import { DayOfWeek } from "../../../../enums/day-of-week";
 import { AuthenticationService } from "../../../authentication/services/authentication.service";
 import { TranslationService } from "../../../../i18n/translation.service";
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
+import { UserAvatarComponent } from "../../../../shared/components/user-avatar/user-avatar.component";
 
 @Component({
   selector: "app-appointments-list",
-  imports: [CommonModule, DatePipe, TableModule, ButtonDirective, Button, TranslatePipe],
+  imports: [UserAvatarComponent, CommonModule, DatePipe, TableModule, ButtonDirective, Button, TranslatePipe],
   providers: [DialogService],
   templateUrl: "./appointments-list.component.html",
   styleUrl: "./appointments-list.component.scss",
